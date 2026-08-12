@@ -211,11 +211,21 @@ const bolgeRotalari = serviceAreas.map((a) => {
 
   return {
     path: `/hizmet-bolgeleri/${a.slug}/`,
-    // Başlık kalıbı: hedef kelime EN BAŞTA, sonra kapsam, sonra tıklama sebebi.
-    // "Kırma" çıkarıldı — yerine "Ücretsiz Keşif" kondu; SERP'te fazladan bir
-    // hizmet adından çok, tıklama sebebi kazandırıyor. Genişlik ServiceAreaDetail.jsx
-    // ile AYNI olmalı (ikisi de aynı sayfanın başlığını üretiyor).
-    title: `${seoAd} Karot | Beton Delme, Kesme — Ücretsiz Keşif | ${companyName}`,
+    // Başlık kalıbı: hedef kelime EN BAŞTA, sonra aciliyet, sonra kapsam.
+    //
+    // Önceki kalıp `... | Beton Delme, Kesme — Ücretsiz Keşif | 20 Karot` idi ve
+    // 20 ilçenin HEPSİNDE 63-73 karakterdi; Google hepsini kesiyordu, yani
+    // "Ücretsiz Keşif" zaten görünmüyordu. İki fazlalık vardı: "Karot" markada
+    // bir kez daha geçiyor ve iki ayraç (|) boşa yer yiyordu.
+    //
+    // "Acil" eklendi çünkü ana sayfa zaten 7/24 hizmet iddia ediyor ve arama
+    // tarafında "acil karot" / "acil beton delme" gerçek bir talep kalıbı.
+    // Yeni kalıp en uzun ilçede bile 57 karakter — hiçbiri kesilmiyor.
+    //
+    // ServiceAreaDetail.jsx:88 ile AYNI kalmalı: biri build'deki statik HTML'i,
+    // diğeri SPA gezinmesini besliyor. Biri değişip diğeri kalırsa tarayıcı ile
+    // kullanıcı farklı başlık görür.
+    title: `${seoAd} Karot — Acil Beton Delme, Kesme | ${companyName}`,
     description: `${seoAd} karot hizmeti: beton delme, beton kesme, beton kırma, filiz ekimi ve ankraj. Ücretsiz keşif ve net fiyat teklifi için ${phone}.`,
     jsonLd: [hizmetSemasi, faqSemasi(a.sss)],
     h1: `${a.name} Karot`,
