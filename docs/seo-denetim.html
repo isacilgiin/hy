@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    /* Artifact sarmalayıcısı bu reset'i kendisi veriyordu; dosya tek başına
+       açıldığında da aynı görünsün diye buraya alındı. */
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; }
+    img, svg { display: block; max-width: 100%; }
+  </style>
+  <title>20 Karot — Yayın Öncesi SEO Denetimi</title>
+  
+  <style>
+    /* ---- Palet: sitenin kendi token'larından türetildi ----
+       altın #C8A24A · bordo #6E1B2E · kömür #14100F · krem #F2EDE7
+       Nötrler krem/altına doğru sıcak yönlendirildi; soğuk gri kullanılmadı. */
+    :root {
+      --zemin:        #FAF7F2;
+      --kart:         #FFFFFF;
+      --kart-alt:     #F2EDE7;
+      --cizgi:        #E0D6C8;
+      --cizgi-ince:   #EDE5D9;
+      --metin:        #14100F;
+      --metin-orta:   #5C534B;
+      --metin-soluk:  #857A70;
+      --altin:        #8A6D2C;
+      --altin-zemin:  #F7EFDC;
+      --bordo:        #6E1B2E;
+      --bordo-zemin:  #F8E9EC;
+      --yesil:        #3F5C32;
+      --yesil-zemin:  #EAF0E5;
+      --golge:        0 1px 2px rgba(20,16,15,.05), 0 8px 24px -12px rgba(20,16,15,.14);
+  
+      --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --mono: ui-monospace, "SFMono-Regular", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    }
+  
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --zemin:        #14100F;
+        --kart:         #1F1917;
+        --kart-alt:     #2A2320;
+        --cizgi:        #3A302B;
+        --cizgi-ince:   #2A2320;
+        --metin:        #F0E9DF;
+        --metin-orta:   #B5A99C;
+        --metin-soluk:  #8B8076;
+        --altin:        #E3C77E;
+        --altin-zemin:  #2E2517;
+        --bordo:        #E09AAA;
+        --bordo-zemin:  #33181E;
+        --yesil:        #A8C494;
+        --yesil-zemin:  #1E2618;
+        --golge:        0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.6);
+      }
+    }
+  
+    :root[data-theme="dark"] {
+      --zemin:        #14100F;
+      --kart:         #1F1917;
+      --kart-alt:     #2A2320;
+      --cizgi:        #3A302B;
+      --cizgi-ince:   #2A2320;
+      --metin:        #F0E9DF;
+      --metin-orta:   #B5A99C;
+      --metin-soluk:  #8B8076;
+      --altin:        #E3C77E;
+      --altin-zemin:  #2E2517;
+      --bordo:        #E09AAA;
+      --bordo-zemin:  #33181E;
+      --yesil:        #A8C494;
+      --yesil-zemin:  #1E2618;
+      --golge:        0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.6);
+    }
+  
+    body {
+      background: var(--zemin);
+      color: var(--metin);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+  
+    .sayfa {
+      max-width: 60rem;
+      margin: 0 auto;
+      padding: 3.5rem 1.5rem 6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 3.5rem;
+    }
+  
+    /* ---- Tipografi ---- */
+    h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.2; letter-spacing: -0.015em; }
+    h1 { font-size: clamp(1.9rem, 5vw, 2.7rem); font-weight: 700; }
+    h2 { font-size: clamp(1.3rem, 3vw, 1.6rem); font-weight: 650; }
+    h3 { font-size: 1.05rem; font-weight: 650; }
+    p  { margin: 0; max-width: 68ch; }
+  
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: .13em;
+      color: var(--metin-soluk);
+      margin: 0 0 .55rem;
+    }
+  
+    code, .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+    code {
+      font-size: .855em;
+      background: var(--kart-alt);
+      border: 1px solid var(--cizgi-ince);
+      border-radius: 4px;
+      padding: .08em .34em;
+      word-break: break-word;
+    }
+  
+    a { color: var(--altin); text-underline-offset: 2px; }
+    a:focus-visible, summary:focus-visible {
+      outline: 2px solid var(--altin);
+      outline-offset: 3px;
+      border-radius: 3px;
+    }
+  
+    /* ---- Karar bandı ---- */
+    .karar {
+      display: flex;
+      flex-direction: column;
+      gap: .9rem;
+      padding: 1.6rem 1.75rem;
+      background: var(--kart);
+      border: 1px solid var(--cizgi);
+      border-left: 4px solid var(--yesil);
+      border-radius: 10px;
+      box-shadow: var(--golge);
+    }
+    .karar-ust { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; }
+  
+    .rozet {
+      display: inline-flex;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: .69rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      padding: .22rem .55rem;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .rozet.ok      { background: var(--yesil-zemin); color: var(--yesil); }
+    .rozet.kritik  { background: var(--bordo-zemin); color: var(--bordo); }
+    .rozet.orta    { background: var(--altin-zemin); color: var(--altin); }
+    .rozet.dusuk   { background: var(--kart-alt);    color: var(--metin-orta); }
+  
+    /* ---- Bölümler ---- */
+    section { display: flex; flex-direction: column; gap: 1.5rem; }
+    .bolum-bas { display: flex; flex-direction: column; gap: .5rem; }
+  
+    /* ---- Bulgu kartları ---- */
+    .bulgular { display: flex; flex-direction: column; gap: 1rem; }
+    .bulgu {
+      background: var(--kart);
+      border: 1px solid var(--cizgi);
+      border-left: 3px solid var(--cizgi);
+      border-radius: 9px;
+      padding: 1.25rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: .7rem;
+      box-shadow: var(--golge);
+    }
+    .bulgu.s-kritik { border-left-color: var(--bordo); }
+    .bulgu.s-orta   { border-left-color: var(--altin); }
+    .bulgu.s-dusuk  { border-left-color: var(--cizgi); }
+  
+    .bulgu-bas { display: flex; flex-wrap: wrap; align-items: baseline; gap: .6rem; }
+    .bulgu-bas h3 { flex: 1 1 18rem; }
+    .bulgu p { font-size: .935rem; color: var(--metin-orta); }
+    .bulgu p strong { color: var(--metin); font-weight: 620; }
+  
+    .kanit {
+      font-family: var(--mono);
+      font-size: .78rem;
+      color: var(--metin-soluk);
+      background: var(--kart-alt);
+      border-radius: 6px;
+      padding: .6rem .8rem;
+      overflow-x: auto;
+      white-space: pre;
+    }
+  
+    /* ---- Ölçüm tablosu ---- */
+    .tablo-sarmal { overflow-x: auto; border: 1px solid var(--cizgi); border-radius: 9px; background: var(--kart); }
+    table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+    th, td { padding: .68rem .9rem; text-align: left; border-bottom: 1px solid var(--cizgi-ince); }
+    thead th {
+      font-family: var(--mono);
+      font-size: .68rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--metin-soluk);
+      font-weight: 600;
+      background: var(--kart-alt);
+    }
+    tbody tr:last-child td { border-bottom: 0; }
+    td.sayi { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    td.sayi .onceki { color: var(--metin-soluk); }
+    td.sayi .ok     { color: var(--metin-soluk); padding: 0 .3em; }
+    td.sayi .sonraki{ color: var(--yesil); font-weight: 600; }
+  
+    /* ---- Numaralı yükleme sırası ---- */
+    ol.adimlar { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1.1rem; counter-reset: adim; }
+    ol.adimlar > li {
+      counter-increment: adim;
+      display: grid;
+      grid-template-columns: 2rem 1fr;
+      gap: .3rem 1rem;
+      align-items: start;
+    }
+    ol.adimlar > li::before {
+      content: counter(adim);
+      grid-row: 1 / span 2;
+      font-family: var(--mono);
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--altin);
+      background: var(--altin-zemin);
+      border-radius: 50%;
+      width: 2rem; height: 2rem;
+      display: flex; align-items: center; justify-content: center;
+      margin-top: .1rem;
+    }
+    ol.adimlar h3 { grid-column: 2; }
+    ol.adimlar .adim-govde { grid-column: 2; display: flex; flex-direction: column; gap: .6rem; }
+    ol.adimlar p { font-size: .935rem; color: var(--metin-orta); }
+  
+    pre {
+      margin: 0;
+      font-family: var(--mono);
+      font-size: .8rem;
+      line-height: 1.75;
+      background: var(--kart-alt);
+      border: 1px solid var(--cizgi-ince);
+      border-radius: 7px;
+      padding: .85rem 1rem;
+      overflow-x: auto;
+    }
+    pre .yorum { color: var(--metin-soluk); }
+  
+    .uyari {
+      border-left: 3px solid var(--bordo);
+      background: var(--bordo-zemin);
+      border-radius: 0 7px 7px 0;
+      padding: .8rem 1rem;
+      font-size: .9rem;
+      color: var(--metin);
+    }
+  
+    ul.duz { margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: .4rem; font-size: .935rem; color: var(--metin-orta); }
+  
+    footer {
+      border-top: 1px solid var(--cizgi);
+      padding-top: 1.5rem;
+      font-size: .82rem;
+      color: var(--metin-soluk);
+    }
+  
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+    }
+  </style>
+</head>
+<body>
+<div class="sayfa">
+
+  <header>
+    <p class="eyebrow">20karot.com.tr · yayın öncesi denetim · 12 Ağustos 2026</p>
+    <h1>Yayına hazır — biri yayını engelliyordu, düzeltildi</h1>
+  </header>
+
+  <div class="karar">
+    <div class="karar-ust">
+      <span class="rozet ok">Yükleyebilirsin</span>
+      <span class="rozet kritik">1 engel bulundu · kapatıldı</span>
+      <span class="rozet orta">4 iyileştirme yapıldı</span>
+    </div>
+    <p>
+      46 sayfanın tamamı ham HTML, render sonrası DOM ve iç link grafiği katmanlarında tarandı.
+      Yayını gerçekten engelleyen tek şey <code>/blog/</code> adresini öldüren bir 301 kuralıydı —
+      kaldırıldı ve aynı hatanın tekrarını build sırasında yakalayan bir kontrol eklendi.
+      Geri kalan her şey yükleme sonrasına bırakılabilir.
+    </p>
+  </div>
+
+  <section>
+    <div class="bolum-bas">
+      <p class="eyebrow">Bu denetimde bulunup düzeltilenler</p>
+      <h2>Beş bulgu</h2>
+    </div>
+
+    <div class="bulgular">
+
+      <article class="bulgu s-kritik">
+        <div class="bulgu-bas">
+          <h3>Blog dizini 301 yiyip ölüyordu</h3>
+          <span class="rozet kritik">Yayın engeli</span>
+        </div>
+        <p>
+          <code>.htaccess</code> içinde <em>“Blog arşivi (yeni sitede blog yok)”</em> notuyla yazılmış bir
+          301 kuralı vardı. Blog sonradan eklendi, kural güncellenmedi. <strong>RewriteRule dosya var mı
+          diye bakmaz</strong> — fiziksel <code>dist/blog/index.html</code> hiç sunulmadan
+          <code>/blog/</code> ana sayfaya 301 atacaktı.
+        </p>
+        <p>
+          Blog dizini 6 yazının siteden <strong>tek girişi</strong>: yazılar kapalı devre kalır, sitemap'teki
+          <code>/blog/</code> ise Search Console'da “yönlendirilen sayfa” hatasına düşerdi. 11.191 kelime
+          hiç indekslenmezdi.
+        </p>
+        <div class="kanit">RewriteRule ^blog/?$ / [R=301,L]     ← kaldırıldı</div>
+        <p>
+          Kural kaldırıldı. Ayrıca <strong>build sırasında çalışan bir çakışma kontrolü</strong> eklendi:
+          46 gerçek rota × 11 yönlendirme kuralı taranıyor, bir kural gerçek sayfayı vuruyorsa build
+          kırılıyor ve hangi kuralın hangi sayfayı öldürdüğünü yazıyor. Bilerek hatalı kural enjekte
+          edilerek doğrulandı.
+        </p>
+      </article>
+
+      <article class="bulgu s-orta">
+        <div class="bulgu-bas">
+          <h3>Olmayan adresler 200 dönüyordu (yumuşak 404)</h3>
+          <span class="rozet orta">Yüksek</span>
+        </div>
+        <p>
+          Klasik SPA kuralı <code>RewriteRule . /index.html [L]</code> her bilinmeyen adrese
+          <strong>ana sayfanın HTML'ini 200 statüsüyle</strong> döndürüyordu. Bu sitede gereksizdi:
+          46 rotanın hepsinin fiziksel <code>index.html</code>'i var, blok yalnızca olmayan adreslere düşüyor.
+        </p>
+        <p>
+          WordPress göçünde ayrıca zararlı: 301 listende karşılığı olmayan her eski adres
+          “200 + ana sayfa içeriği” verip Google'ın indeksinde <strong>ana sayfanın kopyası</strong> olarak
+          kalırdı. Artık gerçek 404 dönüyor ve <code>noindex</code> taşıyan bir <code>404.html</code> gösteriliyor.
+        </p>
+        <p>
+          Bu değişiklik eski adresleri kırabilirdi: daha önce “hepsi çalışıyor” demiştim ama o kontrol
+          <em>her şeye 200 dönen</em> eski davranışa karşı yapılmıştı. Bu yüzden <strong>64 eski WordPress
+          adresini yeni kural setine göre baştan sınıflandırdım</strong>. Hiçbiri 404'e düşmüyor —
+          link değeri kaybı yok.
+        </p>
+        <div class="kanit">34 adres  aynı yerde duruyor (200)
+30 adres  tek adımda 301
+ 0 adres  404
+ 0 döngü, 0 zincirli yönlendirme</div>
+      </article>
+
+      <article class="bulgu s-orta">
+        <div class="bulgu-bas">
+          <h3>Site ile Google İşletme Profili arasında bağ yoktu</h3>
+          <span class="rozet orta">Orta</span>
+        </div>
+        <p>
+          Yerel aramadaki asıl güven sinyalleri — 5,0 puan, 32 yorum, konum, fotoğraflar — işletme
+          profilinde duruyor. Ama sitedeki <code>LocalBusiness</code> şemasında <code>sameAs</code> alanı
+          boştu, yani ikisini eşleştirecek <strong>makine tarafından okunabilir hiçbir bağ yoktu</strong>;
+          Google ad/adres/telefon benzerliğine mahkûmdu. Profilin kanonik paylaşım adresi şemaya eklendi.
+        </p>
+      </article>
+
+      <article class="bulgu s-orta">
+        <div class="bulgu-bas">
+          <h3>Blog tek yönlü bir link kuyusuydu</h3>
+          <span class="rozet orta">Orta</span>
+        </div>
+        <p>
+          Her blog yazısından hizmet sayfalarına <strong>10 link gidiyor, geriye 0 link geliyordu</strong>.
+          Yazı başına yalnızca 4 iç link vardı (footer + blog dizini + 3 kardeş yazı). Blogu zaten
+          “karot fiyatları” gibi sorguları yakalamak için yazdık; o yazının kendisi link almazsa çıkamaz.
+        </p>
+        <p>
+          Hizmet sayfalarına “bu hizmet hakkında yazdıklarımız” bloğu eklendi. Eşleme, yazıların kendi
+          <code>ilgiliHizmetler</code> alanından tersine çevrilerek kuruluyor — elle liste tutulmuyor.
+          Alan, ağır <code>blogContent.js</code>'ten hafif <code>blog.js</code>'e taşındı ki hizmet sayfası
+          11 bin kelimelik blog gövdesini indirmesin.
+        </p>
+        <div class="kanit">yazı başına iç link:  4  →  6-8   (tüm yazılar)</div>
+      </article>
+
+      <article class="bulgu s-dusuk">
+        <div class="bulgu-bas">
+          <h3><code>llms.txt</code> blogdan haberdar değildi</h3>
+          <span class="rozet dusuk">Düşük</span>
+        </div>
+        <p>
+          Dosya blog eklenmeden önce yazılmıştı; içinde <em>blog</em> kelimesi hiç geçmiyordu.
+          Yapay zekâ tarayıcıları 11.191 kelimelik rehber içeriğini göremiyordu. Artık altı yazı da
+          özetleriyle listeleniyor.
+        </p>
+      </article>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="bolum-bas">
+      <p class="eyebrow">Ölçüm · 46 sayfa, iki cihaz</p>
+      <h2>Sitenin şu anki hâli</h2>
+    </div>
+    <div class="tablo-sarmal">
+      <table>
+        <thead>
+          <tr><th scope="col">Ölçüm</th><th scope="col">Durum</th><th scope="col">Not</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Erişilebilirlik ihlali (axe)</td><td class="sayi"><span class="onceki">83</span><span class="ok">→</span><span class="sonraki">0</span></td><td>46 sayfa × 2 cihaz</td></tr>
+          <tr><td>301 tetikleyen iç link</td><td class="sayi"><span class="onceki">2.472</span><span class="ok">→</span><span class="sonraki">0</span></td><td>2.966 linkin tamamı temiz</td></tr>
+          <tr><td>Benzersiz ham HTML gövdesi</td><td class="sayi"><span class="onceki">1</span><span class="ok">→</span><span class="sonraki">46</span></td><td>JS'siz istemciler her sayfayı ayrı görüyor</td></tr>
+          <tr><td>Blog yazısı başına iç link</td><td class="sayi"><span class="onceki">4</span><span class="ok">→</span><span class="sonraki">6-8</span></td><td>bu denetimde düzeltildi</td></tr>
+          <tr><td>Kırık iç link</td><td class="sayi"><span class="sonraki">0</span></td><td>—</td></tr>
+          <tr><td>Yetim sayfa</td><td class="sayi"><span class="sonraki">0</span></td><td>her sayfaya en az 4 link geliyor</td></tr>
+          <tr><td>Tıklama derinliği</td><td class="sayi"><span class="sonraki">≤ 2</span></td><td>ana sayfadan en uzak sayfa 2 tık</td></tr>
+          <tr><td>Sitemap ↔ HTML paritesi</td><td class="sayi"><span class="sonraki">46 / 46</span></td><td>eksik ya da fazla adres yok</td></tr>
+          <tr><td>Tekrarlanan başlık / açıklama</td><td class="sayi"><span class="sonraki">0</span></td><td>46 sayfanın hepsi benzersiz</td></tr>
+          <tr><td>Şema (render öncesi + sonrası)</td><td class="sayi"><span class="sonraki">0 hata</span></td><td>çift basma yok, kırıntı her sayfada</td></tr>
+          <tr><td>Eski WordPress adresi</td><td class="sayi"><span class="sonraki">64 / 64</span></td><td>34 aynı yerde, 30 tek adımda 301, 404'e düşen yok</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="bolum-bas">
+      <p class="eyebrow">Sıra önemli</p>
+      <h2>Yükleme adımları</h2>
+    </div>
+
+    <ol class="adimlar">
+      <li>
+        <h3>Eski WordPress dosyalarını sil</h3>
+        <div class="adim-govde">
+          <p>Yedeğin hazır. Sunucudaki eski dosyaları temizle — özellikle eski <code>.htaccess</code>,
+          <code>index.php</code> ve <code>wp-*</code> klasörleri kalmasın. Eski <code>.htaccess</code>
+          kalırsa yeni kurallar hiç çalışmaz.</p>
+        </div>
+      </li>
+
+      <li>
+        <h3><code>dist/</code> içeriğini yükle</h3>
+        <div class="adim-govde">
+          <p><code>dist</code> klasörünün <em>içindekileri</em> site köküne kopyala, klasörün kendisini değil.</p>
+          <div class="uyari">
+            <strong><code>.htaccess</code> gizli bir dosyadır</strong> ve FileZilla varsayılan olarak
+            göstermez. Sunucu → “Gizli dosyaları göstermeye zorla” seçeneğini aç. Bu dosya yüklenmezse
+            yönlendirmeler, 404'ler, önbellek ve UTF-8 ayarlarının hiçbiri çalışmaz.
+          </div>
+        </div>
+      </li>
+
+      <li>
+        <h3>Dört komutla doğrula</h3>
+        <div class="adim-govde">
+          <p>Bu kontrolleri buradan çalıştıramadım — sunucusuz ortamda Apache yok, dolayısıyla
+          yukarıdaki <code>.htaccess</code> bulguları kural mantığından çıkarıldı, çalıştırılarak
+          değil. <strong>Sitemap'i göndermeden önce</strong> bunları çalıştır:</p>
+          <pre><span class="yorum"># 200 bekleniyor — blog dizini yaşıyor mu</span>
+curl -I https://20karot.com.tr/blog/
+
+<span class="yorum"># 200 bekleniyor — yazı sayfası</span>
+curl -I https://20karot.com.tr/blog/karot-nedir/
+
+<span class="yorum"># 301 → /hizmetler/ bekleniyor — eski WP adresi</span>
+curl -I https://20karot.com.tr/hizmetlerimiz
+
+<span class="yorum"># 404 bekleniyor — 200 dönerse yumuşak 404 hâlâ var</span>
+curl -I https://20karot.com.tr/olmayan-sayfa/</pre>
+          <p>Dördüncüsü <code>200</code> dönerse hostingin <code>ErrorDocument</code> veya
+          <code>[R=404]</code> yönergesine izin vermiyor demektir; haber ver, farklı bir yolla çözeriz.</p>
+        </div>
+      </li>
+
+      <li>
+        <h3>Search Console'da sitemap'i yeniden gönder</h3>
+        <div class="adim-govde">
+          <p><code>https://20karot.com.tr/sitemap.xml</code> — 46 adres. Ardından ana sayfa,
+          <code>/hizmetler/karot/</code> ve <code>/blog/</code> için “URL denetimi → dizine ekleme iste”
+          yap; kalanlar sitemap üzerinden kendiliğinden taranır.</p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section>
+    <div class="bolum-bas">
+      <p class="eyebrow">Yayını engellemiyor · sırayla ele alınabilir</p>
+      <h2>Sonraya kalanlar</h2>
+    </div>
+    <div class="tablo-sarmal">
+      <table>
+        <thead>
+          <tr><th scope="col">Konu</th><th scope="col">Etki</th><th scope="col">Durum</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Google Fonts render engeli</strong><br><span style="color:var(--metin-soluk)">Kanit dosyasını kendi sunucumuzdan servis etmek</span></td>
+            <td><span class="rozet orta">Yüksek</span></td>
+            <td>Lighthouse'ta en büyük engelleyici: 823/916 ms. Yayın sonrası ilk iş buysa hız kazancı en çok buradan gelir.</td>
+          </tr>
+          <tr>
+            <td><strong>“Acil” kelimesi hiçbir yerde geçmiyor</strong></td>
+            <td><span class="rozet orta">Orta</span></td>
+            <td>46 sayfanın hiçbirinin başlığında, açıklamasında veya H1'inde yok. “acil karot”, “acil beton kesme” aranan sorgular; 7/24 açık olmak bunu karşılamıyor.</td>
+          </tr>
+          <tr>
+            <td><strong>İnce hub sayfaları</strong><br><span style="color:var(--metin-soluk)">/hizmetler/ 218 kelime · /hizmet-bolgeleri/ 168 kelime</span></td>
+            <td><span class="rozet orta">Orta</span></td>
+            <td>İkisi de kategori sayfası ve hedef kelimeleri kovalıyor. /iletisim/ (106 kelime) sorun değil — iletişim niyeti zaten karşılanıyor.</td>
+          </tr>
+          <tr>
+            <td><strong>9 ilçe başlığı SERP'te kırpılacak</strong></td>
+            <td><span class="rozet dusuk">Düşük</span></td>
+            <td>En uzunu 635 px (sınır ~580). Kırpılan kısım sondaki marka — ilçe adı, “Karot”, “Beton Delme” hepsi kesimin önünde kalıyor. Etkisi tıklama oranı, sıralama değil. Aşağıya bak.</td>
+          </tr>
+          <tr>
+            <td><strong>Hakkımızda zaman çizelgesi uydurma</strong></td>
+            <td><span class="rozet dusuk">Düşük</span></td>
+            <td>5 kilometre taşı kuruluş yılına +3, +6, +8, +10 eklenerek üretiliyor. Gerçek tarihleri verirsen düzeltirim.</td>
+          </tr>
+          <tr>
+            <td><strong>20 ilçenin <code>note</code> alanı boş</strong></td>
+            <td><span class="rozet dusuk">Düşük</span></td>
+            <td>İlçeye özel birer cümle (bilinen bir saha, mesafe, sanayi bölgesi) 20 sayfayı birbirinden gerçekten ayırır.</td>
+          </tr>
+          <tr>
+            <td><strong>Swiper her sayfada yükleniyor</strong><br><span style="color:var(--metin-soluk)">108 KB, yalnızca ana sayfada kullanılıyor</span></td>
+            <td><span class="rozet dusuk">Düşük</span></td>
+            <td>Hizmet sayfalarında da <code>modulepreload</code> ediliyor. Ayrıştırması riskli olduğu için yayın öncesine sokmadım.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="bolum-bas">
+      <p class="eyebrow">Karar senin</p>
+      <h2>İlçe başlıkları</h2>
+    </div>
+    <p>
+      Başlık kalıbını sen seçmiştin: <em>marka kalsın, keşif eklensin</em>. Ölçtüğümde tam olarak bu
+      birleşim 9 başlığı sınırın üstüne çıkarıyor. Tek bir alternatif öneriyorum — sondaki markayı
+      atmak:
+    </p>
+    <pre><span class="yorum">şu an   (593 px)</span>  Acıpayam Karot | Beton Delme, Kesme — Ücretsiz Keşif | 20 Karot
+<span class="yorum">öneri   (470 px)</span>  Acıpayam Karot | Beton Delme, Kesme — Ücretsiz Keşif</pre>
+    <p>
+      Google zaten çoğu zaman marka adını sonuca kendisi ekliyor. Yalnızca 20 ilçe sayfasında
+      uygulanır; ana sayfa ve hizmet sayfaları şu anki hâlinde kalır — onların hepsi sınırın altında.
+      İstersen değiştiririm, istemezsen olduğu gibi kalsın; sıralamaya etkisi yok.
+    </p>
+  </section>
+
+  <section>
+    <div class="bolum-bas">
+      <p class="eyebrow">Sitenin dışında · hâlâ açık</p>
+      <h2>Google Ads dönüşüm ayarı</h2>
+    </div>
+    <div class="uyari">
+      Bu, listedeki en acil madde ve site tarafından çözülemiyor. Hesapta
+      <code>conversion_event_page_view</code> hâlâ birincil dönüşüm olarak duruyor — yani
+      <strong>her sayfa görüntüleme dönüşüm sayılıyor</strong> ve teklif algoritması ona göre
+      optimize ediyor.
+    </div>
+    <ul class="duz">
+      <li><code>conversion_event_page_view</code> → “İkincil” yap (silme, geçmiş veri bozulmasın).</li>
+      <li>Üç dönüşüm eylemi oluştur: <strong>Telefon</strong>, <strong>WhatsApp</strong>, <strong>Form</strong>.</li>
+      <li>Üçünü de birincil yap. Sitede tetikleyici kodlar hazır, ölçüm ilk günden başlar.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>
+      46 sayfa üç katmanda tarandı: ham HTML (Googlebot'un ilk gördüğü), render sonrası DOM
+      (JavaScript çalıştıktan sonra) ve iç link grafiği. Erişilebilirlik için axe-core, tarayıcı
+      ölçümleri için Playwright kullanıldı. <code>.htaccess</code> bulguları kural mantığından
+      çıkarıldı — bu ortamda Apache olmadığı için yükleme sonrası <code>curl</code> kontrolleri
+      onların doğrulama adımıdır.
+    </p>
+  </footer>
+
+</div>
+
+</body>
+</html>
