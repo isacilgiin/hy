@@ -101,12 +101,24 @@ const siteConfig = {
     ga4: 'G-26EVFNCNE4',
     googleAds: '', // TODO: 'AW-XXXXXXXXX' — Google Ads dönüşüm kimliği
 
-    // Google Tag Manager (opsiyonel).
-    // Doldurursanız gtag yerine GTM yüklenir ve etiketleri koda dokunmadan
-    // GTM arayüzünden yönetirsiniz. Mevcut konteyneriniz: 'GTM-PFPDVBL4'
-    // (yayındaki sitede kullanılıyor, içinde GA4 zaten tanımlı).
-    // Boş bırakılırsa yukarıdaki ga4/googleAds kimlikleri doğrudan kullanılır.
-    gtm: 'GTM-PFPDVBL4',
+    // Google Tag Manager (opsiyonel) — BİLİNÇLİ OLARAK BOŞ. Geri koymayın.
+    //
+    // Eski konteyner 'GTM-PFPDVBL4' idi (WordPress'ten miras). İçinde GA4
+    // dışında hiçbir etiket yoktu, ama iki soruna yol açıyordu:
+    //
+    // 1) GTM snippet'i `window.gtag`i TANIMLAMAZ; yalnızca dataLayer açar.
+    //    gtag ancak GTM inip GA4 etiketini tetikleyip gtag.js'i yükleyince
+    //    ortaya çıkıyordu (ölçümde ~880 ms). O ana kadar utils/analytics.js
+    //    ilk satırdaki `typeof window.gtag !== 'function'` kontrolünden
+    //    dönüyor, erken tıklamalar sessizce kayboluyordu.
+    // 2) 121 KB fazladan yük — konteyner inip sonra GA4'ü ayrıca indiriyordu.
+    //
+    // Boş bırakıldığında vite.config.js gtag.js'i doğrudan basar ve `gtag`
+    // satır içinde SENKRON tanımlanır; yarış ortadan kalkar.
+    //
+    // Search Console doğrulaması DNS TXT ("Alan adı sağlayıcı") ile yapılıyor,
+    // yani konteynerin kaldırılması sahipliği etkilemez.
+    gtm: '',
     googleSiteVerification: '', // TODO: Search Console doğrulama kodu
 
     // Google Ads dönüşüm etiketleri.
