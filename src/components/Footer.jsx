@@ -145,6 +145,19 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-white/60 text-sm">
             © {currentYear} {siteConfig.companyName}. Tüm hakları saklıdır.
+            {' · '}
+            {/* Geliştirici künyesi. Site genelinde tekrarlayan bir dış link
+                olduğu için bağlantı metni MARKA adı — anahtar kelime değil
+                ("Denizli web tasarım" gibi bir metin site geneline yayılınca
+                Google bunu link şeması olarak değerlendirebiliyor). */}
+            <a
+              href="https://appx.net.tr"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white/60 hover:text-primary transition-colors"
+            >
+              Powered by APPX
+            </a>
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
             {yasalLinkler.map((link) => (
