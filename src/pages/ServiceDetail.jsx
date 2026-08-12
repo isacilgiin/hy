@@ -7,6 +7,9 @@ import SmartImage from '../components/SmartImage'
 import Seo from '../components/Seo'
 import services from '../data/services'
 import serviceContent from '../data/serviceContent'
+// HAFİF dizin (blog.js) — yazıların tam metnini taşıyan blogContent.js DEĞİL.
+// Buradan okuyunca hizmet sayfası 11 bin kelimelik blog gövdesini indirmiyor.
+import blog from '../data/blog'
 import serviceAreas from '../data/serviceAreas'
 import siteConfig from '../data/siteConfig'
 import { whatsappUrl } from '../utils/links'
@@ -69,6 +72,16 @@ export default function ServiceDetail() {
   const prevService = currentIndex > 0 ? services[currentIndex - 1] : null
   const nextService = currentIndex < services.length - 1 ? services[currentIndex + 1] : null
   const paragraflar = service.girisMetni ?? [service.description]
+
+  // Ters eşleme: yazı "hangi hizmetlerle ilgiliyim" diyor, biz burada tersini
+  // soruyoruz.
+  //
+  // Sayı SINIRLANMIYOR. Önce ilk 3'ü alıyordu ama o zaman /hizmetler/karot/
+  // sayfasında tam da en alakalı yazı ("Karot Nedir?") listenin dışında
+  // kalıyordu — alfabetik sırada sonuncuydu. En kalabalık hizmette bile
+  // 5 yazı çıkıyor; hepsini göstermek hem daha doğru hem her yazının
+  // ilan ettiği her hizmetten link almasını garantiliyor.
+  const ilgiliYazilar = blog.filter((y) => y.ilgiliHizmetler.includes(service.slug))
 
   return (
     <div className="page-enter">
@@ -321,6 +334,41 @@ export default function ServiceDetail() {
               ))}
             </div>
           </div>
+
+          {/* Bu hizmeti anlatan blog yazıları.
+              Blog eskiden tek yönlü bir link kuyusuydu: yazılardan hizmetlere
+              10 link gidiyor, hizmetlerden geriye HİÇ link gelmiyordu. Yazıların
+              siteden tek girişi blog dizini kalıyordu (yazı başına 4 iç link).
+              Özellikle fiyat yazısının aranan sorgularda çıkması buna bağlı. */}
+          {ilgiliYazilar.length > 0 && (
+            <div className="mt-16 pt-10 border-t border-gray-100">
+              <h2 className="text-2xl font-bold text-dark mb-2">
+                {service.title} Hakkında Yazdıklarımız
+              </h2>
+              <p className="text-gray-600 text-sm mb-6">
+                Bu işin sahada nasıl yürüdüğünü, nelere dikkat edildiğini ve fiyatı neyin
+                belirlediğini ayrıntılı anlattığımız yazılar.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                {ilgiliYazilar.map((y) => (
+                  <Link
+                    key={y.slug}
+                    to={`/blog/${y.slug}/`}
+                    className="group block p-5 rounded-xl bg-surface hover:bg-white hover:shadow-lg transition-all"
+                  >
+                    <span className="inline-flex items-center gap-2 text-xs text-gray-600 mb-2">
+                      <Icon name="calendar" className="w-4 h-4" strokeWidth={2} />
+                      {y.okumaSuresi} dk okuma
+                    </span>
+                    <span className="block font-semibold text-dark group-hover:text-accent transition-colors mb-2">
+                      {y.title}
+                    </span>
+                    <span className="block text-sm text-gray-600 leading-relaxed">{y.ozet}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Önceki / sonraki */}
           <div className="mt-16 pt-8 border-t border-gray-100 grid grid-cols-2 gap-6">

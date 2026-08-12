@@ -106,7 +106,19 @@ function seoFromConfig() {
     }
   }
 
-  const sameAs = [social.instagram, social.facebook, social.youtube].filter(Boolean)
+  /**
+   * sameAs — bu işletmeyi BAŞKA yerlerdeki AYNI varlıkla eşleştirir.
+   *
+   * Google İşletme Profili bağlantısı burada olmazsa site ile profil arasında
+   * makine tarafından okunabilir HİÇBİR bağ kalmıyordu: yerel aramada asıl
+   * güven sinyali (puan, yorum, fotoğraf, konum) profilde duruyor ama Google
+   * onu siteyle ilişkilendirmek için ad/adres/telefon eşleşmesine mahkûm
+   * kalıyordu. shortLink profilin kendi paylaşım adresi — kanonik kaynak.
+   *
+   * Sosyal hesaplar boş olduğu için (Instagram/Facebook yok) filtreleniyor;
+   * boş string'li bir sameAs dizisi şemayı geçersiz yapardı.
+   */
+  const sameAs = [siteConfig.geo.shortLink, social.instagram, social.facebook, social.youtube].filter(Boolean)
   if (sameAs.length) jsonLd.sameAs = sameAs
 
   // --- Yalnızca değeri olan meta etiketleri üretilir ---
@@ -205,7 +217,12 @@ ${gtagKimlikleri.map((id) => `    gtag('config','${id}');`).join('\n')}
       '^denizlide-profesyonel-karot-ve-beton-delme-hizmetleri-20-karot-guvencesiyle/?$',
       '/hizmetler/karot/',
     ],
-    ['Blog arşivi (yeni sitede blog yok)', '^blog/?$', '/'],
+    // NOT: Eski WordPress'in /blog/ arşivi için burada bir 301 VARDI. Kaldırıldı:
+    // yeni sitede /blog/ GERÇEK bir sayfa. Kural dursaydı, fiziksel
+    // dist/blog/index.html hiç sunulmadan /blog/ -> / 301'i yerdi (RewriteRule'un
+    // RewriteCond guard'ı yok, dosya var mı diye bakmaz) ve blog dizini ölürdü.
+    // 6 yazının siteden TEK girişi o dizin — kapalı devre kalırlardı.
+    // Eski /blog/ adresi zaten yeni /blog/ adresine denk düşüyor; taşımaya gerek yok.
     // Eski sitede /en/... adresleri vardı ama içerikleri TÜRKÇEYDİ ve
     // canonical'ları Türkçe sayfayı gösteriyordu — gerçek bir İngilizce sürüm
     // yoktu. Aynı yoldaki Türkçe sayfaya taşınıyorlar.
@@ -222,6 +239,48 @@ ${gtagKimlikleri.map((id) => `    gtag('config','${id}');`).join('\n')}
     // NOT: /sikca-sorulan-sorular/, /gizlilik-politikasi/ ve /sartlar-ve-kosullar/
     // artık yeni sitede GERÇEK sayfa olarak var; yönlendirmeleri kaldırıldı.
   ]
+
+  /**
+   * Sitenin GERÇEK sayfa adresleri. Sitemap ve statik HTML üretimi aynı dört
+   * kaynaktan (staticRoutes + services + serviceAreas + blog) besleniyor;
+   * buradaki liste onların birleşimi ve aşağıdaki çakışma kontrolüne girdi.
+   */
+  const tumRotalar = [
+    ...staticRoutes.map((r) => r.path),
+    ...services.map((s) => `/hizmetler/${s.slug}/`),
+    ...serviceAreas.map((a) => `/hizmet-bolgeleri/${a.slug}/`),
+    ...blog.map((y) => `/blog/${y.slug}/`),
+  ]
+
+  /**
+   * 301 kuralları ile gerçek sayfaları ÇAPRAZ kontrol eder.
+   *
+   * Neden gerekli: .htaccess'teki RewriteRule'lar dosya var mı diye bakmaz.
+   * Bir kural gerçek bir sayfanın adresine uyarsa, o sayfa hiç sunulmadan
+   * 301 yer ve fiilen ölür. Tam olarak bu, blog eklendiğinde başımıza geldi:
+   * "yeni sitede blog yok" diye yazılmış `^blog/?$` kuralı, blog gelince
+   * /blog/ dizinini öldürüyordu — ve build hiçbir uyarı vermiyordu.
+   *
+   * Elle kontrol bir sonraki veri değişikliğinde tutmaz; o yüzden build kırılır.
+   */
+  const cakismalar = []
+  for (const [aciklama, desen, hedef] of redirects) {
+    // Apache per-directory bağlamında baştaki eğik çizgiyi kırpar: /blog/ -> blog/
+    const re = new RegExp(desen)
+    for (const rota of tumRotalar) {
+      if (re.test(rota.replace(/^\//, ''))) {
+        cakismalar.push(`  ✗ "${aciklama}" (${desen} -> ${hedef})  GERÇEK SAYFAYI VURUYOR: ${rota}`)
+      }
+    }
+  }
+  if (cakismalar.length) {
+    throw new Error(
+      `\n\n301 YÖNLENDİRME ÇAKIŞMASI — bu kurallar gerçek sayfaları erişilemez yapar:\n` +
+        `${cakismalar.join('\n')}\n\n` +
+        `Çözüm: vite.config.js > redirects dizisinden ilgili kuralı kaldırın.\n` +
+        `Eski adres yeni sitede gerçek sayfaysa yönlendirmeye zaten gerek yoktur.\n`
+    )
+  }
 
   /**
    * llms.txt — LLM'ler ve AI arama motorları için düz metin firma özeti.
@@ -266,12 +325,20 @@ ${serviceAreas.map((a) => `- [${a.name} karot, beton delme ve kesme](${url}/hizm
 
 Listede olmayan bölgeler ve çevre iller için telefonla değerlendirme yapılır.
 
+## Rehber Yazıları
+
+Sahadan yazılmış ayrıntılı rehberler. Fiyatın neye göre değiştiği, hangi işte
+hangi yöntemin kullanıldığı ve firma seçerken nelere bakılacağı bu yazılarda:
+
+${blog.map((y) => `- [${y.title}](${url}/blog/${y.slug}/): ${y.ozet}`).join('\n')}
+
 ## Sık Sorulan Sorular
 
 ${faq.map((f) => `**${f.q}**\n${f.a}`).join('\n\n')}
 
 ## Diğer Sayfalar
 
+- [Blog](${url}/blog/): ${blog.length} rehber yazısı
 - [Hizmetlerimiz](${url}/hizmetler/): Tüm hizmetlerin listesi
 - [Hizmet Bölgeleri](${url}/hizmet-bolgeleri/): ${address.city} genelinde çalıştığımız ilçeler
 - [Hakkımızda](${url}/hakkimizda/): Firma, ekip ve çalışma yöntemi
@@ -449,12 +516,25 @@ ${redirects.map(([aciklama, from, to]) => `  # ${aciklama}\n  RewriteRule ${from
   RewriteRule ^(.*[^/])$ /$1/ [R=301,L]
 
   # ---------------------------------------------------------------
-  # 3) Tek sayfa uygulaması (SPA) yönlendirmesi
-  #    BU BLOK OLMADAN alt sayfalara doğrudan girildiğinde 404 alınır.
+  # 3) Bilinmeyen adresler: GERÇEK 404 (yumuşak 404 DEĞİL)
+  #
+  #    Burada eskiden "RewriteRule . /index.html [L]" vardı — klasik SPA
+  #    yönlendirmesi. Bu sitede GEREKSİZ ve ZARARLIYDI: ${tumRotalar.length} rotanın
+  #    hepsinin fiziksel index.html'i var, o yüzden gerçek sayfalar bu bloğa
+  #    hiç düşmüyor. Buraya yalnızca OLMAYAN adresler düşüyordu ve onlara
+  #    ana sayfanın HTML'i 200 ile dönüyordu.
+  #
+  #    WordPress göçünde bu ciddi bir sorun: 301 listemizde karşılığı olmayan
+  #    her eski adres "200 + ana sayfa içeriği" verir, Google da onları ana
+  #    sayfanın kopyası olarak indekste tutar. Gerçek 404 ile temiz düşerler.
+  #
+  #    UYARI: Yeni bir React rotası eklerken vite.config.js'teki listelere de
+  #    (staticRoutes / services / serviceAreas / blog) eklemezseniz o adres
+  #    artık sessizce yanlış meta ile değil, doğrudan 404 ile cevap verir.
   # ---------------------------------------------------------------
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule . /index.html [L]
+  RewriteRule . - [R=404,L]
 </IfModule>
 
 # ---------------------------------------------------------------
@@ -503,7 +583,9 @@ AddDefaultCharset UTF-8
   AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/javascript text/javascript application/json image/svg+xml
 </IfModule>
 
-ErrorDocument 404 /index.html
+# Olmayan adreslerde ana sayfa DEĞİL, kendi 404 sayfamız gösterilir.
+# 404.html noindex taşır; writeBundle üretir.
+ErrorDocument 404 /404.html
 `
 
       this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: sitemap })
@@ -645,8 +727,46 @@ ${paragraflar}
         fs.writeFileSync(path.join(klasor, 'index.html'), html)
         yazilan++
       }
+      /**
+       * 404.html — Apache'nin ErrorDocument'i bunu 404 STATÜSÜYLE sunar.
+       *
+       * Eskiden ErrorDocument da /index.html'i gösteriyordu: kullanıcı olmayan
+       * bir adreste ana sayfanın başlığını/metnini görüyordu. Ayrıca o HTML'in
+       * canonical'ı ana sayfayı işaret ettiği için Google bu adresleri ana
+       * sayfanın kopyası sayabiliyordu.
+       *
+       * noindex ŞART: 404 gövdesi yanlışlıkla 200 ile sunulursa (sunucu
+       * yapılandırması değişirse) tek koruma bu etiket olur.
+       */
+      const html404 = anaHtml
+        .replace(/\s*<link rel="preload" as="image"[^>]*>/, '')
+        .replace(/<title>[\s\S]*?<\/title>/, '<title>Sayfa Bulunamadı — 20 Karot</title>')
+        .replace(
+          /<meta name="description" content="[^"]*" \/>/,
+          '<meta name="description" content="Aradığınız sayfa bulunamadı." />'
+        )
+        // canonical KALDIRILIR — 404 sayfasının kanonik bir karşılığı yoktur.
+        // (Kalsaydı ana sayfayı işaret ederdi ve Google bu adresi ana sayfanın
+        // kopyası sayardı — düzeltmeye çalıştığımız sorunun ta kendisi.)
+        .replace(/\s*<link rel="canonical" href="[^"]*" \/>/, '')
+        // Var olan robots etiketi DEĞİŞTİRİLİR, yenisi EKLENMEZ: iki robots
+        // etiketi bırakmak Google'a çelişkili sinyal verir.
+        .replace(/<meta name="robots" content="[^"]*" \/>/, '<meta name="robots" content="noindex, follow" />')
+        .replace(/<div class="noscript-seo">[\s\S]*?<\/div>/, `<div class="noscript-seo">
+      <h1>Sayfa bulunamadı</h1>
+      <p>Aradığınız sayfa taşınmış veya kaldırılmış olabilir.</p>
+      <h2>Hizmetlerimiz</h2>
+      <ul>
+        ${services.map((s) => `<li><a href="/hizmetler/${s.slug}/">${kacis(s.title)}</a></li>`).join('\n        ')}
+      </ul>
+      <p><a href="/">Ana sayfaya dön</a> · Telefon: <a href="tel:${phoneRaw}">${kacis(phone)}</a></p>
+    </div>`)
+      fs.writeFileSync(path.join(cikti, '404.html'), html404)
+
       // eslint-disable-next-line no-console
       console.log(`  ${yazilan} rota icin ayri index.html yazildi (sosyal onizleme + JS'siz istemciler)`)
+      // eslint-disable-next-line no-console
+      console.log('  404.html yazildi (noindex, gercek 404 statusu icin)')
     },
   }
 }
