@@ -12,6 +12,7 @@ const quickLinks = [
   { to: '/hakkimizda/', label: 'Hakkımızda' },
   { to: '/iletisim/', label: 'İletişim' },
   { to: '/hizmet-bolgeleri/', label: 'Hizmet Bölgeleri' },
+  { to: '/blog/', label: 'Blog' },
   { to: '/sikca-sorulan-sorular/', label: 'Sıkça Sorulan Sorular' },
 ]
 

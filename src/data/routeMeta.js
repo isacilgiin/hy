@@ -25,6 +25,8 @@ import serviceContent from './serviceContent.js'
 import serviceAreas from './serviceAreas.js'
 import { faq } from './faq.js'
 import { gizlilik, sartlar } from './legal.js'
+import blog from './blog.js'
+import blogContent from './blogContent.js'
 
 const { url, companyName, phone, phoneRaw, address, seo } = siteConfig
 const ogImage = `${url}/images/logo/og-image.jpg`
@@ -225,7 +227,51 @@ const bolgeRotalari = serviceAreas.map((a) => {
   }
 })
 
-const rotalar = [...sabitler, ...hizmetRotalari, ...bolgeRotalari].map((r) => ({
+/** Blog listesi + yazı sayfaları */
+const blogRotalari = [
+  {
+    path: '/blog/',
+    title: `Blog | Karot, Beton Delme ve Kesme Rehberleri — ${companyName}`,
+    description:
+      'Karot, beton delme, kesme ve filiz ekimi hakkında sahadan yazılmış rehberler. Fiyatı ne belirler, hangi yöntem ne zaman kullanılır, firma seçerken nelere bakılır.',
+    h1: 'Blog',
+    kirintilar: [{ ad: 'Blog', yol: '/blog/' }],
+    govde: blog.map((y) => `${y.title}: ${y.ozet}`),
+  },
+  ...blog.map((y) => {
+    const icerik = blogContent[y.slug] ?? {}
+
+    const makale = {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: y.title,
+      description: y.description,
+      image: `${url}${y.image}`,
+      datePublished: y.tarih,
+      dateModified: y.tarih,
+      author: { '@type': 'Organization', name: companyName, url: `${url}/` },
+      publisher: { '@type': 'Organization', name: companyName, url: `${url}/` },
+      mainEntityOfPage: { '@type': 'WebPage', '@id': `${url}/blog/${y.slug}/` },
+    }
+
+    return {
+      path: `/blog/${y.slug}/`,
+      title: icerik.seoTitle ?? y.title,
+      description: y.description,
+      image: `${url}${y.image}`,
+      h1: y.title,
+      kirintilar: [
+        { ad: 'Blog', yol: '/blog/' },
+        { ad: y.title, yol: `/blog/${y.slug}/` },
+      ],
+      // Yazının kendi giriş paragrafları ham HTML'e girsin
+      govde: (icerik.giris ?? []).slice(0, 3),
+      jsonLd: icerik.sss?.length ? [makale, faqSemasi(icerik.sss)] : makale,
+    }
+  }),
+]
+
+const rotalar = [...sabitler, ...hizmetRotalari, ...bolgeRotalari, ...blogRotalari].map((r) => ({
   ...r,
   description: kisalt(r.description),
   image: r.image ?? ogImage,

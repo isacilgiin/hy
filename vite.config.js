@@ -7,6 +7,7 @@ import serviceAreas from './src/data/serviceAreas.js'
 import { oneCikanFaq as faq } from './src/data/faq.js'
 import rotaMetalari from './src/data/routeMeta.js'
 import heroSlides from './src/data/heroSlides.js'
+import blog from './src/data/blog.js'
 import fs from 'node:fs'
 import path from 'node:path'
 import { execSync } from 'node:child_process'
@@ -183,6 +184,7 @@ ${gtagKimlikleri.map((id) => `    gtag('config','${id}');`).join('\n')}
     { path: '/projeler/', priority: '0.7', changefreq: 'monthly' },
     { path: '/hakkimizda/', priority: '0.6', changefreq: 'yearly' },
     { path: '/iletisim/', priority: '0.8', changefreq: 'yearly' },
+    { path: '/blog/', priority: '0.8', changefreq: 'monthly' },
     { path: '/sikca-sorulan-sorular/', priority: '0.7', changefreq: 'monthly' },
     { path: '/gizlilik-politikasi/', priority: '0.3', changefreq: 'yearly' },
     { path: '/sartlar-ve-kosullar/', priority: '0.3', changefreq: 'yearly' },
@@ -312,6 +314,7 @@ ${faq.map((f) => `**${f.q}**\n${f.a}`).join('\n\n')}
     const tarihSabit = gitTarihi('src/data/routeMeta.js')
     const tarihHizmet = gitTarihi('src/data/serviceContent.js')
     const tarihBolge = gitTarihi('src/data/serviceAreas.js')
+    const tarihBlog = gitTarihi('src/data/blogContent.js')
 
     const urls = [
         ...staticRoutes.map((r) => ({ ...r, lastmod: tarihSabit })),
@@ -326,6 +329,15 @@ ${faq.map((f) => `**${f.q}**\n${f.a}`).join('\n\n')}
           priority: '0.8',
           changefreq: 'monthly',
           lastmod: tarihBolge,
+        })),
+        // Blog yazısının lastmod'u kendi YAYIN tarihinden gelir; git tarihi
+        // değil. Yazı yayımlandığı gün gerçekten değişti, sonraki commit'lerde
+        // değişmedi — Google'a doğru sinyal bu.
+        ...blog.map((y) => ({
+          path: `/blog/${y.slug}/`,
+          priority: '0.7',
+          changefreq: 'yearly',
+          lastmod: y.tarih,
         })),
       ]
 

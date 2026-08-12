@@ -12,6 +12,7 @@ const navLinks = [
   { to: '/hakkimizda/', label: 'Hakkımızda' },
   { to: '/iletisim/', label: 'İletişim' },
   { to: '/hizmet-bolgeleri/', label: 'Hizmet Bölgeleri' },
+  { to: '/blog/', label: 'Blog' },
 ]
 
 export default function Header() {

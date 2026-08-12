@@ -25,6 +25,10 @@ const Contact = lazy(() => import('./pages/Contact'))
 const ServiceAreas = lazy(() => import('./pages/ServiceAreas'))
 const ServiceAreaDetail = lazy(() => import('./pages/ServiceAreaDetail'))
 const Faq = lazy(() => import('./pages/Faq'))
+const Blog = lazy(() => import('./pages/Blog'))
+// BlogPost, blogContent.js'i (tüm yazıların tam metni) çektiği için ayrı parça;
+// blog listesi sayfası o metinleri indirmesin.
+const BlogPost = lazy(() => import('./pages/BlogPost'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 // Yasal sayfalar: metinleri (src/data/legal.js) de bu parçaya girsin diye
 // veri ile bileşen birlikte tembel yükleniyor.
@@ -78,6 +82,8 @@ export default function App() {
               <Route path="/hizmet-bolgeleri" element={<ServiceAreas />} />
               <Route path="/hizmet-bolgeleri/:slug" element={<ServiceAreaDetail />} />
               <Route path="/sikca-sorulan-sorular" element={<Faq />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/gizlilik-politikasi" element={<Gizlilik />} />
               <Route path="/sartlar-ve-kosullar" element={<Sartlar />} />
               <Route path="*" element={<NotFound />} />
