@@ -21,17 +21,24 @@
  * sayfadaki küçük "Nasıl çalışıyoruz?" kutusunu besler ve mesafeye göre değişir.
  */
 export const zoneContent = {
+  // `label`  : TEK bir ilçeyi nitelerken kullanılır (ilçe detay sayfası).
+  // `grupAdi`: ilçe GRUBUNU başlıklarken kullanılır (hub sayfası, noscript
+  //            gövdesi). İkisi ayrı çünkü "Merkeze yakın ilçe (6 ilçe)" gibi
+  //            tekil bir etiketi gruba uydurmak bozuk cümle üretiyordu.
   merkez: {
+    grupAdi: 'Denizli Merkez',
     label: 'Denizli merkez',
     howWeWork:
       'Merkezdeki işlere genellikle aynı gün içinde ulaşıyoruz. Keşif ücretsiz; işin yöntemi ve fiyatı başlamadan önce netleşiyor.',
   },
   yakin: {
+    grupAdi: 'Merkeze Yakın İlçeler',
     label: 'Merkeze yakın ilçe',
     howWeWork:
       'Merkeze yakın olduğu için günübirlik ulaşıyoruz. Keşif ücretsiz; yol ve süre dâhil net fiyat veriyoruz, sonradan ek kalem çıkmıyor.',
   },
   uzak: {
+    grupAdi: 'Merkeze Uzak İlçeler',
     label: 'Merkeze uzak ilçe',
     howWeWork:
       'Merkeze uzak olduğu için işi tek gidişte bitirecek şekilde planlıyoruz: gerekli tüm uçlar ve yedek ekipman yanımızda geliyor. Ön değerlendirmeyi telefonla fotoğraf üzerinden hızlandırıyoruz.',

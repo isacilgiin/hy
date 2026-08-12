@@ -4,18 +4,15 @@ import PageHeader from '../components/PageHeader'
 import Icon from '../components/Icon'
 import Seo from '../components/Seo'
 import siteConfig from '../data/siteConfig'
-import serviceAreas from '../data/serviceAreas'
+import serviceAreas, { zoneContent } from '../data/serviceAreas'
 
-const zoneTitles = {
-  merkez: 'Denizli Merkez',
-  yakin: 'Merkeze Yakın İlçeler',
-  uzak: 'Diğer İlçeler',
-}
-
+// Grup başlıkları burada AYRICA tanımlıydı ve 'uzak' için "Diğer İlçeler"
+// diyordu; serviceAreas.js ise aynı grubu "Merkeze uzak ilçe" olarak
+// adlandırıyordu. İki ad tek kaynağa indirildi: zoneContent[zone].grupAdi.
 export default function ServiceAreas() {
   const grouped = ['merkez', 'yakin', 'uzak'].map((zone) => ({
     zone,
-    title: zoneTitles[zone],
+    title: zoneContent[zone].grupAdi,
     areas: serviceAreas.filter((a) => a.zone === zone),
   }))
 
@@ -74,6 +71,52 @@ export default function ServiceAreas() {
                 </ul>
               </div>
             ))}
+          </div>
+
+          {/*
+            Bölgeye göre çalışma biçimi.
+
+            NEDEN VAR: Bu sayfa daha önce başlık + tek cümle + link ızgarasından
+            ibaretti; <noscript> gövdesi 140 kelimeydi. Bir hub sayfasının
+            ziyaretçiye "benim ilçem kapsamda mı ve nasıl çalışıyorsunuz?"
+            sorusunu cevaplaması gerekir.
+
+            Metinler zoneContent'ten OKUNUYOR, kopyalanmıyor: aynı cümleler
+            ilçe detay sayfalarındaki "Nasıl çalışıyoruz?" kutusunu da besliyor.
+            Tek kaynak olduğu için biri güncellenince ikisi birden değişir ve
+            sayfalar arası çelişki oluşmaz.
+          */}
+          <div className="mt-16">
+            <h3 className="text-2xl font-bold text-dark mb-3 text-center">
+              Bölgeye Göre Nasıl Çalışıyoruz?
+            </h3>
+            <p className="text-gray-600 leading-relaxed text-center max-w-3xl mx-auto mb-10">
+              Denizli&apos;nin {serviceAreas.length} ilçesinin tamamına gidiyoruz. Değişen şey
+              hizmetin kendisi değil, planlaması: mesafe arttıkça işi tek gidişte bitirecek
+              şekilde hazırlanıyoruz.
+            </p>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              {grouped.map((group) => (
+                <div
+                  key={group.zone}
+                  className="bg-surface rounded-2xl p-6 border border-gray-100 flex flex-col"
+                >
+                  <h4 className="font-bold text-dark mb-1">{group.title}</h4>
+                  <p className="text-accent text-sm font-medium mb-3">
+                    {group.areas.length} ilçe
+                  </p>
+                  <p className="text-gray-700 text-sm leading-relaxed">
+                    {zoneContent[group.zone].howWeWork}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <p className="text-gray-600 text-sm leading-relaxed text-center mt-8 max-w-3xl mx-auto">
+              Her ilçenin kendi sayfasında o bölgedeki yapı dokusu, sık karşılaşılan iş tipleri
+              ve o ilçeye özel sık sorulan sorular yer alıyor.
+            </p>
           </div>
 
           {/* Ek bilgi */}

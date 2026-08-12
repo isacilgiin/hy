@@ -22,7 +22,7 @@
 import siteConfig from './siteConfig.js'
 import services from './services.js'
 import serviceContent from './serviceContent.js'
-import serviceAreas from './serviceAreas.js'
+import serviceAreas, { zoneContent } from './serviceAreas.js'
 import { faq } from './faq.js'
 import { gizlilik, sartlar } from './legal.js'
 import blog from './blog.js'
@@ -100,6 +100,17 @@ const sabitler = [
     description:
       "Denizli'de karot, beton delme, beton kesme, beton kırma, filiz ekimi, ankraj ve kimyasal dübel hizmetleri. Ücretsiz keşif ve net fiyat teklifi.",
     h1: `${address.city}'de Verdiğimiz Karot Hizmetleri`,
+    // Bu paragraflar Services.jsx'teki "Hangi Hizmete İhtiyacınız Var?"
+    // bölümünün DÜZ METİN karşılığı. İkisi aynı içeriği anlatmak zorunda:
+    // noscript gövdesi render edilen sayfadan farklı şey söylerse cloaking olur.
+    // Biri değişirse diğeri de değişmeli.
+    govde: [
+      'Beton üzerinde yapılacak işler dört ana grupta toplanıyor: delik açmak, kesmek, kırmak ve mevcut betona yeni bir eleman bağlamak. Hangisinin gerektiği çoğu zaman işin kendisinden değil çevresinden belli oluyor — elemanın taşıyıcı olup olmadığı, çevrede kimlerin bulunduğu ve kenarın düzgün kalması gerekip gerekmediği.',
+      "Tesisat, klima, baca ve havalandırma geçişleri için betonarmede ölçülü delik gerekiyorsa karot yöntemi kullanılır; elmas uçlu silindirik uç betonu keserek ilerlediği için delik kenarı pürüzsüz çıkar ve kırıcının yarattığı türden çatlak oluşmaz. Çap ihtiyacı büyüdükçe iş beton delme başlığına geçer, 50 mm ile 1000 mm arasında çalışılabiliyor.",
+      'Duvarda kapı ya da pencere açıklığı açmak, döşemede merdiven veya asansör boşluğu oluşturmak beton kesme işidir; kesim hattı düz çıktığı için kenarda ek sıva veya tamir işi kalmaz. Ölçü elmas diskin kapasitesini aştığında hidrolik beton kesme devreye girer. Yol ve zemin çalışmalarında ise asfalt derz kesim ayrı bir uygulamadır.',
+      'Kaldırılacak beton serbest bir alandaysa ve kenarın düzgün kalması gerekmiyorsa beton kırma hem daha hızlı hem daha ekonomik olur; bütün bir yapı söz konusuysa iş kontrollü bina yıkımı kapsamına girer. Mevcut betona yeni bir eleman bağlanacaksa filiz ekimi donatı devamlılığı kurar, ankraj yükü mevcut betonarmeye aktaran bağlantı noktası oluşturur, kimyasal dübel ise mekanik dübelin tutmadığı durumlarda enjeksiyon reçinesiyle çalışır.',
+      'Emin değilseniz aramanız yeterli: yerinde bakıp hangi yöntemin uygun olduğunu söylüyoruz, keşif ücretsiz.',
+    ],
     kirintilar: [{ ad: 'Hizmetler', yol: '/hizmetler/' }],
   },
   {
@@ -107,6 +118,18 @@ const sabitler = [
     title: `Hizmet Bölgeleri | Denizli ve Tüm İlçeler — ${companyName}`,
     description: `Denizli il genelinde ${serviceAreas.length} ilçede karot, beton delme, kesme ve kırma hizmeti. Merkezefendi, Pamukkale, Honaz, Sarayköy, Çivril, Acıpayam ve tüm ilçeler.`,
     h1: `${address.city} Genelinde Hizmet Verdiğimiz İlçeler`,
+    // ServiceAreas.jsx'teki "Bölgeye Göre Nasıl Çalışıyoruz?" bölümünün düz
+    // metin karşılığı. Bölge metinleri zoneContent'ten OKUNUYOR, kopyalanmıyor:
+    // aynı cümleler hem burada, hem hub sayfasında, hem de ilçe detay
+    // sayfalarındaki "Nasıl çalışıyoruz?" kutusunda kullanılıyor. Tek kaynak.
+    govde: [
+      `Denizli'nin ${serviceAreas.length} ilçesinin tamamına gidiyoruz. Değişen şey hizmetin kendisi değil, planlaması: mesafe arttıkça işi tek gidişte bitirecek şekilde hazırlanıyoruz.`,
+      ...['merkez', 'yakin', 'uzak'].map(
+        (z) =>
+          `${zoneContent[z].grupAdi} — ${serviceAreas.filter((a) => a.zone === z).length} ilçe: ${zoneContent[z].howWeWork}`
+      ),
+      'Her ilçenin kendi sayfasında o bölgedeki yapı dokusu, sık karşılaşılan iş tipleri ve o ilçeye özel sık sorulan sorular yer alıyor.',
+    ],
     kirintilar: [{ ad: 'Hizmet Bölgeleri', yol: '/hizmet-bolgeleri/' }],
   },
   {
