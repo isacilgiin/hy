@@ -10,21 +10,32 @@ export default function Projects() {
   return (
     <div className="page-enter">
       <Seo
-        title={`Projelerimiz | Denizli Karot ve Beton Kesme İşleri — ${siteConfig.companyName}`}
-        description="Denizli ve çevre ilçelerde tamamladığımız karot, beton delme, kesme ve kırma projelerinden örnekler."
+        title={`Uygulama Alanları | Denizli Karot ve Beton Kesme — ${siteConfig.companyName}`}
+        description="Karot, beton delme, kesme, kırma ve filiz ekiminin sahada nasıl göründüğü. Hangi işte hangi yöntemin kullanıldığını görselleriyle anlattık."
         path="/projeler/"
       />
 
       <PageHeader
-        title="Projelerimiz"
-        description="Denizli ve çevresinde başarıyla tamamladığımız projelerden örnekler."
-        breadcrumb={[{ label: 'Projeler' }]}
+        title="Uygulama Alanları"
+        description="Hangi işte hangi yöntemi kullandığımızı görselleriyle anlattık."
+        breadcrumb={[{ label: 'Uygulama Alanları' }]}
       />
 
       <section className="section-padding bg-white">
         <div className="max-w-7xl mx-auto">
           {projects.length > 0 ? (
-            <ProjectGallery />
+            <>
+              <div className="max-w-3xl mx-auto text-center mb-12">
+                <p className="text-gray-600 leading-relaxed">
+                  Aşağıdaki görseller, verdiğimiz hizmetlerin sahada nasıl göründüğünü
+                  anlatan <strong className="text-dark">temsili örneklerdir</strong> —
+                  tamamladığımız işlerin fotoğrafları değildir. Kendi saha
+                  fotoğraflarımızı çektikçe bu sayfayı gerçek işlerimizle
+                  değiştiriyoruz.
+                </p>
+              </div>
+              <ProjectGallery />
+            </>
           ) : (
             <div className="max-w-xl mx-auto text-center">
               <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-accent/10 text-accent flex items-center justify-center">

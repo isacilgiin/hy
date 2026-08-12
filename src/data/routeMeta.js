@@ -83,9 +83,9 @@ const sabitler = [
   },
   {
     path: '/projeler/',
-    title: `Projelerimiz | Denizli Karot ve Beton Kesme İşleri — ${companyName}`,
+    title: `Uygulama Alanları | Denizli Karot ve Beton Kesme — ${companyName}`,
     description:
-      'Denizli ve çevre ilçelerde tamamladığımız karot, beton delme, kesme ve kırma projelerinden örnekler.',
+      'Karot, beton delme, kesme, kırma ve filiz ekiminin sahada nasıl göründüğü. Hangi işte hangi yöntemin kullanıldığını görselleriyle anlattık.',
   },
   {
     path: '/hakkimizda/',

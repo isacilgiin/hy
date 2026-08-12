@@ -99,6 +99,20 @@ const heroSlides = [
     serviceTo: '/hizmetler/kontrollu-bina-yikimi',
     serviceLabel: 'Kontrollü Yıkım',
   },
+  {
+    id: 'acil',
+    image: '/images/hero/hero-7.webp',
+    imageAlt: 'Gece çalışma ışıkları altında beton kesme operasyonu',
+    icon: 'siren',
+    badge: '7/24 Açığız',
+    title: 'Gece de',
+    titleAccent: 'Acil Servis',
+    titleAfter: 'Veriyoruz',
+    description:
+      'İşletmenizin kapalı olduğu saatlerde, trafiğin durduğu gece vakitlerinde çalışabiliyoruz. <strong>Google profilimizde 24 saat açık görünüyoruz</strong> — acil durumda arayın, durumu birlikte değerlendirelim.',
+    serviceTo: '/iletisim',
+    serviceLabel: 'Bize Ulaşın',
+  },
 ]
 
 export default heroSlides

@@ -8,7 +8,7 @@ import Logo from './Logo'
 const navLinks = [
   { to: '/', label: 'Ana Sayfa' },
   { to: '/hizmetler', label: 'Hizmetler', hasDropdown: true },
-  { to: '/projeler', label: 'Projeler' },
+  { to: '/projeler', label: 'Uygulama Alanları' },
   { to: '/hakkimizda', label: 'Hakkımızda' },
   { to: '/iletisim', label: 'İletişim' },
   { to: '/hizmet-bolgeleri', label: 'Hizmet Bölgeleri' },

@@ -8,7 +8,7 @@ import { mapsUrl, activeSocials } from '../utils/links'
 const quickLinks = [
   { to: '/', label: 'Ana Sayfa' },
   { to: '/hizmetler', label: 'Hizmetler' },
-  { to: '/projeler', label: 'Projeler' },
+  { to: '/projeler', label: 'Uygulama Alanları' },
   { to: '/hakkimizda', label: 'Hakkımızda' },
   { to: '/iletisim', label: 'İletişim' },
   { to: '/hizmet-bolgeleri', label: 'Hizmet Bölgeleri' },

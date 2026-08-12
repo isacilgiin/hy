@@ -141,11 +141,11 @@ export default function Home() {
           <div className="text-center mb-14">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 mb-4">
               <Icon name="camera" className="w-4 h-4 text-accent" strokeWidth={2} />
-              <span className="text-accent text-sm font-semibold">Son Projelerimiz</span>
+              <span className="text-accent text-sm font-semibold">Sahada Nasıl Görünüyor?</span>
             </div>
-            <h2 className="section-title text-dark">Tamamlanan Projeler</h2>
+            <h2 className="section-title text-dark">Uygulama Alanları</h2>
             <p className="section-subtitle">
-              Başarıyla tamamladığımız projelerden bazıları. Kaliteli işçiliğimizi inceleyin.
+              Hangi işte hangi yöntemi kullandığımızı görselleriyle anlattık.
             </p>
           </div>
 
@@ -153,7 +153,7 @@ export default function Home() {
 
           <div className="text-center mt-12">
             <Link to="/projeler" className="btn-primary">
-              Tüm Projeler
+              Tüm Uygulama Alanları
               <Icon name="arrowRight" className="w-5 h-5" strokeWidth={2} />
             </Link>
           </div>
