@@ -265,10 +265,14 @@ ${gtagKimlikleri.map((id) => `    gtag('config','${id}');`).join('\n')}
    */
   const cakismalar = []
   for (const [aciklama, desen, hedef] of redirects) {
-    // Apache per-directory bağlamında baştaki eğik çizgiyi kırpar: /blog/ -> blog/
     const re = new RegExp(desen)
     for (const rota of tumRotalar) {
-      if (re.test(rota.replace(/^\//, ''))) {
+      // İKİ biçim de sınanır. Apache per-directory bağlamında baştaki eğik
+      // çizgiyi kırpar (/blog/ -> blog/), ama istek sondaki çizgi olmadan da
+      // gelebilir. Yalnızca "blog/" sınansaydı `^blog$` gibi bir kural
+      // kontrolden kaçar, sonra da "blog" isteğini vururdu.
+      const adaylar = [rota.replace(/^\//, ''), rota.replace(/^\//, '').replace(/\/$/, '')]
+      if (adaylar.some((a) => re.test(a))) {
         cakismalar.push(`  ✗ "${aciklama}" (${desen} -> ${hedef})  GERÇEK SAYFAYI VURUYOR: ${rota}`)
       }
     }
@@ -752,6 +756,25 @@ ${paragraflar}
         // Var olan robots etiketi DEĞİŞTİRİLİR, yenisi EKLENMEZ: iki robots
         // etiketi bırakmak Google'a çelişkili sinyal verir.
         .replace(/<meta name="robots" content="[^"]*" \/>/, '<meta name="robots" content="noindex, follow" />')
+        // Sosyal önizleme etiketleri de düzeltilir; yoksa ana sayfanınkiler
+        // kalır ve og:url olmayan bir adresi ANA SAYFA diye paylaştırır.
+        .replace(
+          /<meta property="og:title" content="[^"]*" \/>/,
+          '<meta property="og:title" content="Sayfa Bulunamadı — 20 Karot" />'
+        )
+        .replace(
+          /<meta property="og:description" content="[^"]*" \/>/,
+          '<meta property="og:description" content="Aradığınız sayfa bulunamadı." />'
+        )
+        .replace(/\s*<meta property="og:url" content="[^"]*" \/>/, '')
+        .replace(
+          /<meta name="twitter:title" content="[^"]*" \/>/,
+          '<meta name="twitter:title" content="Sayfa Bulunamadı — 20 Karot" />'
+        )
+        .replace(
+          /<meta name="twitter:description" content="[^"]*" \/>/,
+          '<meta name="twitter:description" content="Aradığınız sayfa bulunamadı." />'
+        )
         .replace(/<div class="noscript-seo">[\s\S]*?<\/div>/, `<div class="noscript-seo">
       <h1>Sayfa bulunamadı</h1>
       <p>Aradığınız sayfa taşınmış veya kaldırılmış olabilir.</p>
