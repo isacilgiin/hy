@@ -92,7 +92,7 @@ export default function ServiceDetail() {
           </div>
           <div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white">
-              {siteConfig.address.city} {service.title}
+              {service.h1 ?? `${siteConfig.address.city} ${service.title}`}
             </h1>
             <p className="text-white/65 mt-2">{service.shortDescription}</p>
           </div>

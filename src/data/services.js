@@ -22,6 +22,19 @@ const services = [
     id: 1,
     slug: 'karot',
     seoTitle: 'Karot Nedir, Nasıl Yapılır? | Denizli Karot — 20 Karot',
+    /**
+     * h1: Yalnızca bu hizmette var — ANAHTAR KELİME YAMYAMLIĞINI önlemek için.
+     *
+     * Bu sayfanın H1'i de "Denizli Karot"tu; ana sayfanın H1'i de artık
+     * "Denizli'de Karot, Beton Delme & Kesme Hizmetleri". İki sayfa aynı head
+     * sorguyu hedeflediğinde Google hangisini göstereceğine kendi karar verir
+     * ve ikisi de zayıflar. Karar: "denizli karot" sorgusunu ANA SAYFA
+     * sahiplenir (en çok link ve otorite orada). Bu sayfa, seoTitle'ında zaten
+     * söz verdiği bilgi amaçlı sorguya ("karot nedir", "karot nasıl yapılır")
+     * geçer. Diğer hizmetlerde çakışma olmadığı için h1 alanı yok; onlar
+     * "Denizli {hizmet}" kalıbını kullanmaya devam eder.
+     */
+    h1: 'Karot Nedir, Nasıl Yapılır?',
     title: 'Karot',
     shortTitle: 'Karot',
     icon: 'drill',

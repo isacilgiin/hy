@@ -169,7 +169,9 @@ const hizmetRotalari = services.map((s) => {
     // çıkarıyor; her hizmet için 1200x630 markalı JPG üretildi.
     image: `${url}/images/og/${s.slug}.jpg`,
     jsonLd: icerik.sss?.length ? [hizmetSemasi, faqSemasi(icerik.sss)] : hizmetSemasi,
-    h1: `${address.city} ${s.title}`,
+    // services.js'te h1 tanımlıysa onu kullan (bkz. karot — yamyamlık notu);
+    // ekrandaki H1 ile ham HTML'deki H1 aynı olmalı.
+    h1: s.h1 ?? `${address.city} ${s.title}`,
     kirintilar: [
       { ad: 'Hizmetler', yol: '/hizmetler/' },
       { ad: s.title, yol: `/hizmetler/${s.slug}/` },
