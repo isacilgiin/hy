@@ -24,12 +24,11 @@ export default function ServiceAreaDetail() {
 
   const zone = area ? zoneContent[area.zone] : null
 
-  // Service + FAQPage şeması birlikte gönderilir. FAQ soruları ilçe adını
-  // içerdiği ve cevaplar bölge tipine göre değiştiği için sayfalar birbirinin
-  // kopyası olmuyor; ayrıca Google'da soru-cevap kutusu çıkma ihtimali doğuyor.
+  // Service + FAQPage şeması birlikte gönderilir. Her ilçenin SSS'i kendine
+  // özeldir (ilçeler arası cümle tekrarı yok); FAQPage şeması Google'da
+  // soru-cevap kutusu çıkma ihtimali doğurur.
   const jsonLd = useMemo(() => {
     if (!area) return null
-    const z = zoneContent[area.zone]
     const service = {
       '@context': 'https://schema.org',
       '@type': 'Service',
@@ -56,9 +55,9 @@ export default function ServiceAreaDetail() {
     const faq = {
       '@context': 'https://schema.org',
       '@type': 'FAQPage',
-      mainEntity: z.sss.map((item) => ({
+      mainEntity: area.sss.map((item) => ({
         '@type': 'Question',
-        name: `${area.name} — ${item.q}`,
+        name: item.q,
         acceptedAnswer: { '@type': 'Answer', text: item.a },
       })),
     }
@@ -100,7 +99,14 @@ export default function ServiceAreaDetail() {
                 <span className="text-gradient-accent">{area.name}</span>&apos;de Karot Hizmeti
               </h2>
 
-              <p className="text-gray-600 text-lg leading-relaxed mb-6">{area.intro}</p>
+              {area.intro.map((paragraf, i) => (
+                <p
+                  key={paragraf.slice(0, 40)}
+                  className={`text-gray-600 leading-relaxed mb-5 ${i === 0 ? 'text-lg' : ''}`}
+                >
+                  {paragraf}
+                </p>
+              ))}
 
               {area.note && (
                 <div className="border-l-4 border-accent bg-surface rounded-r-xl p-5 mb-8">
@@ -108,20 +114,26 @@ export default function ServiceAreaDetail() {
                 </div>
               )}
 
-              {/* Nasıl çalışıyoruz — gövde metni değil, bilgi kutusu (bölge tipine göre değişir) */}
+              {/* Ulaşım/program kutusu — mesafeye göre değişen kısa bilgi (chrome) */}
               <div className="flex items-start gap-4 rounded-2xl bg-surface p-5 mb-12">
                 <span className="w-10 h-10 shrink-0 rounded-xl bg-accent/10 text-accent flex items-center justify-center">
                   <Icon name="clipboard" className="w-5 h-5" strokeWidth={2} />
                 </span>
                 <span>
                   <span className="block font-semibold text-dark text-sm mb-1">
-                    Nasıl çalışıyoruz?
+                    Ulaşım ve program
                   </span>
                   <span className="block text-gray-500 text-sm leading-relaxed">
                     {zone.howWeWork}
                   </span>
                 </span>
               </div>
+
+              {/* İlçeye özel: yapı stoğu ve saha planlaması */}
+              <h3 className="text-2xl font-bold text-dark mb-4">
+                {area.name}&apos;de Saha Koşulları ve Planlama
+              </h3>
+              <p className="text-gray-600 leading-relaxed mb-12">{area.yerelBaglam}</p>
 
               {/* Hizmetler */}
               <h3 className="text-2xl font-bold text-dark mb-6">
@@ -152,20 +164,20 @@ export default function ServiceAreaDetail() {
                 {area.name} İçin Sık Sorulanlar
               </h3>
               <div className="space-y-3 mb-12">
-                {zone.sss.map((item) => (
+                {area.sss.map((item) => (
                   <details
                     key={item.q}
                     className="group rounded-xl border border-gray-100 bg-surface p-5 [&[open]]:bg-accent/5 transition-colors"
                   >
-                    <summary className="flex items-center justify-between gap-4 cursor-pointer font-semibold text-dark text-sm list-none">
-                      {item.q}
+                    <summary className="flex items-start justify-between gap-4 cursor-pointer font-semibold text-dark list-none">
+                      <span>{item.q}</span>
                       <Icon
                         name="chevronDown"
                         className="w-5 h-5 shrink-0 text-accent transition-transform group-open:rotate-180"
                         strokeWidth={2}
                       />
                     </summary>
-                    <p className="text-gray-600 text-sm leading-relaxed mt-3">{item.a}</p>
+                    <p className="text-gray-600 leading-relaxed mt-3">{item.a}</p>
                   </details>
                 ))}
               </div>
