@@ -155,7 +155,15 @@ kırık görsel ikonu asla çıkmaz. Tam dosya listesi: [`DEPLOY-ONCESI.md`](./D
 
 ## Doğrulama Durumu
 
-Son build (Chromium 1440×900 ve 390×844):
+### ⚠️ Önce şunu bilin: ana sayfadaki 4 rakam yer tutucudur
+
+`10+ Yıl Tecrübe`, `750+ Tamamlanan Proje`, `500+ Mutlu Müşteri`, `8+ Uzman Kadro`
+uydurma sayılardır ve şu an hero'da, istatistik şeridinde, footer metninde ve
+Hakkımızda yazısında **gerçekmiş gibi görünüyor**. `src/data/siteConfig.js` →
+`stats` bölümünü gerçek rakamlarınızla değiştirmeden yayına çıkmayın.
+Aynı şey `src/data/about.js` → `foundedYear` (2015) için de geçerli.
+
+### Teknik doğrulama — Chromium 1440×900 ve 390×844
 
 - ✅ 7 sayfanın tamamı, iki ekran boyutunda — konsol hatası yok
 - ✅ Yatay taşma yok (her sayfa, her boyut)
