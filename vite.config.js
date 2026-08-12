@@ -227,6 +227,19 @@ ${gtagKimlikleri.map((id) => `    gtag('config','${id}');`).join('\n')}
     // canonical'ları Türkçe sayfayı gösteriyordu — gerçek bir İngilizce sürüm
     // yoktu. Aynı yoldaki Türkçe sayfaya taşınıyorlar.
     ['/en/ kopyaları', '^en/(.*)$', '/$1'],
+    // Eski WordPress'te ilçe sayfaları KÖKTEYDİ: /denizli-karot/, /tavas-karot/ ...
+    // Yeni sitede aynı slug'larla /hizmet-bolgeleri/ altına taşındılar, yani
+    // eşleme birebir. Search Console 14 tanesini "taranmış ama dizine
+    // eklenmemiş" olarak tutuyordu ve taşınmadan sonra hepsi 404'e düştü —
+    // aralarında ana hedef kelimemizin sayfası /denizli-karot/ da vardı.
+    //
+    // İKİ AYRI KURAL, birleştirmeyin: '-uygulama' ekini tek kuralda opsiyonel
+    // grup yapmak ÇALIŞMAZ. [a-z0-9-]+ açgözlüdür ve '-uygulama' da yalnızca
+    // kabul ettiği karakterlerden oluşur; girdinin tamamını yutar, opsiyonel
+    // grup hiç devreye girmez ve /hizmet-bolgeleri/saraykoy-karot-uygulama/
+    // gibi var olmayan bir adrese 301 verirsiniz. Özel olan önce gelir.
+    ['Eski kök ilçe sayfası (uygulama ekli)', '^([a-z0-9-]+-karot)-uygulama/?$', '/hizmet-bolgeleri/$1/'],
+    ['Eski kök ilçe sayfaları', '^([a-z0-9-]+-karot)/?$', '/hizmet-bolgeleri/$1/'],
     // WordPress taksonomi arşivleri
     ['service-category -> hizmet detayı', '^service-category/([a-z0-9-]+)/?$', '/hizmetler/$1/'],
     ['portfolio-category -> hizmet detayı', '^portfolio-category/([a-z0-9-]+)/?$', '/hizmetler/$1/'],
