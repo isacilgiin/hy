@@ -10,7 +10,10 @@ import About from './pages/About'
 import Contact from './pages/Contact'
 import ServiceAreas from './pages/ServiceAreas'
 import ServiceAreaDetail from './pages/ServiceAreaDetail'
+import Faq from './pages/Faq'
+import Legal from './pages/Legal'
 import NotFound from './pages/NotFound'
+import { gizlilik, sartlar } from './data/legal'
 
 export default function App() {
   return (
@@ -28,6 +31,9 @@ export default function App() {
             <Route path="/iletisim" element={<Contact />} />
             <Route path="/hizmet-bolgeleri" element={<ServiceAreas />} />
             <Route path="/hizmet-bolgeleri/:slug" element={<ServiceAreaDetail />} />
+            <Route path="/sikca-sorulan-sorular" element={<Faq />} />
+            <Route path="/gizlilik-politikasi" element={<Legal sayfa={gizlilik} />} />
+            <Route path="/sartlar-ve-kosullar" element={<Legal sayfa={sartlar} />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

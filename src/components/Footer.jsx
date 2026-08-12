@@ -12,6 +12,12 @@ const quickLinks = [
   { to: '/hakkimizda', label: 'Hakkımızda' },
   { to: '/iletisim', label: 'İletişim' },
   { to: '/hizmet-bolgeleri', label: 'Hizmet Bölgeleri' },
+  { to: '/sikca-sorulan-sorular', label: 'Sıkça Sorulan Sorular' },
+]
+
+const yasalLinkler = [
+  { to: '/gizlilik-politikasi', label: 'Gizlilik Politikası' },
+  { to: '/sartlar-ve-kosullar', label: 'Şartlar ve Koşullar' },
 ]
 
 export default function Footer() {
@@ -139,9 +145,20 @@ export default function Footer() {
           <p className="text-white/40 text-sm">
             © {currentYear} {siteConfig.companyName}. Tüm hakları saklıdır.
           </p>
-          <p className="text-white/30 text-xs">
-            {siteConfig.address.district} / {siteConfig.address.city}
-          </p>
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+            {yasalLinkler.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                className="text-white/40 hover:text-primary text-xs transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
+            <span className="text-white/25 text-xs">
+              {siteConfig.address.district} / {siteConfig.address.city}
+            </span>
+          </div>
         </div>
       </div>
     </footer>

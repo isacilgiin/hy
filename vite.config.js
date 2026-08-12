@@ -131,6 +131,9 @@ function seoFromConfig() {
     { path: '/projeler/', priority: '0.7', changefreq: 'monthly' },
     { path: '/hakkimizda/', priority: '0.6', changefreq: 'yearly' },
     { path: '/iletisim/', priority: '0.8', changefreq: 'yearly' },
+    { path: '/sikca-sorulan-sorular/', priority: '0.7', changefreq: 'monthly' },
+    { path: '/gizlilik-politikasi/', priority: '0.3', changefreq: 'yearly' },
+    { path: '/sartlar-ve-kosullar/', priority: '0.3', changefreq: 'yearly' },
   ]
 
   /**
@@ -158,11 +161,8 @@ function seoFromConfig() {
     // WordPress kalıntıları
     ['RSS beslemeleri', '^(.*/)?feed/?$', '/'],
     ['WordPress yönetim', '^wp-(admin|login\\.php).*$', '/'],
-    // TODO: Bu 3 sayfa henüz yeni sitede YOK. İçeriklerini ekleyip sayfa
-    // oluşturduğunuzda aşağıdaki 3 satırı SİLİN, yoksa sayfalar açılmaz.
-    ['SSS sayfası (henüz yok)', '^sikca-sorulan-sorular/?$', '/iletisim/'],
-    ['Gizlilik politikası (henüz yok)', '^gizlilik-politikasi/?$', '/'],
-    ['Şartlar ve koşullar (henüz yok)', '^sartlar-ve-kosullar/?$', '/'],
+    // NOT: /sikca-sorulan-sorular/, /gizlilik-politikasi/ ve /sartlar-ve-kosullar/
+    // artık yeni sitede GERÇEK sayfa olarak var; yönlendirmeleri kaldırıldı.
   ]
 
   /**
