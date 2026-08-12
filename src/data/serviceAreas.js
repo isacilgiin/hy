@@ -13,6 +13,66 @@
  * o ilçenin sayfasında ayrı bir kutuda gösterilir ve içeriği benzersizleştirir.
  */
 
+/**
+ * Bölge tipine göre değişen içerik.
+ *
+ * NEDEN BÖLGEYE GÖRE: 20 ilçe sayfasında birebir AYNI paragrafın tekrarlanması
+ * Google'ın "doorway / thin content" sinyalidir ve sayfaların değerini düşürür.
+ * Bu yüzden ortak anlatım 3 varyanta ayrıldı ve sayfada gövde metni gibi değil,
+ * kenarda bir bilgi kutusu (chrome) olarak gösteriliyor.
+ *
+ * ⚠️ ASIL ÇÖZÜM: her ilçenin `note` alanına o ilçede yaptığınız GERÇEK bir işi
+ * yazmak. Bu alan doldurulmadığı sürece sayfalar, yerini aldıkları eski
+ * WordPress sayfalarından daha ince kalır.
+ */
+export const zoneContent = {
+  merkez: {
+    label: 'Denizli merkez',
+    howWeWork:
+      'Merkezdeki işlere genellikle aynı gün içinde ulaşıyoruz. Keşif ücretsiz; işin yöntemi ve fiyatı başlamadan önce netleşiyor.',
+    sss: [
+      {
+        q: 'Aynı gün gelebiliyor musunuz?',
+        a: 'Merkez ilçelerde programımız uygunsa aynı gün, değilse ertesi gün ulaşıyoruz. Acil işler için telefonla durumu değerlendiriyoruz.',
+      },
+      {
+        q: 'Oturulan binada çalışıyor musunuz?',
+        a: 'Evet. Karot ve elmas diskli kesim, kırıcıya göre çok daha az toz ve titreşim ürettiği için oturulan binalarda tercih edilen yöntem. Çalışma alanını örtüyor, iş bitiminde temiz teslim ediyoruz.',
+      },
+    ],
+  },
+  yakin: {
+    label: 'Merkeze yakın ilçe',
+    howWeWork:
+      'Merkeze yakın olduğu için günübirlik ulaşıyoruz. Keşif ücretsiz; yol ve süre dâhil net fiyat veriyoruz, sonradan ek kalem çıkmıyor.',
+    sss: [
+      {
+        q: 'Yol ücreti ayrıca alınıyor mu?',
+        a: 'Hayır. Verdiğimiz teklif yol ve süre dâhil nettir; iş bitiminde ek kalem çıkmaz.',
+      },
+      {
+        q: 'Küçük bir iş için de geliyor musunuz?',
+        a: 'Geliyoruz. Tek bir tesisat deliği gibi küçük işlerde, aynı bölgedeki başka işlerle aynı güne denk getirerek maliyeti düşürmeye çalışıyoruz.',
+      },
+    ],
+  },
+  uzak: {
+    label: 'Merkeze uzak ilçe',
+    howWeWork:
+      'Merkeze uzak olduğu için işi tek gidişte bitirecek şekilde planlıyoruz: gerekli tüm uçlar ve yedek ekipman yanımızda geliyor. Ön değerlendirmeyi telefonla fotoğraf üzerinden hızlandırıyoruz.',
+    sss: [
+      {
+        q: 'Uzak ilçeye gerçekten geliyor musunuz?',
+        a: 'Evet, Denizli il sınırları içindeki tüm ilçelere gidiyoruz. Uzak mesafede işi tek gidişte tamamlayacak şekilde planlıyoruz.',
+      },
+      {
+        q: 'Keşif için önce gelmeniz gerekiyor mu?',
+        a: 'Uzak ilçelerde ön değerlendirmeyi WhatsApp’tan göndereceğiniz fotoğraf ve ölçülerle yapıp fiyat aralığı verebiliyoruz. Kesin teklif için gerekirse yerinde keşfe geliyoruz.',
+      },
+    ],
+  },
+}
+
 const serviceAreas = [
   {
     name: 'Merkezefendi',

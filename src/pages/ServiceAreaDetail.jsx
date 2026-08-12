@@ -6,7 +6,7 @@ import Icon from '../components/Icon'
 import Seo from '../components/Seo'
 import siteConfig from '../data/siteConfig'
 import services from '../data/services'
-import serviceAreas from '../data/serviceAreas'
+import serviceAreas, { zoneContent } from '../data/serviceAreas'
 import { whatsappUrl } from '../utils/links'
 
 export default function ServiceAreaDetail() {
@@ -22,9 +22,15 @@ export default function ServiceAreaDetail() {
     return [...sameZone, ...others].slice(0, 8)
   }, [area, slug])
 
+  const zone = area ? zoneContent[area.zone] : null
+
+  // Service + FAQPage şeması birlikte gönderilir. FAQ soruları ilçe adını
+  // içerdiği ve cevaplar bölge tipine göre değiştiği için sayfalar birbirinin
+  // kopyası olmuyor; ayrıca Google'da soru-cevap kutusu çıkma ihtimali doğuyor.
   const jsonLd = useMemo(() => {
     if (!area) return null
-    return {
+    const z = zoneContent[area.zone]
+    const service = {
       '@context': 'https://schema.org',
       '@type': 'Service',
       name: `${area.name} Karot — Beton Delme, Kesme ve Kırma`,
@@ -46,16 +52,21 @@ export default function ServiceAreaDetail() {
         })),
       },
     }
+
+    const faq = {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: z.sss.map((item) => ({
+        '@type': 'Question',
+        name: `${area.name} — ${item.q}`,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    }
+
+    return [service, faq]
   }, [area])
 
   if (!area) return <Navigate to="/hizmet-bolgeleri" replace />
-
-  const zoneLabel =
-    area.zone === 'merkez'
-      ? 'Denizli merkez'
-      : area.zone === 'yakin'
-        ? 'Merkeze yakın ilçe'
-        : 'Merkeze uzak ilçe'
 
   return (
     <div className="page-enter">
@@ -82,7 +93,7 @@ export default function ServiceAreaDetail() {
               {/* Bölge etiketi */}
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 mb-6">
                 <Icon name="mapPin" className="w-4 h-4 text-accent" strokeWidth={2} />
-                <span className="text-accent text-sm font-semibold">{zoneLabel}</span>
+                <span className="text-accent text-sm font-semibold">{zone.label}</span>
               </div>
 
               <h2 className="section-title text-dark mb-6">
@@ -97,12 +108,20 @@ export default function ServiceAreaDetail() {
                 </div>
               )}
 
-              <p className="text-gray-600 leading-relaxed mb-10">
-                {area.name} bölgesindeki işlerde çalışma şeklimiz aynı: önce yerinde (ya da
-                fotoğraf üzerinden) ücretsiz keşif, sonra uygulanacak yöntemin ve net fiyatın
-                paylaşılması, sonra iş. Taşıyıcı elemana müdahale gerektiren durumlarda statik
-                proje ve mühendis onayı olmadan işleme başlamıyoruz.
-              </p>
+              {/* Nasıl çalışıyoruz — gövde metni değil, bilgi kutusu (bölge tipine göre değişir) */}
+              <div className="flex items-start gap-4 rounded-2xl bg-surface p-5 mb-12">
+                <span className="w-10 h-10 shrink-0 rounded-xl bg-accent/10 text-accent flex items-center justify-center">
+                  <Icon name="clipboard" className="w-5 h-5" strokeWidth={2} />
+                </span>
+                <span>
+                  <span className="block font-semibold text-dark text-sm mb-1">
+                    Nasıl çalışıyoruz?
+                  </span>
+                  <span className="block text-gray-500 text-sm leading-relaxed">
+                    {zone.howWeWork}
+                  </span>
+                </span>
+              </div>
 
               {/* Hizmetler */}
               <h3 className="text-2xl font-bold text-dark mb-6">
@@ -125,6 +144,29 @@ export default function ServiceAreaDetail() {
                       <span className="block text-gray-500 text-xs mt-0.5">{s.shortTitle}</span>
                     </span>
                   </Link>
+                ))}
+              </div>
+
+              {/* Sık sorulanlar — FAQPage şeması ile birlikte */}
+              <h3 className="text-2xl font-bold text-dark mb-5">
+                {area.name} İçin Sık Sorulanlar
+              </h3>
+              <div className="space-y-3 mb-12">
+                {zone.sss.map((item) => (
+                  <details
+                    key={item.q}
+                    className="group rounded-xl border border-gray-100 bg-surface p-5 [&[open]]:bg-accent/5 transition-colors"
+                  >
+                    <summary className="flex items-center justify-between gap-4 cursor-pointer font-semibold text-dark text-sm list-none">
+                      {item.q}
+                      <Icon
+                        name="chevronDown"
+                        className="w-5 h-5 shrink-0 text-accent transition-transform group-open:rotate-180"
+                        strokeWidth={2}
+                      />
+                    </summary>
+                    <p className="text-gray-600 text-sm leading-relaxed mt-3">{item.a}</p>
+                  </details>
                 ))}
               </div>
 

@@ -86,8 +86,21 @@ metin/rozet olarak göstermek serbest. Kendi sitenizde yorum toplarsanız
 
 ### `src/data/serviceAreas.js`
 - ⚠️ **Slug'ları değiştirmeyin** — indeksli URL'ler.
-- Her ilçenin `note` alanı boş. Oraya o ilçedeki **gerçek bir referans işinizi**
-  yazarsanız sayfada ayrı bir kutuda görünür ve içerik benzersizleşir (SEO'da değerli).
+- ⚠️ **`note` alanları ZORUNLU sayılmalı, opsiyonel değil.**
+
+  20 ilçe sayfası aynı iskeleti paylaşıyor: aynı hizmet listesi, aynı "nasıl
+  çalışıyoruz" kutusu, aynı kenar çubuğu. Her sayfayı ayıran şey şu an sadece
+  `intro` paragrafı. Google bu şekli "doorway / thin content" olarak
+  sınıflandırabilir — ve bu sayfalar, yerini aldıkları eski WordPress
+  sayfalarından daha ince kalır.
+
+  Çözüm: her ilçenin `note` alanına o ilçede yaptığınız **gerçek bir işi** yazın.
+  Örnek: `note: 'Tavas\'ta bir un fabrikasının döşemesinde 40 cm derinlikte hidrolik kesim yaptık.'`
+  Bu metin sayfada ayrı bir kutuda görünür. 2-3 cümle yeter, 20 ilçe için
+  yaklaşık yarım saatlik iş — ama bu sayfaların sıralamada kalmasını sağlayan şey bu.
+
+  Ölçüm: şu an farklı bölge tiplerindeki sayfalar %20, aynı bölge tipindekiler
+  %44 oranında ortak cümle içeriyor. `note` doldurulunca bu oran belirgin düşer.
 
 ### `src/data/projects.js`
 - Proje fotoğrafınız yok dediniz. Fotoğraf hazır olana kadar **diziyi `[]` yapın** —
