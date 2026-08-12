@@ -121,7 +121,7 @@ export default function StatsSection() {
                 <AnimatedNumber target={stat.value} suffix={stat.suffix} />
               </div>
               <div className="text-primary font-semibold mb-1">{stat.label}</div>
-              <div className="text-white/40 text-sm hidden sm:block">{stat.description}</div>
+              <div className="text-white/60 text-sm hidden sm:block">{stat.description}</div>
             </div>
           ))}
         </div>

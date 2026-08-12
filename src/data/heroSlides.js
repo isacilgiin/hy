@@ -21,12 +21,17 @@ const heroSlides = [
     imageAlt: 'Betonarme duvarda elmas uçlu karot makinesiyle delme işlemi',
     icon: 'drill',
     badge: 'Denizli & Tüm İlçeler',
-    title: 'Profesyonel',
+    // DİKKAT: İlk slaytın başlığı sayfanın <h1>'idir — sitedeki en ağırlıklı
+    // tek başlık. Önceden "Profesyonel / Beton Delme & Kesme / Hizmetleri"
+    // yazıyordu; içinde ne "Denizli" ne de "Karot" geçiyordu, yani hedef
+    // sorguların hiçbirini karşılamıyordu. Bu üç satır tek bir cümle olarak
+    // okunur, sırayı bozarsanız cümle bozulur.
+    title: "Denizli'de Karot,",
     titleAccent: 'Beton Delme & Kesme',
     titleAfter: 'Hizmetleri',
     description:
       'Karot ve elmas diskli ekipmanlarımızla <strong>kırıcıya göre çok daha az toz, gürültü ve titreşim</strong>. Taşıyıcı sisteme yük bindirmeden, pürüzsüz kesim yüzeyiyle teslim.',
-    serviceTo: '/hizmetler/karot',
+    serviceTo: '/hizmetler/karot/',
     serviceLabel: 'Karot Hizmeti',
   },
   {
@@ -40,7 +45,7 @@ const heroSlides = [
     titleAfter: '',
     description:
       'Ray sistemli duvar testeresiyle <strong>düz ve temiz kesim hattı</strong>. Kapı-pencere açıklığı, asansör ve merdiven boşluğu, döşeme ve temel kesimi.',
-    serviceTo: '/hizmetler/beton-kesme',
+    serviceTo: '/hizmetler/beton-kesme/',
     serviceLabel: 'Beton Kesme',
   },
   {
@@ -54,7 +59,7 @@ const heroSlides = [
     titleAfter: 've Söküm',
     description:
       'Taşıyıcı sisteme zarar vermeden, toz kontrolü altında kırım. <strong>Moloz toplama ve nakliye dâhil</strong> — sahayı temiz teslim ediyoruz.',
-    serviceTo: '/hizmetler/beton-kirma',
+    serviceTo: '/hizmetler/beton-kirma/',
     serviceLabel: 'Beton Kırma',
   },
   {
@@ -68,7 +73,7 @@ const heroSlides = [
     titleAfter: '',
     description:
       'Altyapı hendek kesimleri, derz açma ve yenileme çalışmaları. Elmas diskli yol kesme makineleriyle <strong>trafiğe en az etkiyle</strong>, temiz kesim hattı.',
-    serviceTo: '/hizmetler/asfalt-derz-kesim',
+    serviceTo: '/hizmetler/asfalt-derz-kesim/',
     serviceLabel: 'Asfalt Derz Kesim',
   },
   {
@@ -82,7 +87,7 @@ const heroSlides = [
     titleAfter: '',
     description:
       'Mevcut betonarmeye yeni bağlantı noktaları. Delik temizliği ve <strong>kürleme süresine uyulmadan yük verilmez</strong>; talep halinde çekme testi yapılır.',
-    serviceTo: '/hizmetler/filiz-ekimi',
+    serviceTo: '/hizmetler/filiz-ekimi/',
     serviceLabel: 'Filiz Ekimi',
   },
   {
@@ -96,7 +101,7 @@ const heroSlides = [
     titleAfter: '',
     description:
       'Çevre güvenliği, toz bastırma ve moloz yönetimiyle planlı yıkım. <strong>Kısmi yıkım ve kat indirme</strong> işlerinde komşu yapıya zarar vermeden çalışıyoruz.',
-    serviceTo: '/hizmetler/kontrollu-bina-yikimi',
+    serviceTo: '/hizmetler/kontrollu-bina-yikimi/',
     serviceLabel: 'Kontrollü Yıkım',
   },
   {
@@ -110,7 +115,7 @@ const heroSlides = [
     titleAfter: 'Veriyoruz',
     description:
       'İşletmenizin kapalı olduğu saatlerde, trafiğin durduğu gece vakitlerinde çalışabiliyoruz. <strong>Google profilimizde 24 saat açık görünüyoruz</strong> — acil durumda arayın, durumu birlikte değerlendirelim.',
-    serviceTo: '/iletisim',
+    serviceTo: '/iletisim/',
     serviceLabel: 'Bize Ulaşın',
   },
 ]

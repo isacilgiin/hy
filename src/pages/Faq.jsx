@@ -141,13 +141,13 @@ export default function Faq() {
           </div>
 
           {/* Hizmetlere iç link */}
-          <p className="mt-10 text-center text-gray-500 text-sm">
+          <p className="mt-10 text-center text-gray-600 text-sm">
             Hizmetlerimizin ayrıntılarını{' '}
-            <Link to="/hizmetler" className="text-accent font-semibold hover:underline inline-block py-1">
+            <Link to="/hizmetler/" className="text-accent font-semibold hover:underline inline-block py-1">
               hizmetler sayfasından
             </Link>{' '}
             inceleyebilir, bölgenizdeki çalışmalarımız için{' '}
-            <Link to="/hizmet-bolgeleri" className="text-accent font-semibold hover:underline inline-block py-1">
+            <Link to="/hizmet-bolgeleri/" className="text-accent font-semibold hover:underline inline-block py-1">
               hizmet bölgelerine
             </Link>{' '}
             bakabilirsiniz.

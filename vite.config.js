@@ -6,6 +6,7 @@ import services from './src/data/services.js'
 import serviceAreas from './src/data/serviceAreas.js'
 import { oneCikanFaq as faq } from './src/data/faq.js'
 import rotaMetalari from './src/data/routeMeta.js'
+import heroSlides from './src/data/heroSlides.js'
 import fs from 'node:fs'
 import path from 'node:path'
 
@@ -21,6 +22,24 @@ function seoFromConfig() {
     siteConfig
 
   const ogImage = `${url}/images/logo/og-image.jpg`
+
+  /**
+   * Ana sayfanın LCP'si hero slider'ın ilk görselidir. Bu görsel React +
+   * Swiper çalıştıktan sonra DOM'a girdiği için tarayıcı onu ancak JS
+   * paketleri indikten sonra keşfediyordu (Lighthouse: "Request is
+   * discoverable in initial document" = false, lcpLoadDelay 2,5 sn).
+   * Aşağıdaki ön yükleme isteği HTML ayrıştırılırken başlatır.
+   *
+   * srcset/sizes, HeroSection.jsx'teki <img> ile AYNI olmak zorundadır;
+   * farklı olursa tarayıcı iki ayrı görsel indirir.
+   */
+  const ilkSlayt = heroSlides[0]
+  const heroPreload = ilkSlayt
+    ? `<link rel="preload" as="image" href="${ilkSlayt.image}" imagesrcset="${ilkSlayt.image.replace(
+        '.webp',
+        '-800.webp'
+      )} 800w, ${ilkSlayt.image} 1600w" imagesizes="100vw" fetchpriority="high" />`
+    : ''
 
   // --- JSON-LD (Schema.org LocalBusiness) ---
   const jsonLd = {
@@ -142,9 +161,16 @@ ${gtagKimlikleri.map((id) => `    gtag('config','${id}');`).join('\n')}
         ? '<link rel="preconnect" href="https://www.googletagmanager.com" />\n  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />'
         : '',
     SITE_JSONLD: JSON.stringify(jsonLd, null, 2),
+    // Sondaki eğik çizgi ŞART: canonical bu formatta. Çizgisiz yazılırsa
+    // .htaccess her tıklamada 301 veriyor (bkz. staticRoutes notu).
     SITE_SERVICE_LINKS: services
-      .map((s) => `<li><a href="/hizmetler/${s.slug}">${s.title}</a></li>`)
+      .map((s) => `<li><a href="/hizmetler/${s.slug}/">${s.title}</a></li>`)
       .join('\n        '),
+    // LCP ön yükleme — YALNIZCA ana sayfada anlamlı, writeBundle diğer
+    // rotalarda boşaltıyor. Değerler heroSlides[0]'dan üretiliyor ki
+    // HeroSection'daki <img> ile birebir aynı olsun; en ufak sapmada tarayıcı
+    // görseli İKİ KEZ indirir ve ön yükleme fayda yerine zarar verir.
+    SITE_HERO_PRELOAD: heroPreload,
   }
 
   // Sondaki eğik çizgi (trailing slash) BİLİNÇLİ: eski WordPress sitesinde
@@ -213,7 +239,7 @@ ${gtagKimlikleri.map((id) => `    gtag('config','${id}');`).join('\n')}
 - Telefon: ${phone}
 - WhatsApp: ${siteConfig.social.whatsapp}
 - E-posta: ${email}
-- Web: ${url}
+- Web: [${url.replace(/^https?:\/\//, '')}](${url}/)
 - Çalışma Saatleri: ${workingHours.days} ${workingHours.hours}
 - Google İşletme Puanı: ${rating.value != null ? `${String(rating.value).replace('.', ',')} / 5 (${rating.count} yorum)` : 'belirtilmemiş'}
 
@@ -225,17 +251,15 @@ ${companyDescription}
 
 ${services
   .map(
-    (s, i) => `### ${i + 1}. ${s.title}
-${s.shortDescription}
-${s.applications.slice(0, 3).join(', ')}.
-Detay: ${url}/hizmetler/${s.slug}/`
+    (s) => `- [${s.title}](${url}/hizmetler/${s.slug}/): ${s.shortDescription} ${s.applications.slice(0, 3).join(', ')}.`
   )
-  .join('\n\n')}
+  .join('\n')}
 
 ## Hizmet Bölgeleri
 
 ${address.city} il genelinde ${serviceAreas.length} ilçe:
-${serviceAreas.map((a) => `- ${a.name}: ${url}/hizmet-bolgeleri/${a.slug}/`).join('\n')}
+
+${serviceAreas.map((a) => `- [${a.name} karot, beton delme ve kesme](${url}/hizmet-bolgeleri/${a.slug}/)`).join('\n')}
 
 Listede olmayan bölgeler ve çevre iller için telefonla değerlendirme yapılır.
 
@@ -243,13 +267,22 @@ Listede olmayan bölgeler ve çevre iller için telefonla değerlendirme yapıl�
 
 ${faq.map((f) => `**${f.q}**\n${f.a}`).join('\n\n')}
 
+## Diğer Sayfalar
+
+- [Hizmetlerimiz](${url}/hizmetler/): Tüm hizmetlerin listesi
+- [Hizmet Bölgeleri](${url}/hizmet-bolgeleri/): ${address.city} genelinde çalıştığımız ilçeler
+- [Hakkımızda](${url}/hakkimizda/): Firma, ekip ve çalışma yöntemi
+- [Projeler](${url}/projeler/): Uygulama örnekleri
+- [Sıkça Sorulan Sorular](${url}/sikca-sorulan-sorular/): Fiyat, süre, toz ve taşıyıcı elemanlarla ilgili sorular
+- [İletişim](${url}/iletisim/): Telefon, WhatsApp, adres ve harita
+
 ## İletişim
 
-Telefon: ${phone}
-WhatsApp: ${siteConfig.social.whatsapp}
-E-posta: ${email}
-Adres: ${address.full}
-Çalışma saatleri: ${workingHours.days} ${workingHours.hours}
+- Telefon: [${phone}](tel:${siteConfig.phoneRaw})
+- WhatsApp: [${phone}](${siteConfig.social.whatsapp})
+- E-posta: [${email}](mailto:${email})
+- Adres: ${address.full}
+- Çalışma saatleri: ${workingHours.days} ${workingHours.hours}
 `
 
   const buildSitemap = () => {
@@ -282,9 +315,19 @@ ${urls
 `
   }
 
+  /**
+   * robots.txt
+   *
+   * DİKKAT — `Disallow: /assets/` SATIRINI GERİ EKLEMEYİN.
+   * Site tek sayfa uygulaması: sayfa gövdesini /assets/ altındaki JavaScript
+   * üretiyor. O klasör kapatıldığında Googlebot betikleri indiremediği için
+   * sayfayı RENDER EDEMEZ; geriye yalnızca <noscript> bloğu kalır ve 39 sayfa
+   * birbirinin aynısı görünür. Google'ın kendi dokümanı da CSS/JS'in taranmaya
+   * açık olmasını şart koşar. Klasördeki dosyalar zaten içerik hash'li olduğu
+   * için ayrıca indekslenme riski yok (hiçbir yerden link almıyorlar).
+   */
   const buildRobots = () => `User-agent: *
 Allow: /
-Disallow: /assets/
 
 Sitemap: ${url}/sitemap.xml
 `
@@ -380,7 +423,11 @@ ${redirects.map(([aciklama, from, to]) => `  # ${aciklama}\n  RewriteRule ${from
   ExpiresActive On
   # İçerik hash'i olan varlıklar uzun süre önbelleklenebilir
   ExpiresByType text/css "access plus 1 year"
+  # .js için İKİ MIME tipi de yazılmalı: eski Apache'ler application/javascript,
+  # güncel olanlar text/javascript sunar. Yalnızca biri yazılırsa diğerini
+  # sunan sunucuda JavaScript ne önbelleklenir ne de sıkıştırılır.
   ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/javascript "access plus 1 year"
   ExpiresByType image/jpeg "access plus 6 months"
   ExpiresByType image/png "access plus 6 months"
   ExpiresByType image/webp "access plus 6 months"
@@ -412,7 +459,7 @@ AddDefaultCharset UTF-8
 </IfModule>
 
 <IfModule mod_deflate.c>
-  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/javascript application/json image/svg+xml
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/javascript text/javascript application/json image/svg+xml
 </IfModule>
 
 ErrorDocument 404 /index.html
@@ -450,6 +497,9 @@ ErrorDocument 404 /index.html
         if (rota.path === '/') continue // ana sayfa zaten dogru
 
         let html = anaHtml
+          // Hero ön yüklemesi yalnızca ana sayfaya ait. Diğer rotalarda o
+          // görsel hiç kullanılmadığı için kalırsa boşuna ~37 KB indirilir.
+          .replace(/\s*<link rel="preload" as="image"[^>]*>/, '')
           .replace(/<title>[\s\S]*?<\/title>/, `<title>${kacis(rota.title)}</title>`)
           .replace(
             /<meta name="description" content="[^"]*" \/>/,
@@ -514,7 +564,13 @@ export default defineConfig({
         manualChunks(id) {
           if (!id.includes('node_modules')) return
           if (id.includes('swiper')) return 'swiper'
-          if (id.includes('yet-another-react-lightbox')) return 'lightbox'
+          // yet-another-react-lightbox'ı BURAYA EKLEMEYİN.
+          // ProjectGallery.jsx onu `await import()` ile tembel yüklüyor; ama
+          // adlandırılmış bir parçaya atandığında statik parça grafiğine
+          // giriyor ve Vite her sayfanın HTML'ine hem <link rel="modulepreload">
+          // hem de RENDER BLOKLAYAN bir <link rel="stylesheet"> basıyordu.
+          // Kural kaldırılınca kendi asenkron parçasını oluşturuyor ve CSS'i
+          // yalnızca lightbox gerçekten açıldığında çalışma anında ekleniyor.
           if (/[\\/](react|react-dom|react-router|react-router-dom|scheduler)[\\/]/.test(id)) return 'vendor'
         },
       },

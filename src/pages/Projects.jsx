@@ -42,7 +42,7 @@ export default function Projects() {
                 <Icon name="camera" className="w-10 h-10" strokeWidth={1.5} />
               </div>
               <h2 className="text-2xl font-bold text-dark mb-3">Proje Fotoğrafları Yakında</h2>
-              <p className="text-gray-500 leading-relaxed mb-8">
+              <p className="text-gray-600 leading-relaxed mb-8">
                 Tamamladığımız işlerin fotoğraflarını bu sayfada paylaşacağız. Bu arada
                 yaptığımız işler hakkında bilgi almak için doğrudan bize ulaşabilirsiniz.
               </p>

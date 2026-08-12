@@ -8,6 +8,7 @@ import siteConfig from '../data/siteConfig'
 import services from '../data/services'
 import serviceAreas, { zoneContent } from '../data/serviceAreas'
 import { whatsappUrl } from '../utils/links'
+import { bulunmaEkiTam } from '../utils/turkce'
 
 export default function ServiceAreaDetail() {
   const { slug } = useParams()
@@ -72,7 +73,7 @@ export default function ServiceAreaDetail() {
     return [service, faq]
   }, [area])
 
-  if (!area) return <Navigate to="/hizmet-bolgeleri" replace />
+  if (!area) return <Navigate to="/hizmet-bolgeleri/" replace />
 
   // Başlıkta parantezli ek ("Denizli (Merkez)") kötü duruyor; ayrıca
   // "Denizli Karot" hedeflenen en değerli anahtar kelime.
@@ -94,7 +95,7 @@ export default function ServiceAreaDetail() {
         title={`${area.name} Karot`}
         description={`${area.name} ve çevresinde beton delme, kesme, kırma, filiz ekimi ve ankraj hizmetleri.`}
         breadcrumb={[
-          { label: 'Hizmet Bölgeleri', to: '/hizmet-bolgeleri' },
+          { label: 'Hizmet Bölgeleri', to: '/hizmet-bolgeleri/' },
           { label: area.name },
         ]}
       />
@@ -110,7 +111,8 @@ export default function ServiceAreaDetail() {
               </div>
 
               <h2 className="section-title text-dark mb-6">
-                <span className="text-gradient-accent">{area.name}</span>&apos;de Karot Hizmeti
+                <span className="text-gradient-accent">{area.name}</span>
+                {bulunmaEkiTam(area.name)} Karot Hizmeti
               </h2>
 
               {area.intro.map((paragraf, i) => (
@@ -137,7 +139,7 @@ export default function ServiceAreaDetail() {
                   <span className="block font-semibold text-dark text-sm mb-1">
                     Ulaşım ve program
                   </span>
-                  <span className="block text-gray-500 text-sm leading-relaxed">
+                  <span className="block text-gray-600 text-sm leading-relaxed">
                     {zone.howWeWork}
                   </span>
                 </span>
@@ -145,19 +147,21 @@ export default function ServiceAreaDetail() {
 
               {/* İlçeye özel: yapı stoğu ve saha planlaması */}
               <h3 className="text-2xl font-bold text-dark mb-4">
-                {area.name}&apos;de Saha Koşulları ve Planlama
+                {area.name}
+                {bulunmaEkiTam(area.name)} Saha Koşulları ve Planlama
               </h3>
               <p className="text-gray-600 leading-relaxed mb-12">{area.yerelBaglam}</p>
 
               {/* Hizmetler */}
               <h3 className="text-2xl font-bold text-dark mb-6">
-                {area.name}&apos;de Verdiğimiz Hizmetler
+                {area.name}
+                {bulunmaEkiTam(area.name)} Verdiğimiz Hizmetler
               </h3>
               <div className="grid sm:grid-cols-2 gap-4 mb-12">
                 {services.map((s) => (
                   <Link
                     key={s.slug}
-                    to={`/hizmetler/${s.slug}`}
+                    to={`/hizmetler/${s.slug}/`}
                     className="flex items-start gap-3 p-4 rounded-xl bg-surface hover:bg-accent/5 transition-colors group"
                   >
                     <span className="w-10 h-10 rounded-lg bg-accent/10 text-accent flex items-center justify-center shrink-0 group-hover:bg-accent group-hover:text-white transition-colors">
@@ -167,7 +171,7 @@ export default function ServiceAreaDetail() {
                       <span className="block font-semibold text-dark text-sm group-hover:text-accent transition-colors">
                         {area.name} {s.title}
                       </span>
-                      <span className="block text-gray-500 text-xs mt-0.5">{s.shortTitle}</span>
+                      <span className="block text-gray-600 text-xs mt-0.5">{s.shortTitle}</span>
                     </span>
                   </Link>
                 ))}
@@ -202,7 +206,7 @@ export default function ServiceAreaDetail() {
                 {nearby.map((a) => (
                   <Link
                     key={a.slug}
-                    to={`/hizmet-bolgeleri/${a.slug}`}
+                    to={`/hizmet-bolgeleri/${a.slug}/`}
                     className="px-4 py-2 rounded-full bg-surface hover:bg-accent hover:text-white text-gray-600 text-sm transition-colors"
                   >
                     {a.name} Karot
@@ -259,12 +263,12 @@ export default function ServiceAreaDetail() {
           <div className="mt-16 pt-8 border-t border-gray-100 grid grid-cols-2 gap-6">
             {index > 0 ? (
               <Link
-                to={`/hizmet-bolgeleri/${serviceAreas[index - 1].slug}`}
+                to={`/hizmet-bolgeleri/${serviceAreas[index - 1].slug}/`}
                 className="group flex items-center gap-4 p-4 rounded-xl hover:bg-surface transition-colors"
               >
-                <Icon name="arrowLeft" className="w-6 h-6 text-gray-400 group-hover:text-accent transition-all group-hover:-translate-x-1" strokeWidth={2} />
+                <Icon name="arrowLeft" className="w-6 h-6 text-gray-600 group-hover:text-accent transition-all group-hover:-translate-x-1" strokeWidth={2} />
                 <span>
-                  <span className="block text-xs text-gray-400">Önceki Bölge</span>
+                  <span className="block text-xs text-gray-600">Önceki Bölge</span>
                   <span className="block font-semibold text-dark group-hover:text-accent transition-colors">
                     {serviceAreas[index - 1].name}
                   </span>
@@ -275,16 +279,16 @@ export default function ServiceAreaDetail() {
             )}
             {index < serviceAreas.length - 1 && (
               <Link
-                to={`/hizmet-bolgeleri/${serviceAreas[index + 1].slug}`}
+                to={`/hizmet-bolgeleri/${serviceAreas[index + 1].slug}/`}
                 className="group flex items-center gap-4 p-4 rounded-xl hover:bg-surface transition-colors justify-end text-right"
               >
                 <span>
-                  <span className="block text-xs text-gray-400">Sonraki Bölge</span>
+                  <span className="block text-xs text-gray-600">Sonraki Bölge</span>
                   <span className="block font-semibold text-dark group-hover:text-accent transition-colors">
                     {serviceAreas[index + 1].name}
                   </span>
                 </span>
-                <Icon name="arrowRight" className="w-6 h-6 text-gray-400 group-hover:text-accent transition-all group-hover:translate-x-1" strokeWidth={2} />
+                <Icon name="arrowRight" className="w-6 h-6 text-gray-600 group-hover:text-accent transition-all group-hover:translate-x-1" strokeWidth={2} />
               </Link>
             )}
           </div>

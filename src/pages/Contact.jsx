@@ -105,7 +105,7 @@ export default function Contact() {
                     <Icon name={item.icon} className="w-6 h-6" strokeWidth={1.75} />
                   </div>
                   <h2 className="font-bold text-dark mb-1">{item.title}</h2>
-                  <p className="text-gray-500 text-sm break-words">{item.value}</p>
+                  <p className="text-gray-600 text-sm break-words">{item.value}</p>
                 </a>
               )
             })}
@@ -219,7 +219,7 @@ export default function Contact() {
                     />
                   </div>
 
-                  <p className="text-gray-400 text-xs">
+                  <p className="text-gray-600 text-xs">
                     Gönder&apos;e bastığınızda mesajınız WhatsApp üzerinden iletilir.
                   </p>
 
@@ -237,7 +237,7 @@ export default function Contact() {
               <div className="rounded-2xl overflow-hidden shadow-lg border border-gray-100 h-[400px] lg:h-[calc(100%-3.5rem)] min-h-[400px]">
                 <MapEmbed />
               </div>
-              <p className="mt-4 text-gray-500 text-sm flex items-start gap-2">
+              <p className="mt-4 text-gray-600 text-sm flex items-start gap-2">
                 <Icon name="mapPin" className="w-5 h-5 shrink-0 text-accent" strokeWidth={2} />
                 {siteConfig.address.full}
               </p>

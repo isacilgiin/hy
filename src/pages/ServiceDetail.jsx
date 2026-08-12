@@ -63,7 +63,7 @@ export default function ServiceDetail() {
   }, [service])
 
   if (!service) {
-    return <Navigate to="/hizmetler" replace />
+    return <Navigate to="/hizmetler/" replace />
   }
 
   const prevService = currentIndex > 0 ? services[currentIndex - 1] : null
@@ -84,7 +84,7 @@ export default function ServiceDetail() {
 
       <PageHeader
         align="left"
-        breadcrumb={[{ label: 'Hizmetler', to: '/hizmetler' }, { label: service.title }]}
+        breadcrumb={[{ label: 'Hizmetler', to: '/hizmetler/' }, { label: service.title }]}
       >
         <div className="flex items-center gap-5 animate-fade-in-up">
           <div className="w-16 h-16 shrink-0 rounded-2xl gradient-primary flex items-center justify-center text-dark">
@@ -287,7 +287,7 @@ export default function ServiceDetail() {
                       .map((s) => (
                         <Link
                           key={s.slug}
-                          to={`/hizmetler/${s.slug}`}
+                          to={`/hizmetler/${s.slug}/`}
                           className="flex items-center gap-3 text-white/55 hover:text-primary text-sm transition-colors py-1.5"
                         >
                           <Icon name={s.icon} className="w-4 h-4 shrink-0" />
@@ -305,7 +305,7 @@ export default function ServiceDetail() {
             <h2 className="text-2xl font-bold text-dark mb-2">
               {service.title} Hizmeti Verdiğimiz Bölgeler
             </h2>
-            <p className="text-gray-500 text-sm mb-6">
+            <p className="text-gray-600 text-sm mb-6">
               {siteConfig.address.city} il genelinde {serviceAreas.length} ilçede{' '}
               {service.title.toLowerCase()} hizmeti veriyoruz. Bulunduğunuz ilçeye tıklayın.
             </p>
@@ -313,7 +313,7 @@ export default function ServiceDetail() {
               {serviceAreas.map((a) => (
                 <Link
                   key={a.slug}
-                  to={`/hizmet-bolgeleri/${a.slug}`}
+                  to={`/hizmet-bolgeleri/${a.slug}/`}
                   className="px-4 py-2 rounded-full bg-surface hover:bg-accent hover:text-white text-gray-600 text-sm transition-colors"
                 >
                   {a.name} {service.shortTitle}
@@ -326,16 +326,16 @@ export default function ServiceDetail() {
           <div className="mt-16 pt-8 border-t border-gray-100 grid grid-cols-2 gap-6">
             {prevService ? (
               <Link
-                to={`/hizmetler/${prevService.slug}`}
+                to={`/hizmetler/${prevService.slug}/`}
                 className="group flex items-center gap-4 p-4 rounded-xl hover:bg-surface transition-colors"
               >
                 <Icon
                   name="arrowLeft"
-                  className="w-6 h-6 text-gray-400 group-hover:text-accent transition-all group-hover:-translate-x-1"
+                  className="w-6 h-6 text-gray-600 group-hover:text-accent transition-all group-hover:-translate-x-1"
                   strokeWidth={2}
                 />
                 <span>
-                  <span className="block text-xs text-gray-400">Önceki Hizmet</span>
+                  <span className="block text-xs text-gray-600">Önceki Hizmet</span>
                   <span className="block font-semibold text-dark group-hover:text-accent transition-colors">
                     {prevService.title}
                   </span>
@@ -347,18 +347,18 @@ export default function ServiceDetail() {
 
             {nextService && (
               <Link
-                to={`/hizmetler/${nextService.slug}`}
+                to={`/hizmetler/${nextService.slug}/`}
                 className="group flex items-center gap-4 p-4 rounded-xl hover:bg-surface transition-colors text-right justify-end"
               >
                 <span>
-                  <span className="block text-xs text-gray-400">Sonraki Hizmet</span>
+                  <span className="block text-xs text-gray-600">Sonraki Hizmet</span>
                   <span className="block font-semibold text-dark group-hover:text-accent transition-colors">
                     {nextService.title}
                   </span>
                 </span>
                 <Icon
                   name="arrowRight"
-                  className="w-6 h-6 text-gray-400 group-hover:text-accent transition-all group-hover:translate-x-1"
+                  className="w-6 h-6 text-gray-600 group-hover:text-accent transition-all group-hover:translate-x-1"
                   strokeWidth={2}
                 />
               </Link>

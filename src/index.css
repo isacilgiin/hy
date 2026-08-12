@@ -381,7 +381,9 @@
 
   .section-subtitle {
     font-size: 1.125rem;
-    color: #6b7280;
+    /* Krem zeminde (--color-surface #F2EDE7) #6b7280 yalnızca 4,15:1 veriyordu;
+       WCAG AA normal metin için 4,5:1 ister. #4a5565 (gray-600) 6,49:1. */
+    color: #4a5565;
     max-width: 600px;
     margin: 0 auto;
   }
@@ -402,18 +404,36 @@
   }
 
   /* ===== SWIPER CUSTOM ===== */
+  /*
+   * Slider noktaları: görünen boyut 10px, DOKUNMA HEDEFİ 24x24px.
+   *
+   * WCAG 2.2 "Target Size (Minimum)" (2.5.8) etkileşimli hedefler için en az
+   * 24x24px ister; 10px'lik noktalar mobilde ıskalanıyordu. Noktaları büyütmek
+   * tasarımı bozacağı için kutu padding ile 10+7+7=24px'e çıkarılıp arka plan
+   * `background-clip: content-box` ile yalnızca ortadaki 10px'e basılıyor.
+   *
+   * border-radius DIŞ kutuya uygulanır; iç yarıçap = dış yarıçap - padding.
+   * Bu yüzden 12px veriliyor: 12-7 = 5px iç yarıçap, 10px'lik kutuda tam daire
+   * (aktif haldeki 32px'lik kutuda da hap görünümü). Buraya 5px yazılırsa
+   * iç yarıçap 0'a kırpılır ve noktalar KÖŞELİ KARE olarak çıkar.
+   */
   .swiper-pagination-bullet {
-    background: rgba(255, 255, 255, 0.45) !important;
     width: 10px !important;
     height: 10px !important;
+    box-sizing: content-box !important;
+    padding: 7px !important;
+    margin: 0 !important;
+    background-color: rgba(255, 255, 255, 0.45) !important;
+    background-clip: content-box !important;
+    border-radius: 12px !important;
     opacity: 1 !important;
-    transition: width 0.3s ease, background 0.3s ease;
+    transition: width 0.3s ease, background-color 0.3s ease;
   }
 
   .swiper-pagination-bullet-active {
-    background: var(--color-primary) !important;
+    background-color: var(--color-primary) !important;
     width: 32px !important;
-    border-radius: 5px !important;
+    border-radius: 12px !important;
   }
 
   /* Hero slider — noktalar alttaki dalganın ÜSTÜNDE kalsın */

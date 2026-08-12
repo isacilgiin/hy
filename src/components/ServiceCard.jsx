@@ -7,7 +7,7 @@ export default function ServiceCard({ service, index = 0 }) {
 
   return (
     <Link
-      to={`/hizmetler/${service.slug}`}
+      to={`/hizmetler/${service.slug}/`}
       className={`animate-fade-in-up ${delayClass} group relative flex flex-col bg-white rounded-2xl card-hover border border-gray-100 overflow-hidden`}
     >
       {/* Görsel */}
@@ -43,7 +43,7 @@ export default function ServiceCard({ service, index = 0 }) {
           {service.title}
         </h3>
 
-        <p className="text-gray-500 text-sm leading-relaxed mb-5 flex-1">
+        <p className="text-gray-600 text-sm leading-relaxed mb-5 flex-1">
           {service.shortDescription}
         </p>
 

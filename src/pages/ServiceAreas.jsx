@@ -56,7 +56,7 @@ export default function ServiceAreas() {
                   {group.areas.map((area) => (
                     <li key={area.slug}>
                       <Link
-                        to={`/hizmet-bolgeleri/${area.slug}`}
+                        to={`/hizmet-bolgeleri/${area.slug}/`}
                         className="h-full flex flex-col items-center justify-center group bg-surface hover:bg-accent rounded-2xl p-6 text-center card-hover border border-gray-100 hover:border-accent transition-all duration-300"
                       >
                         <span className="w-12 h-12 mb-3 rounded-xl bg-accent/10 group-hover:bg-white/20 flex items-center justify-center text-accent group-hover:text-white transition-colors">
@@ -65,7 +65,7 @@ export default function ServiceAreas() {
                         <span className="font-semibold text-dark group-hover:text-white transition-colors text-lg leading-tight">
                           {area.name}
                         </span>
-                        <span className="text-gray-400 group-hover:text-white/75 text-xs mt-1 transition-colors">
+                        <span className="text-gray-600 group-hover:text-white/75 text-xs mt-1 transition-colors">
                           Karot Hizmetleri
                         </span>
                       </Link>
@@ -83,7 +83,7 @@ export default function ServiceAreas() {
                 <h3 className="text-2xl font-bold text-dark mb-4">
                   Denizli Dışında mısınız?
                 </h3>
-                <p className="text-gray-500 leading-relaxed mb-6">
+                <p className="text-gray-600 leading-relaxed mb-6">
                   Çevre illerdeki işleri de değerlendiriyoruz. Bizi arayın, projenin
                   kapsamına ve mesafeye göre net bir teklif verelim.
                 </p>

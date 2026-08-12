@@ -51,7 +51,7 @@ export default function Home() {
           </div>
 
           <div className="text-center mt-12">
-            <Link to="/hizmetler" className="btn-primary">
+            <Link to="/hizmetler/" className="btn-primary">
               Tüm Hizmetlerimiz
               <Icon name="arrowRight" className="w-5 h-5" strokeWidth={2} />
             </Link>
@@ -89,7 +89,7 @@ export default function Home() {
                     </div>
                     <div>
                       <h3 className="font-semibold text-dark mb-1">{item.title}</h3>
-                      <p className="text-gray-500 text-sm">{item.desc}</p>
+                      <p className="text-gray-600 text-sm">{item.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -152,7 +152,7 @@ export default function Home() {
           <ProjectGallery limit={6} />
 
           <div className="text-center mt-12">
-            <Link to="/projeler" className="btn-primary">
+            <Link to="/projeler/" className="btn-primary">
               Tüm Uygulama Alanları
               <Icon name="arrowRight" className="w-5 h-5" strokeWidth={2} />
             </Link>

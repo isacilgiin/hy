@@ -7,11 +7,11 @@ import Logo from './Logo'
 
 const navLinks = [
   { to: '/', label: 'Ana Sayfa' },
-  { to: '/hizmetler', label: 'Hizmetler', hasDropdown: true },
-  { to: '/projeler', label: 'Uygulama Alanları' },
-  { to: '/hakkimizda', label: 'Hakkımızda' },
-  { to: '/iletisim', label: 'İletişim' },
-  { to: '/hizmet-bolgeleri', label: 'Hizmet Bölgeleri' },
+  { to: '/hizmetler/', label: 'Hizmetler', hasDropdown: true },
+  { to: '/projeler/', label: 'Uygulama Alanları' },
+  { to: '/hakkimizda/', label: 'Hakkımızda' },
+  { to: '/iletisim/', label: 'İletişim' },
+  { to: '/hizmet-bolgeleri/', label: 'Hizmet Bölgeleri' },
 ]
 
 export default function Header() {
@@ -102,7 +102,7 @@ export default function Header() {
                       {services.map((service) => (
                         <Link
                           key={service.slug}
-                          to={`/hizmetler/${service.slug}`}
+                          to={`/hizmetler/${service.slug}/`}
                           className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/75 hover:text-white hover:bg-white/10 transition-all text-sm group/item"
                         >
                           <Icon
@@ -193,7 +193,7 @@ export default function Header() {
                       {services.map((service) => (
                         <Link
                           key={service.slug}
-                          to={`/hizmetler/${service.slug}`}
+                          to={`/hizmetler/${service.slug}/`}
                           className="flex items-center justify-center gap-2.5 text-white/70 hover:text-primary text-base transition-colors py-1"
                         >
                           <Icon name={service.icon} className="w-4 h-4 shrink-0" />

@@ -41,7 +41,7 @@ export default function NotFound() {
             {services.map((s) => (
               <Link
                 key={s.slug}
-                to={`/hizmetler/${s.slug}`}
+                to={`/hizmetler/${s.slug}/`}
                 className="flex items-center gap-3 p-4 rounded-xl bg-surface hover:bg-accent/5 transition-colors group"
               >
                 <span className="w-10 h-10 rounded-lg bg-accent/10 text-accent flex items-center justify-center shrink-0 group-hover:bg-accent group-hover:text-white transition-colors">

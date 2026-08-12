@@ -98,7 +98,7 @@ export default function About() {
                       <div className="bg-surface rounded-2xl p-6 card-hover">
                         <div className="text-accent font-bold text-lg mb-1">{item.year}</div>
                         <h3 className="font-bold text-dark text-xl mb-2">{item.title}</h3>
-                        <p className="text-gray-500 text-sm">{item.desc}</p>
+                        <p className="text-gray-600 text-sm">{item.desc}</p>
                       </div>
                     </div>
                   </div>
@@ -129,7 +129,7 @@ export default function About() {
                   <Icon name={madde.icon} className="w-7 h-7" />
                 </div>
                 <h3 className="font-bold text-dark text-lg mb-2">{madde.baslik}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">{madde.metin}</p>
+                <p className="text-gray-600 text-sm leading-relaxed">{madde.metin}</p>
               </div>
             ))}
           </div>

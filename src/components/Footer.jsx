@@ -7,17 +7,17 @@ import { mapsUrl, activeSocials } from '../utils/links'
 
 const quickLinks = [
   { to: '/', label: 'Ana Sayfa' },
-  { to: '/hizmetler', label: 'Hizmetler' },
-  { to: '/projeler', label: 'Uygulama Alanları' },
-  { to: '/hakkimizda', label: 'Hakkımızda' },
-  { to: '/iletisim', label: 'İletişim' },
-  { to: '/hizmet-bolgeleri', label: 'Hizmet Bölgeleri' },
-  { to: '/sikca-sorulan-sorular', label: 'Sıkça Sorulan Sorular' },
+  { to: '/hizmetler/', label: 'Hizmetler' },
+  { to: '/projeler/', label: 'Uygulama Alanları' },
+  { to: '/hakkimizda/', label: 'Hakkımızda' },
+  { to: '/iletisim/', label: 'İletişim' },
+  { to: '/hizmet-bolgeleri/', label: 'Hizmet Bölgeleri' },
+  { to: '/sikca-sorulan-sorular/', label: 'Sıkça Sorulan Sorular' },
 ]
 
 const yasalLinkler = [
-  { to: '/gizlilik-politikasi', label: 'Gizlilik Politikası' },
-  { to: '/sartlar-ve-kosullar', label: 'Şartlar ve Koşullar' },
+  { to: '/gizlilik-politikasi/', label: 'Gizlilik Politikası' },
+  { to: '/sartlar-ve-kosullar/', label: 'Şartlar ve Koşullar' },
 ]
 
 export default function Footer() {
@@ -66,7 +66,7 @@ export default function Footer() {
               {services.map((service) => (
                 <li key={service.slug}>
                   <Link
-                    to={`/hizmetler/${service.slug}`}
+                    to={`/hizmetler/${service.slug}/`}
                     className="text-white/60 hover:text-primary text-sm transition-colors hover:translate-x-1 inline-block py-1"
                   >
                     {service.title}
@@ -142,7 +142,7 @@ export default function Footer() {
       {/* Alt bar */}
       <div className="border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-white/40 text-sm">
+          <p className="text-white/60 text-sm">
             © {currentYear} {siteConfig.companyName}. Tüm hakları saklıdır.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
@@ -150,12 +150,12 @@ export default function Footer() {
               <Link
                 key={link.to}
                 to={link.to}
-                className="text-white/40 hover:text-primary text-xs transition-colors inline-block py-1"
+                className="text-white/60 hover:text-primary text-xs transition-colors inline-block py-1"
               >
                 {link.label}
               </Link>
             ))}
-            <span className="text-white/25 text-xs">
+            <span className="text-white/55 text-xs">
               {siteConfig.address.district} / {siteConfig.address.city}
             </span>
           </div>
