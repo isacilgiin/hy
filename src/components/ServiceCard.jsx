@@ -16,7 +16,14 @@ export default function ServiceCard({ service, index = 0 }) {
           src={service.image}
           /* Kart en fazla ~380px genişlikte görünüyor; 1200px görsel indirmek
              boşuna. Tarayıcı srcset'ten uygun olanı seçer. */
-          srcSet={`${service.image.replace('.webp', '-600.webp')} 600w, ${service.image} 1200w`}
+          /* 900w ŞART: mobilde (412px, DPR 1,75) kart 92vw yer kaplıyor,
+             yani 379 x 1,75 = 663 fiziksel piksel gerekiyor. 600w yetmediği
+             için tarayıcı doğrudan 1200w'a atlıyor ve kart başına ~31 KB
+             fazladan iniyordu. Ara boy eklenince mobil 900w'ı seçiyor. */
+          srcSet={`${service.image.replace('.webp', '-600.webp')} 600w, ${service.image.replace(
+            '.webp',
+            '-900.webp'
+          )} 900w, ${service.image} 1200w`}
           sizes="(min-width: 1024px) 300px, (min-width: 640px) 45vw, 92vw"
           alt={service.title}
           icon={service.icon}
