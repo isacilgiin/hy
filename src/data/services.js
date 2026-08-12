@@ -24,7 +24,7 @@ const services = [
     title: 'Karot',
     shortTitle: 'Karot',
     icon: 'drill',
-    image: '/images/hizmetler/karot.jpg',
+    image: '/images/hizmetler/karot.webp',
     shortDescription:
       'Elmas uçlu karot makineleriyle betonarmede dairesel, pürüzsüz ve titreşimsiz delik açma yöntemi.',
     description:
@@ -52,7 +52,7 @@ const services = [
     title: 'Beton Delme',
     shortTitle: 'Beton Delme',
     icon: 'wallHole',
-    image: '/images/hizmetler/beton-delme.jpg',
+    image: '/images/hizmetler/beton-delme.webp',
     shortDescription:
       'Karot makineleriyle 50mm\'den 1000mm\'ye kadar her çapta hassas beton delme işlemi.',
     description:
@@ -80,7 +80,7 @@ const services = [
     title: 'Beton Kesme',
     shortTitle: 'Beton Kesme',
     icon: 'saw',
-    image: '/images/hizmetler/beton-kesme.jpg',
+    image: '/images/hizmetler/beton-kesme.webp',
     shortDescription:
       'Duvar, döşeme ve temel kesimi için elmas diskli profesyonel beton kesme hizmeti.',
     description:
@@ -108,7 +108,7 @@ const services = [
     title: 'Beton Kırma',
     shortTitle: 'Beton Kırma',
     icon: 'hammer',
-    image: '/images/hizmetler/beton-kirma.jpg',
+    image: '/images/hizmetler/beton-kirma.webp',
     shortDescription:
       'Kontrollü beton kırma işlemleri ile minimum gürültü ve titreşimde yıkım hizmeti.',
     description:
@@ -136,7 +136,7 @@ const services = [
     title: 'Asfalt Derz Kesim',
     shortTitle: 'Asfalt Kesim',
     icon: 'road',
-    image: '/images/hizmetler/asfalt-derz-kesim.jpg',
+    image: '/images/hizmetler/asfalt-derz-kesim.webp',
     shortDescription:
       'Yol ve zemin çalışmalarında düzgün derz kesimi ve asfalt kesme hizmeti.',
     description:
@@ -164,7 +164,7 @@ const services = [
     title: 'Hidrolik Beton Kesme',
     shortTitle: 'Hidrolik Kesme',
     icon: 'hydraulic',
-    image: '/images/hizmetler/hidrolik-beton-kesme.jpg',
+    image: '/images/hizmetler/hidrolik-beton-kesme.webp',
     shortDescription:
       'Büyük çaplı projelerde hidrolik güçle yüksek kapasiteli beton kesme.',
     description:
@@ -192,7 +192,7 @@ const services = [
     title: 'Filiz Ekimi',
     shortTitle: 'Filiz Ekimi',
     icon: 'rebar',
-    image: '/images/hizmetler/filiz-ekimi.jpg',
+    image: '/images/hizmetler/filiz-ekimi.webp',
     shortDescription:
       'Kimyasal dübel ve demir filiz ekimi ile güçlü yapısal bağlantılar.',
     description:
@@ -220,7 +220,7 @@ const services = [
     title: 'Ankraj',
     shortTitle: 'Ankraj',
     icon: 'anchor',
-    image: '/images/hizmetler/ankraj.jpg',
+    image: '/images/hizmetler/ankraj.webp',
     shortDescription:
       'Mevcut betonarmeye yük aktaran güvenli bağlantı noktaları oluşturma.',
     description:
@@ -248,7 +248,7 @@ const services = [
     title: 'Kimyasal Dübel',
     shortTitle: 'Kimyasal Dübel',
     icon: 'chemical',
-    image: '/images/hizmetler/kimyasal-dubel.jpg',
+    image: '/images/hizmetler/kimyasal-dubel.webp',
     shortDescription:
       'Enjeksiyon reçineli dübel uygulaması — mekanik dübelin yetmediği yerlerde.',
     description:
@@ -276,7 +276,7 @@ const services = [
     title: 'Kontrollü Bina Yıkımı',
     shortTitle: 'Bina Yıkımı',
     icon: 'demolition',
-    image: '/images/hizmetler/kontrollu-bina-yikimi.jpg',
+    image: '/images/hizmetler/kontrollu-bina-yikimi.webp',
     shortDescription:
       'Çevreye ve komşu yapılara zarar vermeden kontrollü yıkım hizmetleri.',
     description:

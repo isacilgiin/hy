@@ -49,30 +49,34 @@ export default function HeroSection() {
           paginationBulletMessage: '{{index}}. slayta git',
         }}
       >
-        {heroSlides.map((slide) => (
+        {heroSlides.map((slide, slideIndex) => (
           <SwiperSlide key={slide.id}>
-            {/* Arka plan görseli */}
+            {/* Arka plan görseli — ilk slayt LCP olduğu için eager, diğerleri lazy */}
             <div className="absolute inset-0">
               <SmartImage
                 src={slide.image}
-                alt=""
+                alt={slide.imageAlt}
                 icon={null}
                 className="w-full h-full"
                 imgClassName="w-full h-full object-cover"
-                loading="eager"
-                aria-hidden="true"
+                loading={slideIndex === 0 ? 'eager' : 'lazy'}
+                fetchPriority={slideIndex === 0 ? 'high' : undefined}
+                width="1600"
+                height="900"
               />
             </div>
 
-            {/* Okunabilirlik katmanı — metin her görselde kontrastlı kalsın diye */}
-            <div className="absolute inset-0 bg-gradient-to-r from-dark via-dark/90 to-dark/55" />
-            <div className="absolute inset-0 bg-gradient-to-t from-dark via-transparent to-dark/60" />
+            {/* Okunabilirlik katmanı — metnin bulunduğu sol tarafta koyu, sağda
+                fotoğraf görünsün diye açık. Metin `text-white` üzerinde en az
+                7:1 kontrast kalacak şekilde ayarlandı. */}
+            <div className="absolute inset-0 bg-gradient-to-r from-dark/95 via-dark/78 to-dark/30" />
+            <div className="absolute inset-0 bg-gradient-to-t from-dark/85 via-transparent to-dark/45" />
             {/* Bordo yıkama — paletin bordo tonu fotoğrafın üzerinde de görünsün */}
             <div
               className="absolute inset-0"
               style={{
                 background:
-                  'radial-gradient(75% 65% at 88% 15%, rgba(110,27,46,0.55) 0%, rgba(110,27,46,0.18) 45%, transparent 72%)',
+                  'radial-gradient(75% 65% at 88% 15%, rgba(110,27,46,0.42) 0%, rgba(110,27,46,0.14) 45%, transparent 72%)',
               }}
             />
 
@@ -95,12 +99,21 @@ export default function HeroSection() {
                   <span className="text-white/85 text-sm font-medium">{slide.badge}</span>
                 </div>
 
-                {/* Başlık */}
-                <h1 className="animate-fade-in-up text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
-                  {slide.title}
-                  <span className="text-gradient block mt-2">{slide.titleAccent}</span>
-                  {slide.titleAfter && <span className="block mt-2">{slide.titleAfter}</span>}
-                </h1>
+                {/* Başlık — yalnızca ilk slaytta <h1>, diğerlerinde <p>.
+                    Bir sayfada birden fazla h1 olması SEO'da başlık hiyerarşisini bozar. */}
+                {slideIndex === 0 ? (
+                  <h1 className="animate-fade-in-up text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+                    {slide.title}
+                    <span className="text-gradient block mt-2">{slide.titleAccent}</span>
+                    {slide.titleAfter && <span className="block mt-2">{slide.titleAfter}</span>}
+                  </h1>
+                ) : (
+                  <p className="animate-fade-in-up text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+                    {slide.title}
+                    <span className="text-gradient block mt-2">{slide.titleAccent}</span>
+                    {slide.titleAfter && <span className="block mt-2">{slide.titleAfter}</span>}
+                  </p>
+                )}
 
                 {/* Açıklama */}
                 <p
@@ -114,8 +127,11 @@ export default function HeroSection() {
                     <Icon name="phone" className="w-5 h-5" strokeWidth={2} />
                     Hemen Arayın
                   </a>
-                  <Link to="/hizmetler" className="btn-outline text-lg px-8 py-4">
-                    Hizmetlerimiz
+                  <Link
+                    to={slide.serviceTo || '/hizmetler'}
+                    className="btn-outline text-lg px-8 py-4"
+                  >
+                    {slide.serviceLabel || 'Hizmetlerimiz'}
                     <Icon name="arrowRight" className="w-5 h-5" strokeWidth={2} />
                   </Link>
                 </div>

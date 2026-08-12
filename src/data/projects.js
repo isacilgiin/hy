@@ -9,19 +9,17 @@
  *       fotoğrafları public/images/projeler/ altına atın.
  */
 
-const projects = [
-  { id: 1, image: '/images/projeler/proje-01.jpg', title: 'Beton Delme — Tesisat Geçişi', category: 'Beton Delme', icon: 'drill' },
-  { id: 2, image: '/images/projeler/proje-02.jpg', title: 'Duvar Kesimi — Kapı Açıklığı', category: 'Beton Kesme', icon: 'saw' },
-  { id: 3, image: '/images/projeler/proje-03.jpg', title: 'Temel Kırım — Tadilat', category: 'Beton Kırma', icon: 'hammer' },
-  { id: 4, image: '/images/projeler/proje-04.jpg', title: 'Asfalt Derz Kesimi', category: 'Asfalt Kesim', icon: 'road' },
-  { id: 5, image: '/images/projeler/proje-05.jpg', title: 'Hidrolik Kesim — Köprü', category: 'Hidrolik Kesme', icon: 'hydraulic' },
-  { id: 6, image: '/images/projeler/proje-06.jpg', title: 'Filiz Ekimi — Güçlendirme', category: 'Filiz Ekimi', icon: 'rebar' },
-  { id: 7, image: '/images/projeler/proje-07.jpg', title: 'Asansör Boşluğu Açma', category: 'Beton Kesme', icon: 'saw' },
-  { id: 8, image: '/images/projeler/proje-08.jpg', title: 'Kimyasal Ankraj Uygulaması', category: 'Kimyasal Ankraj', icon: 'anchor' },
-  { id: 9, image: '/images/projeler/proje-09.jpg', title: 'Havalandırma Kanalı Delimi', category: 'Beton Delme', icon: 'drill' },
-  { id: 10, image: '/images/projeler/proje-10.jpg', title: 'Kontrollü Kat İndirme', category: 'Bina Yıkımı', icon: 'demolition' },
-  { id: 11, image: '/images/projeler/proje-11.jpg', title: 'Döşeme Kesimi — Sanayi Tesisi', category: 'Beton Kesme', icon: 'saw' },
-  { id: 12, image: '/images/projeler/proje-12.jpg', title: 'Altyapı Hendek Kesimi', category: 'Asfalt Kesim', icon: 'road' },
-]
+// Gerçek proje fotoğrafları eklenene kadar dizi BOŞ bırakıldı.
+// Boşken: Projeler sayfası "yakında" mesajı gösterir, ana sayfadaki proje bölümü
+// ve galeri tamamen gizlenir — sahte/boş yer tutucu kareler görünmez.
+//
+// Fotoğraf hazır olunca: dosyaları public/images/projeler/ altına atın ve
+// aşağıdaki örneği çoğaltın. Bölümler otomatik geri gelir.
+//
+// const projects = [
+//   { id: 1, image: '/images/projeler/proje-01.webp', title: 'Perde Beton Delimi — Merkezefendi',
+//     category: 'Beton Delme', icon: 'drill' },
+// ]
+const projects = []
 
 export default projects

@@ -57,7 +57,7 @@ export default function About() {
             <div className="relative hidden lg:block">
               <div className="relative rounded-3xl overflow-hidden shadow-2xl aspect-[4/3]">
                 <SmartImage
-                  src="/images/hero/hero-1.jpg"
+                  src="/images/hero/hero-1.webp"
                   alt={`${siteConfig.companyName} saha ekibi`}
                   icon="drill"
                   label={siteConfig.companyName}

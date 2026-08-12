@@ -25,7 +25,7 @@ export default function Footer() {
           {/* Firma bilgisi */}
           <div>
             <Link to="/" className="inline-block mb-5" aria-label={`${siteConfig.companyName} — ana sayfa`}>
-              <Logo variant="light" markClassName="w-10 h-10" />
+              <Logo variant="light" imgClassName="h-11 w-auto" />
             </Link>
             <p className="text-white/60 text-sm leading-relaxed mb-6">
               {siteConfig.stats.yearsExperience}+ yıllık saha tecrübesiyle Denizli ve çevresinde

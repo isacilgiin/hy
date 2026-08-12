@@ -100,7 +100,7 @@ export default function Home() {
             <div className="relative hidden lg:block">
               <div className="relative rounded-3xl overflow-hidden shadow-2xl aspect-square">
                 <SmartImage
-                  src="/images/hero/hero-2.jpg"
+                  src="/images/hero/hero-2.webp"
                   alt="Şantiyede beton kesme çalışması"
                   icon="hydraulic"
                   label="Saha Çalışması"

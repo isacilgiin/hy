@@ -4,12 +4,16 @@ import siteConfig from '../data/siteConfig'
 /**
  * 20 Karot logosu.
  *
- * `public/images/logo/logo-beyaz.svg` (koyu zemin) veya `logo.svg` (açık zemin)
- * dosyası varsa onu kullanır. Dosya yoksa/yüklenemezse aşağıdaki gömülü SVG
- * marka işaretine düşer — yani kırık görsel ikonu ASLA çıkmaz.
+ * Gerçek logo `public/images/logo/` altındadır ve GENİŞ BİR WORDMARK'tır:
+ * içinde zaten "20 KAROT" yazısı ve "BETON DELME - KESME - KIRMA" alt satırı var.
+ * Bu yüzden logo görseli yüklendiğinde YANINA AYRICA yazı basılmaz — yoksa
+ * firma adı iki kez görünür.
  *
- * Gerçek logoyu eklemek için: dosyayı public/images/logo/ altına at, başka
- * hiçbir şey değiştirmene gerek yok.
+ *   logo-beyaz.webp → koyu zeminde (header, footer)
+ *   logo.webp       → açık zeminde (kömür tonlu, aynı çizimin renklendirilmişi)
+ *
+ * Dosya yüklenemezse aşağıdaki gömülü SVG marka işareti + yazı bloğuna düşer,
+ * yani kırık görsel ikonu asla çıkmaz.
  */
 
 /** Yedek marka işareti — karot ucu motifi (eş merkezli halkalar + ışın). */
@@ -44,56 +48,55 @@ export function LogoMark({ className = 'w-10 h-10' }) {
 }
 
 /**
- * @param {'light'|'dark'} variant  light = koyu zeminde (beyaz yazı), dark = açık zeminde
- * @param {boolean} showText        yazı bloğunu göster
- * @param {boolean} showSlogan      sloganı göster
+ * @param {'light'|'dark'} variant   light = koyu zeminde, dark = açık zeminde
+ * @param {string} imgClassName      logo görselinin boyutu (yükseklik ver, genişlik auto)
  */
 export default function Logo({
   variant = 'light',
-  showText = true,
-  showSlogan = true,
   className = '',
+  imgClassName = 'h-9 sm:h-10 w-auto',
   markClassName = 'w-10 h-10',
-  textClassName = '',
+  showSloganOnFallback = true,
 }) {
   const [imgFailed, setImgFailed] = useState(false)
-  const src = variant === 'light' ? '/images/logo/logo-beyaz.svg' : '/images/logo/logo.svg'
+  const src = variant === 'light' ? '/images/logo/logo-beyaz.webp' : '/images/logo/logo.webp'
 
+  // Gerçek logo yüklendi → sadece logo. Yazı zaten görselin içinde.
+  if (!imgFailed) {
+    return (
+      <img
+        src={src}
+        alt={`${siteConfig.companyName} — ${siteConfig.companySlogan}`}
+        className={`${imgClassName} object-contain ${className}`}
+        onError={() => setImgFailed(true)}
+        width="300"
+        height="100"
+      />
+    )
+  }
+
+  // Yedek: gömülü işaret + yazı
   return (
     <span className={`flex items-center gap-3 ${className}`}>
-      {imgFailed ? (
-        <LogoMark className={`${markClassName} shrink-0`} />
-      ) : (
-        <img
-          src={src}
-          alt={`${siteConfig.companyName} logosu`}
-          className={`${markClassName} shrink-0 object-contain`}
-          onError={() => setImgFailed(true)}
-          width="40"
-          height="40"
-        />
-      )}
-
-      {showText && (
-        <span className={`flex flex-col leading-tight ${textClassName}`}>
+      <LogoMark className={`${markClassName} shrink-0`} />
+      <span className="flex flex-col leading-tight">
+        <span
+          className={`font-bold text-lg tracking-wide ${
+            variant === 'light' ? 'text-white' : 'text-dark'
+          }`}
+        >
+          {siteConfig.companyShortName}
+        </span>
+        {showSloganOnFallback && (
           <span
-            className={`font-bold text-lg tracking-wide ${
-              variant === 'light' ? 'text-white' : 'text-dark'
+            className={`text-xs font-medium tracking-wider ${
+              variant === 'light' ? 'text-primary' : 'text-accent'
             }`}
           >
-            {siteConfig.companyShortName}
+            {siteConfig.companySlogan}
           </span>
-          {showSlogan && (
-            <span
-              className={`text-xs font-medium tracking-wider ${
-                variant === 'light' ? 'text-primary' : 'text-accent'
-              }`}
-            >
-              {siteConfig.companySlogan}
-            </span>
-          )}
-        </span>
-      )}
+        )}
+      </span>
     </span>
   )
 }
