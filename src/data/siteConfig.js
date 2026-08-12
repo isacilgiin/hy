@@ -148,12 +148,14 @@ const siteConfig = {
 
   // ===== SEO =====
   seo: {
-    defaultTitle: 'Denizli Karot — Beton Delme, Kesme, Kırma | 20 Karot',
-    // Google ~155 karakterde kesiyor; bu metin 152.
+    // 58 karakter. "Denizli Karot" + "Denizli Karot Firması" varyantlarını birlikte
+    // yakalar; "7/24" gerçek bir ayrışma (Google İşletme Profili: 24 saat açık).
+    defaultTitle: 'Denizli Karot Firması — 7/24 Beton Delme, Kesme | 20 Karot',
+    // Google ~155 karakterde kesiyor. "karotçu" varyantı ve 7/24 vurgusu burada.
     defaultDescription:
-      'Denizli\'de karot, beton delme, kesme ve kırma hizmetleri. Minimum toz ve titreşim, pürüzsüz kesim yüzeyi. Ücretsiz keşif ve net fiyat: 0545 678 91 94.',
+      'Denizli karotçu: beton delme, kesme, kırma, filiz ekimi ve ankraj. 7/24 açığız, tüm ilçelere gidiyoruz. Ücretsiz keşif ve net fiyat: 0545 678 91 94.',
     keywords:
-      '20 karot, denizli karot, karot denizli, beton delme denizli, beton kesme denizli, beton kırma, karotçu denizli, merkezefendi karot, pamukkale karot, asfalt derz kesim denizli',
+      '20 karot, denizli karot, denizli karot firması, karot denizli, denizli karotçu, beton delme denizli, beton kesme denizli, denizli beton kırma, 7/24 karot denizli, merkezefendi karot, pamukkale karot, asfalt derz kesim denizli, filiz ekimi denizli, kimyasal ankraj denizli',
   },
 }
 

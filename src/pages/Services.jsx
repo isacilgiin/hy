@@ -9,7 +9,7 @@ export default function Services() {
   return (
     <div className="page-enter">
       <Seo
-        title={`Hizmetlerimiz | Karot, Beton Delme, Kesme, Kırma — ${siteConfig.companyName}`}
+        title={`Karot Hizmetleri | Denizli Beton Delme ve Kesme — ${siteConfig.companyName}`}
         description="Denizli'de karot, beton delme, beton kesme, beton kırma, filiz ekimi, ankraj ve kimyasal dübel hizmetleri. Ücretsiz keşif ve net fiyat teklifi."
         path="/hizmetler/"
       />
