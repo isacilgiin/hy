@@ -76,7 +76,9 @@ export default function ServiceDetail() {
         title={service.seoTitle ?? `Denizli ${service.title} — ${siteConfig.companyName}`}
         description={`Denizli ve çevre ilçelerde ${service.title.toLowerCase()} hizmeti. ${service.shortDescription} Ücretsiz keşif için ${siteConfig.phone}.`}
         path={`/hizmetler/${service.slug}/`}
-        image={`${siteConfig.url}${service.image}`}
+        /* Sosyal önizleme görseli WebP değil JPG: WhatsApp WebP og:image ile
+           kararsız. src/data/routeMeta.js ile aynı yol kullanılmalı. */
+        image={`${siteConfig.url}/images/og/${service.slug}.jpg`}
         jsonLd={jsonLd}
       />
 

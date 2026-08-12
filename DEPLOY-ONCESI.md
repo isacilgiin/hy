@@ -169,8 +169,13 @@ npm install
 npm run build     # dist/ klasörü oluşur
 ```
 
-`dist/` klasörünün **içindekilerin tamamını** (gizli `.htaccess` dahil)
+`dist/` klasörünün **içindekilerin tamamını** (gizli `.htaccess` ve **alt klasörler** dahil)
 hostingin `public_html` klasörüne yükleyin.
+
+> `dist/` içinde artık `hizmetler/`, `hizmet-bolgeleri/` gibi klasörler ve her
+> birinin içinde `index.html` var. FileZilla'da klasörleri de aktardığınızdan
+> emin olun; eksik yüklenirse o sayfaların sosyal medya önizlemesi bozulur
+> (site yine çalışır, SPA yönlendirmesi devreye girer).
 
 > Nginx kullanıyorsanız `.htaccess` işe yaramaz; `try_files $uri $uri/ /index.html;`
 > ve `dist/.htaccess` içindeki 301'lerin nginx karşılıkları gerekir — söyleyin, yazayım.
@@ -191,7 +196,10 @@ hostingin `public_html` klasörüne yükleyin.
 
 `src/data/*.js` üzerinden **build sırasında** üretilirler:
 
-- `dist/index.html` → tüm meta etiketleri, Open Graph, JSON-LD
+- `dist/index.html` **ve her rota için ayrı `dist/<rota>/index.html`** (39 dosya)
+  → meta etiketleri, Open Graph, canonical, JSON-LD hepsi o sayfaya ait
+  Bu sayede WhatsApp/Facebook link önizlemeleri doğru sayfayı gösterir
+  (sosyal medya botları JavaScript çalıştırmaz).
 - `dist/sitemap.xml` → 36 URL (6 sabit + 10 hizmet + 20 hizmet bölgesi)
 - `dist/robots.txt`
 - `dist/.htaccess` → 301 yönlendirmeleri + SPA yönlendirmesi + önbellek

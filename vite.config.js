@@ -5,6 +5,9 @@ import siteConfig from './src/data/siteConfig.js'
 import services from './src/data/services.js'
 import serviceAreas from './src/data/serviceAreas.js'
 import { oneCikanFaq as faq } from './src/data/faq.js'
+import rotaMetalari from './src/data/routeMeta.js'
+import fs from 'node:fs'
+import path from 'node:path'
 
 /**
  * index.html + robots.txt + sitemap.xml içeriğini src/data/siteConfig.js'ten üretir.
@@ -405,6 +408,84 @@ ErrorDocument 404 /index.html
       this.emitFile({ type: 'asset', fileName: 'llms.txt', source: llms })
       this.emitFile({ type: 'asset', fileName: '.well-known/llms.txt', source: llms })
       this.emitFile({ type: 'asset', fileName: '.htaccess', source: htaccess })
+    },
+
+    /**
+     * ROTA BAŞINA STATİK HTML
+     *
+     * Site tek sayfa uygulaması olduğu için sunucu her adreste aynı index.html'i
+     * döndürüyordu. JavaScript çalıştırmayan istemciler bütün sayfalarda ANA
+     * SAYFANIN başlığını/açıklamasını/görselini görüyordu. WhatsApp, Facebook ve
+     * Twitter link önizlemeleri JavaScript çalıştırmaz — bir hizmet sayfasının
+     * linkini paylaştığınızda önizlemede ana sayfa çıkıyordu.
+     *
+     * Burada dist/index.html kopyalanıp her rota için meta etiketleri, canonical
+     * ve JSON-LD değiştirilerek dist/<rota>/index.html olarak yazılıyor.
+     * Uygulama yine istemcide çalışıyor; değişen yalnızca ilk HTML.
+     */
+    writeBundle(secenekler) {
+      const cikti = secenekler.dir ?? 'dist'
+      const anaHtml = fs.readFileSync(path.join(cikti, 'index.html'), 'utf8')
+
+      const kacis = (s) =>
+        String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+
+      let yazilan = 0
+      for (const rota of rotaMetalari) {
+        if (rota.path === '/') continue // ana sayfa zaten dogru
+
+        let html = anaHtml
+          .replace(/<title>[\s\S]*?<\/title>/, `<title>${kacis(rota.title)}</title>`)
+          .replace(
+            /<meta name="description" content="[^"]*" \/>/,
+            `<meta name="description" content="${kacis(rota.description)}" />`
+          )
+          .replace(
+            /<link rel="canonical" href="[^"]*" \/>/,
+            `<link rel="canonical" href="${rota.canonical}" />`
+          )
+          .replace(
+            /<meta property="og:title" content="[^"]*" \/>/,
+            `<meta property="og:title" content="${kacis(rota.title)}" />`
+          )
+          .replace(
+            /<meta property="og:description" content="[^"]*" \/>/,
+            `<meta property="og:description" content="${kacis(rota.description)}" />`
+          )
+          .replace(
+            /<meta property="og:url" content="[^"]*" \/>/,
+            `<meta property="og:url" content="${rota.canonical}" />`
+          )
+          .replace(
+            /<meta property="og:image" content="[^"]*" \/>/g,
+            `<meta property="og:image" content="${rota.image}" />`
+          )
+          .replace(
+            /<meta name="twitter:title" content="[^"]*" \/>/,
+            `<meta name="twitter:title" content="${kacis(rota.title)}" />`
+          )
+          .replace(
+            /<meta name="twitter:description" content="[^"]*" \/>/,
+            `<meta name="twitter:description" content="${kacis(rota.description)}" />`
+          )
+          .replace(
+            /<meta name="twitter:image" content="[^"]*" \/>/,
+            `<meta name="twitter:image" content="${rota.image}" />`
+          )
+
+        // Sayfaya özel JSON-LD, LocalBusiness şemasının hemen ardına eklenir
+        if (rota.jsonLd) {
+          const ek = `</script>\n  <script type="application/ld+json">\n${JSON.stringify(rota.jsonLd, null, 2)}\n  </script>`
+          html = html.replace('</script>', ek)
+        }
+
+        const klasor = path.join(cikti, rota.path)
+        fs.mkdirSync(klasor, { recursive: true })
+        fs.writeFileSync(path.join(klasor, 'index.html'), html)
+        yazilan++
+      }
+      // eslint-disable-next-line no-console
+      console.log(`  ${yazilan} rota icin ayri index.html yazildi (sosyal onizleme + JS'siz istemciler)`)
     },
   }
 }
