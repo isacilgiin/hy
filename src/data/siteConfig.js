@@ -106,7 +106,7 @@ const siteConfig = {
     // GTM arayüzünden yönetirsiniz. Mevcut konteyneriniz: 'GTM-PFPDVBL4'
     // (yayındaki sitede kullanılıyor, içinde GA4 zaten tanımlı).
     // Boş bırakılırsa yukarıdaki ga4/googleAds kimlikleri doğrudan kullanılır.
-    gtm: '',
+    gtm: 'GTM-PFPDVBL4',
     googleSiteVerification: '', // TODO: Search Console doğrulama kodu
 
     // Google Ads dönüşüm etiketleri.
