@@ -505,6 +505,37 @@ Sitemap: ${url}/sitemap.xml
   RewriteBase /
 
   # ---------------------------------------------------------------
+  # 0) Tek kanonik konak: https + www'suz
+  #
+  #    Dört varyant da (http/https × www/www'suz) aynı siteyi 200 ile
+  #    veriyordu. <link rel="canonical"> doğru adresi gösterdiği için Google
+  #    büyük ölçüde korunuyordu, ama canonical bir ÖNERİ, 301 bir TALİMAT.
+  #    301 ayrıca eski www bağlantılarının değerini tek adreste toplar.
+  #
+  #    Search Console "Alan adı" mülkü olduğu için dört varyant da aynı
+  #    mülke rapor ediyor; bu yüzden sorun panelde hiç görünmüyordu.
+  #
+  #    İKİ AYRI KURAL, bilerek:
+  #      - www kuralı %{HTTPS}'e hiç bakmaz, kendi kendine döngüye GİREMEZ.
+  #      - https kuralı hem %{HTTPS} hem X-Forwarded-Proto kontrol eder;
+  #        ileride önüne Cloudflare gibi TLS'i sonlandıran bir vekil
+  #        konursa sonsuz yönlendirme oluşmaz.
+  #    Konak adı hiçbir yerde sabit yazılmadı (%1 ve %{HTTP_HOST}), alan
+  #    adı değişse bile kural çalışmaya devam eder.
+  #
+  #    Bu blok 1. bölümden ÖNCE: https + www'suz gelen eski adresler bu
+  #    kurallara hiç takılmadan doğrudan 301'lerine düşer, zincir uzamaz.
+  # ---------------------------------------------------------------
+  # www -> www'suz (tek adımda https'e de geçer)
+  RewriteCond %{HTTP_HOST} ^www\\.(.+)$ [NC]
+  RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+
+  # http -> https
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+  # ---------------------------------------------------------------
   # 1) Eski WordPress adreslerinden yeni adreslere kalıcı (301) taşıma
   #    Adresi DEĞİŞMEYEN sayfalar burada yok — onlar zaten çalışıyor.
   # ---------------------------------------------------------------
