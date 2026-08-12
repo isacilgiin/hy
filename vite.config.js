@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 import siteConfig from './src/data/siteConfig.js'
 import services from './src/data/services.js'
 import serviceAreas from './src/data/serviceAreas.js'
+import { oneCikanFaq as faq } from './src/data/faq.js'
 
 /**
  * index.html + robots.txt + sitemap.xml içeriğini src/data/siteConfig.js'ten üretir.
@@ -164,17 +165,66 @@ function seoFromConfig() {
     ['Şartlar ve koşullar (henüz yok)', '^sartlar-ve-kosullar/?$', '/'],
   ]
 
-  return {
-    name: 'seo-from-siteconfig',
+  /**
+   * llms.txt — LLM'ler ve AI arama motorları için düz metin firma özeti.
+   * Elle tutulan bir kopya olarak duruyordu ve bayatlamıştı (8 hizmet yazıyordu,
+   * eski slug'ları gösteriyordu, çalışma saati yanlıştı). Artık veriden üretiliyor.
+   */
+  const buildLlmsTxt = () => `# ${companyName} — ${address.city} Beton Delme, Kesme & Kırma Hizmetleri
 
-    transformIndexHtml(html) {
-      return html.replace(/%(SITE_[A-Z_]+)%/g, (match, key) =>
-        key in tokens ? tokens[key] : match
-      )
-    },
+> Bu dosya, yapay zeka dil modelleri (LLM) ve AI arama motorları için hazırlanmıştır.
+> Kaynak: ${url}
 
-    generateBundle() {
-      const urls = [
+## Firma Bilgileri
+
+- Firma Adı: ${companyName}
+- Sektör: Beton delme, kesme, kırma (karot) hizmetleri
+- Konum: ${address.city}, Türkiye
+- Adres: ${address.full}
+- Telefon: ${phone}
+- WhatsApp: ${siteConfig.social.whatsapp}
+- E-posta: ${email}
+- Web: ${url}
+- Çalışma Saatleri: ${workingHours.days} ${workingHours.hours}
+- Google İşletme Puanı: ${rating.value != null ? `${String(rating.value).replace('.', ',')} / 5 (${rating.count} yorum)` : 'belirtilmemiş'}
+
+## Kısaca
+
+${companyDescription}
+
+## Hizmetlerimiz
+
+${services
+  .map(
+    (s, i) => `### ${i + 1}. ${s.title}
+${s.shortDescription}
+${s.applications.slice(0, 3).join(', ')}.
+Detay: ${url}/hizmetler/${s.slug}/`
+  )
+  .join('\n\n')}
+
+## Hizmet Bölgeleri
+
+${address.city} il genelinde ${serviceAreas.length} ilçe:
+${serviceAreas.map((a) => `- ${a.name}: ${url}/hizmet-bolgeleri/${a.slug}/`).join('\n')}
+
+Listede olmayan bölgeler ve çevre iller için telefonla değerlendirme yapılır.
+
+## Sık Sorulan Sorular
+
+${faq.map((f) => `**${f.q}**\n${f.a}`).join('\n\n')}
+
+## İletişim
+
+Telefon: ${phone}
+WhatsApp: ${siteConfig.social.whatsapp}
+E-posta: ${email}
+Adres: ${address.full}
+Çalışma saatleri: ${workingHours.days} ${workingHours.hours}
+`
+
+  const buildSitemap = () => {
+    const urls = [
         ...staticRoutes,
         ...services.map((s) => ({
           path: `/hizmetler/${s.slug}/`,
@@ -188,7 +238,7 @@ function seoFromConfig() {
         })),
       ]
 
-      const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+    return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls
   .map(
@@ -201,13 +251,62 @@ ${urls
   .join('\n')}
 </urlset>
 `
+  }
 
-      const robots = `User-agent: *
+  const buildRobots = () => `User-agent: *
 Allow: /
 Disallow: /assets/
 
 Sitemap: ${url}/sitemap.xml
 `
+
+  /** Dev ve preview sunucularinda sitemap/robots/llms.txt servis eden ara katman. */
+  function devSeoMiddleware(llms) {
+    const rotalar = {
+      '/sitemap.xml': () => ['application/xml; charset=utf-8', buildSitemap()],
+      '/robots.txt': () => ['text/plain; charset=utf-8', buildRobots()],
+      '/llms.txt': () => ['text/plain; charset=utf-8', llms()],
+      '/.well-known/llms.txt': () => ['text/plain; charset=utf-8', llms()],
+    }
+    return (req, res, next) => {
+      const yol = (req.url || '').split('?')[0]
+      const f = rotalar[yol]
+      if (!f) return next()
+      const [tip, govde] = f()
+      res.setHeader('Content-Type', tip)
+      res.end(govde)
+    }
+  }
+
+  return {
+    name: 'seo-from-siteconfig',
+
+    transformIndexHtml(html) {
+      return html.replace(/%(SITE_[A-Z_]+)%/g, (match, key) =>
+        key in tokens ? tokens[key] : match
+      )
+    },
+
+    /**
+     * sitemap.xml / robots.txt / llms.txt yalnızca `generateBundle` içinde
+     * üretiliyordu; yani SADECE build çıktısında vardılar. `npm run dev` ve
+     * `npm run preview` sırasında dosya bulunamadığı için SPA yönlendirmesi
+     * devreye girip React'in 404 sayfasını döndürüyordu.
+     * Bu ara katman aynı içeriği geliştirme sunucusunda da servis eder.
+     */
+    configureServer(server) {
+      server.middlewares.use(devSeoMiddleware(buildLlmsTxt))
+    },
+    configurePreviewServer(server) {
+      server.middlewares.use(devSeoMiddleware(buildLlmsTxt))
+    },
+
+
+    generateBundle() {
+      const sitemap = buildSitemap()
+      const robots = buildRobots()
+      const llms = buildLlmsTxt()
+
 
       const htaccess = `# ${companyName} — Apache yapılandırması
 # BU DOSYA OTOMATİK ÜRETİLİR (vite.config.js > seoFromConfig).
@@ -262,6 +361,19 @@ ${redirects.map(([aciklama, from, to]) => `  # ${aciklama}\n  RewriteRule ${from
   ExpiresByType text/html "access plus 0 seconds"
 </IfModule>
 
+# ---------------------------------------------------------------
+# Karakter kodlamasi
+# Metin dosyalari UTF-8'dir. Sunucu charset bildirmezse tarayici
+# windows-1252 varsayip Turkce karakterleri bozuk gosterir
+# ("Kırma" -> "KÄ±rma"). Bu blok o sorunu onler.
+# ---------------------------------------------------------------
+AddDefaultCharset UTF-8
+<IfModule mod_mime.c>
+  AddCharset UTF-8 .txt .xml .json .css .js .html .webmanifest
+  AddType application/xml .xml
+  AddType text/plain .txt
+</IfModule>
+
 <IfModule mod_headers.c>
   <FilesMatch "\\.(html)$">
     Header set Cache-Control "no-cache, must-revalidate"
@@ -279,6 +391,8 @@ ErrorDocument 404 /index.html
 
       this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: sitemap })
       this.emitFile({ type: 'asset', fileName: 'robots.txt', source: robots })
+      this.emitFile({ type: 'asset', fileName: 'llms.txt', source: llms })
+      this.emitFile({ type: 'asset', fileName: '.well-known/llms.txt', source: llms })
       this.emitFile({ type: 'asset', fileName: '.htaccess', source: htaccess })
     },
   }
