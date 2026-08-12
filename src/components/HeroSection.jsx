@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay, EffectFade, Pagination, Keyboard, A11y } from 'swiper/modules'
@@ -23,6 +24,26 @@ const heroStats = [
 ]
 
 export default function HeroSection() {
+  /**
+   * GÖRSEL YÜKLEME KONTROLÜ
+   *
+   * Swiper'ın fade efektinde bütün slaytlar aynı konumda üst üste durur.
+   * Tarayıcı hepsini "görünür" saydığı için loading="lazy" işe yaramıyor ve
+   * ana sayfa açılışında 6 hero görselinin TAMAMI iniyordu (~1,4 MB).
+   * Burada yalnızca gösterilmiş olan slaytların + bir sonrakinin görseli
+   * DOM'a konuyor; geri kalanların yerinde koyu zemin duruyor.
+   */
+  const [yuklenecek, setYuklenecek] = useState(() => new Set([0, 1]))
+
+  const slaytDegisti = (swiper) => {
+    setYuklenecek((oncekiler) => {
+      const sonraki = new Set(oncekiler)
+      sonraki.add(swiper.realIndex)
+      sonraki.add((swiper.realIndex + 1) % heroSlides.length)
+      return sonraki
+    })
+  }
+
   const stats = heroStats
     .map((s) => ({ ...s, resolved: s.value(siteConfig.stats) }))
     .filter((s) => s.resolved !== null)
@@ -42,6 +63,7 @@ export default function HeroSection() {
             : { delay: 6500, disableOnInteraction: false, pauseOnMouseEnter: true }
         }
         pagination={{ clickable: true }}
+        onSlideChange={slaytDegisti}
         keyboard={{ enabled: true }}
         a11y={{
           prevSlideMessage: 'Önceki slayt',
@@ -51,19 +73,25 @@ export default function HeroSection() {
       >
         {heroSlides.map((slide, slideIndex) => (
           <SwiperSlide key={slide.id}>
-            {/* Arka plan görseli — ilk slayt LCP olduğu için eager, diğerleri lazy */}
-            <div className="absolute inset-0">
-              <SmartImage
-                src={slide.image}
-                alt={slide.imageAlt}
-                icon={null}
-                className="w-full h-full"
-                imgClassName="w-full h-full object-cover"
-                loading={slideIndex === 0 ? 'eager' : 'lazy'}
-                fetchPriority={slideIndex === 0 ? 'high' : undefined}
-                width="1600"
-                height="900"
-              />
+            {/* Arka plan görseli — ilk slayt LCP olduğu için eager ve yüksek
+                öncelikli; diğerleri ancak sırası gelince DOM'a giriyor. */}
+            <div className="absolute inset-0 bg-dark">
+              {yuklenecek.has(slideIndex) && (
+                <SmartImage
+                  src={slide.image}
+                  /* Mobilde 1600px hero indirmeye gerek yok. */
+                  srcSet={`${slide.image.replace('.webp', '-800.webp')} 800w, ${slide.image} 1600w`}
+                  sizes="100vw"
+                  alt={slide.imageAlt}
+                  icon={null}
+                  className="w-full h-full"
+                  imgClassName="w-full h-full object-cover"
+                  loading={slideIndex === 0 ? 'eager' : 'lazy'}
+                  fetchPriority={slideIndex === 0 ? 'high' : undefined}
+                  width="1600"
+                  height="900"
+                />
+              )}
             </div>
 
             {/* Okunabilirlik katmanı — metnin bulunduğu sol tarafta koyu, sağda

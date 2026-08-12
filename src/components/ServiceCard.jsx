@@ -14,9 +14,15 @@ export default function ServiceCard({ service, index = 0 }) {
       <div className="relative aspect-[16/10] overflow-hidden bg-dark">
         <SmartImage
           src={service.image}
+          /* Kart en fazla ~380px genişlikte görünüyor; 1200px görsel indirmek
+             boşuna. Tarayıcı srcset'ten uygun olanı seçer. */
+          srcSet={`${service.image.replace('.webp', '-600.webp')} 600w, ${service.image} 1200w`}
+          sizes="(min-width: 1024px) 300px, (min-width: 640px) 45vw, 92vw"
           alt={service.title}
           icon={service.icon}
           label={service.shortTitle}
+          width="1200"
+          height="675"
           className="absolute inset-0 w-full h-full"
           imgClassName="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         />

@@ -5,7 +5,7 @@ import Seo from '../components/Seo'
 import Icon from '../components/Icon'
 import SmartImage from '../components/SmartImage'
 import siteConfig from '../data/siteConfig'
-import { timeline, values, foundedYear } from '../data/about'
+import { timeline, yaklasim, hikaye, foundedYear } from '../data/about'
 
 export default function About() {
   return (
@@ -35,21 +35,9 @@ export default function About() {
                 Denizli&apos;de <span className="text-gradient-accent">Güvenilir</span> Bir Marka
               </h2>
               <div className="space-y-4 text-gray-600 leading-relaxed">
-                <p>
-                  <strong className="text-dark">{siteConfig.companyName}</strong>,{' '}
-                  {siteConfig.stats.yearsExperience} yılı aşkın saha deneyimiyle Denizli ve
-                  çevresinde beton delme, kesme ve kırma hizmetleri veren bir karot firmasıdır.
-                </p>
-                <p>
-                  Profesyonel makine parkurumuz, uzman kadromuz ve müşteri odaklı yaklaşımımızla
-                  her projede aynı kalite standardını sunmayı hedefliyoruz. İşe başlamadan önce
-                  yerinde keşif yapar, uygulanabilir yöntemi ve net fiyatı önceden paylaşırız.
-                </p>
-                <p>
-                  Konut projelerinden sanayi tesislerine, altyapı çalışmalarından kentsel dönüşüm
-                  projelerine kadar geniş bir yelpazede hizmet veriyoruz. Her işte güvenlik, kalite
-                  ve zamanında teslimat ilkelerimizden taviz vermiyoruz.
-                </p>
+                {hikaye.map((p) => (
+                  <p key={p.slice(0, 40)}>{p}</p>
+                ))}
               </div>
             </div>
 
@@ -123,19 +111,23 @@ export default function About() {
       <section className="section-padding bg-surface">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-14">
-            <h2 className="section-title text-dark">Değerlerimiz</h2>
+            <h2 className="section-title text-dark">Çalışma Prensiplerimiz</h2>
+            <p className="section-subtitle">
+              Her işte uyduğumuz kurallar. Bunlar pazarlama cümlesi değil, sahada
+              gerçekten uyguladığımız sıra.
+            </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {values.map((value) => (
+            {yaklasim.map((madde) => (
               <div
-                key={value.title}
-                className="bg-white rounded-2xl p-7 card-hover border border-gray-100 text-center group"
+                key={madde.baslik}
+                className="bg-white rounded-2xl p-7 card-hover border border-gray-100 group"
               >
-                <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-accent/10 text-accent flex items-center justify-center group-hover:bg-accent group-hover:text-white transition-colors duration-300">
-                  <Icon name={value.icon} className="w-7 h-7" />
+                <div className="w-14 h-14 mb-4 rounded-2xl bg-accent/10 text-accent flex items-center justify-center group-hover:bg-accent group-hover:text-white transition-colors duration-300">
+                  <Icon name={madde.icon} className="w-7 h-7" />
                 </div>
-                <h3 className="font-bold text-dark text-xl mb-2">{value.title}</h3>
-                <p className="text-gray-500 text-sm">{value.desc}</p>
+                <h3 className="font-bold text-dark text-lg mb-2">{madde.baslik}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{madde.metin}</p>
               </div>
             ))}
           </div>

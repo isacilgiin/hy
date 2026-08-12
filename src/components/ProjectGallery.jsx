@@ -1,6 +1,13 @@
-import { useState, useCallback } from 'react'
-import Lightbox from 'yet-another-react-lightbox'
-import 'yet-another-react-lightbox/styles.css'
+import { useState, useCallback, lazy, Suspense } from 'react'
+
+/**
+ * Lightbox yalnızca bir görsele tıklanınca indirilir. Önceden ana pakete
+ * dahildi ve proje galerisi boş olsa bile ~38 KB yer kaplıyordu.
+ */
+const Lightbox = lazy(async () => {
+  await import('yet-another-react-lightbox/styles.css')
+  return import('yet-another-react-lightbox')
+})
 import projects from '../data/projects'
 import Icon from './Icon'
 import SmartImage from './SmartImage'
@@ -90,12 +97,16 @@ export default function ProjectGallery({ limit }) {
         ))}
       </div>
 
-      <Lightbox
-        open={lightboxOpen}
-        close={() => setLightboxOpen(false)}
-        index={lightboxIndex}
-        slides={slides}
-      />
+      {lightboxOpen && (
+        <Suspense fallback={null}>
+          <Lightbox
+            open
+            close={() => setLightboxOpen(false)}
+            index={lightboxIndex}
+            slides={slides}
+          />
+        </Suspense>
+      )}
     </>
   )
 }
