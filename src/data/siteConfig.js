@@ -96,8 +96,17 @@ const siteConfig = {
   // ===== Analytics =====
   // Boş bırakıldığında ilgili script hiç yüklenmez.
   analytics: {
-    ga4: '', // TODO: 'G-XXXXXXXXXX' — Google Analytics 4 ölçüm kimliği
+    // Mevcut GA4 mülkünüz. Yayındaki WordPress sitesinin kaynak kodundan
+    // bulundu (GTM konteyneri ve Google Tag'in ikisi de buraya yönlendiriyor).
+    ga4: 'G-26EVFNCNE4',
     googleAds: '', // TODO: 'AW-XXXXXXXXX' — Google Ads dönüşüm kimliği
+
+    // Google Tag Manager (opsiyonel).
+    // Doldurursanız gtag yerine GTM yüklenir ve etiketleri koda dokunmadan
+    // GTM arayüzünden yönetirsiniz. Mevcut konteyneriniz: 'GTM-PFPDVBL4'
+    // (yayındaki sitede kullanılıyor, içinde GA4 zaten tanımlı).
+    // Boş bırakılırsa yukarıdaki ga4/googleAds kimlikleri doğrudan kullanılır.
+    gtm: '',
     googleSiteVerification: '', // TODO: Search Console doğrulama kodu
 
     // Google Ads dönüşüm etiketleri.
@@ -139,7 +148,11 @@ const siteConfig = {
   // ===== Kuruluş & İstatistikler =====
   // foundedYear tek kaynak: "yıl tecrübe" bundan HESAPLANIYOR, ikisi
   // birbirinden ayrı düşemez. Yılı değiştirmek yeterli.
-  foundedYear: 2014,
+  //
+  // 2015 seçildi çünkü yayındaki WordPress sitenizin meta açıklaması
+  // "10 yıllık deneyim" diyor ve o metin 2025'te yazılmış. Google'ın
+  // indeksinde bu ifade var; tutarlı kalmak için aynı çizgide ilerliyoruz.
+  foundedYear: 2015,
 
   stats: {
     // yearsExperience aşağıda foundedYear'dan hesaplanıp ekleniyor.

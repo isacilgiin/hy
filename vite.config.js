@@ -98,10 +98,20 @@ function seoFromConfig() {
     optionalMeta.push(`<meta name="google-site-verification" content="${analytics.googleSiteVerification}" />`)
   }
 
-  // gtag.js tek dosyadir; GA4 ve Google Ads ayni script uzerinden calisir.
-  // Hangisinin kimligi tanimliysa yalnizca o yapilandirilir.
-  const gtagKimlikleri = [analytics.ga4, analytics.googleAds].filter(Boolean)
-  const analyticsScript = gtagKimlikleri.length
+  // İki seçenek:
+  //   1) Google Tag Manager konteyneri (analytics.gtm doluysa) — etiketler
+  //      koda dokunmadan GTM arayüzünden yönetilir.
+  //   2) Doğrudan gtag.js — GA4 ve Google Ads aynı script üzerinden çalışır.
+  // GTM tanımlıysa o kullanılır; ikisi birden yüklenmez (çift ölçüm olurdu).
+  const gtagKimlikleri = analytics.gtm ? [] : [analytics.ga4, analytics.googleAds].filter(Boolean)
+  const gtmKullaniliyor = Boolean(analytics.gtm)
+
+  const analyticsScript = gtmKullaniliyor
+    ? `<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});
+    var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+    j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','${analytics.gtm}');</script>`
+    : gtagKimlikleri.length
     ? `<script async src="https://www.googletagmanager.com/gtag/js?id=${gtagKimlikleri[0]}"></script>
   <script>
     window.dataLayer=window.dataLayer||[];
@@ -127,9 +137,10 @@ ${gtagKimlikleri.map((id) => `    gtag('config','${id}');`).join('\n')}
     SITE_OG_IMAGE: ogImage,
     SITE_OPTIONAL_META: optionalMeta.join('\n  '),
     SITE_ANALYTICS: analyticsScript,
-    SITE_ANALYTICS_PRECONNECT: gtagKimlikleri.length
-      ? '<link rel="preconnect" href="https://www.googletagmanager.com" />\n  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />'
-      : '',
+    SITE_ANALYTICS_PRECONNECT:
+      gtagKimlikleri.length || gtmKullaniliyor
+        ? '<link rel="preconnect" href="https://www.googletagmanager.com" />\n  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />'
+        : '',
     SITE_JSONLD: JSON.stringify(jsonLd, null, 2),
     SITE_SERVICE_LINKS: services
       .map((s) => `<li><a href="/hizmetler/${s.slug}">${s.title}</a></li>`)
@@ -166,6 +177,10 @@ ${gtagKimlikleri.map((id) => `    gtag('config','${id}');`).join('\n')}
       '/hizmetler/karot/',
     ],
     ['Blog arşivi (yeni sitede blog yok)', '^blog/?$', '/'],
+    // Eski sitede /en/... adresleri vardı ama içerikleri TÜRKÇEYDİ ve
+    // canonical'ları Türkçe sayfayı gösteriyordu — gerçek bir İngilizce sürüm
+    // yoktu. Aynı yoldaki Türkçe sayfaya taşınıyorlar.
+    ['/en/ kopyaları', '^en/(.*)$', '/$1'],
     // WordPress taksonomi arşivleri
     ['service-category -> hizmet detayı', '^service-category/([a-z0-9-]+)/?$', '/hizmetler/$1/'],
     ['portfolio-category -> hizmet detayı', '^portfolio-category/([a-z0-9-]+)/?$', '/hizmetler/$1/'],

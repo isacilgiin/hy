@@ -128,23 +128,34 @@ metin/rozet olarak göstermek serbest. Kendi sitenizde yorum toplarsanız
 
 ## 1.5 Google Analytics ve Google Ads kimlikleri — nereden alınır?
 
-### A) GA4 Ölçüm Kimliği (`G-XXXXXXXXXX`)
+### A) GA4 Ölçüm Kimliği — ✅ BULUNDU, ZATEN GİRİLDİ
 
-1. [analytics.google.com](https://analytics.google.com) → sol altta **⚙ Yönetici**
-2. Sağ sütun **Mülk** altında → **Veri akışları**
-3. `20karot.com.tr` akışına tıkla
-4. Sağ üstte **Ölçüm Kimliği** yazıyor: `G-` ile başlayan kod. Kopyala.
+`G-26EVFNCNE4`
 
-→ `src/data/siteConfig.js` → `analytics.ga4`
+Aramanıza gerek kalmadı: yayındaki WordPress sitenizin kaynak kodundan çıkarıldı.
+Hem Tag Manager konteyneriniz (`GTM-PFPDVBL4`) hem de Google Tag'iniz
+(`GT-WRGZ972H`) bu GA4 mülküne yönlendiriyor. `siteConfig.analytics.ga4`
+alanına girildi, yeni site aynı mülke veri gönderecek — geçmiş verinizle
+kesintisiz devam eder.
 
-> Akış yoksa: **Veri akışları → Akış ekle → Web** → URL `https://20karot.com.tr`,
-> akış adı "20 Karot Web". Kimlik hemen oluşur.
+**Alternatif: Tag Manager kullanmak.** `analytics.gtm` alanına `GTM-PFPDVBL4`
+yazarsanız gtag yerine mevcut GTM konteyneriniz yüklenir; etiketleri koda
+dokunmadan GTM arayüzünden yönetirsiniz (GA4 zaten o konteynerde tanımlı).
+İkisini birden doldurmayın — GTM doluysa gtag yüklenmez, çift ölçüm olmaz.
 
 ### B) Google Ads Dönüşüm Kimliği (`AW-XXXXXXXXX`) ve etiketler
 
+> **Arayüz değiştiyse:** Google Ads menüsü sık değişiyor. Menüde aramak yerine
+> şu adresi doğrudan tarayıcıya yazın — hangi sürümde olursanız olun dönüşüm
+> listesine gider:
+>
+> **https://ads.google.com/aw/conversions**
+>
+> (Sizin gördüğünüz menüde bu sayfanın adı **Hedefler → Özet**.)
+
 **Önce mevcut sorunu düzelt:**
 
-1. [ads.google.com](https://ads.google.com) → üstte **Hedefler** → **Dönüşümler** → **Özet**
+1. **https://ads.google.com/aw/conversions** adresini aç
 2. Listede `20karot.com.tr (web) conversion_event_page_view` satırını bul
 3. Üstüne tıkla → **Ayarları düzenle** → **Hedef ve işlem optimizasyonu**
 4. **"İkincil işlem"** seç → Kaydet
@@ -155,7 +166,8 @@ metin/rozet olarak göstermek serbest. Kendi sitenizde yorum toplarsanız
 
 **Sonra gerçek dönüşümleri oluştur — 3 kez tekrarla:**
 
-1. **Dönüşümler → + Yeni dönüşüm işlemi → Web sitesi**
+1. Aynı sayfada (**https://ads.google.com/aw/conversions**) mavi **+** veya
+   **"Yeni dönüşüm işlemi"** düğmesi → **Web sitesi**
 2. Alan adı olarak `20karot.com.tr` yaz → **Tara**
 3. Alttaki **"Dönüşüm işlemini manuel olarak ekle"** bağlantısına tıkla
    *(sitede otomatik bulamayabilir, normal)*
