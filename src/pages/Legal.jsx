@@ -73,14 +73,14 @@ export default function Legal({ sayfa }) {
               </p>
               <a
                 href={`tel:${siteConfig.phoneRaw}`}
-                className="flex items-start gap-3 text-gray-600 hover:text-accent transition-colors"
+                className="flex items-start gap-3 text-gray-600 hover:text-accent transition-colors py-1"
               >
                 <Icon name="phone" className="w-5 h-5 shrink-0 text-accent" strokeWidth={2} />
                 <span>{siteConfig.phone}</span>
               </a>
               <a
                 href={`mailto:${siteConfig.email}`}
-                className="flex items-start gap-3 text-gray-600 hover:text-accent transition-colors"
+                className="flex items-start gap-3 text-gray-600 hover:text-accent transition-colors py-1"
               >
                 <Icon name="mail" className="w-5 h-5 shrink-0 text-accent" strokeWidth={2} />
                 <span className="break-all">{siteConfig.email}</span>
@@ -89,7 +89,7 @@ export default function Legal({ sayfa }) {
                 href={mapsUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start gap-3 text-gray-600 hover:text-accent transition-colors"
+                className="flex items-start gap-3 text-gray-600 hover:text-accent transition-colors py-1"
               >
                 <Icon name="mapPin" className="w-5 h-5 shrink-0 text-accent" strokeWidth={2} />
                 <span>{siteConfig.address.full}</span>

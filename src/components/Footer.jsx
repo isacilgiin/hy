@@ -67,7 +67,7 @@ export default function Footer() {
                 <li key={service.slug}>
                   <Link
                     to={`/hizmetler/${service.slug}`}
-                    className="text-white/60 hover:text-primary text-sm transition-colors hover:translate-x-1 inline-block"
+                    className="text-white/60 hover:text-primary text-sm transition-colors hover:translate-x-1 inline-block py-1"
                   >
                     {service.title}
                   </Link>
@@ -85,7 +85,7 @@ export default function Footer() {
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.to}>
-                  <Link to={link.to} className="text-white/60 hover:text-primary text-sm transition-colors">
+                  <Link to={link.to} className="text-white/60 hover:text-primary text-sm transition-colors inline-block py-1">
                     {link.label}
                   </Link>
                 </li>
@@ -102,7 +102,7 @@ export default function Footer() {
             <div className="space-y-4">
               <a
                 href={`tel:${siteConfig.phoneRaw}`}
-                className="flex items-start gap-3 text-white/60 hover:text-primary transition-colors"
+                className="flex items-start gap-3 text-white/60 hover:text-primary transition-colors py-1"
               >
                 <Icon name="phone" className="w-5 h-5 mt-0.5 shrink-0 text-primary" strokeWidth={2} />
                 <span className="text-sm">{siteConfig.phone}</span>
@@ -110,7 +110,7 @@ export default function Footer() {
 
               <a
                 href={`mailto:${siteConfig.email}`}
-                className="flex items-start gap-3 text-white/60 hover:text-primary transition-colors"
+                className="flex items-start gap-3 text-white/60 hover:text-primary transition-colors py-1"
               >
                 <Icon name="mail" className="w-5 h-5 mt-0.5 shrink-0 text-primary" strokeWidth={2} />
                 <span className="text-sm break-all">{siteConfig.email}</span>
@@ -120,7 +120,7 @@ export default function Footer() {
                 href={mapsUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start gap-3 text-white/60 hover:text-primary transition-colors"
+                className="flex items-start gap-3 text-white/60 hover:text-primary transition-colors py-1"
               >
                 <Icon name="mapPin" className="w-5 h-5 mt-0.5 shrink-0 text-primary" strokeWidth={2} />
                 <span className="text-sm">{siteConfig.address.full}</span>
@@ -150,7 +150,7 @@ export default function Footer() {
               <Link
                 key={link.to}
                 to={link.to}
-                className="text-white/40 hover:text-primary text-xs transition-colors"
+                className="text-white/40 hover:text-primary text-xs transition-colors inline-block py-1"
               >
                 {link.label}
               </Link>

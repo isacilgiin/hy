@@ -22,6 +22,18 @@ export default function Services() {
 
       <section className="section-padding bg-white">
         <div className="max-w-7xl mx-auto">
+          {/* H2 şart: H1'den sonra doğrudan kartların H3'üne atlanınca başlık
+              hiyerarşisinde seviye atlaması oluyordu (H1 → H3). */}
+          <div className="text-center mb-12">
+            <h2 className="section-title text-dark">
+              Denizli&apos;de Verdiğimiz <span className="text-gradient-accent">Karot</span> Hizmetleri
+            </h2>
+            <p className="section-subtitle">
+              Her hizmetin sayfasında yöntemi, sahada nasıl uygulandığını ve sık
+              sorulan soruları ayrıntısıyla anlattık.
+            </p>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {services.map((service, idx) => (
               <ServiceCard key={service.id} service={service} index={idx} />

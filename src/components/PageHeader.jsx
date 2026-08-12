@@ -47,14 +47,14 @@ export default function PageHeader({ title, description, breadcrumb = [], align 
               centered ? 'justify-center' : ''
             }`}
           >
-            <Link to="/" className="hover:text-primary transition-colors">
+            <Link to="/" className="hover:text-primary transition-colors inline-block py-1">
               Ana Sayfa
             </Link>
             {breadcrumb.map((crumb, idx) => (
               <span key={crumb.label} className="flex items-center gap-2">
                 <span aria-hidden="true">/</span>
                 {crumb.to && idx < breadcrumb.length - 1 ? (
-                  <Link to={crumb.to} className="hover:text-primary transition-colors">
+                  <Link to={crumb.to} className="hover:text-primary transition-colors inline-block py-1">
                     {crumb.label}
                   </Link>
                 ) : (

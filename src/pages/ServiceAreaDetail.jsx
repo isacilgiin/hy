@@ -14,12 +14,19 @@ export default function ServiceAreaDetail() {
   const area = serviceAreas.find((a) => a.slug === slug)
   const index = serviceAreas.findIndex((a) => a.slug === slug)
 
-  // Aynı bölgedeki diğer ilçeler — iç link ağı için (SEO'da önemli)
+  /**
+   * Yakın hizmet bölgeleri — iç link ağı.
+   *
+   * Önce "aynı bölge tipindekiler + kalanlar" sıralanıp ilk 8'i alınıyordu.
+   * Sonuç: dizinin sonundaki ilçeler (Güney, Baklan) neredeyse hiç iç link
+   * almıyordu — Güney 12, Merkezefendi 20 link alıyordu. Şimdi liste
+   * DÖNGÜSEL olarak seçiliyor: her ilçe, kendinden sonraki 8 ilçeyi listeliyor.
+   * Böylece her ilçe tam olarak 8 sayfadan iç link alıyor.
+   */
   const nearby = useMemo(() => {
     if (!area) return []
-    const sameZone = serviceAreas.filter((a) => a.slug !== slug && a.zone === area.zone)
-    const others = serviceAreas.filter((a) => a.slug !== slug && a.zone !== area.zone)
-    return [...sameZone, ...others].slice(0, 8)
+    const i = serviceAreas.findIndex((a) => a.slug === slug)
+    return Array.from({ length: 8 }, (_, k) => serviceAreas[(i + k + 1) % serviceAreas.length])
   }, [area, slug])
 
   const zone = area ? zoneContent[area.zone] : null

@@ -24,7 +24,18 @@ export default function Projects() {
       <section className="section-padding bg-white">
         <div className="max-w-7xl mx-auto">
           {projects.length > 0 ? (
-            <ProjectGallery />
+            <>
+              {/* H2 şart: H1'den kart H3'üne atlama olmasın */}
+              <div className="text-center mb-12">
+                <h2 className="section-title text-dark">
+                  Sahada <span className="text-gradient-accent">Nasıl Görünüyor?</span>
+                </h2>
+                <p className="section-subtitle">
+                  Hangi işte hangi yöntemin kullanıldığını görselleriyle anlattık.
+                </p>
+              </div>
+              <ProjectGallery />
+            </>
           ) : (
             <div className="max-w-xl mx-auto text-center">
               <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-accent/10 text-accent flex items-center justify-center">

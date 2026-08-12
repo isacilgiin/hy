@@ -2,9 +2,10 @@ import { useState } from 'react'
 import PageHeader from '../components/PageHeader'
 import Seo from '../components/Seo'
 import Icon from '../components/Icon'
+import MapEmbed from '../components/MapEmbed'
 import siteConfig from '../data/siteConfig'
 import services from '../data/services'
-import { mapsUrl, mapEmbedUrl, whatsappUrl } from '../utils/links'
+import { mapsUrl, whatsappUrl } from '../utils/links'
 import { trackConversion } from '../utils/analytics'
 
 const inputClass =
@@ -234,16 +235,7 @@ export default function Contact() {
             <div>
               <h2 className="text-2xl font-bold text-dark mb-6">Konum</h2>
               <div className="rounded-2xl overflow-hidden shadow-lg border border-gray-100 h-[400px] lg:h-[calc(100%-3.5rem)] min-h-[400px]">
-                <iframe
-                  src={mapEmbedUrl()}
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title={`${siteConfig.companyName} konum haritası`}
-                />
+                <MapEmbed />
               </div>
               <p className="mt-4 text-gray-500 text-sm flex items-start gap-2">
                 <Icon name="mapPin" className="w-5 h-5 shrink-0 text-accent" strokeWidth={2} />
