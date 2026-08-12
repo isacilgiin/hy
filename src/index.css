@@ -4,17 +4,33 @@
 /* Kanit is loaded via index.html link tag for better performance */
 
 /* ===== CUSTOM THEME ===== */
+/* ===== PALET: Kömür + Bordo + Altın (endüstriyel premium) =====
+   KONTRAST KURALI — tasarımda buna uy:
+     • ALTIN (primary) yalnızca KOYU zeminde metin/ikon rengidir.
+       Altın üzerine krem/beyaz zemin = 2.07:1 → WCAG AA (4.5:1) başarısız.
+     • Açık zeminde metin/ikon aksanı BORDO (accent) olmalıdır → 9.7:1 başarılı.
+     • Altın DOLGU (buton/rozet) üzerine KÖMÜR yazı → 7.9:1 başarılı.
+     • Bordo DOLGU üzerine BEYAZ yazı → 11.3:1 başarılı. */
 @theme {
-  --color-primary: #F5A623;
-  --color-primary-dark: #D4891A;
-  --color-primary-light: #FFCA6E;
-  --color-dark: #0A0A2E;
-  --color-dark-light: #141440;
-  --color-dark-lighter: #1E1E5A;
-  --color-gold: #F5A623;
-  --color-gold-dark: #D4891A;
-  --color-surface: #F8F9FA;
-  --color-surface-dark: #E9ECEF;
+  /* Altın — koyu zeminde vurgu, dolgu butonlar */
+  --color-primary: #C8A24A;
+  --color-primary-dark: #A8863A;
+  --color-primary-light: #E3C77E;
+
+  /* Bordo — açık zeminde vurgu, ikincil dolgu */
+  --color-accent: #6E1B2E;
+  --color-accent-dark: #4E1220;
+  --color-accent-light: #8E2B40;
+
+  /* Kömür — koyu zeminler */
+  --color-dark: #14100F;
+  --color-dark-light: #1F1917;
+  --color-dark-lighter: #2A2320;
+
+  /* Krem — açık zeminler */
+  --color-surface: #F2EDE7;
+  --color-surface-dark: #E4DACE;
+
   --font-kanit: 'Kanit', sans-serif;
 }
 
@@ -187,7 +203,7 @@
   }
 
   .glass-dark {
-    background: rgba(10, 10, 46, 0.85);
+    background: rgba(20, 16, 15, 0.88);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -198,15 +214,21 @@
     background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
   }
 
+  .gradient-accent {
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
+  }
+
   .gradient-dark {
     background: linear-gradient(180deg, var(--color-dark) 0%, var(--color-dark-light) 100%);
   }
 
+  /* Kömür → bordo geçişi: hero ve sayfa başlıklarının zemini */
   .gradient-hero {
-    background: linear-gradient(135deg, var(--color-dark) 0%, var(--color-dark-light) 50%, #1a1a5a 100%);
+    background: linear-gradient(135deg, #14100f 0%, #241417 45%, #4e1220 78%, #6e1b2e 100%);
   }
 
   /* ===== TEXT GRADIENT ===== */
+  /* .text-gradient → KOYU zeminde (altın) */
   .text-gradient {
     background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
     -webkit-background-clip: text;
@@ -214,13 +236,21 @@
     background-clip: text;
   }
 
+  /* .text-gradient-accent → AÇIK zeminde (bordo). Açık zeminde .text-gradient KULLANMA. */
+  .text-gradient-accent {
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
   /* ===== GOLDEN GLOW ===== */
   .glow-gold {
-    box-shadow: 0 0 20px rgba(245, 166, 35, 0.3), 0 0 60px rgba(245, 166, 35, 0.1);
+    box-shadow: 0 0 20px rgba(200, 162, 74, 0.28), 0 0 60px rgba(200, 162, 74, 0.1);
   }
 
   .glow-gold-hover:hover {
-    box-shadow: 0 0 30px rgba(245, 166, 35, 0.5), 0 0 80px rgba(245, 166, 35, 0.2);
+    box-shadow: 0 0 30px rgba(200, 162, 74, 0.45), 0 0 80px rgba(200, 162, 74, 0.18);
   }
 
   /* ===== BUTTON STYLES ===== */
@@ -258,7 +288,7 @@
 
   .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(245, 166, 35, 0.4);
+    box-shadow: 0 8px 25px rgba(200, 162, 74, 0.35);
   }
 
   .btn-primary:hover::before {
@@ -288,7 +318,35 @@
     background: var(--color-primary);
     color: var(--color-dark);
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(245, 166, 35, 0.4);
+    box-shadow: 0 8px 25px rgba(200, 162, 74, 0.35);
+  }
+
+  /* AÇIK zeminde kullanılacak çerçeveli buton — altın çerçeve/yazı krem zeminde
+     okunmadığı için (2.07:1) bordo varyant. */
+  .btn-outline-accent {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 2rem;
+    background: transparent;
+    color: var(--color-accent);
+    font-family: var(--font-kanit);
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.2;
+    border: 2px solid var(--color-accent);
+    border-radius: 50px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .btn-outline-accent:hover {
+    background: var(--color-accent);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(110, 27, 46, 0.3);
   }
 
   /* ===== SECTION STYLES ===== */
@@ -345,22 +403,42 @@
 
   /* ===== SWIPER CUSTOM ===== */
   .swiper-pagination-bullet {
-    background: rgba(255, 255, 255, 0.5) !important;
+    background: rgba(255, 255, 255, 0.45) !important;
     width: 10px !important;
     height: 10px !important;
+    opacity: 1 !important;
+    transition: width 0.3s ease, background 0.3s ease;
   }
 
   .swiper-pagination-bullet-active {
     background: var(--color-primary) !important;
-    width: 30px !important;
+    width: 32px !important;
     border-radius: 5px !important;
+  }
+
+  /* Hero slider — noktalar alttaki dalganın ÜSTÜNDE kalsın */
+  .hero-swiper .swiper-pagination {
+    bottom: 5.5rem !important;
+    z-index: 25;
+  }
+
+  @media (min-width: 640px) {
+    .hero-swiper .swiper-pagination {
+      bottom: 6.5rem !important;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-swiper .swiper-pagination {
+      bottom: 8.5rem !important;
+    }
   }
 
   /* ===== MOBILE MENU ===== */
   .mobile-menu-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(10, 10, 46, 0.95);
+    background: linear-gradient(160deg, rgba(20, 16, 15, 0.97) 0%, rgba(78, 18, 32, 0.97) 100%);
     backdrop-filter: blur(10px);
     z-index: 40;
     overflow-y: auto;

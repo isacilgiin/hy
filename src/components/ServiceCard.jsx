@@ -1,42 +1,54 @@
 import { Link } from 'react-router-dom'
+import Icon from './Icon'
+import SmartImage from './SmartImage'
 
 export default function ServiceCard({ service, index = 0 }) {
-  const delayClass = `delay-${(index % 4 + 1) * 100}`
+  const delayClass = `delay-${((index % 4) + 1) * 100}`
 
   return (
     <Link
       to={`/hizmetler/${service.slug}`}
-      className={`animate-fade-in-up ${delayClass} group relative bg-white rounded-2xl p-7 card-hover border border-gray-100 overflow-hidden`}
+      className={`animate-fade-in-up ${delayClass} group relative flex flex-col bg-white rounded-2xl card-hover border border-gray-100 overflow-hidden`}
     >
-      {/* Hover Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      {/* Görsel */}
+      <div className="relative aspect-[16/10] overflow-hidden bg-dark">
+        <SmartImage
+          src={service.image}
+          alt={service.title}
+          icon={service.icon}
+          label={service.shortTitle}
+          className="absolute inset-0 w-full h-full"
+          imgClassName="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-dark/70 to-transparent opacity-60 group-hover:opacity-30 transition-opacity duration-500" />
 
-      {/* Top Accent Line */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-primary-dark transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
-
-      <div className="relative">
-        {/* Icon */}
-        <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center text-2xl mb-5 group-hover:bg-primary/20 transition-colors">
-          {service.icon}
+        {/* İkon rozeti */}
+        <div className="absolute bottom-3 left-3 w-11 h-11 rounded-xl gradient-primary flex items-center justify-center shadow-lg">
+          <Icon name={service.icon} className="w-6 h-6 text-dark" strokeWidth={1.75} />
         </div>
+      </div>
 
-        {/* Title */}
-        <h3 className="text-xl font-bold text-dark mb-3 group-hover:text-primary transition-colors">
+      {/* Üst vurgu çizgisi */}
+      <div className="absolute top-0 left-0 right-0 h-1 gradient-accent transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 z-10" />
+
+      {/* İçerik */}
+      <div className="flex flex-col flex-1 p-6">
+        <h3 className="text-lg font-bold text-dark mb-2 group-hover:text-accent transition-colors">
           {service.title}
         </h3>
 
-        {/* Description */}
-        <p className="text-gray-500 text-sm leading-relaxed mb-5">
+        <p className="text-gray-500 text-sm leading-relaxed mb-5 flex-1">
           {service.shortDescription}
         </p>
 
-        {/* Arrow Link */}
-        <div className="flex items-center gap-2 text-primary font-semibold text-sm">
-          <span>Detaylı Bilgi</span>
-          <svg className="w-4 h-4 transform group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-          </svg>
-        </div>
+        <span className="flex items-center gap-2 text-accent font-semibold text-sm">
+          Detaylı Bilgi
+          <Icon
+            name="arrowRight"
+            className="w-4 h-4 transition-transform group-hover:translate-x-1.5"
+            strokeWidth={2}
+          />
+        </span>
       </div>
     </Link>
   )

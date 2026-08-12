@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import PageHeader from '../components/PageHeader'
+import Icon from '../components/Icon'
 import siteConfig from '../data/siteConfig'
+import services from '../data/services'
+import { mapsUrl, mapEmbedUrl, whatsappUrl } from '../utils/links'
+
+const inputClass =
+  'w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-accent focus:ring-2 focus:ring-accent/20 outline-none transition-all text-sm'
 
 export default function Contact() {
   useEffect(() => {
@@ -8,76 +14,109 @@ export default function Contact() {
   }, [])
 
   const [formData, setFormData] = useState({
-    name: '', phone: '', email: '', service: '', message: ''
+    name: '',
+    phone: '',
+    email: '',
+    service: '',
+    message: '',
   })
   const [submitted, setSubmitted] = useState(false)
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    // Form gönderimi — backend entegrasyonu sonra yapılacak
-    // Şimdilik WhatsApp'a yönlendir
-    const text = `Merhaba, ben ${formData.name}.\n\nHizmet: ${formData.service}\n\n${formData.message}\n\nTelefon: ${formData.phone}\nE-posta: ${formData.email}`
-    window.open(`https://wa.me/905078549502?text=${encodeURIComponent(text)}`, '_blank')
+    // Backend yok — mesaj WhatsApp'a aktarılıyor.
+    // TODO: form backend'i (Formspree / Netlify Forms / kendi PHP endpoint'iniz)
+    const text = [
+      `Merhaba, ben ${formData.name}.`,
+      '',
+      formData.service && `Hizmet: ${formData.service}`,
+      '',
+      formData.message,
+      '',
+      `Telefon: ${formData.phone}`,
+      formData.email && `E-posta: ${formData.email}`,
+    ]
+      .filter((line) => line !== false && line !== undefined)
+      .join('\n')
+
+    window.open(whatsappUrl(text), '_blank', 'noopener,noreferrer')
     setSubmitted(true)
   }
 
+  const contactCards = [
+    {
+      icon: 'phone',
+      title: 'Telefon',
+      value: siteConfig.phone,
+      href: `tel:${siteConfig.phoneRaw}`,
+    },
+    {
+      icon: 'whatsapp',
+      title: 'WhatsApp',
+      value: 'Mesaj Gönderin',
+      href: whatsappUrl(),
+    },
+    {
+      icon: 'mail',
+      title: 'E-posta',
+      value: siteConfig.email,
+      href: `mailto:${siteConfig.email}`,
+    },
+    {
+      icon: 'mapPin',
+      title: 'Adres',
+      value: `${siteConfig.address.district}, ${siteConfig.address.city}`,
+      href: mapsUrl(),
+    },
+  ]
+
   return (
     <div className="page-enter">
-      {/* Header */}
-      <section className="gradient-hero pt-32 pb-20 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 right-20 w-96 h-96 rounded-full bg-primary/20 blur-[100px]"></div>
-        </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4 animate-fade-in-up">İletişim</h1>
-          <p className="text-white/60 text-lg max-w-2xl mx-auto animate-fade-in-up delay-200">
-            Projeleriniz için ücretsiz keşif ve fiyat teklifi alın. Hemen bize ulaşın!
-          </p>
-          <div className="mt-6 flex items-center justify-center gap-2 text-white/40 text-sm animate-fade-in-up delay-300">
-            <Link to="/" className="hover:text-primary transition-colors">Ana Sayfa</Link>
-            <span>/</span>
-            <span className="text-primary">İletişim</span>
-          </div>
-        </div>
-      </section>
+      <PageHeader
+        title="İletişim"
+        description="Projeleriniz için ücretsiz keşif ve fiyat teklifi alın. Hemen bize ulaşın!"
+        breadcrumb={[{ label: 'İletişim' }]}
+      />
 
-      {/* Contact Cards */}
       <section className="section-padding bg-white">
         <div className="max-w-7xl mx-auto">
-          {/* Quick Contact Cards */}
+          {/* Hızlı iletişim kartları */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16 -mt-20 relative z-10">
-            {[
-              { icon: '📞', title: 'Telefon', value: siteConfig.phone, href: `tel:${siteConfig.phoneRaw}`, color: 'from-blue-500/10 to-blue-600/5' },
-              { icon: '💬', title: 'WhatsApp', value: 'Mesaj Gönderin', href: siteConfig.social.whatsapp, color: 'from-green-500/10 to-green-600/5' },
-              { icon: '📧', title: 'E-posta', value: siteConfig.email, href: `mailto:${siteConfig.email}`, color: 'from-purple-500/10 to-purple-600/5' },
-              { icon: '📍', title: 'Adres', value: siteConfig.address.district + ', ' + siteConfig.address.city, href: `https://maps.google.com/?q=${siteConfig.geo.lat},${siteConfig.geo.lng}`, color: 'from-red-500/10 to-red-600/5' },
-            ].map((item, idx) => (
-              <a
-                key={idx}
-                href={item.href}
-                target={item.href.startsWith('http') ? '_blank' : undefined}
-                rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                className={`bg-white rounded-2xl p-6 card-hover border border-gray-100 text-center group shadow-lg`}
-              >
-                <div className={`w-14 h-14 mx-auto mb-4 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center text-2xl group-hover:scale-110 transition-transform`}>
-                  {item.icon}
-                </div>
-                <h3 className="font-bold text-dark mb-1">{item.title}</h3>
-                <p className="text-gray-500 text-sm">{item.value}</p>
-              </a>
-            ))}
+            {contactCards.map((item) => {
+              const isExternal = item.href.startsWith('http')
+              return (
+                <a
+                  key={item.title}
+                  href={item.href}
+                  target={isExternal ? '_blank' : undefined}
+                  rel={isExternal ? 'noopener noreferrer' : undefined}
+                  className="bg-white rounded-2xl p-6 card-hover border border-gray-100 text-center group shadow-lg"
+                >
+                  <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-accent/10 text-accent flex items-center justify-center group-hover:bg-accent group-hover:text-white transition-colors duration-300">
+                    <Icon name={item.icon} className="w-6 h-6" strokeWidth={1.75} />
+                  </div>
+                  <h2 className="font-bold text-dark mb-1">{item.title}</h2>
+                  <p className="text-gray-500 text-sm break-words">{item.value}</p>
+                </a>
+              )
+            })}
           </div>
 
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Form */}
             <div>
               <h2 className="text-2xl font-bold text-dark mb-6">Bize Yazın</h2>
+
               {submitted ? (
-                <div className="bg-green-50 rounded-2xl p-8 text-center">
-                  <div className="text-5xl mb-4">✅</div>
-                  <h3 className="text-xl font-bold text-green-800 mb-2">Mesajınız İletildi!</h3>
-                  <p className="text-green-600">En kısa sürede size geri dönüş yapacağız.</p>
-                  <button onClick={() => setSubmitted(false)} className="btn-primary mt-6">
+                <div className="bg-green-50 border border-green-100 rounded-2xl p-8 text-center">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-100 text-green-700 flex items-center justify-center">
+                    <Icon name="checkCircle" className="w-9 h-9" strokeWidth={1.75} />
+                  </div>
+                  <h3 className="text-xl font-bold text-green-800 mb-2">WhatsApp&apos;a Yönlendirildiniz</h3>
+                  <p className="text-green-700 text-sm">
+                    Açılan pencereden mesajınızı gönderin, en kısa sürede dönüş yapalım.
+                  </p>
+                  <button type="button" onClick={() => setSubmitted(false)} className="btn-primary mt-6">
                     Yeni Mesaj
                   </button>
                 </div>
@@ -85,97 +124,123 @@ export default function Contact() {
                 <form onSubmit={handleSubmit} className="space-y-5">
                   <div className="grid sm:grid-cols-2 gap-5">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Ad Soyad *</label>
+                      <label htmlFor="ad-soyad" className="block text-sm font-medium text-gray-700 mb-2">
+                        Ad Soyad *
+                      </label>
                       <input
+                        id="ad-soyad"
+                        name="name"
                         type="text"
                         required
+                        autoComplete="name"
                         value={formData.name}
-                        onChange={e => setFormData({...formData, name: e.target.value})}
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        className={inputClass}
                         placeholder="Adınız Soyadınız"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Telefon *</label>
+                      <label htmlFor="telefon" className="block text-sm font-medium text-gray-700 mb-2">
+                        Telefon *
+                      </label>
                       <input
+                        id="telefon"
+                        name="phone"
                         type="tel"
                         required
+                        autoComplete="tel"
                         value={formData.phone}
-                        onChange={e => setFormData({...formData, phone: e.target.value})}
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        className={inputClass}
                         placeholder="05XX XXX XX XX"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">E-posta</label>
+                    <label htmlFor="eposta" className="block text-sm font-medium text-gray-700 mb-2">
+                      E-posta
+                    </label>
                     <input
+                      id="eposta"
+                      name="email"
                       type="email"
+                      autoComplete="email"
                       value={formData.email}
-                      onChange={e => setFormData({...formData, email: e.target.value})}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
-                      placeholder="email@ornek.com"
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className={inputClass}
+                      placeholder="ornek@eposta.com"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Hizmet Türü</label>
+                    <label htmlFor="hizmet" className="block text-sm font-medium text-gray-700 mb-2">
+                      Hizmet Türü
+                    </label>
                     <select
+                      id="hizmet"
+                      name="service"
                       value={formData.service}
-                      onChange={e => setFormData({...formData, service: e.target.value})}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm bg-white"
+                      onChange={(e) => setFormData({ ...formData, service: e.target.value })}
+                      className={`${inputClass} bg-white`}
                     >
                       <option value="">Seçiniz...</option>
-                      <option value="Beton Delme">Beton Delme</option>
-                      <option value="Beton Kesme">Beton Kesme</option>
-                      <option value="Beton Kırma">Beton Kırma</option>
-                      <option value="Asfalt Derz Kesim">Asfalt Derz Kesim</option>
-                      <option value="Hidrolik Beton Kesme">Hidrolik Beton Kesme</option>
-                      <option value="Filiz Ekimi">Filiz Ekimi</option>
-                      <option value="Kimyasal Dübel & Ankraj">Kimyasal Dübel & Ankraj</option>
-                      <option value="Kontrollü Bina Yıkımı">Kontrollü Bina Yıkımı</option>
+                      {services.map((s) => (
+                        <option key={s.slug} value={s.title}>
+                          {s.title}
+                        </option>
+                      ))}
                       <option value="Diğer">Diğer</option>
                     </select>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Mesajınız *</label>
+                    <label htmlFor="mesaj" className="block text-sm font-medium text-gray-700 mb-2">
+                      Mesajınız *
+                    </label>
                     <textarea
+                      id="mesaj"
+                      name="message"
                       required
                       rows={5}
                       value={formData.message}
-                      onChange={e => setFormData({...formData, message: e.target.value})}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm resize-none"
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      className={`${inputClass} resize-none`}
                       placeholder="Projeniz hakkında kısa bilgi verin..."
                     />
                   </div>
 
-                  <button type="submit" className="btn-primary w-full justify-center py-4 text-lg">
+                  <p className="text-gray-400 text-xs">
+                    Gönder&apos;e bastığınızda mesajınız WhatsApp üzerinden iletilir.
+                  </p>
+
+                  <button type="submit" className="btn-primary w-full py-4 text-lg">
                     Mesaj Gönder
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                    </svg>
+                    <Icon name="send" className="w-5 h-5" strokeWidth={2} />
                   </button>
                 </form>
               )}
             </div>
 
-            {/* Map */}
+            {/* Harita */}
             <div>
               <h2 className="text-2xl font-bold text-dark mb-6">Konum</h2>
-              <div className="rounded-2xl overflow-hidden shadow-lg border border-gray-100 h-[400px] lg:h-full min-h-[400px]">
+              <div className="rounded-2xl overflow-hidden shadow-lg border border-gray-100 h-[400px] lg:h-[calc(100%-3.5rem)] min-h-[400px]">
                 <iframe
-                  src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3000!2d${siteConfig.geo.lng}!3d${siteConfig.geo.lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzfCsDQ3JzU2LjgiTiAyOcKwMDUnNTkuNCJF!5e0!3m2!1str!2str!4v1`}
+                  src={mapEmbedUrl()}
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
-                  allowFullScreen=""
+                  allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="Güçlü Karot Konum"
-                ></iframe>
+                  title={`${siteConfig.companyName} konum haritası`}
+                />
               </div>
+              <p className="mt-4 text-gray-500 text-sm flex items-start gap-2">
+                <Icon name="mapPin" className="w-5 h-5 shrink-0 text-accent" strokeWidth={2} />
+                {siteConfig.address.full}
+              </p>
             </div>
           </div>
         </div>

@@ -1,113 +1,167 @@
 import { Link } from 'react-router-dom'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Autoplay, EffectFade, Pagination, Keyboard, A11y } from 'swiper/modules'
+import 'swiper/css'
+import 'swiper/css/effect-fade'
+import 'swiper/css/pagination'
+
 import siteConfig from '../data/siteConfig'
+import heroSlides from '../data/heroSlides'
+import Icon from './Icon'
+import SmartImage from './SmartImage'
+
+/** Kullanıcı "hareketi azalt" dediyse otomatik oynatma çalışmaz. */
+const prefersReducedMotion =
+  typeof window !== 'undefined' &&
+  window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+
+const heroStats = [
+  { key: 'years', icon: 'award', label: 'Yıl Tecrübe', value: (s) => (s.yearsExperience ? `${s.yearsExperience}+` : null) },
+  { key: 'projects', icon: 'clipboard', label: 'Tamamlanan Proje', value: (s) => (s.completedProjects ? `${s.completedProjects.toLocaleString('tr-TR')}+` : null) },
+  { key: 'clients', icon: 'smile', label: 'Mutlu Müşteri', value: (s) => (s.happyClients ? `${s.happyClients.toLocaleString('tr-TR')}+` : null) },
+  { key: 'emergency', icon: 'siren', label: 'Acil Servis', value: () => (siteConfig.workingHours.emergency ? '7/24' : null) },
+]
 
 export default function HeroSection() {
+  const stats = heroStats
+    .map((s) => ({ ...s, resolved: s.value(siteConfig.stats) }))
+    .filter((s) => s.resolved !== null)
+
   return (
-    <section className="relative min-h-screen flex items-center gradient-hero overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-20 right-20 w-96 h-96 rounded-full bg-primary/20 blur-[100px]"></div>
-        <div className="absolute bottom-20 left-10 w-72 h-72 rounded-full bg-primary/10 blur-[80px]"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-primary/5 blur-[120px]"></div>
-      </div>
-
-      {/* Grid Pattern Overlay */}
-      <div className="absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px)`,
-          backgroundSize: '60px 60px',
+    <section className="relative bg-dark overflow-hidden" aria-label="Öne çıkanlar">
+      <Swiper
+        className="hero-swiper"
+        modules={[Autoplay, EffectFade, Pagination, Keyboard, A11y]}
+        effect="fade"
+        fadeEffect={{ crossFade: true }}
+        speed={900}
+        loop={heroSlides.length > 1}
+        autoplay={
+          prefersReducedMotion || heroSlides.length < 2
+            ? false
+            : { delay: 6500, disableOnInteraction: false, pauseOnMouseEnter: true }
+        }
+        pagination={{ clickable: true }}
+        keyboard={{ enabled: true }}
+        a11y={{
+          prevSlideMessage: 'Önceki slayt',
+          nextSlideMessage: 'Sonraki slayt',
+          paginationBulletMessage: '{{index}}. slayta git',
         }}
-      ></div>
-
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 w-full">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left Content */}
-          <div>
-            {/* Badge */}
-            <div className="animate-fade-in-down inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8">
-              <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-              <span className="text-white/80 text-sm font-medium">Denizli&apos;nin 1 Numaralı Karot Firması</span>
+      >
+        {heroSlides.map((slide) => (
+          <SwiperSlide key={slide.id}>
+            {/* Arka plan görseli */}
+            <div className="absolute inset-0">
+              <SmartImage
+                src={slide.image}
+                alt=""
+                icon={null}
+                className="w-full h-full"
+                imgClassName="w-full h-full object-cover"
+                loading="eager"
+                aria-hidden="true"
+              />
             </div>
 
-            {/* Title */}
-            <h1 className="animate-fade-in-up text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
-              Profesyonel
-              <span className="text-gradient block mt-2">Beton Delme & Kesme</span>
-              <span className="block mt-2">Hizmetleri</span>
-            </h1>
+            {/* Okunabilirlik katmanı — metin her görselde kontrastlı kalsın diye */}
+            <div className="absolute inset-0 bg-gradient-to-r from-dark via-dark/90 to-dark/55" />
+            <div className="absolute inset-0 bg-gradient-to-t from-dark via-transparent to-dark/60" />
+            {/* Bordo yıkama — paletin bordo tonu fotoğrafın üzerinde de görünsün */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  'radial-gradient(75% 65% at 88% 15%, rgba(110,27,46,0.55) 0%, rgba(110,27,46,0.18) 45%, transparent 72%)',
+              }}
+            />
 
-            {/* Description */}
-            <p className="animate-fade-in-up delay-200 text-white/60 text-lg sm:text-xl leading-relaxed mb-10 max-w-xl">
-              Hilti marka profesyonel ekipmanlarımızla <strong className="text-white/90">sıfır hata</strong>, minimum titreşim ve maksimum hız. 
-              <strong className="text-primary"> {siteConfig.stats.yearsExperience}+ yıllık</strong> saha tecrübesiyle güvencenizdeyiz.
-            </p>
+            {/* Izgara dokusu */}
+            <div
+              className="absolute inset-0 opacity-[0.04]"
+              style={{
+                backgroundImage:
+                  'linear-gradient(rgba(255,255,255,.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.5) 1px, transparent 1px)',
+                backgroundSize: '60px 60px',
+              }}
+            />
 
-            {/* CTAs */}
-            <div className="animate-fade-in-up delay-300 flex flex-wrap gap-4">
-              <a href={`tel:${siteConfig.phoneRaw}`} className="btn-primary text-lg px-8 py-4">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                </svg>
-                Hemen Arayın
-              </a>
-              <Link to="/hizmetler" className="btn-outline text-lg px-8 py-4">
-                Hizmetlerimiz
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </Link>
-            </div>
-
-            {/* Trust Badges */}
-            <div className="animate-fade-in-up delay-500 mt-12 flex items-center gap-8 flex-wrap">
-              <div className="flex items-center gap-2">
-                <div className="flex -space-x-2">
-                  {[1,2,3,4].map(i => (
-                    <div key={i} className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary-dark border-2 border-dark flex items-center justify-center text-[10px] font-bold text-dark">
-                      {['HK','MA','AY','ÖZ'][i-1]}
-                    </div>
-                  ))}
+            {/* İçerik */}
+            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[100svh] flex items-center pt-32 pb-40 sm:pb-48 lg:pb-52">
+              <div className="w-full lg:max-w-[54%]">
+                {/* Rozet */}
+                <div className="animate-fade-in-down inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8">
+                  <Icon name={slide.icon} className="w-4 h-4 text-primary" strokeWidth={2} />
+                  <span className="text-white/85 text-sm font-medium">{slide.badge}</span>
                 </div>
-                <div className="text-white/60 text-sm">
-                  <span className="text-white font-semibold">{siteConfig.stats.happyClients.toLocaleString('tr-TR')}+</span> mutlu müşteri
+
+                {/* Başlık */}
+                <h1 className="animate-fade-in-up text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+                  {slide.title}
+                  <span className="text-gradient block mt-2">{slide.titleAccent}</span>
+                  {slide.titleAfter && <span className="block mt-2">{slide.titleAfter}</span>}
+                </h1>
+
+                {/* Açıklama */}
+                <p
+                  className="animate-fade-in-up delay-200 text-white/65 text-lg sm:text-xl leading-relaxed mb-10 max-w-xl [&_strong]:text-white [&_strong]:font-semibold"
+                  dangerouslySetInnerHTML={{ __html: slide.description }}
+                />
+
+                {/* CTA */}
+                <div className="animate-fade-in-up delay-300 flex flex-wrap gap-4">
+                  <a href={`tel:${siteConfig.phoneRaw}`} className="btn-primary text-lg px-8 py-4">
+                    <Icon name="phone" className="w-5 h-5" strokeWidth={2} />
+                    Hemen Arayın
+                  </a>
+                  <Link to="/hizmetler" className="btn-outline text-lg px-8 py-4">
+                    Hizmetlerimiz
+                    <Icon name="arrowRight" className="w-5 h-5" strokeWidth={2} />
+                  </Link>
                 </div>
               </div>
-              <div className="flex items-center gap-1">
-                {[1,2,3,4,5].map(i => (
-                  <svg key={i} className="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-                ))}
-                <span className="text-white/60 text-sm ml-1">5.0/5</span>
-              </div>
             </div>
-          </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
 
-          {/* Right - Stats Cards */}
-          <div className="hidden lg:grid grid-cols-2 gap-4">
-            {[
-              { value: `${siteConfig.stats.yearsExperience}+`, label: 'Yıl Tecrübe', icon: '🏆', delay: 'delay-200' },
-              { value: `${siteConfig.stats.completedProjects.toLocaleString('tr-TR')}+`, label: 'Tamamlanan Proje', icon: '📋', delay: 'delay-300' },
-              { value: `${siteConfig.stats.happyClients.toLocaleString('tr-TR')}+`, label: 'Mutlu Müşteri', icon: '😊', delay: 'delay-400' },
-              { value: '7/24', label: 'Acil Servis', icon: '🚨', delay: 'delay-500' },
-            ].map((stat, idx) => (
-              <div
-                key={idx}
-                className={`animate-scale-in ${stat.delay} glass rounded-2xl p-6 text-center card-hover glow-gold-hover group cursor-default`}
-              >
-                <div className="text-3xl mb-3 group-hover:animate-float">{stat.icon}</div>
-                <div className="text-3xl font-bold text-white mb-1">{stat.value}</div>
-                <div className="text-white/50 text-sm">{stat.label}</div>
-              </div>
-            ))}
+      {/* Sağ sütun istatistik kartları — slaytlarla birlikte değişmediği için
+          Swiper'ın DIŞINDA, sabit katman olarak duruyor. */}
+      {stats.length > 0 && (
+        <div className="pointer-events-none absolute inset-0 z-10 hidden lg:block">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-end pb-40">
+            <div className="grid grid-cols-2 gap-4 w-[400px] pointer-events-auto">
+              {stats.map((stat, idx) => (
+                <div
+                  key={stat.key}
+                  className={`animate-scale-in delay-${(idx + 2) * 100} glass rounded-2xl p-6 text-center card-hover glow-gold-hover group cursor-default`}
+                >
+                  <Icon
+                    name={stat.icon}
+                    className="w-8 h-8 mx-auto mb-3 text-primary group-hover:animate-float"
+                  />
+                  <div className="text-3xl font-bold text-white mb-1">{stat.resolved}</div>
+                  <div className="text-white/50 text-sm">{stat.label}</div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Bottom Wave */}
-      <div className="absolute bottom-0 left-0 right-0">
-        <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
-          <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white"/>
+      {/* Alt dalga — bir sonraki (beyaz) bölüme geçiş */}
+      <div className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none">
+        <svg
+          viewBox="0 0 1440 120"
+          preserveAspectRatio="none"
+          className="w-full h-16 sm:h-20 lg:h-28 block"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z"
+            fill="#ffffff"
+          />
         </svg>
       </div>
     </section>

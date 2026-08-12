@@ -1,97 +1,97 @@
-# Güçlü Karot — Denizli Beton Delme, Kesme & Kırma Hizmetleri
+# 20 Karot — Denizli Beton Delme, Kesme & Kırma Hizmetleri
 
-> Bu dosya, yapay zeka dil modelleri (LLM) için hazırlanmıştır.
-> Son güncelleme: 2026-08-12
+> Bu dosya, yapay zeka dil modelleri (LLM) ve AI arama motorları için hazırlanmıştır.
+> Kaynak: https://20karot.com.tr
 
 ## Firma Bilgileri
 
-- Firma Adı: Güçlü Karot
-- Sektör: Beton Delme, Kesme, Kırma Hizmetleri
+- Firma Adı: 20 Karot
+- Sektör: Beton delme, kesme ve kırma (karot) hizmetleri
 - Konum: Denizli, Türkiye
-- Adres: Sümer, 72. Sk. No:1, Merkezefendi / Denizli
-- Telefon: 0507 854 95 02
-- E-posta: info@guclukarot.com
-- Web: https://guclukarot.com
+- Adres: Yeni Mah. 5039. Sk. No:14, 20100 Merkezefendi / Denizli
+- Telefon: 0545 678 91 94
+- E-posta: 20karot20@gmail.com
+- Web: https://20karot.com.tr
 - Çalışma Saatleri: Pazartesi–Cumartesi 08:00–18:00
-- Tecrübe: 15+ yıl
+
+## Kısaca
+
+20 Karot, Denizli ve çevre ilçelerde betonarme yapılarda delme, kesme ve kırma
+işleri yapan bir karot firmasıdır. İşe başlamadan önce yerinde keşif yapılır,
+uygulanacak yöntem ve net fiyat önceden paylaşılır.
 
 ## Hizmetlerimiz
 
 ### 1. Beton Delme
-Hilti karot makineleri ile 50mm'den 1000mm'ye kadar her çapta hassas beton delme.
-Detay: https://guclukarot.com/hizmetler/beton-delme
+Karot makineleriyle 50mm'den 1000mm'ye kadar her çapta hassas beton delme.
+Tesisat geçişleri, havalandırma kanalları, baca ve kablo delikleri.
+Detay: https://20karot.com.tr/hizmetler/beton-delme
 
 ### 2. Beton Kesme
-Duvar, döşeme ve temel kesimi için elmas diskli profesyonel beton kesme.
-Detay: https://guclukarot.com/hizmetler/beton-kesme
+Elmas diskli duvar testeresiyle duvar, döşeme, kolon ve temel kesimi.
+Kapı/pencere açıklığı, asansör ve merdiven boşluğu açma.
+Detay: https://20karot.com.tr/hizmetler/beton-kesme
 
 ### 3. Beton Kırma
-Kontrollü beton kırma ile minimum gürültü ve titreşimde yıkım.
-Detay: https://guclukarot.com/hizmetler/beton-kirma
+Elektrikli ve hidrolik kırıcılarla kontrollü kırım. Taşıyıcı sisteme zarar
+vermeden tadilat ve renovasyon yıkımları, moloz toplama ve nakliye.
+Detay: https://20karot.com.tr/hizmetler/beton-kirma
 
 ### 4. Asfalt Derz Kesim
-Yol ve zemin çalışmalarında düzgün derz kesimi ve asfalt kesme.
-Detay: https://guclukarot.com/hizmetler/asfalt-derz-kesim
+Asfalt ve beton yol kesimi, derz açma, altyapı hendek kesimi.
+300mm derinliğe kadar, düzgün ve temiz kesim hattı.
+Detay: https://20karot.com.tr/hizmetler/asfalt-derz-kesim
 
 ### 5. Hidrolik Beton Kesme
-Büyük çaplı projelerde hidrolik güçle yüksek kapasiteli beton kesme.
-Detay: https://guclukarot.com/hizmetler/hidrolik-beton-kesme
+Hidrolik güç üniteli sistemlerle 1 metreyi aşan derinliklerde kesim.
+Köprü, baraj, sanayi tesisi gibi büyük çaplı projeler; su altı kesim imkanı.
+Detay: https://20karot.com.tr/hizmetler/hidrolik-beton-kesme
 
 ### 6. Filiz Ekimi
-Kimyasal dübel ve demir filiz ekimi ile güçlü yapısal bağlantılar.
-Detay: https://guclukarot.com/hizmetler/filiz-ekimi
+Kimyasal ankrajla demir filiz ekimi. Bina güçlendirme, ek kat, balkon ekleme,
+kolon mantolama ve perde duvar bağlantıları.
+Detay: https://20karot.com.tr/hizmetler/filiz-ekimi
 
 ### 7. Kimyasal Dübel & Ankraj
-Yüksek mukavemetli kimyasal dübel ve ankraj uygulamaları.
-Detay: https://guclukarot.com/hizmetler/kimyasal-dubel-ankraj
+ETA onaylı kimyasal ankraj sistemleriyle M8–M30 arası uygulama.
+Çelik konstrüksiyon, makine montajı, korkuluk, cephe ve güneş paneli taşıyıcıları.
+Detay: https://20karot.com.tr/hizmetler/kimyasal-dubel-ankraj
 
 ### 8. Kontrollü Bina Yıkımı
-Çevreye ve komşu yapılara zarar vermeden kontrollü yıkım.
-Detay: https://guclukarot.com/hizmetler/kontrollu-bina-yikimi
-
-## Kullanılan Ekipmanlar
-
-- Hilti DD 150-U Karot Makinesi
-- Hilti DD 250-E Karot Makinesi
-- Hilti DST 20-CA Duvar Testeresi
-- Hilti TE 3000-AVR Kırıcı
-- Hilti HIT-HY 200 Kimyasal Ankraj
-- Hidrolik kesme ve kırma üniteleri
-- Elmas diskli kesme makineleri
+Kentsel dönüşüm ve yenileme projelerinde planlı yıkım. Çevre güvenliği,
+toz kontrolü, moloz yönetimi ve belediye izin süreçlerinde destek.
+Detay: https://20karot.com.tr/hizmetler/kontrollu-bina-yikimi
 
 ## Hizmet Bölgeleri
 
-Denizli il genelinde hizmet veriyoruz:
-Merkezefendi, Pamukkale, Çivril, Çal, Acıpayam, Tavas, Honaz, Sarayköy, Buldan, Kale
+Denizli il genelinde: Merkezefendi, Pamukkale, Honaz, Sarayköy, Buldan,
+Çivril, Çal, Acıpayam, Tavas, Kale. Listede olmayan bölgeler ve çevre iller
+için telefonla değerlendirme yapılır.
 
-## Neden Güçlü Karot?
+## Sık Sorulan Sorular
 
-1. 15+ yıl saha tecrübesi
-2. Hilti marka profesyonel ekipmanlar
-3. Sıfır hata, minimum titreşim, maksimum hız
-4. Uzman ve deneyimli kadro
-5. Rekabetçi fiyatlandırma
-6. Ücretsiz keşif hizmeti
-7. 7/24 acil servis desteği
+**Keşif ücretli mi?**
+Hayır. Yerinde keşif ve fiyat teklifi ücretsizdir.
 
-## Sıkça Sorulan Sorular
+**Delme/kesme işlemi ne kadar toz ve titreşim yaratır?**
+Su soğutmalı elmas uçlar ve toz kontrol önlemleriyle çalışıldığı için
+klasik kırıcı yöntemlerine göre çok daha az toz ve titreşim oluşur.
+Bu nedenle oturulan binalarda da uygulanabilir.
 
-### Karot delme nedir?
-Karot delme, elmas uçlu karot makineleri ile beton, tuğla, taş gibi sert malzemelerde hassas ve yuvarlak delik açma işlemidir.
+**Taşıyıcı kolona/perdeye müdahale edilebilir mi?**
+Taşıyıcı elemanlara müdahale ancak statik proje ve mühendis onayıyla yapılır.
+Keşifte bu durum değerlendirilir.
 
-### Hangi çaplarda delme yapıyorsunuz?
-50mm'den 1000mm'ye kadar her çapta delme işlemi yapabiliyoruz.
+**Moloz kaldırılıyor mu?**
+Evet, beton kırma ve yıkım işlerinde moloz toplama ve nakliye hizmete dahildir.
 
-### Fiyatlandırma nasıl yapılıyor?
-Fiyat, işin büyüklüğü, delik çapı, derinliği ve malzeme türüne göre değişir. Ücretsiz keşif sonrası net fiyat verilir.
-
-### Acil durumda arayabilir miyiz?
-Evet, 7/24 acil servis hattımızı arayabilirsiniz: 0507 854 95 02
+**Ne kadar sürede başlanır?**
+Keşif sonrası genellikle aynı hafta içinde işe başlanır; acil işler için
+telefonla durum değerlendirilir.
 
 ## İletişim
 
-Ücretsiz keşif ve fiyat teklifi için bize ulaşın:
-- Telefon: 0507 854 95 02
-- WhatsApp: https://wa.me/905078549502
-- E-posta: info@guclukarot.com
-- Adres: Sümer, 72. Sk. No:1, Merkezefendi / Denizli
+Telefon: 0545 678 91 94
+WhatsApp: https://wa.me/905456789194
+E-posta: 20karot20@gmail.com
+Adres: Yeni Mah. 5039. Sk. No:14, 20100 Merkezefendi / Denizli

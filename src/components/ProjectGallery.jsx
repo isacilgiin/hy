@@ -1,83 +1,87 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import Lightbox from 'yet-another-react-lightbox'
 import 'yet-another-react-lightbox/styles.css'
+import projects from '../data/projects'
+import Icon from './Icon'
+import SmartImage from './SmartImage'
 
-// Placeholder proje görselleri — gerçek görseller sonra eklenecek
-const projects = [
-  { id: 1, title: 'Beton Delme — Tesisat Geçişi', category: 'Beton Delme', color: '#2563EB' },
-  { id: 2, title: 'Duvar Kesimi — Kapı Açıklığı', category: 'Beton Kesme', color: '#DC2626' },
-  { id: 3, title: 'Temel Kırım — Tadilat', category: 'Beton Kırma', color: '#059669' },
-  { id: 4, title: 'Asfalt Derz Kesimi', category: 'Asfalt Kesim', color: '#7C3AED' },
-  { id: 5, title: 'Hidrolik Kesim — Köprü', category: 'Hidrolik Kesme', color: '#EA580C' },
-  { id: 6, title: 'Filiz Ekimi — Güçlendirme', category: 'Filiz Ekimi', color: '#0891B2' },
-]
-
-// Placeholder SVG generator (gerçek görseller eklenene kadar)
-function ProjectPlaceholder({ project, onClick }) {
-  return (
-    <div
-      onClick={onClick}
-      className="group relative rounded-2xl overflow-hidden cursor-pointer card-hover aspect-[4/3]"
-    >
-      {/* Placeholder Background */}
-      <div
-        className="absolute inset-0 flex items-center justify-center"
-        style={{ background: `linear-gradient(135deg, ${project.color}33, ${project.color}11)` }}
-      >
-        <div className="text-center p-4">
-          <div className="text-5xl mb-3 opacity-30">🔩</div>
-          <div className="text-sm font-medium opacity-40" style={{ color: project.color }}>
-            Proje Görseli
-          </div>
-        </div>
-      </div>
-
-      {/* Hover Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-5">
-        <span className="text-primary text-xs font-semibold uppercase tracking-wider mb-1">
-          {project.category}
-        </span>
-        <h3 className="text-white font-bold text-lg leading-tight">
-          {project.title}
-        </h3>
-        <div className="mt-3 flex items-center gap-2 text-white/60 text-sm">
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
-          </svg>
-          Büyütmek için tıklayın
-        </div>
-      </div>
-    </div>
-  )
+/** Gerçek fotoğraf yüklenemediğinde lightbox'ta gösterilecek tasarım karesi. */
+function placeholderSlide(project) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900">
+    <rect width="1200" height="900" fill="#14100F"/>
+    <circle cx="880" cy="720" r="320" fill="#6E1B2E" opacity="0.35"/>
+    <circle cx="300" cy="200" r="240" fill="#C8A24A" opacity="0.08"/>
+    <circle cx="600" cy="420" r="86" fill="none" stroke="#C8A24A" stroke-width="6"/>
+    <circle cx="600" cy="420" r="36" fill="none" stroke="#C8A24A" stroke-width="6"/>
+    <text x="600" y="560" fill="#F2EDE7" font-size="34" font-family="sans-serif" text-anchor="middle">${project.title.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</text>
+    <text x="600" y="606" fill="#C8A24A" font-size="22" font-family="sans-serif" text-anchor="middle">${project.category}</text>
+  </svg>`
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`
 }
 
 export default function ProjectGallery({ limit }) {
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [lightboxIndex, setLightboxIndex] = useState(0)
+  // Hangi fotoğrafların gerçekten yüklenemediğini takip et; lightbox'a
+  // kırık görsel yerine tasarım karesi verilsin.
+  const [failedIds, setFailedIds] = useState(() => new Set())
 
   const displayProjects = limit ? projects.slice(0, limit) : projects
+
+  const markFailed = useCallback((id) => {
+    setFailedIds((prev) => {
+      if (prev.has(id)) return prev
+      const next = new Set(prev)
+      next.add(id)
+      return next
+    })
+  }, [])
 
   const openLightbox = (index) => {
     setLightboxIndex(index)
     setLightboxOpen(true)
   }
 
-  // YARL için slide'lar — gerçek görseller eklendiğinde src güncellenir
-  const slides = displayProjects.map(p => ({
-    src: `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600"><rect fill="${p.color}22" width="800" height="600"/><text fill="${p.color}" x="400" y="280" text-anchor="middle" font-size="24" font-family="sans-serif">${p.title}</text><text fill="${p.color}88" x="400" y="320" text-anchor="middle" font-size="16" font-family="sans-serif">${p.category}</text></svg>`)}`,
+  const slides = displayProjects.map((p) => ({
+    src: failedIds.has(p.id) ? placeholderSlide(p) : p.image,
     alt: p.title,
     title: p.title,
+    description: p.category,
   }))
 
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {displayProjects.map((project, idx) => (
-          <ProjectPlaceholder
+          <button
             key={project.id}
-            project={project}
+            type="button"
             onClick={() => openLightbox(idx)}
-          />
+            aria-label={`${project.title} — büyüt`}
+            className="group relative rounded-2xl overflow-hidden cursor-pointer card-hover aspect-[4/3] w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          >
+            <SmartImage
+              src={project.image}
+              alt={project.title}
+              icon={project.icon}
+              label={project.category}
+              className="absolute inset-0 w-full h-full"
+              imgClassName="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              onFail={() => markFailed(project.id)}
+            />
+
+            {/* Hover katmanı */}
+            <div className="absolute inset-0 bg-gradient-to-t from-dark/95 via-dark/40 to-transparent opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-all duration-500 flex flex-col justify-end p-5">
+              <span className="text-primary text-xs font-semibold uppercase tracking-wider mb-1">
+                {project.category}
+              </span>
+              <h3 className="text-white font-bold text-lg leading-tight">{project.title}</h3>
+              <span className="mt-3 flex items-center gap-2 text-white/70 text-sm">
+                <Icon name="zoomIn" className="w-4 h-4" strokeWidth={2} />
+                Büyütmek için tıklayın
+              </span>
+            </div>
+          </button>
         ))}
       </div>
 
