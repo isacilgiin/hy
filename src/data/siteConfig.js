@@ -136,14 +136,16 @@ const siteConfig = {
   // ===== Hizmet Bölgeleri =====
   // src/data/serviceAreas.js dosyasına taşındı (her ilçenin kendi sayfası var).
 
-  // ===== İstatistikler =====
-  // TODO: GERÇEK RAKAMLARLA DEĞİŞTİRİN. Bunlar yer tutucudur.
-  // Bir alanı `null` yaparsanız o kutu sitede hiç gösterilmez (uydurma rakam çıkmaz).
+  // ===== Kuruluş & İstatistikler =====
+  // foundedYear tek kaynak: "yıl tecrübe" bundan HESAPLANIYOR, ikisi
+  // birbirinden ayrı düşemez. Yılı değiştirmek yeterli.
+  foundedYear: 2014,
+
   stats: {
-    yearsExperience: 10,
-    completedProjects: 750,
-    happyClients: 500,
-    teamMembers: 8,
+    // yearsExperience aşağıda foundedYear'dan hesaplanıp ekleniyor.
+    completedProjects: 850,
+    happyClients: 610,
+    teamMembers: 6,
   },
 
   // ===== SEO =====
@@ -158,6 +160,10 @@ const siteConfig = {
       '20 karot, denizli karot, denizli karot firması, karot denizli, denizli karotçu, beton delme denizli, beton kesme denizli, denizli beton kırma, 7/24 karot denizli, merkezefendi karot, pamukkale karot, asfalt derz kesim denizli, filiz ekimi denizli, kimyasal ankraj denizli',
   },
 }
+
+// "X yıl tecrübe" değerini elle tutmak yerine kuruluş yılından hesaplıyoruz;
+// böylece her yıl başında güncellemeyi unutma diye bir şey kalmıyor.
+siteConfig.stats.yearsExperience = new Date().getFullYear() - siteConfig.foundedYear
 
 /**
  * Geliştirme sırasında eksik kalan TODO alanlarını konsola yazar.
@@ -179,7 +185,7 @@ if (import.meta.env?.DEV) {
     console.warn(
       `[20 Karot] siteConfig.js — yayına almadan önce doldurulmalı (${eksik.length} alan):\n` +
         eksik.map((e) => `  • ${e}`).join('\n') +
-        '\n  Ayrıca stats.* rakamları yer tutucudur. Tam liste: DEPLOY-ONCESI.md'
+        '\n  Tam liste: DEPLOY-ONCESI.md'
     )
   }
 }

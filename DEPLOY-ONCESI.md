@@ -21,6 +21,23 @@ Yeni siteyi yüklemek eskisini siler. Yanlış yapılırsa mevcut sıralamalar k
 
 Yönlendirmeler `dist/.htaccess` dosyasında **otomatik üretiliyor**.
 
+### `.htaccess` nedir, neden önemli?
+
+Apache sunucularında, bir klasörün içine konan ve **o klasördeki kuralları
+belirleyen** ayar dosyasıdır. Adı nokta ile başladığı için "gizli dosya"
+sayılır — FileZilla varsayılan ayarlarla **göstermez ve yüklemez.**
+
+Bizim `.htaccess` dosyamız üç iş yapıyor:
+
+1. **Eski adresleri yenisine yönlendiriyor.** `20karot.com.tr/hizmetlerimiz/`
+   adresine gelen ziyaretçiyi (ve Google'ı) `/hizmetler/` adresine kalıcı
+   olarak taşıyor. Bu dosya olmazsa eski WordPress adreslerinin 31 tanesi
+   **404 verir** ve o sayfaların Google'daki sıralaması kaybolur.
+2. **Alt sayfaların açılmasını sağlıyor.** Site tek sayfa uygulaması; sunucuya
+   `/hizmetler/karot/` diye bir istek geldiğinde ne yapacağını bu dosya söylüyor.
+3. **Türkçe karakter ve önbellek ayarları.** Bu olmadan `llms.txt` gibi metin
+   dosyalarında "Kırma" yerine "KÄ±rma" görünüyor (daha önce yaşadığınız sorun).
+
 ### ⚠️ `.htaccess` dosyasını yüklemeyi ATLAMA
 
 `dist/.htaccess` **gizli dosyadır**, FileZilla varsayılan olarak göstermez:
@@ -68,8 +85,8 @@ Bu sayfaları oluşturunca `vite.config.js` içindeki `redirects` dizisinden ilg
 | `geo.lat/lng`, `placeId`, `embedSrc` | ✅ | Google İşletme Profili'nden alındı, harita tam pini gösteriyor |
 | `workingHours` | ✅ | Google profiline göre "24 saat açık" |
 | `rating` | ✅ | 5,0 / 32 yorum — **JSON-LD'ye yazılmıyor** (aşağıya bak) |
-| **`stats.*`** | ⚠️ **YER TUTUCU** | `10 / 750 / 500 / 8` — **uydurma sayılar.** Değiştirmeden yayına çıkma. |
-| `social.instagram/facebook` | ❌ Boş | Boşken footer'da o ikon hiç gösterilmez (kırık link oluşmaz) |
+| `foundedYear` + `stats.*` | ✅ Girildi | Kuruluş 2014, 850 proje, 610 müşteri, 6 kişi. **"Yıl tecrübe" `foundedYear`'dan otomatik hesaplanıyor** — sadece yılı değiştirin, gerisi kendiliğinden güncellenir. |
+| `social.instagram/facebook` | — | Hesap yok. Boş kaldığı sürece footer'da o ikon hiç gösterilmez. |
 | `analytics.ga4` | ❌ Boş | `G-XXXXXXXXXX` girilince GA script'i otomatik eklenir |
 | `analytics.googleSiteVerification` | ❌ Boş | Search Console doğrulama kodu |
 
@@ -106,6 +123,81 @@ metin/rozet olarak göstermek serbest. Kendi sitenizde yorum toplarsanız
 - Proje fotoğrafınız yok dediniz. Fotoğraf hazır olana kadar **diziyi `[]` yapın** —
   Projeler sayfası "yakında" mesajı gösterir, ana sayfadaki proje bölümü tamamen gizlenir.
   Boş yer tutucu kareler görünmez.
+
+---
+
+## 1.5 Google Analytics ve Google Ads kimlikleri — nereden alınır?
+
+### A) GA4 Ölçüm Kimliği (`G-XXXXXXXXXX`)
+
+1. [analytics.google.com](https://analytics.google.com) → sol altta **⚙ Yönetici**
+2. Sağ sütun **Mülk** altında → **Veri akışları**
+3. `20karot.com.tr` akışına tıkla
+4. Sağ üstte **Ölçüm Kimliği** yazıyor: `G-` ile başlayan kod. Kopyala.
+
+→ `src/data/siteConfig.js` → `analytics.ga4`
+
+> Akış yoksa: **Veri akışları → Akış ekle → Web** → URL `https://20karot.com.tr`,
+> akış adı "20 Karot Web". Kimlik hemen oluşur.
+
+### B) Google Ads Dönüşüm Kimliği (`AW-XXXXXXXXX`) ve etiketler
+
+**Önce mevcut sorunu düzelt:**
+
+1. [ads.google.com](https://ads.google.com) → üstte **Hedefler** → **Dönüşümler** → **Özet**
+2. Listede `20karot.com.tr (web) conversion_event_page_view` satırını bul
+3. Üstüne tıkla → **Ayarları düzenle** → **Hedef ve işlem optimizasyonu**
+4. **"İkincil işlem"** seç → Kaydet
+
+   *Neden: bu satır şu an "Birincil". Yani Google'a "biri sayfamı açtıysa bu bir
+   başarıdır" diyorsun. Akıllı teklif bütçeyi arayacak müşteriye değil, açıp
+   çıkacak kişiye harcıyor.*
+
+**Sonra gerçek dönüşümleri oluştur — 3 kez tekrarla:**
+
+1. **Dönüşümler → + Yeni dönüşüm işlemi → Web sitesi**
+2. Alan adı olarak `20karot.com.tr` yaz → **Tara**
+3. Alttaki **"Dönüşüm işlemini manuel olarak ekle"** bağlantısına tıkla
+   *(sitede otomatik bulamayabilir, normal)*
+4. Doldur:
+
+   | Dönüşüm adı | Kategori | Değer |
+   |---|---|---|
+   | Telefon Tıklama | Kişi → Telefonla iletişim | Değer kullanma |
+   | WhatsApp Tıklama | Kişi → Sohbet başlatma | Değer kullanma |
+   | Form Gönderimi | Gönderilen potansiyel müşteri formu | Değer kullanma |
+
+   Üçünde de: **Birincil işlem** · Sayım: **Bir kez**
+5. Kaydet → **"Etiketi ayarla"** ekranı açılır → **"Etiketi manuel olarak yükle"** seç
+6. Ekranda şuna benzer bir kod görürsün:
+
+   ```js
+   gtag('event', 'conversion', {'send_to': 'AW-123456789/AbC-D_efG12'});
+   ```
+
+   - `AW-123456789` → **Dönüşüm kimliği** (üçünde de aynıdır)
+   - `AbC-D_efG12` → **dönüşüm etiketi** (her dönüşümde farklıdır)
+
+**Sitede nereye yazılacak** — `src/data/siteConfig.js`:
+
+```js
+analytics: {
+  ga4: 'G-XXXXXXXXXX',           // A adımından
+  googleAds: 'AW-123456789',     // bölü işaretinden ÖNCEKİ kısım
+  conversions: {
+    telefon:  'AbC-D_efG12',     // bölü işaretinden SONRAKİ kısım
+    whatsapp: '...',
+    form:     '...',
+  },
+},
+```
+
+Kaydet → `npm run build` → yükle. Site tarafında başka bir şey yapmanıza gerek
+yok; telefon, WhatsApp, e-posta, harita tıklamaları ve form gönderimi otomatik
+raporlanıyor.
+
+> **Kontrol:** Ads → Dönüşümler listesinde durum önce *"Doğrulanmadı"* görünür.
+> Siteye girip telefon butonuna tıklayın; birkaç saat içinde *"Etkin"*e döner.
 
 ---
 

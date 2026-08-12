@@ -24,18 +24,7 @@ export default function Projects() {
       <section className="section-padding bg-white">
         <div className="max-w-7xl mx-auto">
           {projects.length > 0 ? (
-            <>
-              <div className="max-w-3xl mx-auto text-center mb-12">
-                <p className="text-gray-600 leading-relaxed">
-                  Aşağıdaki görseller, verdiğimiz hizmetlerin sahada nasıl göründüğünü
-                  anlatan <strong className="text-dark">temsili örneklerdir</strong> —
-                  tamamladığımız işlerin fotoğrafları değildir. Kendi saha
-                  fotoğraflarımızı çektikçe bu sayfayı gerçek işlerimizle
-                  değiştiriyoruz.
-                </p>
-              </div>
-              <ProjectGallery />
-            </>
+            <ProjectGallery />
           ) : (
             <div className="max-w-xl mx-auto text-center">
               <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-accent/10 text-accent flex items-center justify-center">

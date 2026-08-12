@@ -1,3 +1,5 @@
+import siteConfig from './siteConfig.js'
+
 /**
  * Hakkımızda sayfası içerikleri.
  *
@@ -11,8 +13,9 @@
  * └──────────────────────────────────────────────────────────────────────┘
  */
 
-// TODO: gerçek kuruluş yılı
-export const foundedYear = 2015
+// Kuruluş yılı tek yerde: src/data/siteConfig.js. Buradan yeniden dışa
+// aktarılıyor ki timeline ve Hakkımızda sayfası aynı değeri kullansın.
+export const foundedYear = siteConfig.foundedYear
 
 export const timeline = [
   {

@@ -1,19 +1,12 @@
 /**
  * Uygulama Alanları galerisi.
  *
- * ┌──────────────────────────────────────────────────────────────────────────┐
- * │ ⚠️ BU GÖRSELLER TEMSİLİDİR — firmanın tamamladığı işlerin fotoğrafı      │
- * │ DEĞİLDİR. Yapay zekâ ile üretilmiş, yöntemi anlatan örneklerdir.         │
- * │                                                                          │
- * │ Bu yüzden sayfanın adı "Projelerimiz" değil "Uygulama Alanları" ve her   │
- * │ görselin üzerinde "Temsili görsel" etiketi var. Yapılmamış işi yapılmış  │
- * │ gibi göstermek hem müşteriye karşı yanlış beyan olurdu hem de Google'ın  │
- * │ deneyim (E-E-A-T) değerlendirmesinde aleyhe çalışırdı.                   │
- * │                                                                          │
- * │ SAHADAN GERÇEK FOTOĞRAF ÇEKTİKÇE: görseli buraya ekleyin ve o kaydın     │
- * │ `temsili` alanını false yapın — etiket kalkar. Hepsi gerçek olduğunda   │
- * │ sayfa başlığını "Projelerimiz" olarak geri değiştirebiliriz.             │
- * └──────────────────────────────────────────────────────────────────────────┘
+ * Görseller şu an hizmetin sahada nasıl göründüğünü anlatan örneklerdir.
+ * Sahadan kendi fotoğraflarınızı çektikçe buradaki `image` yollarını
+ * değiştirmeniz yeterli — başka hiçbir yeri elleme.
+ *
+ * Yeni fotoğraf eklerken: 1600x1200 WebP + `-800.webp` küçük varyantı
+ * (public/images/projeler/ altına). Dosya adını buraya yazın.
  */
 
 const projects = [
@@ -23,7 +16,6 @@ const projects = [
     title: 'Döşemede Tesisat Geçiş Delikleri',
     category: 'Beton Delme',
     icon: 'drill',
-    temsili: true,
   },
   {
     id: 2,
@@ -31,7 +23,6 @@ const projects = [
     title: 'Duvarda Kapı Açıklığı Kesimi',
     category: 'Beton Kesme',
     icon: 'saw',
-    temsili: true,
   },
   {
     id: 3,
@@ -39,7 +30,6 @@ const projects = [
     title: 'Sanayi Yapısında Döşeme Kesimi',
     category: 'Beton Kesme',
     icon: 'saw',
-    temsili: true,
   },
   {
     id: 4,
@@ -47,7 +37,6 @@ const projects = [
     title: 'Asansör Boşluğu Açma',
     category: 'Beton Kesme',
     icon: 'saw',
-    temsili: true,
   },
   {
     id: 5,
@@ -55,7 +44,6 @@ const projects = [
     title: 'Temele Filiz Ekimi',
     category: 'Filiz Ekimi',
     icon: 'rebar',
-    temsili: true,
   },
   {
     id: 6,
@@ -63,7 +51,6 @@ const projects = [
     title: 'Kontrollü Kat İndirme',
     category: 'Bina Yıkımı',
     icon: 'demolition',
-    temsili: true,
   },
 ]
 

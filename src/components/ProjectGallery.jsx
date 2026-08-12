@@ -86,15 +86,6 @@ export default function ProjectGallery({ limit }) {
               onFail={() => markFailed(project.id)}
             />
 
-            {/* Temsili görsel etiketi — bu kare firmanın tamamladığı bir işin
-                fotoğrafı değil; yöntemi anlatan örnek bir görsel. Gerçek saha
-                fotoğrafı eklendiğinde projects.js'te temsili:false yapılır. */}
-            {project.temsili && (
-              <span className="absolute top-3 right-3 z-10 px-2.5 py-1 rounded-md bg-dark/75 backdrop-blur-sm text-white/85 text-[11px] font-medium tracking-wide">
-                Temsili görsel
-              </span>
-            )}
-
             {/* Hover katmanı */}
             <div className="absolute inset-0 bg-gradient-to-t from-dark/95 via-dark/40 to-transparent opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-all duration-500 flex flex-col justify-end p-5">
               <span className="text-primary text-xs font-semibold uppercase tracking-wider mb-1">
