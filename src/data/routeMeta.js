@@ -63,50 +63,87 @@ function faqSemasi(sorular) {
   }
 }
 
+/**
+ * BreadcrumbList şeması.
+ *
+ * Sitede 38 sayfada GÖRSEL breadcrumb vardı ama şeması hiç yoktu. Breadcrumb,
+ * Google'da hâlâ canlı olan zengin sonuçlardan biri: arama sonucunda ham URL
+ * yerine "20karot.com.tr › Hizmetler › Beton Kesme" yolunu gösterir.
+ */
+function kirintiSemasi(parcalar) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [{ ad: 'Ana Sayfa', yol: '/' }, ...parcalar].map((p, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: p.ad,
+      item: `${url}${p.yol}`,
+    })),
+  }
+}
+
 /** Sabit sayfalar */
 const sabitler = [
   {
     path: '/',
     title: seo.defaultTitle,
     description: seo.defaultDescription,
+    h1: `${address.city}'de Karot, Beton Delme & Kesme Hizmetleri`,
+    govde: [seo.defaultDescription],
   },
   {
     path: '/hizmetler/',
     title: `Karot Hizmetleri | Denizli Beton Delme ve Kesme — ${companyName}`,
     description:
       "Denizli'de karot, beton delme, beton kesme, beton kırma, filiz ekimi, ankraj ve kimyasal dübel hizmetleri. Ücretsiz keşif ve net fiyat teklifi.",
+    h1: `${address.city}'de Verdiğimiz Karot Hizmetleri`,
+    kirintilar: [{ ad: 'Hizmetler', yol: '/hizmetler/' }],
   },
   {
     path: '/hizmet-bolgeleri/',
     title: `Hizmet Bölgeleri | Denizli ve Tüm İlçeler — ${companyName}`,
     description: `Denizli il genelinde ${serviceAreas.length} ilçede karot, beton delme, kesme ve kırma hizmeti. Merkezefendi, Pamukkale, Honaz, Sarayköy, Çivril, Acıpayam ve tüm ilçeler.`,
+    h1: `${address.city} Genelinde Hizmet Verdiğimiz İlçeler`,
+    kirintilar: [{ ad: 'Hizmet Bölgeleri', yol: '/hizmet-bolgeleri/' }],
   },
   {
     path: '/projeler/',
     title: `Uygulama Alanları | Denizli Karot ve Beton Kesme — ${companyName}`,
     description:
       'Karot, beton delme, kesme, kırma ve filiz ekiminin sahada nasıl göründüğü. Hangi işte hangi yöntemin kullanıldığını görselleriyle anlattık.',
+    h1: 'Uygulama Alanları',
+    kirintilar: [{ ad: 'Uygulama Alanları', yol: '/projeler/' }],
   },
   {
     path: '/hakkimizda/',
     title: `Hakkımızda | ${companyName} — Denizli Karot`,
     description: `${companyName}, Denizli ve çevre ilçelerde beton delme, kesme ve kırma hizmetleri veren karot firmasıdır. Önce ücretsiz keşif, sonra net fiyat.`,
+    h1: `${companyName} Hakkında`,
+    kirintilar: [{ ad: 'Hakkımızda', yol: '/hakkimizda/' }],
   },
   {
     path: '/iletisim/',
     title: `İletişim | ${companyName} — Denizli Karot`,
     description: `Denizli karot hizmetleri için bize ulaşın. Telefon ${phone}, WhatsApp ve e-posta. Adres: ${address.full}. Ücretsiz keşif.`,
+    h1: 'İletişim',
+    kirintilar: [{ ad: 'İletişim', yol: '/iletisim/' }],
   },
   {
     path: '/sikca-sorulan-sorular/',
     title: `Sıkça Sorulan Sorular | Karot, Beton Delme ve Kesme — ${companyName}`,
     description: `Karot, beton delme, kesme ve kırma hakkında en çok sorulan ${faq.length} soru ve cevabı. Fiyat, süre, toz ve titreşim, taşıyıcı elemana müdahale, moloz kaldırma.`,
     jsonLd: faqSemasi(faq),
+    h1: 'Sıkça Sorulan Sorular',
+    kirintilar: [{ ad: 'Sıkça Sorulan Sorular', yol: '/sikca-sorulan-sorular/' }],
+    govde: faq.slice(0, 6).map((s) => `${s.q} ${s.a}`),
   },
   ...[gizlilik, sartlar].map((s) => ({
     path: `/${s.slug}/`,
     title: `${s.baslik} | ${companyName}`,
     description: s.ozet,
+    h1: s.baslik,
+    kirintilar: [{ ad: s.baslik, yol: `/${s.slug}/` }],
   })),
 ]
 
@@ -132,6 +169,15 @@ const hizmetRotalari = services.map((s) => {
     // çıkarıyor; her hizmet için 1200x630 markalı JPG üretildi.
     image: `${url}/images/og/${s.slug}.jpg`,
     jsonLd: icerik.sss?.length ? [hizmetSemasi, faqSemasi(icerik.sss)] : hizmetSemasi,
+    h1: `${address.city} ${s.title}`,
+    kirintilar: [
+      { ad: 'Hizmetler', yol: '/hizmetler/' },
+      { ad: s.title, yol: `/hizmetler/${s.slug}/` },
+    ],
+    // <noscript> gövdesi için GERÇEK sayfa metni — sayfanın kendi giriş
+    // paragrafları. Böylece JavaScript çalıştırmayan tarayıcılar ve robotlar
+    // her sayfada aynı ana sayfa metnini değil, o sayfanın metnini görür.
+    govde: (icerik.girisMetni ?? [s.shortDescription]).slice(0, 3),
   }
 })
 
@@ -164,6 +210,12 @@ const bolgeRotalari = serviceAreas.map((a) => {
     title: `${seoAd} Karot | Beton Delme, Kesme, Kırma — ${companyName}`,
     description: `${seoAd} karot hizmeti: beton delme, beton kesme, beton kırma, filiz ekimi ve ankraj. Ücretsiz keşif ve net fiyat teklifi için ${phone}.`,
     jsonLd: [hizmetSemasi, faqSemasi(a.sss)],
+    h1: `${a.name} Karot`,
+    kirintilar: [
+      { ad: 'Hizmet Bölgeleri', yol: '/hizmet-bolgeleri/' },
+      { ad: a.name, yol: `/hizmet-bolgeleri/${a.slug}/` },
+    ],
+    govde: [...(a.intro ?? []), a.yerelBaglam].filter(Boolean).slice(0, 3),
   }
 })
 
@@ -172,6 +224,18 @@ const rotalar = [...sabitler, ...hizmetRotalari, ...bolgeRotalari].map((r) => ({
   description: kisalt(r.description),
   image: r.image ?? ogImage,
   canonical: `${url}${r.path}`,
+  govde: r.govde ?? [r.description],
+
+  /**
+   * BreadcrumbList AYRI TUTULUR — jsonLd ile birleştirilmemelidir.
+   *
+   * jsonLd'deki şemaları (Service, FAQPage) React yüklenince Seo.jsx yeniden
+   * üretir; bu yüzden build çıktısındakiler `data-seo-build` ile işaretlenip
+   * siliniyor. BreadcrumbList'i Seo.jsx üretmiyor — aynı etikete konursa
+   * render sonrası şema tamamen kaybolur ve Google (JS çalıştırdığı için)
+   * breadcrumb'ı hiç görmez. Bu yüzden işaretsiz, ayrı bir script'e yazılır.
+   */
+  kirintiJsonLd: r.kirintilar?.length ? kirintiSemasi(r.kirintilar) : null,
 }))
 
 export default rotalar

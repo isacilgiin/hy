@@ -492,6 +492,41 @@ ErrorDocument 404 /index.html
       const kacis = (s) =>
         String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 
+      /**
+       * ROTAYA ÖZEL <noscript> GÖVDESİ
+       *
+       * Önceden bu blok 39 sayfada BİREBİR AYNIydı (md5 ile doğrulandı):
+       * hepsinde ana sayfanın başlığı ve açıklaması vardı. Sayfa gövdesini
+       * React ürettiği için, JavaScript çalıştıramayan her istemci — robots.txt
+       * /assets/'i kapattığı sürece Googlebot dâhil, ayrıca çoğu AI tarayıcısı —
+       * 39 sayfayı birbirinin kopyası olarak görüyordu. Artık her sayfa kendi
+       * H1'ini ve kendi giriş metnini ham HTML'de taşıyor.
+       *
+       * İçerik, sayfanın render edilmiş hâliyle aynıdır (cloaking değil):
+       * aynı başlık, aynı giriş paragrafları.
+       */
+      const noscriptGovdesi = (rota) => {
+        const paragraflar = (rota.govde ?? [])
+          .filter(Boolean)
+          .map((p) => `      <p>${kacis(p)}</p>`)
+          .join('\n')
+
+        return `<div class="noscript-seo">
+      <h1>${kacis(rota.h1 ?? rota.title)}</h1>
+      <p>${kacis(rota.description)}</p>
+${paragraflar}
+      <h2>Hizmetlerimiz</h2>
+      <ul>
+        ${services.map((s) => `<li><a href="/hizmetler/${s.slug}/">${kacis(s.title)}</a></li>`).join('\n        ')}
+      </ul>
+      <h2>Hizmet Bölgeleri</h2>
+      <p><a href="/hizmet-bolgeleri/">${address.city} genelinde ${serviceAreas.length} ilçede hizmet veriyoruz.</a></p>
+      <h2>İletişim</h2>
+      <p>Telefon: <a href="tel:${phoneRaw}">${kacis(phone)}</a></p>
+      <p>Adres: ${kacis(address.full)}</p>
+    </div>`
+      }
+
       let yazilan = 0
       for (const rota of rotaMetalari) {
         if (rota.path === '/') continue // ana sayfa zaten dogru
@@ -538,9 +573,29 @@ ErrorDocument 404 /index.html
             `<meta name="twitter:image" content="${rota.image}" />`
           )
 
+        // <noscript> gövdesi rotanın kendi metniyle değiştirilir
+        html = html.replace(/<div class="noscript-seo">[\s\S]*?<\/div>/, noscriptGovdesi(rota))
+
+        // BreadcrumbList — işaretsiz, çünkü React onu yeniden üretmiyor;
+        // silinirse render sonrası hiç kalmaz.
+        if (rota.kirintiJsonLd) {
+          html = html.replace(
+            '</script>',
+            `</script>\n  <script type="application/ld+json">\n${JSON.stringify(
+              rota.kirintiJsonLd,
+              null,
+              2
+            )}\n  </script>`
+          )
+        }
+
         // Sayfaya özel JSON-LD, LocalBusiness şemasının hemen ardına eklenir
         if (rota.jsonLd) {
-          const ek = `</script>\n  <script type="application/ld+json">\n${JSON.stringify(rota.jsonLd, null, 2)}\n  </script>`
+          // data-seo-build: React yüklendiğinde Seo.jsx bu etiketleri siler ve
+          // kendi ürettiklerini koyar. İşaret olmadan sayfada aynı Service /
+          // FAQPage şeması İKİ KEZ bulunuyordu (biri statik HTML'den, biri
+          // çalışma anından).
+          const ek = `</script>\n  <script type="application/ld+json" data-seo-build>\n${JSON.stringify(rota.jsonLd, null, 2)}\n  </script>`
           html = html.replace('</script>', ek)
         }
 

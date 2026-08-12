@@ -50,6 +50,20 @@ function upsertLink(rel, href) {
   el.setAttribute('href', href)
 }
 
+/**
+ * Build sırasında gömülen sayfaya özel JSON-LD'leri kaldırır.
+ *
+ * vite.config.js her rota için statik HTML'e Service/FAQPage/BreadcrumbList
+ * şemalarını basıyor — JavaScript çalışmadığında da şema bulunsun diye. React
+ * yüklenince aşağıdaki upsertJsonLd aynı şemaları TEKRAR eklediği için sayfada
+ * iki kopya oluşuyordu. Bunlar `data-seo-build` ile işaretli; React devraldığı
+ * anda siliniyorlar. index.html'deki LocalBusiness şeması işaretsiz olduğu için
+ * yerinde kalır.
+ */
+function buildSemalariniTemizle() {
+  document.head.querySelectorAll('script[data-seo-build]').forEach((el) => el.remove())
+}
+
 /** Sayfaya özel JSON-LD (Service, Place, FAQ ...) ekler/günceller. */
 function upsertJsonLd(id, data) {
   const existing = document.head.querySelector(`script[data-seo="${id}"]`)
@@ -69,6 +83,8 @@ export default function Seo({ title, description, path = '/', image, jsonLd }) {
     const url = `${siteConfig.url}${path}`
     const desc = kisalt(description || siteConfig.seo.defaultDescription)
     const ogImage = image || `${siteConfig.url}/images/logo/og-image.jpg`
+
+    buildSemalariniTemizle()
 
     document.title = title
     upsertMeta('name', 'description', desc)

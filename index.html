@@ -91,12 +91,17 @@
       .noscript-seo a { color: #6E1B2E; }
     </style>
     <div class="noscript-seo">
-      <h1>%SITE_NAME% — %SITE_CITY% Beton Delme, Kesme &amp; Kırma</h1>
+      <!-- Bu blok YALNIZCA ana sayfa içindir. Diğer 38 rotada vite.config.js
+           (writeBundle > noscriptGovdesi) sayfanın kendi H1'i ve giriş
+           metniyle değiştirir. Başlık, ekranda görünen H1 ile aynı olmalı. -->
+      <h1>%SITE_CITY%&apos;de Karot, Beton Delme &amp; Kesme Hizmetleri</h1>
       <p>%SITE_DESCRIPTION%</p>
       <h2>Hizmetlerimiz</h2>
       <ul>
         %SITE_SERVICE_LINKS%
       </ul>
+      <h2>Hizmet Bölgeleri</h2>
+      <p><a href="/hizmet-bolgeleri/">%SITE_CITY% genelinde tüm ilçelerde hizmet veriyoruz.</a></p>
       <h2>İletişim</h2>
       <p>Telefon: <a href="tel:%SITE_PHONE_RAW%">%SITE_PHONE%</a></p>
       <p>Adres: %SITE_ADDRESS%</p>
