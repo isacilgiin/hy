@@ -35,13 +35,20 @@ const siteConfig = {
   },
 
   // ===== Konum =====
-  // TODO: lat/lng Google Maps'ten alınmalı (işletme pinine sağ tık > ilk satırdaki koordinat).
-  // Doldurulana kadar harita ve "yol tarifi" linkleri ADRES METNİ üzerinden çalışır;
-  // JSON-LD'ye de uydurma koordinat yazılmaz. Gerçek koordinat girilince otomatik devreye girer.
+  // Google İşletme Profili'nden alındı (Plus Code: Q3W9+FH Denizli Merkezefendi).
   geo: {
-    lat: null,
-    lng: null,
-    region: 'TR-20', // Denizli plaka kodu — doğru
+    lat: 37.7962244,
+    lng: 29.0664114,
+    region: 'TR-20', // Denizli plaka kodu
+    plusCode: 'Q3W9+FH Denizli Merkezefendi, Denizli',
+    // Google Haritalar yer kimliği — gömülü harita bu sayede tam işletme pinini gösterir
+    // (adres araması yerine). Kaynak: işletme profilinin paylaşım/embed bağlantısı.
+    placeId: '0xa4b23c44d1b911df:0xb76d06306e5b0b53',
+    shortLink: 'https://maps.app.goo.gl/sYGUjbXtyVdp2H1b8',
+    // Google İşletme Profili'nin kendi gömme (embed) adresi. Adres araması yerine
+    // doğrudan işletme pinini ve kartını gösterir. İletişim sayfasındaki harita bunu kullanır.
+    embedSrc:
+      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3152.736081509767!2d29.06641141231915!3d37.796224371863175!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xa4b23c44d1b911df%3A0xb76d06306e5b0b53!2s20%20Karot%20%7C%20Denizli%20Karot%20Uygulama%20%7C%20Muhemmet%20Senek%C3%A7i!5e0!3m2!1str!2str!4v1786527655394!5m2!1str!2str',
   },
 
   // ===== Domain & URL =====
@@ -49,12 +56,12 @@ const siteConfig = {
   url: 'https://20karot.com.tr',
 
   // ===== Çalışma Saatleri =====
-  // TODO: gerçek çalışma saatlerinizle doğrulayın
+  // Google İşletme Profili "24 saat açık" diyor — schema ve site metni buna göre.
   workingHours: {
-    days: 'Pazartesi - Cumartesi',
-    hours: '08:00 - 18:00',
-    schema: ['Mo-Sa 08:00-18:00'],
-    emergency: '7/24 acil servis', // TODO: acil servis veriyor musunuz? Vermiyorsanız bu satırı '' yapın.
+    days: 'Her gün',
+    hours: '24 saat açık',
+    alwaysOpen: true,
+    emergency: '7/24 acil servis',
   },
 
   // ===== Sosyal Medya =====
@@ -95,29 +102,24 @@ const siteConfig = {
   },
 
   // ===== Google İşletme Puanı =====
-  // TODO: Google İşletme Profili'nizdeki GERÇEK puan ve yorum sayısı.
-  // Doldurulana kadar JSON-LD'ye aggregateRating YAZILMAZ.
-  // Uydurma puan yayınlamak Google'ın yapılandırılmış veri politikasına aykırıdır
-  // ve manuel işlem (ceza) riski taşır.
+  // Google İşletme Profili: 5,0 / 32 yorum (İnşaat Şirketi kategorisi).
+  //
+  // `showInSchema` bilinçli olarak FALSE:
+  // Google, bir işletmenin kendi sitesinde KENDİ Google puanını aggregateRating
+  // olarak işaretlemesini "self-serving review" sayar ve yok sayar; bazı durumlarda
+  // yapılandırılmış veri cezası riski taşır. Puan sitede metin/rozet olarak
+  // gösterilebilir (buna izin var), JSON-LD'ye yazılmaz.
+  // Kendi sitenizde yorum toplamaya başlarsanız true yapabilirsiniz.
   rating: {
-    value: null, // örn. 4.9
-    count: null, // örn. 37
+    value: 5.0,
+    count: 32,
+    source: 'Google',
+    url: 'https://maps.app.goo.gl/sYGUjbXtyVdp2H1b8',
+    showInSchema: false,
   },
 
   // ===== Hizmet Bölgeleri =====
-  // TODO: gerçekte hizmet verdiğiniz ilçeleri bırakın, vermediklerinizi silin.
-  serviceAreas: [
-    { name: 'Merkezefendi', slug: 'merkezefendi' },
-    { name: 'Pamukkale', slug: 'pamukkale' },
-    { name: 'Honaz', slug: 'honaz' },
-    { name: 'Sarayköy', slug: 'saraykoy' },
-    { name: 'Buldan', slug: 'buldan' },
-    { name: 'Çivril', slug: 'civril' },
-    { name: 'Çal', slug: 'cal' },
-    { name: 'Acıpayam', slug: 'acipayam' },
-    { name: 'Tavas', slug: 'tavas' },
-    { name: 'Kale', slug: 'kale' },
-  ],
+  // src/data/serviceAreas.js dosyasına taşındı (her ilçenin kendi sayfası var).
 
   // ===== İstatistikler =====
   // TODO: GERÇEK RAKAMLARLA DEĞİŞTİRİN. Bunlar yer tutucudur.

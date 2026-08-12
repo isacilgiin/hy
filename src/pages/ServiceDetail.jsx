@@ -1,10 +1,12 @@
-import { useEffect } from 'react'
+import { useMemo } from 'react'
 import { useParams, Link, Navigate } from 'react-router-dom'
 import CTASection from '../components/CTASection'
 import PageHeader from '../components/PageHeader'
 import Icon from '../components/Icon'
 import SmartImage from '../components/SmartImage'
+import Seo from '../components/Seo'
 import services from '../data/services'
+import serviceAreas from '../data/serviceAreas'
 import siteConfig from '../data/siteConfig'
 import { whatsappUrl } from '../utils/links'
 
@@ -13,9 +15,25 @@ export default function ServiceDetail() {
   const service = services.find((s) => s.slug === slug)
   const currentIndex = services.findIndex((s) => s.slug === slug)
 
-  useEffect(() => {
-    if (service) {
-      document.title = `${service.title} | ${siteConfig.companyName} — Denizli`
+  const jsonLd = useMemo(() => {
+    if (!service) return null
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      name: service.title,
+      description: service.description,
+      serviceType: service.title,
+      url: `${siteConfig.url}/hizmetler/${service.slug}/`,
+      provider: {
+        '@type': 'LocalBusiness',
+        '@id': `${siteConfig.url}/#localbusiness`,
+        name: siteConfig.companyName,
+        telephone: siteConfig.phoneRaw,
+      },
+      areaServed: serviceAreas.map((a) => ({
+        '@type': 'City',
+        name: `${a.name}, ${siteConfig.address.city}`,
+      })),
     }
   }, [service])
 
@@ -28,6 +46,13 @@ export default function ServiceDetail() {
 
   return (
     <div className="page-enter">
+      <Seo
+        title={`${service.title} | Denizli ${service.title} — ${siteConfig.companyName}`}
+        description={`Denizli ve çevre ilçelerde ${service.title.toLowerCase()} hizmeti. ${service.shortDescription} Ücretsiz keşif için ${siteConfig.phone}.`}
+        path={`/hizmetler/${service.slug}/`}
+        image={`${siteConfig.url}${service.image}`}
+        jsonLd={jsonLd}
+      />
       <PageHeader
         align="left"
         breadcrumb={[
@@ -160,6 +185,28 @@ export default function ServiceDetail() {
                 </div>
               </div>
             </aside>
+          </div>
+
+          {/* Hizmet bölgeleri — iç link ağı (SEO) */}
+          <div className="mt-16 pt-10 border-t border-gray-100">
+            <h2 className="text-2xl font-bold text-dark mb-2">
+              {service.title} Hizmeti Verdiğimiz Bölgeler
+            </h2>
+            <p className="text-gray-500 text-sm mb-6">
+              Denizli il genelinde {serviceAreas.length} ilçede {service.title.toLowerCase()}{' '}
+              hizmeti veriyoruz. Bulunduğunuz ilçeye tıklayın.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {serviceAreas.map((a) => (
+                <Link
+                  key={a.slug}
+                  to={`/hizmet-bolgeleri/${a.slug}`}
+                  className="px-4 py-2 rounded-full bg-surface hover:bg-accent hover:text-white text-gray-600 text-sm transition-colors"
+                >
+                  {a.name} {service.shortTitle}
+                </Link>
+              ))}
+            </div>
           </div>
 
           {/* Önceki / sonraki */}

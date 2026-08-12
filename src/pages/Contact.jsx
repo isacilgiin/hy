@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import PageHeader from '../components/PageHeader'
+import Seo from '../components/Seo'
 import Icon from '../components/Icon'
 import siteConfig from '../data/siteConfig'
 import services from '../data/services'
@@ -9,10 +10,6 @@ const inputClass =
   'w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-accent focus:ring-2 focus:ring-accent/20 outline-none transition-all text-sm'
 
 export default function Contact() {
-  useEffect(() => {
-    document.title = `İletişim | ${siteConfig.companyName} — Denizli`
-  }, [])
-
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -72,6 +69,12 @@ export default function Contact() {
 
   return (
     <div className="page-enter">
+      <Seo
+        title={`İletişim | ${siteConfig.companyName} — Denizli Karot`}
+        description={`Denizli karot hizmetleri için bize ulaşın. Telefon ${siteConfig.phone}, WhatsApp ve e-posta. Adres: ${siteConfig.address.full}. Ücretsiz keşif.`}
+        path="/iletisim/"
+      />
+
       <PageHeader
         title="İletişim"
         description="Projeleriniz için ücretsiz keşif ve fiyat teklifi alın. Hemen bize ulaşın!"

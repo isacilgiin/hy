@@ -69,19 +69,44 @@ Buradaki bir değişiklik şunların hepsine otomatik yansır:
 │   │   ├── CTASection.jsx          # telefon + WhatsApp CTA
 │   │   ├── ProjectGallery.jsx      # lightbox'lı galeri
 │   │   └── ScrollToTop.jsx         # sayfa geçişinde yukarı kaydır
-│   ├── pages/                      # Home, Services, ServiceDetail, Projects,
-│   │                               # About, Contact, ServiceAreas
+│   ├── pages/                      # Home, Services, ServiceDetail, Projects, About,
+│   │                               # Contact, ServiceAreas, ServiceAreaDetail, NotFound
 │   ├── data/
 │   │   ├── siteConfig.js           # ⭐ TÜM firma bilgileri
-│   │   ├── services.js             # 8 hizmet
+│   │   ├── services.js             # 10 hizmet (slug'lar indeksli URL'lerle hizalı)
+│   │   ├── serviceAreas.js         # ⭐ 20 ilçe — her biri ayrı sayfa
 │   │   ├── projects.js             # proje galerisi
 │   │   ├── heroSlides.js           # hero slider içerikleri
 │   │   └── about.js                # timeline + değerler
 │   └── utils/links.js              # harita / WhatsApp / sosyal medya link üreticileri
 ├── index.html                      # %SITE_*% belirteçli şablon
 ├── vite.config.js                  # Tailwind + chunk ayrımı + SEO üretici eklenti
-└── DEPLOY-ONCESI.md                # ⭐ yayın öncesi kontrol listesi
+└── DEPLOY-ONCESI.md                # ⭐ yayın öncesi + TAŞINMA kontrol listesi
 ```
+
+---
+
+## ⚠️ URL Yapısı — Slug'ları Değiştirmeyin
+
+`20karot.com.tr` yayında olan ve Google'da **indeksli** bir WordPress sitesiydi.
+Bu proje onun yerini alıyor. Eski sitemap'teki **64 URL'nin tamamı** karşılanıyor:
+30'u aynı adreste çalışıyor, 34'ü 301 ile yönlendiriliyor, **404'e düşen yok.**
+
+Bu yüzden şu iki dosyadaki `slug` alanları **indeksli URL'lerdir**, değiştirmek
+sıralama kaybına yol açar:
+
+- `src/data/services.js` → `/hizmetler/{slug}/`
+- `src/data/serviceAreas.js` → `/hizmet-bolgeleri/{slug}/`
+
+Yönlendirmeler `vite.config.js` içindeki `redirects` dizisinden `dist/.htaccess`
+dosyasına otomatik yazılır. Detay: [`DEPLOY-ONCESI.md`](./DEPLOY-ONCESI.md).
+
+### Sayfa bazlı SEO
+
+index.html tek statik dosya olduğu için canonical etiketi tüm sayfalarda ana sayfayı
+gösteriyordu — yani alt sayfalar Google'a "asıl adresim ana sayfa" diyordu.
+`src/components/Seo.jsx` bunu her sayfada düzeltir. **Yeni sayfa eklerken `<Seo>`
+bileşenini eklemeyi unutmayın**, yoksa o sayfa yanlış canonical ile yayınlanır.
 
 ---
 
@@ -165,7 +190,9 @@ Aynı şey `src/data/about.js` → `foundedYear` (2015) için de geçerli.
 
 ### Teknik doğrulama — Chromium 1440×900 ve 390×844
 
-- ✅ 7 sayfanın tamamı, iki ekran boyutunda — konsol hatası yok
+- ✅ Eski sitemap'teki 64 indeksli URL: 30 aynı adreste + 34 yönlendirme, **0 kırık**
+- ✅ Her sayfa kendi canonical'ını veriyor (12 rota tek tek doğrulandı)
+- ✅ 12 rota × 2 ekran boyutu — konsol hatası yok
 - ✅ Yatay taşma yok (her sayfa, her boyut)
 - ✅ Sabit header hiçbir sayfada içeriğin üstüne binmiyor
 - ✅ Tailwind boşluk utility'leri çalışıyor (`p-6` → 24px doğrulandı)

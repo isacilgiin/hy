@@ -1,19 +1,21 @@
-import { useEffect } from 'react'
 import StatsSection from '../components/StatsSection'
 import CTASection from '../components/CTASection'
 import PageHeader from '../components/PageHeader'
+import Seo from '../components/Seo'
 import Icon from '../components/Icon'
 import SmartImage from '../components/SmartImage'
 import siteConfig from '../data/siteConfig'
 import { timeline, values, foundedYear } from '../data/about'
 
 export default function About() {
-  useEffect(() => {
-    document.title = `Hakkımızda | ${siteConfig.companyName} — Denizli`
-  }, [])
-
   return (
     <div className="page-enter">
+      <Seo
+        title={`Hakkımızda | ${siteConfig.companyName} — Denizli Karot`}
+        description={`${siteConfig.companyName}, Denizli ve çevre ilçelerde beton delme, kesme ve kırma hizmetleri veren karot firmasıdır. Önce ücretsiz keşif, sonra net fiyat.`}
+        path="/hakkimizda/"
+      />
+
       <PageHeader
         title="Hakkımızda"
         description={`${siteConfig.stats.yearsExperience}+ yıllık saha tecrübesiyle Denizli'nin karot firması.`}

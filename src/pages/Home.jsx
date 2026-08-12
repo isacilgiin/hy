@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import HeroSection from '../components/HeroSection'
 import ServiceCard from '../components/ServiceCard'
@@ -8,6 +7,8 @@ import CTASection from '../components/CTASection'
 import Icon from '../components/Icon'
 import SmartImage from '../components/SmartImage'
 import services from '../data/services'
+import projects from '../data/projects'
+import Seo from '../components/Seo'
 import siteConfig from '../data/siteConfig'
 
 const reasons = [
@@ -18,12 +19,14 @@ const reasons = [
 ]
 
 export default function Home() {
-  useEffect(() => {
-    document.title = siteConfig.seo.defaultTitle
-  }, [])
-
   return (
     <div className="page-enter">
+      <Seo
+        title={siteConfig.seo.defaultTitle}
+        description={siteConfig.seo.defaultDescription}
+        path="/"
+      />
+
       <HeroSection />
 
       {/* ===== Hizmetler ===== */}
@@ -131,6 +134,8 @@ export default function Home() {
       <StatsSection />
 
       {/* ===== Projeler ===== */}
+      {/* Proje fotoğrafı yoksa (projects.js boş) bu bölüm hiç gösterilmez. */}
+      {projects.length > 0 && (
       <section className="section-padding bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-14">
@@ -154,6 +159,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      )}
 
       <CTASection />
     </div>

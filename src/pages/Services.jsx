@@ -1,17 +1,19 @@
-import { useEffect } from 'react'
 import ServiceCard from '../components/ServiceCard'
 import CTASection from '../components/CTASection'
 import PageHeader from '../components/PageHeader'
+import Seo from '../components/Seo'
 import services from '../data/services'
 import siteConfig from '../data/siteConfig'
 
 export default function Services() {
-  useEffect(() => {
-    document.title = `Hizmetlerimiz | ${siteConfig.companyName} — Denizli Beton Delme, Kesme, Kırma`
-  }, [])
-
   return (
     <div className="page-enter">
+      <Seo
+        title={`Hizmetlerimiz | Karot, Beton Delme, Kesme, Kırma — ${siteConfig.companyName}`}
+        description="Denizli'de karot, beton delme, beton kesme, beton kırma, filiz ekimi, ankraj ve kimyasal dübel hizmetleri. Ücretsiz keşif ve net fiyat teklifi."
+        path="/hizmetler/"
+      />
+
       <PageHeader
         title="Hizmetlerimiz"
         description="Profesyonel karot ve kesme ekipmanlarımızla sunduğumuz kapsamlı beton delme, kesme ve kırma hizmetleri."

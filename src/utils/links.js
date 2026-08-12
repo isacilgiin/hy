@@ -10,9 +10,13 @@ export function mapsUrl() {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`
 }
 
-/** Contact sayfasındaki gömülü harita. API anahtarı gerektirmez. */
+/**
+ * Contact sayfasındaki gömülü harita. API anahtarı gerektirmez.
+ * Öncelik sırası: işletme profilinin kendi embed adresi → koordinat → adres araması.
+ */
 export function mapEmbedUrl() {
   const { geo, address, companyName } = siteConfig
+  if (geo.embedSrc) return geo.embedSrc
   const query =
     geo.lat != null && geo.lng != null
       ? `${geo.lat},${geo.lng}`

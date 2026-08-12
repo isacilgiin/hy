@@ -27,6 +27,25 @@ const icons = {
     </>
   ),
 
+  // Beton delme — duvarda açılmış delik
+  wallHole: (
+    <>
+      <path d="M3.5 4.5h17v15h-17z" />
+      <path d="M3.5 9.5h4.5M16 9.5h4.5M3.5 14.5h4.5M16 14.5h4.5" />
+      <circle cx="12" cy="12" r="3.5" />
+    </>
+  ),
+
+  // Kimyasal dübel — kimyasal ankraj kartuşu
+  chemical: (
+    <>
+      <path d="M9.5 2.75h5v3.5h-5z" />
+      <path d="M7.75 6.25h8.5v11h-8.5z" />
+      <path d="M10.75 17.25h2.5v4h-2.5z" />
+      <path d="M10 9.75h4M10 12.75h4" />
+    </>
+  ),
+
   // Beton kesme — elmas testere diski + kol
   saw: (
     <>

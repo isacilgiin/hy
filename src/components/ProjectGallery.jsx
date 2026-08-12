@@ -42,6 +42,11 @@ export default function ProjectGallery({ limit }) {
     setLightboxOpen(true)
   }
 
+  // projects.js boşaltılırsa galeri hiç render edilmez — sayfada boş yer
+  // tutucular görünmez. Fotoğraflar hazır olunca diziyi doldurmanız yeterli.
+  // (Tüm hook'lardan SONRA — koşullu hook çağrısı React kuralını bozar.)
+  if (displayProjects.length === 0) return null
+
   const slides = displayProjects.map((p) => ({
     src: failedIds.has(p.id) ? placeholderSlide(p) : p.image,
     alt: p.title,
