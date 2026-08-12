@@ -95,10 +95,18 @@ function seoFromConfig() {
     optionalMeta.push(`<meta name="google-site-verification" content="${analytics.googleSiteVerification}" />`)
   }
 
-  const analyticsScript = analytics.ga4
-    ? `<script async src="https://www.googletagmanager.com/gtag/js?id=${analytics.ga4}"></script>
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${analytics.ga4}');</script>`
-    : '<!-- Google Analytics: siteConfig.analytics.ga4 doldurulunca otomatik eklenir -->'
+  // gtag.js tek dosyadir; GA4 ve Google Ads ayni script uzerinden calisir.
+  // Hangisinin kimligi tanimliysa yalnizca o yapilandirilir.
+  const gtagKimlikleri = [analytics.ga4, analytics.googleAds].filter(Boolean)
+  const analyticsScript = gtagKimlikleri.length
+    ? `<script async src="https://www.googletagmanager.com/gtag/js?id=${gtagKimlikleri[0]}"></script>
+  <script>
+    window.dataLayer=window.dataLayer||[];
+    function gtag(){dataLayer.push(arguments)}
+    gtag('js',new Date());
+${gtagKimlikleri.map((id) => `    gtag('config','${id}');`).join('\n')}
+  </script>`
+    : '<!-- Google Analytics / Ads: siteConfig.analytics doldurulunca otomatik eklenir -->'
 
   const tokens = {
     SITE_URL: url,
@@ -116,6 +124,9 @@ function seoFromConfig() {
     SITE_OG_IMAGE: ogImage,
     SITE_OPTIONAL_META: optionalMeta.join('\n  '),
     SITE_ANALYTICS: analyticsScript,
+    SITE_ANALYTICS_PRECONNECT: gtagKimlikleri.length
+      ? '<link rel="preconnect" href="https://www.googletagmanager.com" />\n  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />'
+      : '',
     SITE_JSONLD: JSON.stringify(jsonLd, null, 2),
     SITE_SERVICE_LINKS: services
       .map((s) => `<li><a href="/hizmetler/${s.slug}">${s.title}</a></li>`)

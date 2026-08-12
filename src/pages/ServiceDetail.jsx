@@ -47,7 +47,7 @@ export default function ServiceDetail() {
   return (
     <div className="page-enter">
       <Seo
-        title={`${service.title} | Denizli ${service.title} — ${siteConfig.companyName}`}
+        title={service.seoTitle ?? `Denizli ${service.title} — ${siteConfig.companyName}`}
         description={`Denizli ve çevre ilçelerde ${service.title.toLowerCase()} hizmeti. ${service.shortDescription} Ücretsiz keşif için ${siteConfig.phone}.`}
         path={`/hizmetler/${service.slug}/`}
         image={`${siteConfig.url}${service.image}`}

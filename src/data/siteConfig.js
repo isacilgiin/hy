@@ -96,9 +96,24 @@ const siteConfig = {
   // ===== Analytics =====
   // Boş bırakıldığında ilgili script hiç yüklenmez.
   analytics: {
-    ga4: '', // TODO: 'G-XXXXXXXXXX'
-    googleAds: '', // TODO
+    ga4: '', // TODO: 'G-XXXXXXXXXX' — Google Analytics 4 ölçüm kimliği
+    googleAds: '', // TODO: 'AW-XXXXXXXXX' — Google Ads dönüşüm kimliği
     googleSiteVerification: '', // TODO: Search Console doğrulama kodu
+
+    // Google Ads dönüşüm etiketleri.
+    // Ads > Hedefler > Dönüşümler > (dönüşüm) > "Etiketi ayarla" ekranındaki
+    // send_to değerinin BÖLÜ işaretinden SONRAKİ kısmı buraya yazılır.
+    // Örn: send_to: 'AW-123456789/AbC-D_efG12' -> etiket: 'AbC-D_efG12'
+    //
+    // Önerilen dönüşüm eylemleri (Ads panelinde bu adlarla oluşturun):
+    //   telefon  -> "Telefon Tıklama"   (Birincil dönüşüm yapın)
+    //   whatsapp -> "WhatsApp Tıklama"  (Birincil)
+    //   form     -> "Form Gönderimi"    (Birincil)
+    conversions: {
+      telefon: '', // TODO
+      whatsapp: '', // TODO
+      form: '', // TODO
+    },
   },
 
   // ===== Google İşletme Puanı =====
@@ -134,8 +149,9 @@ const siteConfig = {
   // ===== SEO =====
   seo: {
     defaultTitle: 'Denizli Karot — Beton Delme, Kesme, Kırma | 20 Karot',
+    // Google ~155 karakterde kesiyor; bu metin 152.
     defaultDescription:
-      'Denizli\'de beton delme, kesme ve kırma hizmetleri. Profesyonel karot ekipmanlarıyla minimum titreşim, minimum toz ve hassas kesim. Ücretsiz keşif ve fiyat teklifi için 20 Karot\'u arayın.',
+      'Denizli\'de karot, beton delme, kesme ve kırma hizmetleri. Minimum toz ve titreşim, pürüzsüz kesim yüzeyi. Ücretsiz keşif ve net fiyat: 0545 678 91 94.',
     keywords:
       '20 karot, denizli karot, karot denizli, beton delme denizli, beton kesme denizli, beton kırma, karotçu denizli, merkezefendi karot, pamukkale karot, asfalt derz kesim denizli',
   },

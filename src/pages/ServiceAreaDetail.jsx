@@ -67,11 +67,18 @@ export default function ServiceAreaDetail() {
 
   if (!area) return <Navigate to="/hizmet-bolgeleri" replace />
 
+  // Başlıkta parantezli ek ("Denizli (Merkez)") kötü duruyor; ayrıca
+  // "Denizli Karot" hedeflenen en değerli anahtar kelime.
+  // "Denizli (Merkez)" sayfasi ana sayfayla AYNI anahtar kelimeyi hedeflemesin
+  // (keyword cannibalization). Ana sayfa "denizli karot" sorgusunu sahiplenir;
+  // bu sayfa "denizli merkez karot" acisiyla ayrisir.
+  const seoAd = area.slug === 'denizli-karot' ? 'Denizli Merkez' : area.name.replace(/\s*\(.*?\)/, '')
+
   return (
     <div className="page-enter">
       <Seo
-        title={`${area.name} Karot | Beton Delme, Kesme, Kırma — ${siteConfig.companyName}`}
-        description={`${area.name} karot hizmeti: beton delme, beton kesme, beton kırma, filiz ekimi ve ankraj. Ücretsiz keşif ve net fiyat teklifi için ${siteConfig.phone}.`}
+        title={`${seoAd} Karot | Beton Delme, Kesme, Kırma — ${siteConfig.companyName}`}
+        description={`${seoAd} karot hizmeti: beton delme, beton kesme, beton kırma, filiz ekimi ve ankraj. Ücretsiz keşif ve net fiyat teklifi için ${siteConfig.phone}.`}
         path={`/hizmet-bolgeleri/${area.slug}/`}
         jsonLd={jsonLd}
       />

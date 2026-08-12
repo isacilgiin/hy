@@ -21,6 +21,7 @@ const services = [
   {
     id: 1,
     slug: 'karot',
+    seoTitle: 'Karot Nedir, Nasıl Yapılır? | Denizli Karot — 20 Karot',
     title: 'Karot',
     shortTitle: 'Karot',
     icon: 'drill',
@@ -49,6 +50,7 @@ const services = [
   {
     id: 2,
     slug: 'beton-delme',
+    seoTitle: 'Denizli Beton Delme | Her Çapta Karot Delme — 20 Karot',
     title: 'Beton Delme',
     shortTitle: 'Beton Delme',
     icon: 'wallHole',
@@ -77,6 +79,7 @@ const services = [
   {
     id: 3,
     slug: 'beton-kesme',
+    seoTitle: 'Denizli Beton Kesme | Duvar ve Döşeme Kesimi — 20 Karot',
     title: 'Beton Kesme',
     shortTitle: 'Beton Kesme',
     icon: 'saw',
@@ -105,6 +108,7 @@ const services = [
   {
     id: 4,
     slug: 'beton-kirma',
+    seoTitle: 'Denizli Beton Kırma | Kontrollü Kırım ve Söküm — 20 Karot',
     title: 'Beton Kırma',
     shortTitle: 'Beton Kırma',
     icon: 'hammer',
@@ -133,6 +137,7 @@ const services = [
   {
     id: 5,
     slug: 'asfalt-derz-kesim',
+    seoTitle: 'Denizli Asfalt Derz Kesim | Yol ve Zemin Kesimi — 20 Karot',
     title: 'Asfalt Derz Kesim',
     shortTitle: 'Asfalt Kesim',
     icon: 'road',
@@ -161,6 +166,7 @@ const services = [
   {
     id: 6,
     slug: 'hidrolik-beton-kesme',
+    seoTitle: 'Denizli Hidrolik Beton Kesme | Ağır İş Kesimi — 20 Karot',
     title: 'Hidrolik Beton Kesme',
     shortTitle: 'Hidrolik Kesme',
     icon: 'hydraulic',
@@ -189,6 +195,7 @@ const services = [
   {
     id: 7,
     slug: 'filiz-ekimi',
+    seoTitle: 'Denizli Filiz Ekimi | Kimyasal Ankrajla Donatı — 20 Karot',
     title: 'Filiz Ekimi',
     shortTitle: 'Filiz Ekimi',
     icon: 'rebar',
@@ -217,6 +224,7 @@ const services = [
   {
     id: 8,
     slug: 'ankraj',
+    seoTitle: 'Denizli Ankraj | Çelik ve Makine Bağlantısı — 20 Karot',
     title: 'Ankraj',
     shortTitle: 'Ankraj',
     icon: 'anchor',
@@ -245,6 +253,7 @@ const services = [
   {
     id: 9,
     slug: 'kimyasal-dubel',
+    seoTitle: 'Denizli Kimyasal Dübel | Enjeksiyon Ankraj — 20 Karot',
     title: 'Kimyasal Dübel',
     shortTitle: 'Kimyasal Dübel',
     icon: 'chemical',
@@ -273,6 +282,7 @@ const services = [
   {
     id: 10,
     slug: 'kontrollu-bina-yikimi',
+    seoTitle: 'Denizli Kontrollü Bina Yıkımı | Kentsel Dönüşüm — 20 Karot',
     title: 'Kontrollü Bina Yıkımı',
     shortTitle: 'Bina Yıkımı',
     icon: 'demolition',

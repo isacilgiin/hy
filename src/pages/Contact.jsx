@@ -5,6 +5,7 @@ import Icon from '../components/Icon'
 import siteConfig from '../data/siteConfig'
 import services from '../data/services'
 import { mapsUrl, mapEmbedUrl, whatsappUrl } from '../utils/links'
+import { trackConversion } from '../utils/analytics'
 
 const inputClass =
   'w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-accent focus:ring-2 focus:ring-accent/20 outline-none transition-all text-sm'
@@ -35,6 +36,10 @@ export default function Contact() {
     ]
       .filter((line) => line !== false && line !== undefined)
       .join('\n')
+
+    // Google Ads / GA4 dönüşümü — tıklama delegasyonu window.open'ı yakalayamaz,
+    // bu yüzden form gönderimi burada elle bildiriliyor.
+    trackConversion('form', { hizmet: formData.service || 'belirtilmedi' })
 
     window.open(whatsappUrl(text), '_blank', 'noopener,noreferrer')
     setSubmitted(true)

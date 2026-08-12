@@ -15,6 +15,20 @@ import siteConfig from '../data/siteConfig'
  * birebir eşleşmesi taşınma sırasında sıralama kaybını önler.
  */
 
+/**
+ * Google, arama sonucunda açıklamayı ~155-160 karakterde keser. Daha uzun
+ * açıklama yazmak zararsız ama sonuçta "..." ile kesilir ve cümle yarım kalır.
+ * Kelime sınırında kesip anlamlı bitmesini sağlıyoruz.
+ */
+const ACIKLAMA_SINIRI = 155
+
+function kisalt(metin, sinir = ACIKLAMA_SINIRI) {
+  if (!metin || metin.length <= sinir) return metin
+  const kesik = metin.slice(0, sinir)
+  const sonBosluk = kesik.lastIndexOf(' ')
+  return `${kesik.slice(0, sonBosluk > 0 ? sonBosluk : sinir).replace(/[.,;:\s]+$/, '')}…`
+}
+
 function upsertMeta(attr, key, content) {
   if (!content) return
   let el = document.head.querySelector(`meta[${attr}="${key}"]`)
@@ -53,7 +67,7 @@ function upsertJsonLd(id, data) {
 export default function Seo({ title, description, path = '/', image, jsonLd }) {
   useEffect(() => {
     const url = `${siteConfig.url}${path}`
-    const desc = description || siteConfig.seo.defaultDescription
+    const desc = kisalt(description || siteConfig.seo.defaultDescription)
     const ogImage = image || `${siteConfig.url}/images/logo/og-image.jpg`
 
     document.title = title
