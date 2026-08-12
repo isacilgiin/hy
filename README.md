@@ -1,10 +1,14 @@
-# 20 Karot — Static Web Site
+# 20 Karot — Statik Web Sitesi
 
-**Domain:** 20karot.com.tr  
-**Firma:** 20 Karot  
-**Sektor:** Beton Delme, Kesme, Kirma Hizmetleri  
-**Teknoloji:** React + Vite + Tailwind CSS v4  
-**Deploy:** Static build (npm run build) -> FTP ile hostinge yukleme
+**Domain:** 20karot.com.tr
+**Firma:** 20 Karot — Denizli
+**Sektör:** Beton delme, kesme, kırma (karot) hizmetleri
+**Teknoloji:** React 19 + Vite 8 + Tailwind CSS v4 + Swiper
+**Deploy:** Statik build (`npm run build`) → `dist/` klasörü FTP ile hostinge
+
+> **Yayına almadan önce mutlaka [`DEPLOY-ONCESI.md`](./DEPLOY-ONCESI.md) dosyasını okuyun.**
+> Gerçek veri bekleyen tüm alanlar (istatistikler, koordinat, sosyal medya, görseller)
+> orada listelenmiştir.
 
 ---
 
@@ -12,139 +16,186 @@
 
 ```bash
 npm install
-npm run dev        # Local gelistirme (http://localhost:5173)
-npm run build      # Production build (dist/ klasoru)
+npm run dev        # http://localhost:5173
+npm run build      # dist/ klasörü
+npm run preview    # build çıktısını lokalde test et
+npm run lint       # oxlint
 ```
 
 ---
 
-## Proje Yapisi
+## Tek Kaynak: `src/data/siteConfig.js`
+
+Firma adı, telefon, adres, domain, renkler, istatistikler — **hepsi tek dosyada.**
+Buradaki bir değişiklik şunların hepsine otomatik yansır:
+
+- Tüm sayfalardaki metin ve linkler
+- `index.html` meta etiketleri, Open Graph, Twitter Card
+- JSON-LD yapılandırılmış veri (Schema.org LocalBusiness)
+- `sitemap.xml` ve `robots.txt` (build sırasında üretilir)
+
+`index.html` içindeki `%SITE_*%` belirteçlerini elle doldurmayın —
+`vite.config.js` içindeki `seoFromConfig` eklentisi build sırasında doldurur.
+
+---
+
+## Proje Yapısı
 
 ```
-20karot/
+20karot-static-web/
 ├── public/
-│   ├── robots.txt              # Arama motoru yonlendirmesi
-│   ├── sitemap.xml             # 14 URL'li site haritasi
-│   ├── llms.txt                # LLM'ler icin firma bilgisi
-│   ├── .well-known/llms.txt    # Alternatif LLM erisim yolu
-│   └── manifest.json           # PWA manifest
+│   ├── favicon.svg                 # karot ucu motifi (çalışır durumda)
+│   ├── manifest.json               # PWA manifest
+│   ├── llms.txt                    # LLM / AI arama motorları için firma bilgisi
+│   ├── .well-known/llms.txt        # alternatif erişim yolu
+│   └── images/
+│       ├── logo/                   # logo, apple-touch-icon, og-image
+│       ├── hero/                   # hero slider görselleri
+│       ├── hizmetler/              # hizmet görselleri (slug adıyla)
+│       └── projeler/               # proje fotoğrafları
 ├── src/
-│   ├── index.css               # Tailwind v4 + animasyonlar + tasarim sistemi
-│   ├── App.jsx                 # Router + Layout
-│   ├── main.jsx                # Entry point
+│   ├── index.css                   # Tailwind v4 + tema + animasyonlar + bileşen sınıfları
+│   ├── App.jsx                     # Router + layout
 │   ├── components/
-│   │   ├── Header.jsx          # Sticky header, dropdown, hamburger menu
-│   │   ├── Footer.jsx          # 4 sutunlu footer
-│   │   ├── HeroSection.jsx     # Hero section (slider eklenecek)
-│   │   ├── ServiceCard.jsx     # Hover efektli hizmet karti
-│   │   ├── StatsSection.jsx    # Animasyonlu sayaclar
-│   │   ├── CTASection.jsx      # Telefon + WhatsApp CTA
-│   │   ├── ProjectGallery.jsx  # Lightbox'li galeri
-│   │   └── ScrollToTop.jsx     # Sayfa gecis scroll
-│   ├── pages/
-│   │   ├── Home.jsx            # Ana sayfa (hero, hizmetler, istatistikler, projeler, CTA)
-│   │   ├── Services.jsx        # Hizmetler listesi
-│   │   ├── ServiceDetail.jsx   # Dinamik hizmet detay (/hizmetler/:slug)
-│   │   ├── Projects.jsx        # Proje galerisi
-│   │   ├── About.jsx           # Hakkimizda + timeline + degerler
-│   │   ├── Contact.jsx         # Iletisim formu + harita
-│   │   └── ServiceAreas.jsx    # Hizmet bolgeleri grid
-│   └── data/
-│       ├── siteConfig.js       # Merkezi firma bilgileri (BURADAN GUNCELLENIR)
-│       └── services.js         # 8 hizmet verisi
-├── index.html                  # SEO meta + JSON-LD + noscript fallback
-├── vite.config.js              # Tailwind plugin + chunk splitting
-├── ANALIZ.md                   # Referans site (guclukarot.com) analiz raporu
-└── package.json
+│   │   ├── Icon.jsx                # ⭐ merkezi SVG ikon sistemi (45 ikon) — emoji YOK
+│   │   ├── Logo.jsx                # logo (dosya yoksa gömülü SVG işarete düşer)
+│   │   ├── SmartImage.jsx          # ⭐ görsel yoksa tasarım yer tutucusu gösterir
+│   │   ├── PageHeader.jsx          # iç sayfaların ortak başlık bloğu
+│   │   ├── Header.jsx              # sticky header, dropdown, mobil menü
+│   │   ├── Footer.jsx              # 4 sütunlu footer
+│   │   ├── HeroSection.jsx         # Swiper slider'lı hero
+│   │   ├── ServiceCard.jsx         # görselli hizmet kartı
+│   │   ├── StatsSection.jsx        # animasyonlu sayaçlar
+│   │   ├── CTASection.jsx          # telefon + WhatsApp CTA
+│   │   ├── ProjectGallery.jsx      # lightbox'lı galeri
+│   │   └── ScrollToTop.jsx         # sayfa geçişinde yukarı kaydır
+│   ├── pages/                      # Home, Services, ServiceDetail, Projects, About,
+│   │                               # Contact, ServiceAreas, ServiceAreaDetail, NotFound
+│   ├── data/
+│   │   ├── siteConfig.js           # ⭐ TÜM firma bilgileri
+│   │   ├── services.js             # 10 hizmet (slug'lar indeksli URL'lerle hizalı)
+│   │   ├── serviceAreas.js         # ⭐ 20 ilçe — her biri ayrı sayfa
+│   │   ├── projects.js             # proje galerisi
+│   │   ├── heroSlides.js           # hero slider içerikleri
+│   │   └── about.js                # timeline + değerler
+│   └── utils/links.js              # harita / WhatsApp / sosyal medya link üreticileri
+├── index.html                      # %SITE_*% belirteçli şablon
+├── vite.config.js                  # Tailwind + chunk ayrımı + SEO üretici eklenti
+└── DEPLOY-ONCESI.md                # ⭐ yayın öncesi + TAŞINMA kontrol listesi
 ```
 
 ---
 
-## Referans Site Analizi
+## ⚠️ URL Yapısı — Slug'ları Değiştirmeyin
 
-guclukarot.com incelendi ve asagidaki teknolojiler tespit edildi:
-- React SPA + Vite bundler
-- Tailwind CSS v4.1.6
-- Swiper (slider) + YARL (lightbox)
-- Google Analytics GA4 + Google Ads
-- Kapsamli JSON-LD Schema.org
-- Kanit + Cal Sans fontlari
+`20karot.com.tr` yayında olan ve Google'da **indeksli** bir WordPress sitesiydi.
+Bu proje onun yerini alıyor. Eski sitemap'teki **64 URL'nin tamamı** karşılanıyor:
+30'u aynı adreste çalışıyor, 34'ü 301 ile yönlendiriliyor, **404'e düşen yok.**
 
-Detayli analiz: `ANALIZ.md`
+Bu yüzden şu iki dosyadaki `slug` alanları **indeksli URL'lerdir**, değiştirmek
+sıralama kaybına yol açar:
 
----
+- `src/data/services.js` → `/hizmetler/{slug}/`
+- `src/data/serviceAreas.js` → `/hizmet-bolgeleri/{slug}/`
 
-## TAMAMLANAN ISLER
+Yönlendirmeler `vite.config.js` içindeki `redirects` dizisinden `dist/.htaccess`
+dosyasına otomatik yazılır. Detay: [`DEPLOY-ONCESI.md`](./DEPLOY-ONCESI.md).
 
-1. **Proje altyapisi kuruldu** — React + Vite + Tailwind CSS v4
-2. **Paketler yuklendi** — react-router-dom, swiper, yet-another-react-lightbox, tailwindcss
-3. **SEO dosyalari olusturuldu:**
-   - `robots.txt` — arama motoru yonlendirmesi
-   - `sitemap.xml` — 14 sayfa URL'si
-   - `llms.txt` + `.well-known/llms.txt` — LLM/AI botlari icin firma bilgisi
-   - `manifest.json` — PWA manifest
-4. **index.html SEO** — Meta tags, Open Graph, Twitter Card, JSON-LD Schema, Geo Tags, guvenlik headerlari, noscript fallback
-5. **Tasarim sistemi** — index.css: animasyonlar, glassmorphism, gradient'ler, butonlar, scrollbar
-6. **7 sayfa olusturuldu** — Home, Services, ServiceDetail, Projects, About, Contact, ServiceAreas
-7. **8 bilesen olusturuldu** — Header, Footer, HeroSection, ServiceCard, StatsSection, CTASection, ProjectGallery, ScrollToTop
-8. **Veri dosyalari** — siteConfig.js (merkezi yapilandirma), services.js (8 hizmet)
-9. **Routing** — React Router ile tum sayfa yonlendirmeleri
-10. **Referans site analizi** — guclukarot.com detayli teknoloji raporu (ANALIZ.md)
+### Sayfa bazlı SEO
+
+index.html tek statik dosya olduğu için canonical etiketi tüm sayfalarda ana sayfayı
+gösteriyordu — yani alt sayfalar Google'a "asıl adresim ana sayfa" diyordu.
+`src/components/Seo.jsx` bunu her sayfada düzeltir. **Yeni sayfa eklerken `<Seo>`
+bileşenini eklemeyi unutmayın**, yoksa o sayfa yanlış canonical ile yayınlanır.
 
 ---
 
-## YAPILACAK ISLER (TODO)
+## Tasarım Sistemi
 
-### Oncelik 1 — Zorunlu Degisiklikler
-- [ ] **Firma bilgilerini guncelle** — siteConfig.js'de "Guclu Karot" -> "20 Karot", domain -> 20karot.com.tr, telefon, adres, koordinatlar vb.
-- [ ] **Renk paletini degistir** — Mavi+sari yerine "koyu bordo + altin/krem" paleti (secildi)
-- [ ] **Emojileri kaldir** — Tum dosyalardaki emoji kullanimini SVG ikonlarla degistir
-- [ ] **Hero slider ekle** — HeroSection'a Swiper slider entegrasyonu (referans sitede vardi)
-- [ ] **sitemap.xml domain guncelle** — guclukarot.com -> 20karot.com.tr
-- [ ] **robots.txt domain guncelle** — guclukarot.com -> 20karot.com.tr  
-- [ ] **llms.txt firma bilgilerini guncelle** — 20 Karot bilgileri
-- [ ] **index.html meta tagleri guncelle** — baslik, aciklama, JSON-LD, OG tagleri
-- [ ] **manifest.json guncelle** — firma adi ve tema renkleri
+### Palet: Kömür + Bordo + Altın
 
-### Oncelik 2 — Gorseller
-- [ ] **Logo tasarimi** — 20 Karot SVG logosu olustur
-- [ ] **Banner gorselleri** — Hero slider icin 3-4 banner gorseli
-- [ ] **Proje fotograflari** — Gercek proje gorselleri ekle
-- [ ] **Favicon olustur** — Logo ile favicon.ico, android-chrome, apple-touch-icon
-- [ ] **OG image** — Sosyal medya paylasim gorseli
+| Token | Hex | Kullanım |
+|---|---|---|
+| `dark` | `#14100F` | kömür — koyu zeminler |
+| `dark-light` | `#1F1917` | koyu grafit |
+| `accent` | `#6E1B2E` | **bordo** — açık zeminde vurgu rengi |
+| `accent-light` | `#8E2B40` | açık bordo |
+| `primary` | `#C8A24A` | **altın** — koyu zeminde vurgu, dolgu butonlar |
+| `primary-light` | `#E3C77E` | açık altın |
+| `surface` | `#F2EDE7` | krem — açık zeminler |
 
-### Oncelik 3 — Icerik Guncellemesi
-- [ ] **Hizmet aciklamalari** — Firma ozelinde hizmet metinleri guncelle
-- [ ] **Hakkimizda icerigi** — Gercek firma hikayesi, timeline tarihleri
-- [ ] **Hizmet bolgeleri** — Gercek hizmet verilen ilceler
-- [ ] **Istatistikler** — Gercek rakamlar (yil, proje sayisi vb.)
-- [ ] **Iletisim formu backend** — Form gonderimi icin backend veya servis entegrasyonu
+### ⚠️ Kontrast kuralı — buna uyun
 
-### Oncelik 4 — Optimizasyon & Deploy
-- [ ] **Responsive test** — Mobil, tablet, desktop kontrol
-- [ ] **Lighthouse analizi** — Performance, SEO, Accessibility skorlari
-- [ ] **WebP gorsel donusumu** — PNG/JPG -> WebP
-- [ ] **Production build** — npm run build
-- [ ] **FTP ile deploy** — dist/ klasorunu hostinge yukle
-- [ ] **SSL sertifikasi** — HTTPS aktif et
-- [ ] **Google Analytics** — GA4 ID'yi siteConfig.js'e ekle
-- [ ] **Google Search Console** — Site dogrulama
+Altın, açık zeminde **okunmaz** (kontrast 2.07:1, WCAG AA sınırı 4.5:1).
 
----
+| Zemin | Metin/ikon rengi | Kontrast |
+|---|---|---|
+| Koyu (kömür) | `text-primary` (altın) | 7.9 : 1 ✅ |
+| Açık (beyaz/krem) | `text-accent` (bordo) | 9.7 : 1 ✅ |
+| Açık (beyaz/krem) | ~~`text-primary`~~ (altın) | 2.1 : 1 ❌ **kullanmayın** |
+| Altın dolgu üstü | `text-dark` (kömür) | 7.9 : 1 ✅ |
+| Bordo dolgu üstü | beyaz | 11.3 : 1 ✅ |
 
-## Onemli Dosya: siteConfig.js
+Aynı kural gradient metinler için de geçerli:
+`.text-gradient` (altın) → koyu zemin · `.text-gradient-accent` (bordo) → açık zemin.
 
-Tum firma bilgileri tek dosyadan yonetilir. Degisiklik yapilacak ilk dosya budur:
+### İkonlar — emoji kullanılmaz
 
-```
-src/data/siteConfig.js
+Tüm ikonlar `src/components/Icon.jsx` içinde tanımlıdır ve `currentColor` ile
+bulundukları yerin rengini alır:
+
+```jsx
+<Icon name="drill" className="w-6 h-6 text-accent" />
 ```
 
-Telefon, adres, domain, sosyal medya, istatistikler, SEO metinleri — hepsi burada.
+Emoji kullanılmamasının nedeni: platformdan platforma farklı render edilir,
+marka rengini almaz, boyutu kontrol edilemez, ekran okuyucularda gürültü yapar.
+
+### ⚠️ CSS yazarken: özel kurallar mutlaka `@layer` içinde olmalı
+
+`src/index.css` içine **katmansız (unlayered)** CSS yazmayın. CSS cascade kurallarına
+göre katmansız bir bildirim, `@layer utilities` içindeki **tüm** Tailwind utility'lerini
+ezer. Bu projede daha önce şu satır yüzünden sitedeki bütün `p-*`, `m-*`, `px-*`, `pt-*`
+sınıfları çalışmıyordu:
+
+```css
+/* ❌ ASLA — tüm Tailwind boşluk utility'lerini öldürür */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+```
+
+(Tailwind preflight bunu zaten `@layer base` içinde yapıyor, tekrarlamaya gerek yok.)
+
+Yeni kural eklerken: temel stiller → `@layer base`, bileşen sınıfları → `@layer components`,
+yardımcı sınıflar → `@layer utilities`.
 
 ---
 
-## Secilen Renk Paleti (Henuz Uygulanmadi)
+## Görsel Ekleme
 
-- **Koyu Bordo + Altin/Krem** — premium, luks his
-- Mavi+sari (guclukarot.com) ile karistirilmayacak, tamamen farkli kimlik
+`public/images/...` altına **beklenen isimle** dosyayı atmanız yeterli — kod değişikliği
+gerekmez. Dosya yoksa `SmartImage` bileşeni tasarlanmış bir yer tutucu gösterir,
+kırık görsel ikonu asla çıkmaz. Tam dosya listesi: [`DEPLOY-ONCESI.md`](./DEPLOY-ONCESI.md).
+
+---
+
+## Doğrulama Durumu
+
+### ⚠️ Önce şunu bilin: ana sayfadaki 4 rakam yer tutucudur
+
+`10+ Yıl Tecrübe`, `750+ Tamamlanan Proje`, `500+ Mutlu Müşteri`, `8+ Uzman Kadro`
+uydurma sayılardır ve şu an hero'da, istatistik şeridinde, footer metninde ve
+Hakkımızda yazısında **gerçekmiş gibi görünüyor**. `src/data/siteConfig.js` →
+`stats` bölümünü gerçek rakamlarınızla değiştirmeden yayına çıkmayın.
+Aynı şey `src/data/about.js` → `foundedYear` (2015) için de geçerli.
+
+### Teknik doğrulama — Chromium 1440×900 ve 390×844
+
+- ✅ Eski sitemap'teki 64 indeksli URL: 30 aynı adreste + 34 yönlendirme, **0 kırık**
+- ✅ Her sayfa kendi canonical'ını veriyor (12 rota tek tek doğrulandı)
+- ✅ 12 rota × 2 ekran boyutu — konsol hatası yok
+- ✅ Yatay taşma yok (her sayfa, her boyut)
+- ✅ Sabit header hiçbir sayfada içeriğin üstüne binmiyor
+- ✅ Tailwind boşluk utility'leri çalışıyor (`p-6` → 24px doğrulandı)
+- ✅ JSON-LD geçerli JSON, uydurma `aggregateRating`/`geo` içermiyor
+- ✅ `src/` içinde emoji sayısı: 0
+- ✅ oxlint temiz

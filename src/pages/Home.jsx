@@ -1,35 +1,46 @@
-import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import HeroSection from '../components/HeroSection'
 import ServiceCard from '../components/ServiceCard'
 import StatsSection from '../components/StatsSection'
 import ProjectGallery from '../components/ProjectGallery'
 import CTASection from '../components/CTASection'
+import Icon from '../components/Icon'
+import SmartImage from '../components/SmartImage'
 import services from '../data/services'
+import projects from '../data/projects'
+import Seo from '../components/Seo'
 import siteConfig from '../data/siteConfig'
 
-export default function Home() {
-  useEffect(() => {
-    document.title = siteConfig.seo.defaultTitle
-  }, [])
+const reasons = [
+  { title: 'Profesyonel Ekipman', desc: 'Karot, elmas diskli kesme ve hidrolik sistemlerle çalışıyoruz' },
+  { title: 'Uzman Kadro', desc: `${siteConfig.stats.teamMembers}+ kişilik deneyimli saha ekibi` },
+  { title: 'Hızlı Teslimat', desc: 'Projenizi zamanında ve eksiksiz teslim ediyoruz' },
+  { title: 'Net Fiyat', desc: 'Keşif sonrası net teklif — sürpriz maliyet çıkmaz' },
+]
 
+export default function Home() {
   return (
     <div className="page-enter">
-      {/* Hero */}
+      <Seo
+        title={siteConfig.seo.defaultTitle}
+        description={siteConfig.seo.defaultDescription}
+        path="/"
+      />
+
       <HeroSection />
 
-      {/* Hizmetler Bölümü */}
+      {/* ===== Hizmetler ===== */}
       <section className="section-padding bg-white" id="hizmetler">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-14">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 mb-4">
-              <span className="text-primary text-sm font-semibold">🔧 Profesyonel Çözümler</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 mb-4">
+              <Icon name="cog" className="w-4 h-4 text-accent" strokeWidth={2} />
+              <span className="text-accent text-sm font-semibold">Profesyonel Çözümler</span>
             </div>
-            <h2 className="section-title text-dark">
-              Hizmetlerimiz
-            </h2>
+            <h2 className="section-title text-dark">Hizmetlerimiz</h2>
             <p className="section-subtitle">
-              Hilti marka ekipmanlarımızla her türlü beton delme, kesme ve kırma ihtiyacınıza profesyonel çözümler sunuyoruz.
+              Her türlü beton delme, kesme ve kırma ihtiyacınıza profesyonel ekipman ve uzman
+              kadroyla çözüm sunuyoruz.
             </p>
           </div>
 
@@ -42,42 +53,39 @@ export default function Home() {
           <div className="text-center mt-12">
             <Link to="/hizmetler" className="btn-primary">
               Tüm Hizmetlerimiz
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
+              <Icon name="arrowRight" className="w-5 h-5" strokeWidth={2} />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Neden Biz */}
+      {/* ===== Neden Biz ===== */}
       <section className="section-padding bg-surface">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
-            {/* Left */}
+            {/* Sol */}
             <div>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 mb-4">
-                <span className="text-primary text-sm font-semibold">🏆 Neden Güçlü Karot?</span>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 mb-4">
+                <Icon name="award" className="w-4 h-4 text-accent" strokeWidth={2} />
+                <span className="text-accent text-sm font-semibold">
+                  Neden {siteConfig.companyName}?
+                </span>
               </div>
               <h2 className="section-title text-dark mb-6">
-                Denizli&apos;de <span className="text-gradient">Güvenilir</span> Karot Hizmeti
+                Denizli&apos;de <span className="text-gradient-accent">Güvenilir</span> Karot
+                Hizmeti
               </h2>
-              <p className="text-gray-500 text-lg leading-relaxed mb-8">
-                {siteConfig.stats.yearsExperience} yılı aşkın sektör deneyimimiz, Hilti marka profesyonel ekipman parkurumuz ve uzman kadromuzla Denizli ve çevresinde beton delme, kesme ve kırma hizmetlerinde lider konumdayız.
+              <p className="text-gray-600 text-lg leading-relaxed mb-8">
+                {siteConfig.stats.yearsExperience} yılı aşkın saha deneyimimiz, profesyonel makine
+                parkurumuz ve uzman kadromuzla Denizli ve çevresinde beton delme, kesme ve kırma
+                hizmetleri veriyoruz.
               </p>
 
               <div className="space-y-4">
-                {[
-                  { title: 'Hilti Ekipmanlar', desc: 'Dünya lideri Hilti marka makinelerle çalışıyoruz' },
-                  { title: 'Uzman Kadro', desc: `${siteConfig.stats.teamMembers}+ kişilik deneyimli ve sertifikalı ekip` },
-                  { title: 'Hızlı Teslimat', desc: 'Projenizi zamanında ve eksiksiz teslim ediyoruz' },
-                  { title: 'Uygun Fiyat', desc: 'Rekabetçi fiyatlandırma ile bütçenize uygun çözümler' },
-                ].map((item, idx) => (
-                  <div key={idx} className="flex items-start gap-4 group">
-                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
-                      <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
+                {reasons.map((item) => (
+                  <div key={item.title} className="flex items-start gap-4 group">
+                    <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center shrink-0 group-hover:bg-accent group-hover:text-white text-accent transition-colors">
+                      <Icon name="check" className="w-5 h-5" strokeWidth={2.5} />
                     </div>
                     <div>
                       <h3 className="font-semibold text-dark mb-1">{item.title}</h3>
@@ -88,27 +96,33 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right - Visual */}
+            {/* Sağ — görsel */}
             <div className="relative hidden lg:block">
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-gradient-to-br from-dark to-dark-light p-10 aspect-square flex items-center justify-center">
-                <div className="text-center">
-                  <div className="text-8xl mb-6 animate-float">🏗️</div>
-                  <div className="text-white text-2xl font-bold mb-2">Hilti Teknolojisi</div>
-                  <div className="text-white/50">Profesyonel Ekipman Parkuru</div>
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl aspect-square">
+                <SmartImage
+                  src="/images/hero/hero-2.jpg"
+                  alt="Şantiyede beton kesme çalışması"
+                  icon="hydraulic"
+                  label="Saha Çalışması"
+                  className="absolute inset-0 w-full h-full"
+                  imgClassName="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-dark/85 via-dark/20 to-transparent" />
+                <div className="absolute bottom-8 left-8 right-8">
+                  <div className="text-white text-2xl font-bold mb-1">Sahada Uzman Ekip</div>
+                  <div className="text-white/60">Denizli ve çevre ilçelerde hizmet</div>
                 </div>
-                {/* Decorative Elements */}
-                <div className="absolute top-6 right-6 w-20 h-20 rounded-full bg-primary/10 blur-xl"></div>
-                <div className="absolute bottom-10 left-10 w-32 h-32 rounded-full bg-primary/5 blur-2xl"></div>
               </div>
-              {/* Floating Badge */}
+
+              {/* Yüzen rozet */}
               <div className="absolute -bottom-4 -left-4 glass-dark rounded-xl px-5 py-3 shadow-xl">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center text-dark font-bold">
-                    ✓
+                  <div className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center text-dark">
+                    <Icon name="check" className="w-5 h-5" strokeWidth={3} />
                   </div>
                   <div>
-                    <div className="text-white font-semibold text-sm">ISO 9001</div>
-                    <div className="text-white/50 text-xs">Kalite Güvencesi</div>
+                    <div className="text-white font-semibold text-sm">Ücretsiz Keşif</div>
+                    <div className="text-white/50 text-xs">Yerinde değerlendirme</div>
                   </div>
                 </div>
               </div>
@@ -117,19 +131,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* İstatistikler */}
       <StatsSection />
 
-      {/* Projeler Bölümü */}
+      {/* ===== Projeler ===== */}
+      {/* Proje fotoğrafı yoksa (projects.js boş) bu bölüm hiç gösterilmez. */}
+      {projects.length > 0 && (
       <section className="section-padding bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-14">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 mb-4">
-              <span className="text-primary text-sm font-semibold">📸 Son Projelerimiz</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 mb-4">
+              <Icon name="camera" className="w-4 h-4 text-accent" strokeWidth={2} />
+              <span className="text-accent text-sm font-semibold">Son Projelerimiz</span>
             </div>
-            <h2 className="section-title text-dark">
-              Tamamlanan Projeler
-            </h2>
+            <h2 className="section-title text-dark">Tamamlanan Projeler</h2>
             <p className="section-subtitle">
               Başarıyla tamamladığımız projelerden bazıları. Kaliteli işçiliğimizi inceleyin.
             </p>
@@ -140,15 +154,13 @@ export default function Home() {
           <div className="text-center mt-12">
             <Link to="/projeler" className="btn-primary">
               Tüm Projeler
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
+              <Icon name="arrowRight" className="w-5 h-5" strokeWidth={2} />
             </Link>
           </div>
         </div>
       </section>
+      )}
 
-      {/* CTA */}
       <CTASection />
     </div>
   )

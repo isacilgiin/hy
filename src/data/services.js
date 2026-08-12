@@ -1,25 +1,69 @@
 /**
  * Hizmet Verileri
- * Her hizmetin slug'ı, başlığı, açıklaması, ikonu ve detay içeriği burada tanımlıdır.
- * Navigasyon, sitemap ve sayfalar bu veriden beslenir.
+ *
+ * Her hizmetin slug'ı, başlığı, açıklaması, ikon ANAHTARI ve detay içeriği burada.
+ * Navigasyon, sitemap ve tüm sayfalar bu veriden beslenir.
+ *
+ * icon  : src/components/Icon.jsx içindeki ikon adı (emoji DEĞİL)
+ * image : public/images/hizmetler/<slug>.jpg — görsel yoksa otomatik olarak
+ *         tasarım placeholder'ı gösterilir, kırık görsel çıkmaz.
+ *
+ * ┌──────────────────────────────────────────────────────────────────────┐
+ * │ NOT: Ekipman açıklamaları bilinçli olarak MARKA/MODEL İÇERMEZ.       │
+ * │ Referans sitedeki "Hilti DD 150-U", "Hilti TE 3000-AVR" gibi model   │
+ * │ iddiaları o firmanın envanteriydi; sizin makine parkurunuzu bilmeden │
+ * │ yazmak uydurma iddia olurdu. Kendi makinelerinizin marka/modelini    │
+ * │ eklemek isterseniz `features` listelerine yazın.                     │
+ * └──────────────────────────────────────────────────────────────────────┘
  */
 
 const services = [
   {
     id: 1,
+    slug: 'karot',
+    title: 'Karot',
+    shortTitle: 'Karot',
+    icon: 'drill',
+    image: '/images/hizmetler/karot.jpg',
+    shortDescription:
+      'Elmas uçlu karot makineleriyle betonarmede dairesel, pürüzsüz ve titreşimsiz delik açma yöntemi.',
+    description:
+      'Karot, betonarme bir yapıya kırıcı kullanmadan, elmas uçlu silindirik bir uçla dairesel delik açma yöntemidir. Kırıcıyla açılan bir delik çevresindeki betonu çatlatır ve donatıyı zorlar; karotta ise uç betonu keserek ilerlediği için çevre yapıya yük binmez. Bu yüzden oturulan binalarda, taşıyıcı elemanların yakınında ve hassas işlerde tercih edilen yöntemdir. 20 Karot olarak Denizli ve çevre ilçelerde her çapta karot uygulaması yapıyoruz.',
+    features: [
+      'Elmas uçlu, su soğutmalı karot makineleri',
+      '50mm - 1000mm arası çap seçenekleri',
+      'Kırıcıya göre çok daha az toz, gürültü ve titreşim',
+      'Delik kenarı pürüzsüz — ek sıva/tamir gerekmez',
+      'Yatay, dikey ve tavan (yukarı doğru) delme',
+      'Donatıyı zorlamadan, kesip geçerek ilerleme',
+    ],
+    applications: [
+      'Oturulan binalarda tadilat delikleri',
+      'Taşıyıcı eleman yakınındaki hassas delimler',
+      'Beton numunesi (karot numunesi) alma',
+      'Su ve pis su tesisat geçişleri',
+      'Klima ve havalandırma geçişleri',
+      'Ankraj ve montaj delikleri',
+    ],
+  },
+  {
+    id: 2,
     slug: 'beton-delme',
     title: 'Beton Delme',
     shortTitle: 'Beton Delme',
-    icon: '🔩',
-    shortDescription: 'Hilti karot makineleri ile 50mm\'den 1000mm\'ye kadar her çapta hassas beton delme işlemi.',
-    description: 'Profesyonel Hilti karot makinelerimiz ile her çapta beton delme işlemi gerçekleştiriyoruz. Tesisat geçişleri, havalandırma kanalları, baca delikleri ve daha fazlası için minimum titreşim ve toz ile çalışıyoruz.',
+    icon: 'wallHole',
+    image: '/images/hizmetler/beton-delme.jpg',
+    shortDescription:
+      'Karot makineleriyle 50mm\'den 1000mm\'ye kadar her çapta hassas beton delme işlemi.',
+    description:
+      'Profesyonel karot makinelerimizle her çapta beton delme işlemi gerçekleştiriyoruz. Tesisat geçişleri, havalandırma kanalları, baca delikleri ve daha fazlası için minimum titreşim ve toz ile çalışıyoruz. Su soğutmalı elmas uçlarımız sayesinde delik kenarları pürüzsüz kalır, ek sıva veya tamir işi gerektirmez.',
     features: [
       '50mm - 1000mm arası çap seçenekleri',
-      'Hilti DD 150-U & DD 250-E karot makineleri',
+      'Su soğutmalı elmas karot uçları',
       'Minimum titreşim ve toz',
       'Hassas ve düzgün yüzey kalitesi',
-      'Su soğutmalı elmas uçlar',
-      'Betonarme, taş, tuğla her malzemede',
+      'Yatay, dikey ve açılı delme',
+      'Betonarme, taş ve tuğlada uygulama',
     ],
     applications: [
       'Tesisat geçiş delikleri',
@@ -31,44 +75,50 @@ const services = [
     ],
   },
   {
-    id: 2,
+    id: 3,
     slug: 'beton-kesme',
     title: 'Beton Kesme',
     shortTitle: 'Beton Kesme',
-    icon: '⚡',
-    shortDescription: 'Duvar, döşeme ve temel kesimi için elmas diskli profesyonel beton kesme hizmeti.',
-    description: 'Elmas diskli kesme makinelerimizle duvar, döşeme, kolon ve temel gibi tüm betonarme yapılarda hassas kesim yapıyoruz. Kapı-pencere açıklığı, asansör boşluğu ve yapısal düzenlemeler için ideal çözüm.',
+    icon: 'saw',
+    image: '/images/hizmetler/beton-kesme.jpg',
+    shortDescription:
+      'Duvar, döşeme ve temel kesimi için elmas diskli profesyonel beton kesme hizmeti.',
+    description:
+      'Elmas diskli duvar testerelerimizle duvar, döşeme, kolon ve temel gibi tüm betonarme yapılarda hassas kesim yapıyoruz. Kapı-pencere açıklığı, asansör boşluğu ve yapısal düzenlemeler için ideal çözüm. Kesim hattı düzgün çıktığı için çevre yapıya zarar vermez.',
     features: [
-      'Hilti DST 20-CA duvar testeresi',
-      'Elmas diskli kesim teknolojisi',
+      'Elmas diskli duvar testeresi',
+      'Ray sistemli düz kesim',
       '600mm derinliğe kadar kesim kapasitesi',
       'Düz ve hassas kesim yüzeyi',
-      'Toz kontrol sistemi',
-      'Yapıya zarar vermeden kesim',
+      'Su ile toz kontrolü',
+      'Taşıyıcı sisteme zarar vermeden kesim',
     ],
     applications: [
       'Kapı ve pencere açıklıkları',
       'Asansör boşluğu açma',
       'Merdiven boşluğu açma',
-      'Duvar kaldırma / incelme',
+      'Duvar kaldırma / inceltme',
       'Döşeme kesimi',
       'Temel kesimi',
     ],
   },
   {
-    id: 3,
+    id: 4,
     slug: 'beton-kirma',
     title: 'Beton Kırma',
     shortTitle: 'Beton Kırma',
-    icon: '💪',
-    shortDescription: 'Kontrollü beton kırma işlemleri ile minimum gürültü ve titreşimde yıkım hizmeti.',
-    description: 'Hilti elektrikli ve hidrolik kırıcılar ile kontrollü beton kırma işlemleri gerçekleştiriyoruz. Tadilat, renovasyon ve yıkım projelerinde yapıya zarar vermeden hassas kırım yapıyoruz.',
+    icon: 'hammer',
+    image: '/images/hizmetler/beton-kirma.jpg',
+    shortDescription:
+      'Kontrollü beton kırma işlemleri ile minimum gürültü ve titreşimde yıkım hizmeti.',
+    description:
+      'Elektrikli ve hidrolik kırıcılarımızla kontrollü beton kırma işlemleri gerçekleştiriyoruz. Tadilat, renovasyon ve yıkım projelerinde taşıyıcı sisteme zarar vermeden hassas kırım yapıyoruz. İş bitiminde moloz toplama ve nakliye de bizde.',
     features: [
-      'Hilti TE 3000-AVR kırıcı',
-      'Hidrolik kırma seçeneği',
+      'Elektrikli ve hidrolik kırıcılar',
       'Kontrollü ve hassas kırım',
       'Minimum gürültü ve titreşim',
       'Toz kontrol önlemleri',
+      'Taşıyıcı sistem koruması',
       'Moloz toplama ve nakliye',
     ],
     applications: [
@@ -81,24 +131,27 @@ const services = [
     ],
   },
   {
-    id: 4,
+    id: 5,
     slug: 'asfalt-derz-kesim',
     title: 'Asfalt Derz Kesim',
     shortTitle: 'Asfalt Kesim',
-    icon: '🛣️',
-    shortDescription: 'Yol ve zemin çalışmalarında düzgün derz kesimi ve asfalt kesme hizmeti.',
-    description: 'Asfalt ve beton yol kesimi, derz açma, tesisat hendek kesimi ve yenileme çalışmalarında profesyonel hizmet veriyoruz. Elmas diskli kesme makinelerimizle düzgün ve hızlı kesim sağlıyoruz.',
+    icon: 'road',
+    image: '/images/hizmetler/asfalt-derz-kesim.jpg',
+    shortDescription:
+      'Yol ve zemin çalışmalarında düzgün derz kesimi ve asfalt kesme hizmeti.',
+    description:
+      'Asfalt ve beton yol kesimi, derz açma, tesisat hendek kesimi ve yenileme çalışmalarında hizmet veriyoruz. Elmas diskli yol kesme makinelerimizle düzgün, temiz ve hızlı kesim sağlıyor; trafiği en az etkileyecek şekilde çalışıyoruz.',
     features: [
-      'Hilti DST yol kesme makineleri',
-      'Elmas diskli kesim',
+      'Elmas diskli yol kesme makineleri',
       '300mm derinliğe kadar kesim',
       'Düzgün ve temiz kesim hattı',
+      'Derz genişliği ayarlanabilir',
       'Hızlı iş teslimi',
       'Trafik akışına minimum etki',
     ],
     applications: [
       'Yol genişletme çalışmaları',
-      'Alt yapı hendek kesimleri',
+      'Altyapı hendek kesimleri',
       'Derz açma ve yenileme',
       'Asfalt yama kenarı düzeltme',
       'Kaldırım kesimi',
@@ -106,13 +159,16 @@ const services = [
     ],
   },
   {
-    id: 5,
+    id: 6,
     slug: 'hidrolik-beton-kesme',
     title: 'Hidrolik Beton Kesme',
     shortTitle: 'Hidrolik Kesme',
-    icon: '🏗️',
-    shortDescription: 'Büyük çaplı projelerde hidrolik güçle yüksek kapasiteli beton kesme.',
-    description: 'Ağır iş hidrolik kesme sistemlerimizle köprü, baraj, sanayi yapıları gibi büyük çaplı projelerde güçlü ve hassas beton kesimi gerçekleştiriyoruz.',
+    icon: 'hydraulic',
+    image: '/images/hizmetler/hidrolik-beton-kesme.jpg',
+    shortDescription:
+      'Büyük çaplı projelerde hidrolik güçle yüksek kapasiteli beton kesme.',
+    description:
+      'Ağır iş hidrolik kesme sistemlerimizle köprü, baraj, sanayi yapıları gibi büyük çaplı projelerde güçlü ve hassas beton kesimi gerçekleştiriyoruz. Elektrik altyapısının yetersiz olduğu sahalarda da kesintisiz çalışabiliyoruz.',
     features: [
       'Hidrolik güç üniteli sistemler',
       'Yüksek kesim kapasitesi',
@@ -131,20 +187,23 @@ const services = [
     ],
   },
   {
-    id: 6,
+    id: 7,
     slug: 'filiz-ekimi',
     title: 'Filiz Ekimi',
     shortTitle: 'Filiz Ekimi',
-    icon: '🌱',
-    shortDescription: 'Kimyasal dübel ve demir filiz ekimi ile güçlü yapısal bağlantılar.',
-    description: 'Mevcut betonarme yapılara yeni bağlantı noktaları oluşturmak için demir filiz ekimi ve kimyasal ankraj uygulamaları yapıyoruz. Güçlendirme ve ek yapı projelerinde güvenilir bağlantılar sağlıyoruz.',
+    icon: 'rebar',
+    image: '/images/hizmetler/filiz-ekimi.jpg',
+    shortDescription:
+      'Kimyasal dübel ve demir filiz ekimi ile güçlü yapısal bağlantılar.',
+    description:
+      'Mevcut betonarme yapılara yeni bağlantı noktaları oluşturmak için demir filiz ekimi ve kimyasal ankraj uygulamaları yapıyoruz. Güçlendirme ve ek yapı projelerinde projeye uygun çap ve derinlikte, kürleme sürelerine uyarak güvenilir bağlantılar sağlıyoruz.',
     features: [
-      'Hilti HIT-HY 200 kimyasal ankraj',
+      'Kimyasal ankraj ile filiz ekimi',
       'Farklı çaplarda filiz seçenekleri',
       'Yüksek çekme dayanımı',
-      'Sismik bölgelere uygun',
-      'Hızlı kürleme süresi',
-      'Laboratuvar test desteği',
+      'Deprem yönetmeliğine uygun uygulama',
+      'Delik temizliği ve kürleme kontrolü',
+      'Talep halinde çekme testi',
     ],
     applications: [
       'Bina güçlendirme projeleri',
@@ -156,45 +215,79 @@ const services = [
     ],
   },
   {
-    id: 7,
-    slug: 'kimyasal-dubel-ankraj',
-    title: 'Kimyasal Dübel & Ankraj',
-    shortTitle: 'Kimyasal Ankraj',
-    icon: '🔧',
-    shortDescription: 'Yüksek mukavemetli kimyasal dübel ve ankraj uygulamaları.',
-    description: 'Ağır yük taşıyacak bağlantı noktaları için kimyasal dübel ve ankraj uygulamaları sunuyoruz. Hilti kimyasal ankraj sistemleri ile depreme dayanıklı, güvenli bağlantılar oluşturuyoruz.',
+    id: 8,
+    slug: 'ankraj',
+    title: 'Ankraj',
+    shortTitle: 'Ankraj',
+    icon: 'anchor',
+    image: '/images/hizmetler/ankraj.jpg',
+    shortDescription:
+      'Mevcut betonarmeye yük aktaran güvenli bağlantı noktaları oluşturma.',
+    description:
+      'Ankraj, mevcut bir betonarme elemana yeni bir yük taşıyıcı bağlantı kazandırma işlemidir. Çelik konstrüksiyon ayakları, makine kaideleri, korkuluk ve bariyerler gibi yük taşıyan her bağlantı, doğru çapta ve doğru derinlikte açılmış bir deliğe düzgün ankrajlanmadığında zamanla gevşer. Delik çapı, gömme derinliği ve kenar mesafesi proje detayına göre belirlenir; delik temizliği yapılmadan ankraj uygulanmaz.',
     features: [
-      'Hilti HIT kimyasal ankraj sistemleri',
-      'M8 - M30 arası çaplarda uygulama',
-      'Deprem bölgesi onaylı',
-      'Çatlak ve çatlaksız betonda',
+      'Projeye uygun çap ve gömme derinliği',
+      'Kenar mesafesi ve donatı konumu kontrolü',
+      'Delik temizliği (basınçlı hava + fırça)',
+      'Mekanik ve kimyasal ankraj seçenekleri',
       'Yüksek çekme ve kesme dayanımı',
-      'ETA onaylı ürünler',
+      'Talep halinde çekme testi',
     ],
     applications: [
-      'Çelik konstrüksiyon bağlantıları',
-      'Makine ve ekipman montajı',
-      'Korkuluk ve bariyerler',
-      'Asma tavan sistemleri',
+      'Çelik konstrüksiyon kolon ayakları',
+      'Makine ve ekipman kaideleri',
+      'Korkuluk, bariyer ve merdiven bağlantıları',
       'Cephe kaplama taşıyıcıları',
-      'Güneş paneli montajları',
+      'Güneş paneli montaj altyapısı',
+      'Asma tavan ve tesisat askı sistemleri',
     ],
   },
   {
-    id: 8,
+    id: 9,
+    slug: 'kimyasal-dubel',
+    title: 'Kimyasal Dübel',
+    shortTitle: 'Kimyasal Dübel',
+    icon: 'chemical',
+    image: '/images/hizmetler/kimyasal-dubel.jpg',
+    shortDescription:
+      'Enjeksiyon reçineli dübel uygulaması — mekanik dübelin yetmediği yerlerde.',
+    description:
+      'Kimyasal dübel, deliğe enjekte edilen iki bileşenli reçinenin donatı veya saplamayı betona kimyasal olarak kenetlemesiyle çalışır. Mekanik dübel betonu içeriden iterek tuttuğu için kenara yakın ve çatlaklı betonda risklidir; kimyasal dübelde bu genleşme yükü olmadığından kenar mesafesi kısıtlı işlerde ve çatlaklı betonda güvenle kullanılır. Uygulama sıcaklığına bağlı kürleme sürelerine uyulmadan yük verilmez.',
+    features: [
+      'ETA onaylı enjeksiyon reçineleri',
+      'M8 - M30 arası saplama ve donatı çapları',
+      'Çatlaklı ve çatlaksız betonda uygulama',
+      'Kenar mesafesi kısıtlı işlerde güvenli çözüm',
+      'Ortam sıcaklığına göre kürleme süresi takibi',
+      'Uygulama sonrası raporlama',
+    ],
+    applications: [
+      'Filiz ekimi (donatı ekleme)',
+      'Ağır makine kaide saplamaları',
+      'Kenar mesafesi az olan ankrajlar',
+      'Çatlaklı betonda bağlantı noktaları',
+      'Perde ve kolon güçlendirme bağlantıları',
+      'Su altı ve nemli ortam uygulamaları',
+    ],
+  },
+  {
+    id: 10,
     slug: 'kontrollu-bina-yikimi',
     title: 'Kontrollü Bina Yıkımı',
     shortTitle: 'Bina Yıkımı',
-    icon: '🏚️',
-    shortDescription: 'Çevreye ve komşu yapılara zarar vermeden kontrollü yıkım hizmetleri.',
-    description: 'Kentsel dönüşüm ve yenileme projelerinde kontrollü bina yıkımı hizmeti veriyoruz. Çevre güvenliği, toz kontrolü ve moloz yönetimi ile profesyonel yıkım operasyonları gerçekleştiriyoruz.',
+    icon: 'demolition',
+    image: '/images/hizmetler/kontrollu-bina-yikimi.jpg',
+    shortDescription:
+      'Çevreye ve komşu yapılara zarar vermeden kontrollü yıkım hizmetleri.',
+    description:
+      'Kentsel dönüşüm ve yenileme projelerinde kontrollü bina yıkımı hizmeti veriyoruz. Çevre güvenliği, toz kontrolü ve moloz yönetimiyle planlı yıkım operasyonları gerçekleştiriyoruz.',
     features: [
       'Kontrollü yıkım planlaması',
       'Çevre güvenlik önlemleri',
       'Toz ve gürültü kontrolü',
       'İş güvenliği ekipmanları',
       'Moloz toplama ve nakliye',
-      'Belediye izin süreçleri desteği',
+      'Belediye izin süreçlerinde destek',
     ],
     applications: [
       'Kentsel dönüşüm yıkımları',
