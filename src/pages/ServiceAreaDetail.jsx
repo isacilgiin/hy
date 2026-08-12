@@ -85,7 +85,7 @@ export default function ServiceAreaDetail() {
   return (
     <div className="page-enter">
       <Seo
-        title={`${seoAd} Karot | Beton Delme, Kesme, Kırma — ${siteConfig.companyName}`}
+        title={`${seoAd} Karot | Beton Delme, Kesme — Ücretsiz Keşif | ${siteConfig.companyName}`}
         description={`${seoAd} karot hizmeti: beton delme, beton kesme, beton kırma, filiz ekimi ve ankraj. Ücretsiz keşif ve net fiyat teklifi için ${siteConfig.phone}.`}
         path={`/hizmet-bolgeleri/${area.slug}/`}
         jsonLd={jsonLd}

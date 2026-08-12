@@ -186,23 +186,28 @@ const services = [
     image: '/images/hizmetler/hidrolik-beton-kesme.webp',
     shortDescription:
       'Büyük çaplı projelerde hidrolik güçle yüksek kapasiteli beton kesme.',
+    // NOT: Bu hizmette önceden "baraj", "deniz yapıları", "enerji santralleri",
+    // "köprü/viyadük" ve "su altı kesim" yazıyordu. Hiçbiri firmanın yaptığı
+    // işlerle örtüşmüyordu — su altı kesim ayrıca dalgıç ekip gerektirir.
+    // Kanıtlanamayan kapasite iddiaları hem ziyaretçiyi yanıltır hem de
+    // gelen talebi firmanın karşılayamayacağı işlere kaydırır.
     description:
-      'Ağır iş hidrolik kesme sistemlerimizle köprü, baraj, sanayi yapıları gibi büyük çaplı projelerde güçlü ve hassas beton kesimi gerçekleştiriyoruz. Elektrik altyapısının yetersiz olduğu sahalarda da kesintisiz çalışabiliyoruz.',
+      'Hidrolik kesme sistemlerinde güç, kesme başlığından ayrı duran bir üniteden gelir. Bu sayede kesim noktasındaki ekipman küçük kalırken arkasındaki güç yükselir; bir metreyi aşan kesitlerde ve şantiye elektriğinin yetmediği sahalarda elektrikli testerelerin yetersiz kaldığı yerde iş görür.',
     features: [
       'Hidrolik güç üniteli sistemler',
       'Yüksek kesim kapasitesi',
       '1 metreyi aşan derinliklerde kesim',
-      'Elmas zincir ve disk seçenekleri',
-      'Su altı kesim imkanı',
-      'Büyük çaplı projelere uygun',
+      'Elmas tel, zincir ve disk seçenekleri',
+      'Şantiye elektriği gerekmez (dizel ünite)',
+      'Dar ve erişimi zor noktalarda çalışabilme',
     ],
     applications: [
-      'Köprü ve viyadük kesimleri',
-      'Baraj yapıları',
-      'Sanayi tesisleri',
-      'Enerji santralleri',
-      'Deniz yapıları',
-      'Büyük betonarme yapılar',
+      'Kalın perde ve istinat duvarı kesimi',
+      'Temel ve kütle beton kesimi',
+      'Bir metreyi aşan kesitler',
+      'Kazık başı kesimi',
+      'Sanayi tesisinde makine kaidesi sökümü',
+      'Elektrik çekilemeyen şantiyeler',
     ],
   },
   {
@@ -289,7 +294,10 @@ const services = [
       'Kenar mesafesi az olan ankrajlar',
       'Çatlaklı betonda bağlantı noktaları',
       'Perde ve kolon güçlendirme bağlantıları',
-      'Su altı ve nemli ortam uygulamaları',
+      // "Su altı uygulamaları" yazıyordu — dalgıç ekip gerektiren, firmanın
+      // yapmadığı bir iş. Islak/nemli delikte uygulama ise gerçek ve reçine
+      // seçimiyle ilgili bir konu; iddia o ölçeğe çekildi.
+      'Islak ve nemli delikte uygulama',
     ],
   },
   {

@@ -9,6 +9,7 @@ import rotaMetalari from './src/data/routeMeta.js'
 import heroSlides from './src/data/heroSlides.js'
 import fs from 'node:fs'
 import path from 'node:path'
+import { execSync } from 'node:child_process'
 
 /**
  * index.html + robots.txt + sitemap.xml içeriğini src/data/siteConfig.js'ten üretir.
@@ -285,18 +286,46 @@ ${faq.map((f) => `**${f.q}**\n${f.a}`).join('\n\n')}
 - Çalışma saatleri: ${workingHours.days} ${workingHours.hours}
 `
 
+  /**
+   * lastmod tarihi — İLGİLİ VERİ DOSYASININ git tarihinden.
+   *
+   * Tuzak: lastmod'a build tarihi yazmak. O zaman her derlemede 39 URL'nin
+   * tarihi değişir, içerik değişmese bile. Google lastmod'u yalnızca tutarlı
+   * şekilde doğruysa dikkate alıyor; sürekli oynayan bir alanı görmezden
+   * geliyor. Bu yüzden tarih, sayfanın içeriğini üreten dosyanın son commit
+   * tarihinden okunuyor — içerik değişmediyse tarih de değişmiyor.
+   */
+  const gitTarihi = (dosya) => {
+    try {
+      const cikti = execSync(`git log -1 --format=%cs -- ${dosya}`, {
+        encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'ignore'],
+      }).trim()
+      return /^\d{4}-\d{2}-\d{2}$/.test(cikti) ? cikti : null
+    } catch {
+      return null // git yoksa (ör. indirilmiş kaynak) lastmod hiç yazılmaz
+    }
+  }
+
   const buildSitemap = () => {
+    // Her grup, içeriğini üreten dosyadan tarih alır.
+    const tarihSabit = gitTarihi('src/data/routeMeta.js')
+    const tarihHizmet = gitTarihi('src/data/serviceContent.js')
+    const tarihBolge = gitTarihi('src/data/serviceAreas.js')
+
     const urls = [
-        ...staticRoutes,
+        ...staticRoutes.map((r) => ({ ...r, lastmod: tarihSabit })),
         ...services.map((s) => ({
           path: `/hizmetler/${s.slug}/`,
           priority: '0.8',
           changefreq: 'monthly',
+          lastmod: tarihHizmet,
         })),
         ...serviceAreas.map((a) => ({
           path: `/hizmet-bolgeleri/${a.slug}/`,
           priority: '0.8',
           changefreq: 'monthly',
+          lastmod: tarihBolge,
         })),
       ]
 
@@ -305,7 +334,7 @@ ${faq.map((f) => `**${f.q}**\n${f.a}`).join('\n\n')}
 ${urls
   .map(
     (u) => `  <url>
-    <loc>${url}${u.path}</loc>
+    <loc>${url}${u.path}</loc>${u.lastmod ? `\n    <lastmod>${u.lastmod}</lastmod>` : ''}
     <changefreq>${u.changefreq}</changefreq>
     <priority>${u.priority}</priority>
   </url>`

@@ -209,7 +209,11 @@ const bolgeRotalari = serviceAreas.map((a) => {
 
   return {
     path: `/hizmet-bolgeleri/${a.slug}/`,
-    title: `${seoAd} Karot | Beton Delme, Kesme, Kırma — ${companyName}`,
+    // Başlık kalıbı: hedef kelime EN BAŞTA, sonra kapsam, sonra tıklama sebebi.
+    // "Kırma" çıkarıldı — yerine "Ücretsiz Keşif" kondu; SERP'te fazladan bir
+    // hizmet adından çok, tıklama sebebi kazandırıyor. Genişlik ServiceAreaDetail.jsx
+    // ile AYNI olmalı (ikisi de aynı sayfanın başlığını üretiyor).
+    title: `${seoAd} Karot | Beton Delme, Kesme — Ücretsiz Keşif | ${companyName}`,
     description: `${seoAd} karot hizmeti: beton delme, beton kesme, beton kırma, filiz ekimi ve ankraj. Ücretsiz keşif ve net fiyat teklifi için ${phone}.`,
     jsonLd: [hizmetSemasi, faqSemasi(a.sss)],
     h1: `${a.name} Karot`,
