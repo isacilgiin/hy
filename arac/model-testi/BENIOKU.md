@@ -78,14 +78,18 @@ kota bittiyse (`quotaValue: 0`) beklemeden geçilir — pencere o gün açılmay
 | `gemini-3.1-flash-lite` | `none` ✓ `low` ✓ | tam gövde kabul, düşünme kapatılabiliyor |
 | `gemini-3.1-flash-lite-preview` | `none` ✓ `low` ✓ | aynı |
 | `gemini-3.5-flash-lite` | `none` ✗ `low` ✓ | düşünme kapatılamıyor, kısılabiliyor |
-| `gemini-flash-lite-latest` | `none` ✗ `low` ✓ | 3.5 ile aynı davranıyor (takma ad olabilir) |
+| `gemini-flash-lite-latest` | `none` ✗ `low` ✓ | **3.5'in takma adı** — kotası da oraya yazılıyor |
 | `gemma-4-26b-a4b-it` / `gemma-4-31b-it` | hiçbiri | **model düşünmüyor** — aşağıya bakın |
 | `gemini-2.5-flash-lite` | — | 404, yeni kullanıcılara kapalı |
 | `gemini-3.1-flash-lite-image` | — | görsel modeli, metin için değil |
 
 `--liste` çıktısında görünen her model kullanılabilir değil: bazıları kapatılmış,
 bazıları `generateContent` desteklemiyor. Kimliği listeden alın ama önce
-`teshis.mjs` ile yoklayın — model başına tek istek.
+`teshis.mjs` ile yoklayın.
+
+Takma adlar ayrı model değil: `gemini-flash-lite-latest` sorguları panelde
+`Gemini 3.5 Flash Lite` hanesine yazıldı. "Başka model deneyeyim" diye takma
+ada geçmek kotayı ikiye katlamaz, aynı kovadan harcar.
 
 **"Thinking budget is not supported for this model" bir arıza değil.** Gemma
 düşünmeyen bir model; düşünme bütçesi olmayan model metni yarıda da kesemez.

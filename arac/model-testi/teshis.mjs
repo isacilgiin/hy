@@ -40,6 +40,18 @@ const { saglayici, anahtar, saglayiciAdi } = saglayiciyiSec(argumanlar)
 const modeller = argumanlar.filter((a) => !a.startsWith('--'))
 const kisaMesaj = [{ role: 'user', content: 'Merhaba de.' }]
 
+/**
+ * İSTEKLER ARASI BEKLEME. İlk sürümde yoktu ve teşhisin kendisi dakikalık
+ * limiti aşıyordu: 12 yoklama arka arkaya gidince panelde 17/15 RPM göründü.
+ * Ölçüm aracının ölçtüğü şeyi bozması kabul edilemez. `--aralik=0` ile
+ * kapatılabilir (kotası bol modellerde hızlansın diye).
+ */
+const aralikArg = Number(argumanlar.find((a) => a.startsWith('--aralik='))?.split('=')[1])
+const ARALIK_MS =
+  Number.isFinite(aralikArg) && aralikArg >= 0 ? aralikArg * 1000 : saglayici.varsayilanAralikMs
+
+const bekle = () => new Promise((r) => setTimeout(r, ARALIK_MS))
+
 async function dene(govde) {
   try {
     const cevap = await fetch(`${saglayici.taban}/chat/completions`, {
@@ -80,7 +92,7 @@ async function main() {
   }
 
   console.log(`\nTeshis  (${saglayici.ad})`)
-  console.log('Kucuk istekler gonderiliyor.\n')
+  console.log(`Kucuk istekler, aralarinda ${ARALIK_MS / 1000}s bekleme (--aralik= ile degisir).\n`)
 
   // --- 1. AŞAMA: taban gövde, her model için ---
   console.log('1) Taban govde (model + messages + stream)')
@@ -90,6 +102,7 @@ async function main() {
     const sonuc = await dene({ model: kimlik, messages: kisaMesaj, stream: true })
     yaz(kimlik, sonuc)
     if (sonuc.olur && !calisan) calisan = model
+    await bekle()
   }
 
   if (!calisan) {
@@ -145,6 +158,7 @@ async function main() {
     if (sonuc.dusunmeYok) dusunmeyenModel = true
     // Kota hatasi alan hakkinda bir sey soylemez — suclu listesine yazilmaz.
     if (!sonuc.olur && sonuc.kod !== 429) redler.push(t.ad)
+    await bekle()
   }
 
   // --- 3. AŞAMA: tam gövde ---
@@ -172,6 +186,7 @@ async function main() {
       const sonuc = await dene(eksik)
       yaz(`tam govde EKSI ${alanAdi}`, sonuc)
       if (sonuc.olur) redler.push(`${alanAdi} (yalniz degil, birlesimde)`)
+      await bekle()
     }
   }
 
