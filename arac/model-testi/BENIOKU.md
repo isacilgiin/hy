@@ -166,6 +166,23 @@ elle yazılmış 20 ilçe metnini ölçüp eşiği oradan okur (birebir %0/0, i�
 %14/28). Önceki sürümde "%32" diye bir sabit vardı ve verinin hiçbir
 okunuşundan çıkmıyordu; o sabitle model insandan iyi görünüyordu.
 
+## Ölçülen sonuç — ilçe sayfası (2026-08-13)
+
+| Model | Birebir | Aynı şeyi söyleme | Hüküm |
+|---|---|---|---|
+| `gemini-3.1-flash-lite` | %7 | **%61** | PARAFRAZ |
+| `gemini-3.5-flash-lite` | %16 | **%59** | PARAFRAZ |
+| `gemma-4-31b-it` | %24 | %70 | ölçülemedi — çıktı bozuk |
+| elle yazılmış 20 sayfamız | %0 | **%14 / %28** | referans |
+
+**Üç modelin üçü de aynı yere düştü.** Model kalitesiyle ilgili değil: olgu
+sayfasında ilçeye özgü hiçbir bilgi yok, o yüzden üçü de hizmet listesini,
+çalışma saatlerini ve ücretsiz keşfi dört kez farklı kelimelerle yazdı.
+
+Gemma ayrıca `<thought>` etiketiyle kendi düşünmesini metnin içine yazıyor,
+sistem istemini İngilizce çevirip ekliyor ve kelimeleri numaralandırmaya
+başlıyor — dört çıktının üçü bozuk.
+
 ## Ölçüm neyi çözmez
 
 İlçe sayfası sorunu bir **veri** sorunu, model sorunu değil. Olgu sayfasında
