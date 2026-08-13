@@ -64,14 +64,18 @@ const siteConfig = {
    * dosyalarını yanlış alan adına yüklemek an meselesi. Klasör adı hem hangi
    * site hem hangi sürüm olduğunu söylüyor.
    *
-   * Sunucuya yeni bir sürüm yükledikçe BURAYI ELLE ARTIRIN. Aynı sürümü
-   * yeniden build etmek klasörün üzerine yazar — geliştirirken istenen budur.
-   * Sürüm atlamak zorunda değilsiniz; amaç sunucudakini tarif edebilmek.
+   * null  → OTOMATİK. Her build `yayin/` altındaki en yüksek sürümü bulup bir
+   *         artırır: v1, v2, v3... Eski sürümler diskte durur, yani sunucudaki
+   *         yayına dönmek istersen elinde duruyor.
+   * sayı  → SABİTLE. Örneğin `3` yazarsan her build v3'ün üzerine yazar.
+   *         Aynı sürümü düzeltip tekrar üretirken kullanılır; sürüm numarası
+   *         boşuna şişmez.
    *
-   * Hangi kodun hangi sürümde olduğu `rapor/<domain>-v<surum>.json` içinde
-   * git commit'iyle birlikte kayıtlı; klasör adına bakıp geçmişe dönebilirsiniz.
+   * Hangi kodun hangi sürüme girdiği `rapor/<domain>-v<surum>.json` içinde
+   * git commit'iyle kayıtlı — klasör adına bakıp `git show <sha>` ile geçmişe
+   * dönebilirsiniz.
    */
-  yayinSurumu: 1,
+  yayinSurumu: null,
 
   // ===== Çalışma Saatleri =====
   // Google İşletme Profili "24 saat açık" diyor — schema ve site metni buna göre.

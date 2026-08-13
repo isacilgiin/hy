@@ -975,7 +975,7 @@ ${paragraflar}
       const kunye = {
         site: siteConfig.domain,
         url,
-        yayinSurumu: siteConfig.yayinSurumu,
+        yayinSurumu,
         // Klasör adı sürümü taşıyor ama hangi KODUN o sürüme girdiğini bu iki
         // alan söylüyor; sürüm elle artırıldığı için tek başına yeterli değil.
         gitSha,
@@ -989,16 +989,32 @@ ${paragraflar}
 
       const raporKlasoru = 'rapor'
       fs.mkdirSync(raporKlasoru, { recursive: true })
-      const raporYolu = path.join(
-        raporKlasoru,
-        `${siteConfig.domain}-v${siteConfig.yayinSurumu}.json`
-      )
+      const raporYolu = path.join(raporKlasoru, `${siteConfig.domain}-v${yayinSurumu}.json`)
       fs.writeFileSync(raporYolu, JSON.stringify(kunye, null, 2))
 
       // eslint-disable-next-line no-console
       console.log(`  kunye yazildi: ${raporYolu} (${uyarilar.length} uyari)`)
       // eslint-disable-next-line no-console
-      console.log(`\n  YUKLENECEK KLASOR: ${cikti}/  —  icindekilerin TAMAMI (.htaccess dahil)\n`)
+      console.log(`\n  YUKLENECEK KLASOR: ${cikti}/  —  icindekilerin TAMAMI (.htaccess dahil)`)
+
+      // Otomatik sürümde eski yayınlar diskte birikiyor. Silmiyoruz — sunucudaki
+      // sürüme dönmek gerekebilir — ama sessizce şişmesin diye hatırlatıyoruz.
+      try {
+        const surumler = fs
+          .readdirSync('yayin', { withFileTypes: true })
+          .filter((g) => g.isDirectory() && g.name.startsWith(`${siteConfig.domain}-v`))
+        if (surumler.length > 5) {
+          // eslint-disable-next-line no-console
+          console.log(
+            `  not: yayin/ altinda ${surumler.length} surum birikti. Eskileri silebilirsiniz;` +
+              ` hangi kodun hangi surumde oldugu rapor/ icinde kayitli.`
+          )
+        }
+      } catch {
+        // yayin/ okunamadıysa önemli değil, yalnızca hatırlatma atlanır
+      }
+      // eslint-disable-next-line no-console
+      console.log('')
     },
   }
 }
@@ -1013,7 +1029,29 @@ ${paragraflar}
  * burada değiştirmek yeterli — 47 sayfa, sitemap, robots ve .htaccess
  * üretimi otomatik takip ediyor.
  */
-export const yayinKlasoru = `yayin/${siteConfig.domain}-v${siteConfig.yayinSurumu}`
+function sonrakiYayinSurumu() {
+  // Sabitlenmişse ona uy — aynı sürümün üzerine yazmak için kullanılır.
+  if (typeof siteConfig.yayinSurumu === 'number') return siteConfig.yayinSurumu
+
+  // Otomatik: yayin/ altındaki en yüksek sürümü bul, bir artır.
+  // Klasör adları tek doğruluk kaynağı; ayrı bir sayaç dosyası tutulmuyor ki
+  // depo ile disk birbirinden ayrı düşmesin.
+  const desen = new RegExp(`^${siteConfig.domain.replace(/\./g, '\\.')}-v(\\d+)$`)
+  let enYuksek = 0
+  try {
+    for (const girdi of fs.readdirSync('yayin', { withFileTypes: true })) {
+      if (!girdi.isDirectory()) continue
+      const eslesme = girdi.name.match(desen)
+      if (eslesme) enYuksek = Math.max(enYuksek, Number(eslesme[1]))
+    }
+  } catch {
+    // yayin/ henüz yok — ilk build
+  }
+  return enYuksek + 1
+}
+
+export const yayinSurumu = sonrakiYayinSurumu()
+export const yayinKlasoru = `yayin/${siteConfig.domain}-v${yayinSurumu}`
 
 export default defineConfig({
   plugins: [react(), tailwindcss(), seoFromConfig()],

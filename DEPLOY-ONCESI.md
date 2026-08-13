@@ -1,8 +1,17 @@
 # Yayına Almadan Önce — Kontrol Listesi
 
 > **Sürümleme (2026-08-13'ten itibaren).** `npm run build` artık `dist/` değil
-> `yayin/<domain>-v<surum>/` üretiyor. Sürümü `src/data/siteConfig.js` içindeki
-> `yayinSurumu` belirliyor; sunucuya yeni bir yayın attıkça elle artırın.
+> `yayin/<domain>-v<surum>/` üretiyor ve **her build sürümü bir artırıyor**:
+> v1, v2, v3... Eski sürümler diskte kalır, yani sunucudaki yayına dönmen
+> gerekirse elinde durur.
+>
+> Sürümün şişmesini istemediğin bir düzeltme yapıyorsan `src/data/siteConfig.js`
+> içindeki `yayinSurumu` alanına bir **sayı** yaz (örn. `3`); o zaman her build
+> v3'ün üzerine yazar. `null` bırakılırsa otomatik artar.
+>
+> Diskte 5'ten fazla sürüm birikince build sana hatırlatır. Silmekte serbestsin;
+> hangi kodun hangi sürüme girdiği `rapor/` içindeki künyelerde git commit'iyle
+> kayıtlı.
 >
 > Sebebi elde birden fazla site olunca ortaya çıkıyor: hepsinin çıktısı `dist/`
 > adında olsa FTP'de yanlış sitenin dosyalarını yanlış alan adına yüklemek an
