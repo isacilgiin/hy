@@ -26,56 +26,29 @@
  *    deneme eklendi — kuyruk boşalınca geçiyor.
  *  · Uydurulan bir model kimliği 404 veriyor. Artık `--liste` ile API'den
  *    alınıyor, tahmin edilmiyor.
+ *
+ * GÖVDE MERDİVENİ (2026-08-13, ikinci tur): sağlayıcı bazı alanları
+ * reddedebiliyor ve hangisini reddettiğini söylemiyor (`400 INVALID_ARGUMENT`).
+ * 400 alınınca beklemek işe yaramaz — gövde değişmeli. Denenen gövdeler
+ * `ortak.mjs` içinde, düşünmeyi bastırma önceliğine göre sıralı. Hangi gövdenin
+ * işe yaradığı `<cikti>.KOSUL.json` dosyasına yazılıyor. Merdivenin tamamı
+ * reddedilirse `teshis.mjs` hangi alanın suçlu olduğunu ölçer.
  */
 
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { sistemIstemi, gorevler } from './gorev.js'
+import { govdeKur, saglayiciyiSec } from './ortak.mjs'
 
 const buradan = path.dirname(fileURLToPath(import.meta.url))
 const ciktiKlasoru = path.join(buradan, 'ciktilar')
 
 /**
- * SAĞLAYICILAR.
- *
- * Google'ın OpenAI uyumlu ucu sayesinde iki sağlayıcı da aynı istek/akış
- * kodunu kullanıyor; tek fark taban adres ve anahtarın hangi değişkenden
- * okunduğu. Google'ın kendi yerel API'si farklı bir gövde şeması istiyor —
- * uyumlu ucu seçmemizin sebebi bu, ikinci bir çözümleyici yazmamak.
- *
- * NIM'in ücretsiz kotası ~7-8 istekte doluyor; 1.200 sayfalık gerçek üretim
- * için yetmediği ölçüldü. Google AI Studio'nun günlük sınırı çok daha yüksek
- * deniyor — ama önce Türkçesi ölçülmeli, kota tek başına yeterli sebep değil.
+ * Sağlayıcı tanımları ve istek gövdesi `ortak.mjs` içinde — teşhis aracı da
+ * aynılarını kullanıyor. Bir yerde tanımlı olmaları şart: teşhis, gerçekte
+ * gönderilenden farklı bir gövde test ederse hiçbir şey ölçmemiş olur.
  */
-const saglayicilar = {
-  nim: {
-    ad: 'NVIDIA NIM',
-    taban: 'https://integrate.api.nvidia.com/v1',
-    anahtarDegiskeni: 'NVIDIA_API_KEY',
-  },
-  google: {
-    ad: 'Google AI Studio',
-    taban: 'https://generativelanguage.googleapis.com/v1beta/openai',
-    anahtarDegiskeni: 'GOOGLE_API_KEY',
-    // Liste ucu kimlikleri "models/gemini-3.6-flash" diye döndürüyor ama
-    // OpenAI uyumlu uç öneksiz istiyor. Listeden kopyalayıp yapıştıran
-    // kişinin bunu bilmesi gerekmesin diye burada kırpılıyor.
-    kimligiDuzelt: (m) => m.replace(/^models\//, ''),
-    /**
-     * Gemini 3.x varsayılan olarak "düşünen" model. İlk koşuda bunun bedeli
-     * ağır oldu: 1200-1500 kelime istenen görevde 115 kelime geldi, aynı
-     * görevin üç tekrarı 342 / 357 / 108 çıktı, bir çıktı da kelimeleri
-     * numaralandırarak bozuldu ("klima 22: kullanımına 23: yönelik 24:").
-     *
-     * Sebep model kalitesi değil, token bütçesi: düşünme `max_tokens`'ı
-     * yiyor ve cevaba yer kalmıyor. Nemotron Ultra'da da aynı şey olmuştu.
-     * `reasoning_effort: none` düşünmeyi kapatıyor; bütçe aşağıda ayrıca
-     * yükseltildi.
-     */
-    ekGovde: { reasoning_effort: 'none' },
-  },
-}
 
 /**
  * Denenecek modeller — 2026-08-13'te `--liste` çıktısından seçildi (102 model).
@@ -119,18 +92,6 @@ const BOSTA_ASIMI_MS = 75_000 // hiç parça gelmezse bu kadar bekle
 const TOPLAM_TAVAN_MS = 900_000 // güvenlik tavanı: sonsuza kadar sürmesin
 const DENEME_SAYISI = 3
 
-function anahtariOku(degisken) {
-  if (process.env[degisken]) return process.env[degisken]
-  try {
-    const metin = fs.readFileSync(path.join(process.cwd(), '.env.local'), 'utf8')
-    const satir = metin.split('\n').find((s) => s.trim().startsWith(`${degisken}=`))
-    if (satir) return satir.slice(satir.indexOf('=') + 1).trim().replace(/^["']|["']$/g, '')
-  } catch {
-    /* .env.local yok */
-  }
-  return null
-}
-
 async function modelleriListele(anahtar, saglayici) {
   const cevap = await fetch(`${saglayici.taban}/models`, {
     headers: { Authorization: `Bearer ${anahtar}` },
@@ -151,7 +112,7 @@ async function modelleriListele(anahtar, saglayici) {
  * Akışlı istek. Parçalar geldikçe `content` ve `reasoning_content` ayrı ayrı
  * toplanıyor: bazı modeller cevabı ikincisine yazıyor ve ilki boş kalıyor.
  */
-async function modeliCalistir(anahtar, model, istem, saglayici) {
+async function modeliCalistir(anahtar, model, istem, saglayici, secenek) {
   const kontrol = new AbortController()
   const basla = Date.now()
   let sonVeri = Date.now()
@@ -172,23 +133,17 @@ async function modeliCalistir(anahtar, model, istem, saglayici) {
         'Content-Type': 'application/json',
         Accept: 'text/event-stream',
       },
-      body: JSON.stringify({
-        model: saglayici.kimligiDuzelt ? saglayici.kimligiDuzelt(model) : model,
-        messages: [
-          { role: 'system', content: sistemIstemi },
-          { role: 'user', content: istem },
-        ],
-        // Yaratıcılık değil kurallara uyma ölçülüyor; sıcaklık düşük tutuluyor
-        // ki modeller arası fark üslup gürültüsüne karışmasın.
-        temperature: 0.3,
-        top_p: 0.9,
-        // Akıl yürüten modellerde bütçenin çoğu düşünmeye gidiyor. Önce 1500
-        // yetmedi, sonra 6000 da yetmedi (Gemini 1449 yerine 115 kelime yazdı).
-        // 1500 kelimelik Türkçe metin ~3000 token; gerisi düşünmeye pay.
-        max_tokens: 16000,
-        stream: true,
-        ...(saglayici.ekGovde ?? {}),
-      }),
+      body: JSON.stringify(
+        govdeKur({
+          model,
+          saglayici,
+          secenek,
+          mesajlar: [
+            { role: 'system', content: sistemIstemi },
+            { role: 'user', content: istem },
+          ],
+        })
+      ),
     })
 
     if (!cevap.ok) {
@@ -258,22 +213,7 @@ async function modeliCalistir(anahtar, model, istem, saglayici) {
 // --- argümanlar ---
 const argumanlar = process.argv.slice(2)
 
-const saglayiciAdi = argumanlar.find((a) => a.startsWith('--saglayici='))?.split('=')[1] ?? 'nim'
-const saglayici = saglayicilar[saglayiciAdi]
-if (!saglayici) {
-  console.error(`\nBilinmeyen saglayici: ${saglayiciAdi}`)
-  console.error(`Secenekler: ${Object.keys(saglayicilar).join(', ')}\n`)
-  process.exit(1)
-}
-
-const anahtar = anahtariOku(saglayici.anahtarDegiskeni)
-if (!anahtar) {
-  console.error(`\n${saglayici.anahtarDegiskeni} bulunamadi (${saglayici.ad}).`)
-  console.error('Proje kokunde .env.local olusturup su satiri ekleyin:\n')
-  console.error(`  ${saglayici.anahtarDegiskeni}=...\n`)
-  console.error('(VITE_ oneki KULLANMAYIN — o onek anahtari tarayiciya sizdirir.)\n')
-  process.exit(1)
-}
+const { saglayici, anahtar, saglayiciAdi } = saglayiciyiSec(argumanlar)
 
 /**
  * `--liste` sonrası `process.exit(0)` vardı ve Windows'ta libuv çökmesine yol
@@ -327,6 +267,53 @@ if (!kosular.length && !listeModu) {
   process.exit(1)
 }
 
+/**
+ * GÖVDE MERDİVENİ + tekrar deneme.
+ *
+ * İki ayrı hata sınıfı var ve karıştırılmamalı:
+ *  · 429/503 — istek DOĞRU, uç meşgul ya da kota dolu. Beklenip aynı gövdeyle
+ *    tekrar denenir.
+ *  · 400 — istek REDDEDİLDİ. Beklemek bir şey değiştirmez; gövde değişmeli.
+ *
+ * Çalışan gövde bulunduğunda `calisanSecenek`e yazılıyor ve sonraki koşular
+ * doğrudan oradan başlıyor — dört ilçe için merdiveni dört kez tırmanmak
+ * hem zaman hem kota harcar.
+ */
+let calisanSecenek = null
+
+async function merdivenleCalistir(model, istem) {
+  const hepsi = saglayici.govdeSecenekleri
+  const merdiven = calisanSecenek
+    ? [calisanSecenek, ...hepsi.filter((s) => s !== calisanSecenek)]
+    : hepsi
+
+  let sonSonuc
+  for (const [sira, secenek] of merdiven.entries()) {
+    let sonuc
+    for (let deneme = 1; deneme <= DENEME_SAYISI; deneme++) {
+      sonuc = await modeliCalistir(anahtar, model, istem, saglayici, secenek)
+      if (sonuc.kod !== 503 && sonuc.kod !== 429) break
+      // 429 kota, 503 kapasite. Kota daha uzun sürüyor: 15/30/45 saniye
+      // ilçe testinde üç koşuyu birden kaybettirdi.
+      const bekle = sonuc.kod === 429 ? [60, 150, 300][deneme - 1] : deneme * 15
+      process.stdout.write(
+        `\n    ${sonuc.kod === 429 ? 'kota' : 'uc dolu'} (${sonuc.kod}), ${bekle}s bekleniyor... `
+      )
+      await new Promise((r) => setTimeout(r, bekle * 1000))
+    }
+
+    sonSonuc = { ...sonuc, secenek }
+    if (sonuc.kod !== 400) {
+      if (!sonuc.hata) calisanSecenek = secenek
+      return sonSonuc
+    }
+    if (sira < merdiven.length - 1) {
+      process.stdout.write(`\n    400 reddedildi (${secenek.ad}) — sonraki govde deneniyor\n    `)
+    }
+  }
+  return sonSonuc
+}
+
 fs.mkdirSync(ciktiKlasoru, { recursive: true })
 console.log(`\ngorev: ${gorev.ad}  (hedef ${gorev.hedef[0]}-${gorev.hedef[1]} kelime)`)
 console.log(`${denenecek.length} model x ${kosular.length} kosu (nokta = gelen metin)\n`)
@@ -351,21 +338,14 @@ for (const model of denenecek) {
       continue
     }
 
-    let sonuc
-    for (let deneme = 1; deneme <= DENEME_SAYISI; deneme++) {
-      sonuc = await modeliCalistir(anahtar, model, kosu.istem, saglayici)
-      if (sonuc.kod !== 503 && sonuc.kod !== 429) break
-      // 429 kota, 503 kapasite. Kota daha uzun sürüyor: 15/30/45 saniye
-      // ilçe testinde üç koşuyu birden kaybettirdi.
-      const bekle = sonuc.kod === 429 ? [60, 150, 300][deneme - 1] : deneme * 15
-      process.stdout.write(
-        `\n    ${sonuc.kod === 429 ? 'kota' : 'uc dolu'} (${sonuc.kod}), ${bekle}s bekleniyor... `
-      )
-      await new Promise((r) => setTimeout(r, bekle * 1000))
-    }
+    const sonuc = await merdivenleCalistir(model, kosu.istem)
 
     if (sonuc.hata) {
       console.log(`\n    HATA ${sonuc.kod ?? ''} (${sonuc.sure ?? '?'}s) — ${sonuc.hata}\n`)
+      if (sonuc.kod === 400) {
+        console.log(`    Merdivendeki govdelerin hepsi reddedildi. Hangi alan reddediliyor:`)
+        console.log(`      node arac/model-testi/teshis.mjs ${model} --saglayici=${saglayiciAdi}\n`)
+      }
       continue
     }
 
@@ -385,9 +365,43 @@ for (const model of denenecek) {
     }
 
     fs.writeFileSync(path.join(ciktiKlasoru, `${taban}.md`), sonuc.metin)
+
+    /**
+     * KOŞUL DOSYASI. Hangi gövdeyle üretildiği metnin İÇİNE yazılmıyor —
+     * denetçi kelime sayıyor, eklenen bir başlık o sayıyı bozar. Konsoldaki
+     * uyarı da `denetle.mjs` çalıştığında çoktan kaybolmuş oluyor.
+     * Karşılaştırdığımız sayıların hangi ayarla çıktığı burada duruyor.
+     */
+    fs.writeFileSync(
+      path.join(ciktiKlasoru, `${taban}.KOSUL.json`),
+      JSON.stringify(
+        {
+          model,
+          saglayici: saglayiciAdi,
+          gorev: gorevAdi,
+          etiket: kosu.etiket ?? null,
+          govde: sonuc.secenek.ad,
+          maxTokens: sonuc.secenek.tavan,
+          dusunmeDenetimi: Boolean(sonuc.secenek.dusunmeDenetimi),
+          kelime: sonuc.kelime,
+          sure: sonuc.sure,
+        },
+        null,
+        2
+      )
+    )
+
     const [alt, ust] = gorev.hedef
     const uyar = sonuc.kelime < alt ? ' ⚠ hedefin altinda' : sonuc.kelime > ust ? ' ⚠ hedefin ustunde' : ''
-    console.log(`\n    ${sonuc.kelime} kelime, ${sonuc.sure}s ✓${uyar}\n`)
+    console.log(`\n    ${sonuc.kelime} kelime, ${sonuc.sure}s ✓${uyar}`)
+
+    // Merdivenin ilk basamağı düşünmeyi bastırıyordu; ona inemediysek çıktı
+    // kırpılmış olabilir ve sayı geçersizdir. Sessizce geçilmemeli.
+    const ilk = saglayici.govdeSecenekleri[0]
+    if (ilk.dusunmeDenetimi && !sonuc.secenek.dusunmeDenetimi) {
+      console.log(`    ⚠ dusunme denetimsiz govde ile alindi (${sonuc.secenek.ad}) — kirpilma riski`)
+    }
+    console.log('')
     await new Promise((r) => setTimeout(r, 1500))
   }
 }

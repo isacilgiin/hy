@@ -38,7 +38,31 @@ node arac/model-testi/calistir.mjs --liste     # kullanılabilir model kimlikler
 node arac/model-testi/calistir.mjs             # listedeki modelleri sırayla dener
 node arac/model-testi/calistir.mjs <kimlik>    # tek model dener
 node arac/model-testi/denetle.mjs              # uydurma taraması + sıralama
+node arac/model-testi/teshis.mjs <kimlik>      # 400 alıyorsanız: hangi alan reddediliyor
 ```
+
+Google için `--saglayici=google` ekleyin; anahtar `GOOGLE_API_KEY` olur.
+
+## `400 INVALID_ARGUMENT` alıyorsanız
+
+Sağlayıcı isteği reddetti ama hangi alanı beğenmediğini söylemiyor. İki
+mekanizma var:
+
+**Gövde merdiveni (kendiliğinden).** `ortak.mjs` içinde her sağlayıcı için
+sıralı gövde listesi var; 400 gelince çalıştırıcı sıradakine geçer. Sıralama
+"200 dönen ilk gövde" değil **"düşünmeyi bastırmayı koruyan ilk gövde"**
+ölçütüne göre — çünkü düşünme bütçeyi yerse çıktı kırpılır ve sayı geçersiz
+olur. Denetimsiz bir gövdeye düşülürse konsolda uyarı çıkar.
+
+**`teshis.mjs` (elle).** Alanları teker teker gönderip hangisinin reddedildiğini
+ölçer. Önce taban gövdeyi dener: o da düşerse sorun eklenen alanlarda değil,
+model kimliğinde/anahtarda demektir ve orada durur. Tek tek hepsi geçip tam
+gövde düşerse alanları tam gövdeden çıkararak hangi **ikilinin** çakıştığını
+arar. İstekler küçük, kota harcamaz.
+
+Her çıktının yanına `<cikti>.KOSUL.json` yazılır: o metin hangi gövdeyle,
+hangi `max_tokens` ile üretilmiş. Konsoldaki uyarı `denetle.mjs` çalıştığında
+kaybolmuş oluyor; karşılaştırdığınız sayıların hangi ayardan geldiği burada.
 
 ## Model kimlikleri — tahmin etmeyin
 
@@ -59,6 +83,7 @@ Beş modelin beşi de farklı sebepten düştü ve araç bunlara göre yeniden y
 | `503 worker limit (17/16)` | Ücretsiz uç dolu | Geri çekilmeli 3 deneme |
 | `404 page not found` | Model kimliği uydurulmuş | `--liste` |
 | Cevap yarıda kesiliyor | Düşünme bütçeyi yiyor | `max_tokens` 1500 → 6000 |
+| `400 INVALID_ARGUMENT` | Uç bir alanı kabul etmiyor | Gövde merdiveni + `teshis.mjs` |
 
 Model düşünüp cevap yazmazsa araç bunu ayrıca söyler ve düşünce metnini
 `<model>.DUSUNCE.txt` olarak kaydeder — bütçenin nereye gittiği görülsün diye.
