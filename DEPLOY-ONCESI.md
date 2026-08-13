@@ -1,5 +1,19 @@
 # Yayına Almadan Önce — Kontrol Listesi
 
+> **Sürümleme (2026-08-13'ten itibaren).** `npm run build` artık `dist/` değil
+> `yayin/<domain>-v<surum>/` üretiyor. Sürümü `src/data/siteConfig.js` içindeki
+> `yayinSurumu` belirliyor; sunucuya yeni bir yayın attıkça elle artırın.
+>
+> Sebebi elde birden fazla site olunca ortaya çıkıyor: hepsinin çıktısı `dist/`
+> adında olsa FTP'de yanlış sitenin dosyalarını yanlış alan adına yüklemek an
+> meselesi. Klasör adı hem hangi site hem hangi sürüm olduğunu söylüyor.
+>
+> Aynı build ayrıca `rapor/<domain>-v<surum>.json` künyesini yazıyor: rota
+> listesi, başlık/açıklama uzunlukları, kelime sayıları, şema türleri ve
+> uyarılar. **Künye yayın klasörünün İÇİNE yazılmaz** — orası sunucuya giden
+> her şey, künye oraya konsaydı rota haritanız ve eksik sayfalarınız herkese
+> açık olurdu.
+
 Bu dosya, sitede **gerçek veri bekleyen** her yeri ve **taşınma (migration) risklerini**
 tek yerde toplar. `npm run dev` çalıştırdığında tarayıcı konsolunda eksik alanların
 listesini ayrıca uyarı olarak görürsün.
@@ -19,7 +33,7 @@ Yeni siteyi yüklemek eskisini siler. Yanlış yapılırsa mevcut sıralamalar k
 | 301 ile yönlendiriliyor | 34 | `/hizmetlerimiz/` → `/hizmetler/`, `/category/*` → `/hizmetler/` … |
 | **404'e düşen** | **0** | — |
 
-Yönlendirmeler `dist/.htaccess` dosyasında **otomatik üretiliyor**.
+Yönlendirmeler yayın klasöründeki `.htaccess` dosyasında **otomatik üretiliyor**.
 
 ### `.htaccess` nedir, neden önemli?
 
@@ -40,7 +54,7 @@ Bizim `.htaccess` dosyamız üç iş yapıyor:
 
 ### ⚠️ `.htaccess` dosyasını yüklemeyi ATLAMA
 
-`dist/.htaccess` **gizli dosyadır**, FileZilla varsayılan olarak göstermez:
+yayın klasöründeki `.htaccess` **gizli dosyadır**, FileZilla varsayılan olarak göstermez:
 
 > FileZilla → **Sunucu** menüsü → **Gizli dosyaları göstermeye zorla** ✔
 
@@ -216,7 +230,7 @@ raporlanıyor.
 ## 2. Görseller — FileZilla ile nereye?
 
 Görselleri **projeye** ekleyeceksin (hostinge değil), sonra `npm run build` alınca
-`dist/` içine kopyalanırlar. Yani hedef klasör:
+yayın klasörüne kopyalanırlar. Yani hedef klasör:
 
 ```
 20karot-static-web/public/images/...
@@ -270,19 +284,19 @@ hostingde bir PHP endpoint.
 
 ```bash
 npm install
-npm run build     # dist/ klasörü oluşur
+npm run build     # yayin/<domain>-v<surum>/ oluşur
 ```
 
-`dist/` klasörünün **içindekilerin tamamını** (gizli `.htaccess` ve **alt klasörler** dahil)
+Yayın klasörünün **içindekilerin tamamını** (gizli `.htaccess` ve **alt klasörler** dahil)
 hostingin `public_html` klasörüne yükleyin.
 
-> `dist/` içinde artık `hizmetler/`, `hizmet-bolgeleri/` gibi klasörler ve her
+> Yayın klasöründe artık `hizmetler/`, `hizmet-bolgeleri/` gibi klasörler ve her
 > birinin içinde `index.html` var. FileZilla'da klasörleri de aktardığınızdan
 > emin olun; eksik yüklenirse o sayfaların sosyal medya önizlemesi bozulur
 > (site yine çalışır, SPA yönlendirmesi devreye girer).
 
 > Nginx kullanıyorsanız `.htaccess` işe yaramaz; `try_files $uri $uri/ /index.html;`
-> ve `dist/.htaccess` içindeki 301'lerin nginx karşılıkları gerekir — söyleyin, yazayım.
+> ve yayın klasöründeki `.htaccess` içindeki 301'lerin nginx karşılıkları gerekir — söyleyin, yazayım.
 
 ### Yükleme sonrası kontrol listesi
 
@@ -300,13 +314,13 @@ hostingin `public_html` klasörüne yükleyin.
 
 `src/data/*.js` üzerinden **build sırasında** üretilirler:
 
-- `dist/index.html` **ve her rota için ayrı `dist/<rota>/index.html`** (39 dosya)
+- `<yayın>/index.html` **ve her rota için ayrı `<yayın>/<rota>/index.html`** (39 dosya)
   → meta etiketleri, Open Graph, canonical, JSON-LD hepsi o sayfaya ait
   Bu sayede WhatsApp/Facebook link önizlemeleri doğru sayfayı gösterir
   (sosyal medya botları JavaScript çalıştırmaz).
-- `dist/sitemap.xml` → 36 URL (6 sabit + 10 hizmet + 20 hizmet bölgesi)
-- `dist/robots.txt`
-- `dist/.htaccess` → 301 yönlendirmeleri + SPA yönlendirmesi + önbellek
+- `<yayın>/sitemap.xml` → 36 URL (6 sabit + 10 hizmet + 20 hizmet bölgesi)
+- `<yayın>/robots.txt`
+- yayın klasöründeki `.htaccess` → 301 yönlendirmeleri + SPA yönlendirmesi + önbellek
 
 Domain, telefon veya firma adı değiştirmek için **sadece `src/data/siteConfig.js`**.
 Yönlendirme eklemek/çıkarmak için `vite.config.js` içindeki `redirects` dizisi.

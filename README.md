@@ -4,7 +4,7 @@
 **Firma:** 20 Karot — Denizli
 **Sektör:** Beton delme, kesme, kırma (karot) hizmetleri
 **Teknoloji:** React 19 + Vite 8 + Tailwind CSS v4 + Swiper
-**Deploy:** Statik build (`npm run build`) → `dist/` klasörü FTP ile hostinge
+**Deploy:** Statik build (`npm run build`) → `yayin/<domain>-v<surum>/` klasörü FTP ile hostinge
 
 > **Yayına almadan önce mutlaka [`DEPLOY-ONCESI.md`](./DEPLOY-ONCESI.md) dosyasını okuyun.**
 > Gerçek veri bekleyen tüm alanlar (istatistikler, koordinat, sosyal medya, görseller)
@@ -17,7 +17,7 @@
 ```bash
 npm install
 npm run dev        # http://localhost:5173
-npm run build      # dist/ klasörü
+npm run build      # yayin/<domain>-v<surum>/ klasörü + rapor/<...>.json künyesi
 npm run preview    # build çıktısını lokalde test et
 npm run lint       # oxlint
 ```
@@ -98,7 +98,7 @@ sıralama kaybına yol açar:
 - `src/data/services.js` → `/hizmetler/{slug}/`
 - `src/data/serviceAreas.js` → `/hizmet-bolgeleri/{slug}/`
 
-Yönlendirmeler `vite.config.js` içindeki `redirects` dizisinden `dist/.htaccess`
+Yönlendirmeler `vite.config.js` içindeki `redirects` dizisinden yayın klasöründeki `.htaccess`
 dosyasına otomatik yazılır. Detay: [`DEPLOY-ONCESI.md`](./DEPLOY-ONCESI.md).
 
 ### Sayfa bazlı SEO

@@ -3,7 +3,7 @@
 Buradaki dosyalar **ham kaynaklardır** ve siteye yüklenmez.
 
 Orijinal olarak `public/images/hamgorseller/` altına atılmışlardı; orada kalsalardı
-`npm run build` sırasında `dist/` klasörüne kopyalanıp hostinge 3,9 MB gereksiz
+`npm run build` sırasında yayın klasörüne kopyalanıp hostinge 3,9 MB gereksiz
 dosya yüklenecekti. Bu yüzden `public/` dışına taşındılar.
 
 SVG dosyaları aslında birer SVG değil: içine base64 JPEG gömülmüş sarmalayıcılar.

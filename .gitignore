@@ -2,7 +2,10 @@
 node_modules/
 
 # production build
+# Build çıktısı artık yayin/<domain>-v<surum>/ (bkz. siteConfig.js > yayinSurumu).
+# dist/ eski build'lerden kalmış olabilir, o yüzden ikisi de yok sayılıyor.
 dist/
+yayin/
 
 # editor
 .vscode/

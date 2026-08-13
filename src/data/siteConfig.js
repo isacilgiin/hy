@@ -55,6 +55,24 @@ const siteConfig = {
   domain: '20karot.com.tr',
   url: 'https://20karot.com.tr',
 
+  /**
+   * YAYIN SÜRÜMÜ — build çıktısının klasör adını belirler.
+   *
+   * `npm run build` artık `dist/` yerine `yayin/<domain>-v<surum>/` üretiyor.
+   * Sebebi tek bir siteyle çalışırken görünmüyor: elde birden fazla site
+   * olduğunda hepsinin çıktısı `dist/` adında duruyor ve FTP'de yanlış sitenin
+   * dosyalarını yanlış alan adına yüklemek an meselesi. Klasör adı hem hangi
+   * site hem hangi sürüm olduğunu söylüyor.
+   *
+   * Sunucuya yeni bir sürüm yükledikçe BURAYI ELLE ARTIRIN. Aynı sürümü
+   * yeniden build etmek klasörün üzerine yazar — geliştirirken istenen budur.
+   * Sürüm atlamak zorunda değilsiniz; amaç sunucudakini tarif edebilmek.
+   *
+   * Hangi kodun hangi sürümde olduğu `rapor/<domain>-v<surum>.json` içinde
+   * git commit'iyle birlikte kayıtlı; klasör adına bakıp geçmişe dönebilirsiniz.
+   */
+  yayinSurumu: 1,
+
   // ===== Çalışma Saatleri =====
   // Google İşletme Profili "24 saat açık" diyor — schema ve site metni buna göre.
   workingHours: {

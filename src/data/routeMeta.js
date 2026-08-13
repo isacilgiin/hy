@@ -162,7 +162,8 @@ const sabitler = [
   },
   {
     path: '/sikca-sorulan-sorular/',
-    title: `Sıkça Sorulan Sorular | Karot, Beton Delme ve Kesme — ${companyName}`,
+    // 62 karakterdi, arama sonucunda kesiliyordu (build künyesi yakaladı).
+    title: `Karot ve Beton Kesme SSS | ${companyName}`,
     description: `Karot, beton delme, kesme ve kırma hakkında en çok sorulan ${faq.length} soru ve cevabı. Fiyat, süre, toz ve titreşim, taşıyıcı elemana müdahale, moloz kaldırma.`,
     jsonLd: faqSemasi(faq),
     h1: 'Sıkça Sorulan Sorular',

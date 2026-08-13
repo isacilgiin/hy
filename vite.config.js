@@ -12,6 +12,20 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { execSync } from 'node:child_process'
 
+/** Künye için: çıktı klasöründeki bütün index.html'leri toplar. */
+function tumHtmlDosyalari(kok) {
+  const bulunan = []
+  const gez = (dizin) => {
+    for (const girdi of fs.readdirSync(dizin, { withFileTypes: true })) {
+      const tam = path.join(dizin, girdi.name)
+      if (girdi.isDirectory()) gez(tam)
+      else if (girdi.name.endsWith('.html')) bulunan.push(tam)
+    }
+  }
+  gez(kok)
+  return bulunan
+}
+
 /**
  * index.html + robots.txt + sitemap.xml içeriğini src/data/siteConfig.js'ten üretir.
  *
@@ -891,13 +905,120 @@ ${paragraflar}
       console.log(`  ${yazilan} rota icin ayri index.html yazildi (sosyal onizleme + JS'siz istemciler)`)
       // eslint-disable-next-line no-console
       console.log('  404.html yazildi (noindex, gercek 404 statusu icin)')
+
+      /**
+       * KÜNYE — sitenin makine okunur özeti.
+       *
+       * ÇIKTI KLASÖRÜNÜN İÇİNE YAZILMAZ. Orası FTP'ye giden her şey; künye
+       * oraya konsaydı https://<domain>/kunye.json adresinden herkes okurdu:
+       * bütün rota haritası, hangi sayfaların ince kaldığı, içerik planı.
+       * Bu yüzden `rapor/` klasörüne, yayının dışına yazılıyor.
+       *
+       * Ne işe yarıyor: (1) iki sürümün künyesi karşılaştırılınca "bu build
+       * neyi değiştirdi" tek bakışta görünür, (2) eksik/ince sayfalar elle
+       * grep çekmeden listelenir, (3) birden fazla siteye aynı motor
+       * güncellemesi verildiğinde hangi sitede ne değiştiği izlenebilir.
+       */
+      const kunyeRotalari = []
+      const uyarilar = []
+      const yiv = (s) => (s ? [...s].length : 0)
+
+      for (const dosya of tumHtmlDosyalari(cikti)) {
+        const icerik = fs.readFileSync(dosya, 'utf8')
+        const rota = '/' + path.relative(cikti, dosya).replace(/index\.html$/, '').replace(/\\/g, '/')
+        const bul = (re) => (icerik.match(re) ?? [])[1] ?? ''
+        const baslik = bul(/<title>([^<]*)<\/title>/)
+        const aciklama = bul(/<meta name="description" content="([^"]*)"/)
+
+        // Kelime sayısı noscript gövdesinden: ekranda görünen metnin birebir
+        // karşılığı orası (cloaking kuralı gereği aynı olmak zorunda).
+        const noscript = [...icerik.matchAll(/<noscript>([\s\S]*?)<\/noscript>/g)].pop()
+        const kelime = noscript
+          ? noscript[1].replace(/<[^>]+>/g, ' ').trim().split(/\s+/).filter(Boolean).length
+          : 0
+
+        kunyeRotalari.push({
+          yol: rota,
+          baslik,
+          baslikUzunluk: yiv(baslik),
+          aciklamaUzunluk: yiv(aciklama),
+          kelime,
+          // Tür başına adet; ham liste okunmuyordu (tek sayfada 80 girdi,
+          // çoğu tekrar eden City/Offer/Service).
+          sema: [...icerik.matchAll(/"@type":\s*"([A-Za-z]+)"/g)].reduce((sayac, m) => {
+            sayac[m[1]] = (sayac[m[1]] ?? 0) + 1
+            return sayac
+          }, {}),
+        })
+
+        // 404 sayfası kasıtlı olarak kısa ve sitemap'te değil; incelik ve
+        // başlık kuralları ona uygulanmaz, yoksa her build'de yanlış alarm verir.
+        const dorttYuzDort = rota === '/404.html'
+        if (!dorttYuzDort && yiv(baslik) > 60) {
+          uyarilar.push(`${rota} — başlık ${yiv(baslik)} karakter (60 sınırı aşıldı)`)
+        }
+        if (!dorttYuzDort && !aciklama) uyarilar.push(`${rota} — meta açıklama yok`)
+        if (!dorttYuzDort && kelime > 0 && kelime < 120) {
+          uyarilar.push(`${rota} — noscript gövdesi ${kelime} kelime (ince)`)
+        }
+      }
+
+      let gitSha = ''
+      let gitSayac = 0
+      try {
+        gitSha = execSync('git rev-parse --short HEAD', { encoding: 'utf8' }).trim()
+        gitSayac = Number(execSync('git rev-list --count HEAD', { encoding: 'utf8' }).trim())
+      } catch {
+        // git yoksa künye yine yazılır, yalnızca izlenebilirlik alanı boş kalır
+      }
+
+      const kunye = {
+        site: siteConfig.domain,
+        url,
+        yayinSurumu: siteConfig.yayinSurumu,
+        // Klasör adı sürümü taşıyor ama hangi KODUN o sürüme girdiğini bu iki
+        // alan söylüyor; sürüm elle artırıldığı için tek başına yeterli değil.
+        gitSha,
+        gitCommitSayisi: gitSayac,
+        rotaSayisi: kunyeRotalari.length,
+        sitemapUrl: rotaMetalari.length,
+        yonlendirmeSayisi: redirects.length,
+        rotalar: kunyeRotalari.sort((a, b) => a.yol.localeCompare(b.yol)),
+        uyarilar,
+      }
+
+      const raporKlasoru = 'rapor'
+      fs.mkdirSync(raporKlasoru, { recursive: true })
+      const raporYolu = path.join(
+        raporKlasoru,
+        `${siteConfig.domain}-v${siteConfig.yayinSurumu}.json`
+      )
+      fs.writeFileSync(raporYolu, JSON.stringify(kunye, null, 2))
+
+      // eslint-disable-next-line no-console
+      console.log(`  kunye yazildi: ${raporYolu} (${uyarilar.length} uyari)`)
+      // eslint-disable-next-line no-console
+      console.log(`\n  YUKLENECEK KLASOR: ${cikti}/  —  icindekilerin TAMAMI (.htaccess dahil)\n`)
     },
   }
 }
 
+/**
+ * Build çıktısı `dist/` DEĞİL, `yayin/<domain>-v<surum>/`.
+ * Gerekçesi siteConfig.js > yayinSurumu içinde yazılı: birden fazla siteyle
+ * çalışırken hepsinin çıktısının `dist/` adında olması, FTP'de yanlış sitenin
+ * dosyalarını yanlış alan adına yükleme riskini doğuruyor.
+ *
+ * writeBundle çıktı klasörünü Vite'tan alıyor (`secenekler.dir`), o yüzden
+ * burada değiştirmek yeterli — 47 sayfa, sitemap, robots ve .htaccess
+ * üretimi otomatik takip ediyor.
+ */
+export const yayinKlasoru = `yayin/${siteConfig.domain}-v${siteConfig.yayinSurumu}`
+
 export default defineConfig({
   plugins: [react(), tailwindcss(), seoFromConfig()],
   build: {
+    outDir: yayinKlasoru,
     rollupOptions: {
       output: {
         // Vite 8 (rolldown) manualChunks yalnızca fonksiyon formunu destekler.
