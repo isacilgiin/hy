@@ -242,12 +242,26 @@ const denenecek = modelArg ? [modelArg] : modeller
 
 // Görevde `degiskenler` varsa (ilçe testi gibi) her biri ayrı koşu olur;
 // yoksa tek koşu, `--tekrar` kadar yinelenir.
+// Kota tükendiğinde dört ilçeyi tek oturumda almak mümkün olmuyor.
+// --degisken=Pamukkale ile teker teker alınabilir; kota penceresi açıldıkça
+// bir tanesini çalıştırıp bırakmak, üçünü birden deneyip üçünü de kaybetmekten
+// iyi. Tamamlananlar zaten atlanıyor.
+const degiskenFiltre = argumanlar.find((a) => a.startsWith('--degisken='))?.split('=')[1]
+
 const kosular = gorev.degiskenler
-  ? gorev.degiskenler.map((d) => ({ etiket: d, istem: gorev.istem(d) }))
+  ? gorev.degiskenler
+      .filter((d) => !degiskenFiltre || d.toLowerCase() === degiskenFiltre.toLowerCase())
+      .map((d) => ({ etiket: d, istem: gorev.istem(d) }))
   : Array.from({ length: tekrar }, (_, i) => ({
       etiket: tekrar > 1 ? `tekrar${i + 1}` : null,
       istem: gorev.istem(),
     }))
+
+if (!kosular.length) {
+  console.error(`\n"${degiskenFiltre}" bu gorevin degiskenleri arasinda yok.`)
+  console.error(`Secenekler: ${(gorev.degiskenler ?? []).join(', ')}\n`)
+  process.exit(1)
+}
 
 fs.mkdirSync(ciktiKlasoru, { recursive: true })
 console.log(`\ngorev: ${gorev.ad}  (hedef ${gorev.hedef[0]}-${gorev.hedef[1]} kelime)`)
