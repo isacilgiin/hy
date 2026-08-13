@@ -259,19 +259,32 @@ for (const model of denenecek) {
     console.log(`  ${baslik}`)
     process.stdout.write('    ')
 
-    let sonuc
-    for (let deneme = 1; deneme <= DENEME_SAYISI; deneme++) {
-      sonuc = await modeliCalistir(anahtar, model, kosu.istem)
-      // 503/429 = ucretsiz uc dolu. Bekleyip tekrar denemek genelde geciyor.
-      if (sonuc.kod !== 503 && sonuc.kod !== 429) break
-      const bekle = deneme * 15
-      process.stdout.write(`\n    uc dolu (${sonuc.kod}), ${bekle}s bekleniyor... `)
-      await new Promise((r) => setTimeout(r, bekle * 1000))
-    }
-
     const taban = [model.replace(/[/\\]/g, '_'), gorevAdi, kosu.etiket]
       .filter(Boolean)
       .join('__')
+
+    // KALDIĞI YERDEN DEVAM: tamamlanmış koşu tekrar edilmez.
+    // İlçe testinde dört koşudan biri geçip üçü kotaya takıldı; tekrar
+    // denerken geçeni yeniden üretmek hem kotayı hem zamanı boşa harcar.
+    // Baştan almak isterseniz o dosyayı silin.
+    const hedefDosya = path.join(ciktiKlasoru, `${taban}.md`)
+    if (fs.existsSync(hedefDosya)) {
+      console.log(`\n    zaten var, atlandi (yeniden uretmek icin dosyayi silin)\n`)
+      continue
+    }
+
+    let sonuc
+    for (let deneme = 1; deneme <= DENEME_SAYISI; deneme++) {
+      sonuc = await modeliCalistir(anahtar, model, kosu.istem)
+      if (sonuc.kod !== 503 && sonuc.kod !== 429) break
+      // 429 kota, 503 kapasite. Kota daha uzun sürüyor: 15/30/45 saniye
+      // ilçe testinde üç koşuyu birden kaybettirdi.
+      const bekle = sonuc.kod === 429 ? [60, 150, 300][deneme - 1] : deneme * 15
+      process.stdout.write(
+        `\n    ${sonuc.kod === 429 ? 'kota' : 'uc dolu'} (${sonuc.kod}), ${bekle}s bekleniyor... `
+      )
+      await new Promise((r) => setTimeout(r, bekle * 1000))
+    }
 
     if (sonuc.hata) {
       console.log(`\n    HATA ${sonuc.kod ?? ''} (${sonuc.sure ?? '?'}s) — ${sonuc.hata}\n`)
