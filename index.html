@@ -16,15 +16,17 @@
   %SITE_ANALYTICS_PRECONNECT%
   <!-- LCP görseli (yalnızca ana sayfa; diğer rotalarda build sırasında silinir) -->
   %SITE_HERO_PRELOAD%
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-  <!-- Yazı tipi — yalnızca gerçekten kullanılan 4 ağırlık.
-       Önce 6 ağırlık isteniyordu; 300 ve 800 sitede hiç kullanılmıyor. -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&display=swap"
-    rel="stylesheet"
-  />
+  <!-- Yazı tipi kendi sunucumuzdan; kuralları aşağıda satır içi.
+       Gerekçesi ve alt küme üretimi: docs/yazi-tipi.md — okumadan değiştirmeyin.
+       Preload yalnızca 400 ve 700; dördünü birden preload ETMEYİN. -->
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/kanit-400.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/kanit-700.woff2" crossorigin />
+  <style>
+    @font-face{font-family:'Kanit';font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/kanit-400.woff2) format('woff2')}
+    @font-face{font-family:'Kanit';font-style:normal;font-weight:500;font-display:swap;src:url(/fonts/kanit-500.woff2) format('woff2')}
+    @font-face{font-family:'Kanit';font-style:normal;font-weight:600;font-display:swap;src:url(/fonts/kanit-600.woff2) format('woff2')}
+    @font-face{font-family:'Kanit';font-style:normal;font-weight:700;font-display:swap;src:url(/fonts/kanit-700.woff2) format('woff2')}
+  </style>
 
   <title>%SITE_TITLE%</title>
   <meta name="description" content="%SITE_DESCRIPTION%" />

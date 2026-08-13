@@ -1,7 +1,9 @@
 @import "tailwindcss";
 
-/* ===== GOOGLE FONTS ===== */
-/* Kanit is loaded via index.html link tag for better performance */
+/* ===== YAZI TİPİ ===== */
+/* Kanit KENDİ SUNUCUMUZDAN geliyor; @font-face blokları index.html'in <head>'inde
+   SATIR İÇİ duruyor (gerekçesi orada yazılı). Buraya @font-face veya @import
+   eklemeyin — bu dosya CSS paketine giriyor ve font keşfi bir adım gecikirdi. */
 
 /* ===== CUSTOM THEME ===== */
 /* ===== PALET: Kömür + Bordo + Altın (endüstriyel premium) =====
