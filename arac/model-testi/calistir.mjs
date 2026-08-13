@@ -1,7 +1,8 @@
 /**
  * MODEL TESTİ — çalıştırıcı.
  *
- *   node arac/model-testi/calistir.mjs --liste
+ *   node arac/model-testi/calistir.mjs --liste                        NIM modelleri
+ *   node arac/model-testi/calistir.mjs --liste --saglayici=google    Gemini modelleri
  *   node arac/model-testi/calistir.mjs <model>                        varsayilan gorev
  *   node arac/model-testi/calistir.mjs <model> --gorev=uzun          uzun blog yazisi
  *   node arac/model-testi/calistir.mjs <model> --gorev=tuzak         ovgu tuzagi
@@ -10,7 +11,8 @@
  *
  * Anahtar `.env.local` içinden okunur:
  *
- *   NVIDIA_API_KEY=nvapi-...
+ *   NVIDIA_API_KEY=nvapi-...      (--saglayici=nim, varsayilan)
+ *   GOOGLE_API_KEY=...            (--saglayici=google)
  *
  * ÖNEK YOK. `VITE_NVIDIA_API_KEY` yazarsanız Vite onu istemci paketine gömer
  * ve anahtar `yayin/.../assets/*.js` içinde açık metin olarak yayına gider.
@@ -33,7 +35,31 @@ import { sistemIstemi, gorevler } from './gorev.js'
 
 const buradan = path.dirname(fileURLToPath(import.meta.url))
 const ciktiKlasoru = path.join(buradan, 'ciktilar')
-const TABAN = 'https://integrate.api.nvidia.com/v1'
+
+/**
+ * SAĞLAYICILAR.
+ *
+ * Google'ın OpenAI uyumlu ucu sayesinde iki sağlayıcı da aynı istek/akış
+ * kodunu kullanıyor; tek fark taban adres ve anahtarın hangi değişkenden
+ * okunduğu. Google'ın kendi yerel API'si farklı bir gövde şeması istiyor —
+ * uyumlu ucu seçmemizin sebebi bu, ikinci bir çözümleyici yazmamak.
+ *
+ * NIM'in ücretsiz kotası ~7-8 istekte doluyor; 1.200 sayfalık gerçek üretim
+ * için yetmediği ölçüldü. Google AI Studio'nun günlük sınırı çok daha yüksek
+ * deniyor — ama önce Türkçesi ölçülmeli, kota tek başına yeterli sebep değil.
+ */
+const saglayicilar = {
+  nim: {
+    ad: 'NVIDIA NIM',
+    taban: 'https://integrate.api.nvidia.com/v1',
+    anahtarDegiskeni: 'NVIDIA_API_KEY',
+  },
+  google: {
+    ad: 'Google AI Studio',
+    taban: 'https://generativelanguage.googleapis.com/v1beta/openai',
+    anahtarDegiskeni: 'GOOGLE_API_KEY',
+  },
+}
 
 /**
  * Denenecek modeller — 2026-08-13'te `--liste` çıktısından seçildi (102 model).
@@ -77,11 +103,11 @@ const BOSTA_ASIMI_MS = 75_000 // hiç parça gelmezse bu kadar bekle
 const TOPLAM_TAVAN_MS = 900_000 // güvenlik tavanı: sonsuza kadar sürmesin
 const DENEME_SAYISI = 3
 
-function anahtariOku() {
-  if (process.env.NVIDIA_API_KEY) return process.env.NVIDIA_API_KEY
+function anahtariOku(degisken) {
+  if (process.env[degisken]) return process.env[degisken]
   try {
     const metin = fs.readFileSync(path.join(process.cwd(), '.env.local'), 'utf8')
-    const satir = metin.split('\n').find((s) => s.trim().startsWith('NVIDIA_API_KEY='))
+    const satir = metin.split('\n').find((s) => s.trim().startsWith(`${degisken}=`))
     if (satir) return satir.slice(satir.indexOf('=') + 1).trim().replace(/^["']|["']$/g, '')
   } catch {
     /* .env.local yok */
@@ -89,8 +115,8 @@ function anahtariOku() {
   return null
 }
 
-async function modelleriListele(anahtar) {
-  const cevap = await fetch(`${TABAN}/models`, {
+async function modelleriListele(anahtar, saglayici) {
+  const cevap = await fetch(`${saglayici.taban}/models`, {
     headers: { Authorization: `Bearer ${anahtar}` },
   })
   if (!cevap.ok) {
@@ -109,7 +135,7 @@ async function modelleriListele(anahtar) {
  * Akışlı istek. Parçalar geldikçe `content` ve `reasoning_content` ayrı ayrı
  * toplanıyor: bazı modeller cevabı ikincisine yazıyor ve ilki boş kalıyor.
  */
-async function modeliCalistir(anahtar, model, istem) {
+async function modeliCalistir(anahtar, model, istem, saglayici) {
   const kontrol = new AbortController()
   const basla = Date.now()
   let sonVeri = Date.now()
@@ -122,7 +148,7 @@ async function modeliCalistir(anahtar, model, istem) {
   }, 2000)
 
   try {
-    const cevap = await fetch(`${TABAN}/chat/completions`, {
+    const cevap = await fetch(`${saglayici.taban}/chat/completions`, {
       method: 'POST',
       signal: kontrol.signal,
       headers: {
@@ -211,19 +237,28 @@ async function modeliCalistir(anahtar, model, istem) {
   }
 }
 
-const anahtar = anahtariOku()
+// --- argümanlar ---
+const argumanlar = process.argv.slice(2)
+
+const saglayiciAdi = argumanlar.find((a) => a.startsWith('--saglayici='))?.split('=')[1] ?? 'nim'
+const saglayici = saglayicilar[saglayiciAdi]
+if (!saglayici) {
+  console.error(`\nBilinmeyen saglayici: ${saglayiciAdi}`)
+  console.error(`Secenekler: ${Object.keys(saglayicilar).join(', ')}\n`)
+  process.exit(1)
+}
+
+const anahtar = anahtariOku(saglayici.anahtarDegiskeni)
 if (!anahtar) {
-  console.error('\nNVIDIA_API_KEY bulunamadi.')
+  console.error(`\n${saglayici.anahtarDegiskeni} bulunamadi (${saglayici.ad}).`)
   console.error('Proje kokunde .env.local olusturup su satiri ekleyin:\n')
-  console.error('  NVIDIA_API_KEY=nvapi-...\n')
+  console.error(`  ${saglayici.anahtarDegiskeni}=...\n`)
   console.error('(VITE_ oneki KULLANMAYIN — o onek anahtari tarayiciya sizdirir.)\n')
   process.exit(1)
 }
 
-// --- argümanlar ---
-const argumanlar = process.argv.slice(2)
 if (argumanlar.includes('--liste')) {
-  await modelleriListele(anahtar)
+  await modelleriListele(anahtar, saglayici)
   process.exit(0)
 }
 
@@ -289,7 +324,7 @@ for (const model of denenecek) {
 
     let sonuc
     for (let deneme = 1; deneme <= DENEME_SAYISI; deneme++) {
-      sonuc = await modeliCalistir(anahtar, model, kosu.istem)
+      sonuc = await modeliCalistir(anahtar, model, kosu.istem, saglayici)
       if (sonuc.kod !== 503 && sonuc.kod !== 429) break
       // 429 kota, 503 kapasite. Kota daha uzun sürüyor: 15/30/45 saniye
       // ilçe testinde üç koşuyu birden kaybettirdi.
