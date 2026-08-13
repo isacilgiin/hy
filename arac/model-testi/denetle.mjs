@@ -31,11 +31,39 @@ const iddiaKelimeleri = [
   'bu yana', 'beri', 'aşkın', 'askin', 'üzerinde', 'uzerinde', 'binden', 'yüzden',
 ]
 
-const ustunlukKaliplari = [
-  'en iyi', 'en büyük', 'en buyuk', 'en hızlı', 'en hizli', 'en uygun',
+/**
+ * ÜSTÜNLÜK İFADELERİ — İKİ KOVA, tıpkı sayılarda olduğu gibi.
+ *
+ * İlk sürüm düz metin araması yapıyordu ve şunları aynı kefeye koyuyordu:
+ *   "en iyi sonuç için vakum süresine uyulmalıdır"   → sıradan Türkçe
+ *   "alana en uygun kapasitedeki cihaz seçilir"      → sıradan Türkçe
+ *   "Türkiye'nin en iyi klima firmasıyız"            → kural ihlali
+ *
+ * Kural 4 FİRMA ÖVGÜSÜNÜ yasaklıyor, "en" kelimesini değil. gemini-3.5-flash-lite
+ * üç ayrı çıktıda "en uygun" yüzünden puan yedi; okununca üçü de cihaz seçimini
+ * anlatan normal cümlelerdi.
+ *
+ * KESİN kalıplar her hâlükârda ihlal — "lider", "rakipsiz", "Türkiye'nin en"
+ * bir firma metninde başka anlama gelmez. BAĞLAMA BAKILAN kalıplar ise ancak
+ * yakınında firmadan söz eden bir kelime varsa ihlal sayılır; yoksa gösterilir
+ * ama puanlanmaz. Makinenin ayıramayacağı yerde hüküm vermiyoruz.
+ */
+const ustunlukKesin = [
   'lider', 'öncü', 'oncu', 'bir numara', '1 numara', 'zirve', 'rakipsiz',
   'türkiye\'nin en', 'turkiye\'nin en', 'bölgenin en', 'bolgenin en',
   'sektörün', 'sektorun', 'eşsiz', 'essiz', 'kusursuz', 'mükemmel', 'mukemmel',
+]
+
+const ustunlukBaglamli = [
+  'en iyi', 'en büyük', 'en buyuk', 'en hızlı', 'en hizli', 'en uygun',
+  'en kaliteli', 'en guvenilir', 'en güvenilir', 'en deneyimli',
+]
+
+// Yakınında bunlardan biri varsa cümle firmadan bahsediyor demektir.
+const firmaIsaretleri = [
+  'firma', 'şirket', 'sirket', 'olarak biz', 'biziz', 'bizim', 'ekibimiz',
+  'ekibimizle', 'hizmetimiz', 'servisimiz', 'markamız', 'markamiz', 'ünvan',
+  'tercih edilen', 'tercih sebebi', 'farkımız', 'farkimiz',
 ]
 
 const belgeKaliplari = [
@@ -182,7 +210,7 @@ function yazimDenetimi(metin) {
 }
 
 function denetle(metin) {
-  const bulgular = { yuksekRisk: [], sayilar: [], ustunluk: [], belge: [] }
+  const bulgular = { yuksekRisk: [], sayilar: [], ustunluk: [], ustunlukBilgi: [], belge: [] }
   const kucuk = metin.toLowerCase()
 
   // Sayılar — çevresindeki 40 karakterle birlikte
@@ -196,7 +224,20 @@ function denetle(metin) {
     ;(iddiaMi ? bulgular.yuksekRisk : bulgular.sayilar).push(`…${baglam}…`)
   }
 
-  for (const k of ustunlukKaliplari) if (kucuk.includes(k)) bulgular.ustunluk.push(k)
+  for (const k of ustunlukKesin) if (kucuk.includes(k)) bulgular.ustunluk.push(k)
+
+  // Bağlama bakılanlar: firma sözü yakınındaysa ihlal, değilse yalnızca bilgi.
+  for (const k of ustunlukBaglamli) {
+    let konum = kucuk.indexOf(k)
+    while (konum !== -1) {
+      const baglam = metin.slice(Math.max(0, konum - 60), konum + k.length + 60).replace(/\s+/g, ' ')
+      const firmadanBahsediyor = firmaIsaretleri.some((f) => baglam.toLowerCase().includes(f))
+      if (firmadanBahsediyor) bulgular.ustunluk.push(k)
+      else bulgular.ustunlukBilgi.push(`…${baglam}…`)
+      konum = kucuk.indexOf(k, konum + k.length)
+    }
+  }
+
   for (const k of belgeKaliplari) if (kucuk.includes(k)) bulgular.belge.push(k)
 
   return bulgular
@@ -270,11 +311,17 @@ for (const dosya of dosyalar.sort()) {
   }
   if (b.belge.length) console.log(`  BELGE/SERTIFIKA IDDIASI: ${[...new Set(b.belge)].join(', ')}`)
   if (b.ustunluk.length) console.log(`  USTUNLUK IFADESI: ${[...new Set(b.ustunluk)].join(', ')}`)
+  if (b.ustunlukBilgi.length) {
+    console.log(`  bilgi — "en ..." kaliplari (${b.ustunlukBilgi.length}), firma ovgusu degil gibi:`)
+    b.ustunlukBilgi.slice(0, 3).forEach((s) => console.log(`     · ${s}`))
+  }
   if (b.sayilar.length) {
     console.log(`  bilgi — teknik olabilecek sayilar (${b.sayilar.length}), goz atin:`)
     b.sayilar.slice(0, 4).forEach((s) => console.log(`     · ${s}`))
   }
-  if (!skor && !b.sayilar.length) console.log('  temiz ✓')
+  // "temiz" yalnızca gözle bakılacak bir şey de yoksa yazılır — bilgi kovaları
+  // dolu olduğu hâlde "temiz ✓" görmek, o satırların okunmamasına yol açıyor.
+  if (!skor && !b.sayilar.length && !b.ustunlukBilgi.length) console.log('  temiz ✓')
 
   ozet.push({ model: dosya.replace('.md', ''), kelime, skor })
 }
