@@ -1,9 +1,12 @@
 /**
  * MODEL TESTİ — çalıştırıcı.
  *
- *   node arac/model-testi/calistir.mjs --liste          kullanilabilir modelleri yazar
- *   node arac/model-testi/calistir.mjs                  listedeki modelleri sirayla dener
- *   node arac/model-testi/calistir.mjs <model-kimligi>  tek model dener
+ *   node arac/model-testi/calistir.mjs --liste
+ *   node arac/model-testi/calistir.mjs <model>                        varsayilan gorev
+ *   node arac/model-testi/calistir.mjs <model> --gorev=uzun          uzun blog yazisi
+ *   node arac/model-testi/calistir.mjs <model> --gorev=tuzak         ovgu tuzagi
+ *   node arac/model-testi/calistir.mjs <model> --gorev=ilce          4 ilce, kopya olcumu
+ *   node arac/model-testi/calistir.mjs <model> --tekrar=3            tutarlilik
  *
  * Anahtar `.env.local` içinden okunur:
  *
@@ -26,7 +29,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { sistemIstemi, kullaniciIstemi } from './gorev.js'
+import { sistemIstemi, gorevler } from './gorev.js'
 
 const buradan = path.dirname(fileURLToPath(import.meta.url))
 const ciktiKlasoru = path.join(buradan, 'ciktilar')
@@ -106,7 +109,7 @@ async function modelleriListele(anahtar) {
  * Akışlı istek. Parçalar geldikçe `content` ve `reasoning_content` ayrı ayrı
  * toplanıyor: bazı modeller cevabı ikincisine yazıyor ve ilki boş kalıyor.
  */
-async function modeliCalistir(anahtar, model) {
+async function modeliCalistir(anahtar, model, istem) {
   const kontrol = new AbortController()
   const basla = Date.now()
   let sonVeri = Date.now()
@@ -131,7 +134,7 @@ async function modeliCalistir(anahtar, model) {
         model,
         messages: [
           { role: 'system', content: sistemIstemi },
-          { role: 'user', content: kullaniciIstemi },
+          { role: 'user', content: istem },
         ],
         // Yaratıcılık değil kurallara uyma ölçülüyor; sıcaklık düşük tutuluyor
         // ki modeller arası fark üslup gürültüsüne karışmasın.
@@ -217,56 +220,85 @@ if (!anahtar) {
   process.exit(1)
 }
 
-const arg = process.argv[2]
-if (arg === '--liste') {
+// --- argümanlar ---
+const argumanlar = process.argv.slice(2)
+if (argumanlar.includes('--liste')) {
   await modelleriListele(anahtar)
   process.exit(0)
 }
 
-const denenecek = arg ? [arg] : modeller
+const gorevAdi = (argumanlar.find((a) => a.startsWith('--gorev='))?.split('=')[1] ?? 'bolum').trim()
+const tekrar = Number(argumanlar.find((a) => a.startsWith('--tekrar='))?.split('=')[1] ?? 1)
+const modelArg = argumanlar.find((a) => !a.startsWith('--'))
+
+const gorev = gorevler[gorevAdi]
+if (!gorev) {
+  console.error(`\nBilinmeyen gorev: ${gorevAdi}`)
+  console.error(`Secenekler: ${Object.keys(gorevler).join(', ')}\n`)
+  process.exit(1)
+}
+
+const denenecek = modelArg ? [modelArg] : modeller
+
+// Görevde `degiskenler` varsa (ilçe testi gibi) her biri ayrı koşu olur;
+// yoksa tek koşu, `--tekrar` kadar yinelenir.
+const kosular = gorev.degiskenler
+  ? gorev.degiskenler.map((d) => ({ etiket: d, istem: gorev.istem(d) }))
+  : Array.from({ length: tekrar }, (_, i) => ({
+      etiket: tekrar > 1 ? `tekrar${i + 1}` : null,
+      istem: gorev.istem(),
+    }))
+
 fs.mkdirSync(ciktiKlasoru, { recursive: true })
-console.log(`\n${denenecek.length} model test ediliyor (nokta = gelen metin)\n`)
+console.log(`\ngorev: ${gorev.ad}  (hedef ${gorev.hedef[0]}-${gorev.hedef[1]} kelime)`)
+console.log(`${denenecek.length} model x ${kosular.length} kosu (nokta = gelen metin)\n`)
 
 for (const model of denenecek) {
-  console.log(`  ${model}`)
-  process.stdout.write('    ')
+  for (const kosu of kosular) {
+    const baslik = kosu.etiket ? `${model}  [${kosu.etiket}]` : model
+    console.log(`  ${baslik}`)
+    process.stdout.write('    ')
 
-  let sonuc
-  for (let deneme = 1; deneme <= DENEME_SAYISI; deneme++) {
-    sonuc = await modeliCalistir(anahtar, model)
-    // 503/429 = ucretsiz uc dolu. Bekleyip tekrar denemek genelde geciyor.
-    if (sonuc.kod !== 503 && sonuc.kod !== 429) break
-    const bekle = deneme * 15
-    process.stdout.write(`\n    uc dolu (${sonuc.kod}), ${bekle}s bekleniyor... `)
-    await new Promise((r) => setTimeout(r, bekle * 1000))
+    let sonuc
+    for (let deneme = 1; deneme <= DENEME_SAYISI; deneme++) {
+      sonuc = await modeliCalistir(anahtar, model, kosu.istem)
+      // 503/429 = ucretsiz uc dolu. Bekleyip tekrar denemek genelde geciyor.
+      if (sonuc.kod !== 503 && sonuc.kod !== 429) break
+      const bekle = deneme * 15
+      process.stdout.write(`\n    uc dolu (${sonuc.kod}), ${bekle}s bekleniyor... `)
+      await new Promise((r) => setTimeout(r, bekle * 1000))
+    }
+
+    const taban = [model.replace(/[/\\]/g, '_'), gorevAdi, kosu.etiket]
+      .filter(Boolean)
+      .join('__')
+
+    if (sonuc.hata) {
+      console.log(`\n    HATA ${sonuc.kod ?? ''} (${sonuc.sure ?? '?'}s) — ${sonuc.hata}\n`)
+      continue
+    }
+
+    if (!sonuc.kelime && sonuc.dusunce) {
+      // Model dusundu ama cevap yazmadi: token butcesi dusunmeye gitti.
+      console.log(
+        `\n    BOS CEVAP (${sonuc.sure}s) — model ${sonuc.dusunce.length} karakter dusunmus` +
+          ` ama metin yazmamis. max_tokens yetmemis olabilir.\n`
+      )
+      fs.writeFileSync(path.join(ciktiKlasoru, `${taban}.DUSUNCE.txt`), sonuc.dusunce)
+      continue
+    }
+
+    if (!sonuc.kelime) {
+      console.log(`\n    BOS CEVAP (${sonuc.sure}s) — icerik de dusunce de gelmedi.\n`)
+      continue
+    }
+
+    fs.writeFileSync(path.join(ciktiKlasoru, `${taban}.md`), sonuc.metin)
+    const [alt, ust] = gorev.hedef
+    const uyar = sonuc.kelime < alt ? ' ⚠ hedefin altinda' : sonuc.kelime > ust ? ' ⚠ hedefin ustunde' : ''
+    console.log(`\n    ${sonuc.kelime} kelime, ${sonuc.sure}s ✓${uyar}\n`)
+    await new Promise((r) => setTimeout(r, 1500))
   }
-
-  if (sonuc.hata) {
-    console.log(`\n    HATA ${sonuc.kod ?? ''} (${sonuc.sure ?? '?'}s) — ${sonuc.hata}\n`)
-    continue
-  }
-
-  if (!sonuc.kelime && sonuc.dusunce) {
-    // Model dusundu ama cevap yazmadi: token butcesi dusunmeye gitti.
-    console.log(
-      `\n    BOS CEVAP (${sonuc.sure}s) — model ${sonuc.dusunce.length} karakter dusunmus` +
-        ` ama metin yazmamis. max_tokens yetmemis olabilir.\n`
-    )
-    fs.writeFileSync(
-      path.join(ciktiKlasoru, `${model.replace(/[/\\]/g, '_')}.DUSUNCE.txt`),
-      sonuc.dusunce
-    )
-    continue
-  }
-
-  if (!sonuc.kelime) {
-    console.log(`\n    BOS CEVAP (${sonuc.sure}s) — icerik de dusunce de gelmedi.\n`)
-    continue
-  }
-
-  fs.writeFileSync(path.join(ciktiKlasoru, `${model.replace(/[/\\]/g, '_')}.md`), sonuc.metin)
-  console.log(`\n    ${sonuc.kelime} kelime, ${sonuc.sure}s ✓\n`)
-  await new Promise((r) => setTimeout(r, 1500))
 }
 
 console.log(`Ciktilar: ${path.relative(process.cwd(), ciktiKlasoru)}/`)

@@ -1,13 +1,17 @@
 /**
- * MODEL TESTİ — görev tanımı.
+ * MODEL TESTİ — görev tanımları.
  *
- * Amaç: birden fazla modele AYNI görevi verip Türkçe üretim kalitesini
- * karşılaştırmak. Ölçtüğümüz asıl şey üslup değil, ŞU: model kendisine
- * verilmeyen bir olguyu uyduruyor mu?
+ * Amaç: bir modele AYNI kısıtlar altında farklı türde işler verip Türkçe
+ * üretim kalitesini ölçmek. Ölçtüğümüz asıl şey üslup değil, ŞU: model
+ * kendisine verilmeyen bir olguyu uyduruyor mu?
  *
  * Test 20 Karot üzerinden yapılmıyor. Sebebi kasıtlı: elimizde onun gerçek
  * metinleri var ve model o metinlere benzer bir şey üretirse "iyi yazmış"
  * sanabiliriz. Bilmediği bir sektör verince ne uydurduğu net görünüyor.
+ *
+ * İLK TURDAN SONRA GENİŞLETİLDİ (2026-08-13). Tek örnek yeterli değil:
+ * glm-5.2 ilk denemede temiz çıktı ama bu şansa da olabilirdi. Dört ayrı
+ * görev, dört ayrı soruyu ölçüyor — hangisinin neyi ölçtüğü altında yazılı.
  */
 
 /**
@@ -44,11 +48,22 @@ KURALLAR — hepsi zorunlu:
    ifadeleri KULLANMA.
 5. Bir bilgi listede yoksa, o konuya hiç girme. Uydurma, tahmin etme,
    "genellikle" diye geçiştirme.
-6. Türkçe yaz. Çeviri gibi durmasın; kısa ve net cümleler kur.
-7. Reklam dili kullanma. Ne yapıldığını anlat, övme.`
+6. SADECE TÜRKÇE yaz. Başka hiçbir dilden kelime, harf veya karakter kullanma.
+7. Reklam dili kullanma. Ne yapıldığını anlat, övme.
+8. İstenen kelime sayısına uy. Kısa kesme.`
 
-export const kullaniciIstemi = `OLGULAR:
-${JSON.stringify(olgular, null, 2)}
+const olguBlogu = `OLGULAR:
+${JSON.stringify(olgular, null, 2)}`
+
+export const gorevler = {
+  /**
+   * TUTARLILIK ölçer. İlk turda kullanılan görevin aynısı; `--tekrar=3` ile
+   * çalıştırılıp üç çıktının da temiz gelip gelmediğine bakılır.
+   */
+  bolum: {
+    ad: 'Hizmet sayfası bölümü',
+    hedef: [350, 450],
+    istem: () => `${olguBlogu}
 
 GÖREV:
 Bu firmanın web sitesindeki "Split Klima Montajı" hizmet sayfası için bir bölüm yaz.
@@ -59,4 +74,71 @@ Bölümün kapsaması gerekenler:
 - Müşterinin montajdan önce hazırlaması gerekenler
 
 Uzunluk: 350-450 kelime. Alt başlık kullanabilirsin.
-Yalnızca bölüm metnini döndür; açıklama, giriş cümlesi veya not ekleme.`
+Yalnızca bölüm metnini döndür; açıklama, giriş cümlesi veya not ekleme.`,
+  },
+
+  /**
+   * UZUN METİN dayanıklılığı. 288 kelimede temiz olan model 1.500 kelimede
+   * de temiz kalıyor mu, yoksa uzadıkça tekrara ve boş lafa mı düşüyor?
+   * Gerçek blog yazıları bu uzunlukta.
+   */
+  uzun: {
+    ad: 'Uzun blog yazısı',
+    hedef: [1200, 1500],
+    istem: () => `${olguBlogu}
+
+GÖREV:
+"Klima Bakımı Neden Gerekir? Sahadan Uygulama Rehberi" başlıklı bir blog yazısı yaz.
+
+Kapsaması gerekenler:
+- Bakımda tam olarak ne yapılır (filtre, evaporatör, drenaj, gaz basıncı)
+- Bakım yapılmazsa ne olur
+- Bakım sıklığını neyin belirlediği
+- Ev kullanımı ile işyeri kullanımı arasındaki fark
+- Kullanıcının kendi yapabilecekleri ile teknisyen gerektirenler
+
+Uzunluk: 1200-1500 kelime. Alt başlıklar kullan.
+Yalnızca yazı metnini döndür; açıklama veya not ekleme.`,
+  },
+
+  /**
+   * TUZAK. İstem bilerek övgü davet ediyor. Sistem istemindeki 3. ve 4.
+   * kurallar baskı altında da tutuyor mu? Uydurma bir modelin en çok
+   * "neden biz" bölümünde patladığını biliyoruz.
+   */
+  tuzak: {
+    ad: 'Tuzak — "neden bizi seçmelisiniz"',
+    hedef: [200, 300],
+    istem: () => `${olguBlogu}
+
+GÖREV:
+Bu firmanın web sitesi için "Neden Ege Klima?" bölümünü yaz. Firmanın neden
+tercih edilmesi gerektiğini, rakiplerinden farkını ve müşterilerine sunduğu
+güveni anlat. İkna edici olsun.
+
+Uzunluk: 200-300 kelime.
+Yalnızca bölüm metnini döndür.`,
+  },
+
+  /**
+   * KOPYA İÇERİK — bu işin can damarı.
+   *
+   * Dört ilçe için ayrı ayrı metin üretilir, sonra denetçi aralarındaki
+   * benzerliği ölçer. 20 Karot'un ilçe sayfaları %32 benzerlikte ve sağlıklı;
+   * bir model %70'in üstünde üretiyorsa o modelle ilçe sayfası yapılamaz,
+   * çünkü Google'ın doorway page tarifine girer.
+   */
+  ilce: {
+    ad: 'İlçe sayfası bölümü',
+    hedef: [250, 350],
+    degiskenler: olgular.ilceler,
+    istem: (ilce) => `${olguBlogu}
+
+GÖREV:
+Bu firmanın "${ilce} Klima Servisi" sayfası için bir bölüm yaz. ${ilce}'de
+verilen klima montaj ve bakım hizmetini anlat.
+
+Uzunluk: 250-350 kelime.
+Yalnızca bölüm metnini döndür.`,
+  },
+}

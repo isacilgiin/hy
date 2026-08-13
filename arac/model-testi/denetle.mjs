@@ -163,9 +163,87 @@ console.log('='.repeat(70))
 for (const s of ozet.sort((a, b) => a.skor - b.skor)) {
   console.log(`  ${String(s.skor).padStart(3)}  ${s.model.padEnd(42)} ${s.kelime} kelime`)
 }
+/**
+ * KOPYA İÇERİK ÖLÇÜMÜ — `--gorev=ilce` çıktıları için.
+ *
+ * Aynı modelin farklı ilçeler için yazdığı metinler birbirine ne kadar
+ * benziyor? Bu, ilçe sayfası üretilip üretilemeyeceğini belirleyen tek soru.
+ *
+ * Ölçüm 5 kelimelik pencerelerle (shingle) yapılıyor; cümle sırası değişse de
+ * yakalıyor. Referans: 20karot.com.tr'nin elle yazılmış 20 ilçe sayfası
+ * ortalama %32 benziyor ve Google'da sorun yaşamıyor. Yakın kopya eşiği
+ * genelde %70-80 kabul edilir.
+ */
+const shingle = (metin, n = 5) => {
+  const kelimeler = metin.toLowerCase().replace(/[^\wçğıöşüâî\s]/g, ' ').split(/\s+/).filter(Boolean)
+  const kume = new Set()
+  for (let i = 0; i + n <= kelimeler.length; i++) kume.add(kelimeler.slice(i, i + n).join(' '))
+  return kume
+}
+
+const ilceDosyalari = dosyalar.filter((d) => d.includes('__ilce__'))
+if (ilceDosyalari.length > 1) {
+  // Model bazında grupla — farklı modellerin metinleri karşılaştırılmaz.
+  const gruplar = {}
+  for (const d of ilceDosyalari) {
+    const model = d.split('__')[0]
+    ;(gruplar[model] ??= []).push(d)
+  }
+
+  console.log('\n' + '='.repeat(70))
+  console.log('KOPYA ICERIK — ilce sayfalari birbirine ne kadar benziyor')
+  console.log('='.repeat(70))
+
+  for (const [model, grup] of Object.entries(gruplar)) {
+    if (grup.length < 2) continue
+    const kumeler = grup.map((d) => ({
+      ad: d.replace(`${model}__ilce__`, '').replace('.md', ''),
+      k: shingle(fs.readFileSync(path.join(ciktiKlasoru, d), 'utf8')),
+    }))
+
+    const skorlar = []
+    for (let a = 0; a < kumeler.length; a++) {
+      for (let b = a + 1; b < kumeler.length; b++) {
+        const kesisim = [...kumeler[a].k].filter((x) => kumeler[b].k.has(x)).length
+        const oran = (100 * kesisim) / Math.min(kumeler[a].k.size, kumeler[b].k.size) || 0
+        skorlar.push([oran, kumeler[a].ad, kumeler[b].ad])
+      }
+    }
+    skorlar.sort((x, y) => y[0] - x[0])
+    const ort = skorlar.reduce((s, x) => s + x[0], 0) / skorlar.length
+
+    const enYuksek = skorlar[0][0]
+
+    console.log(`\n${model}  —  ${grup.length} ilce, ${skorlar.length} cift`)
+    console.log(`  ortalama benzerlik: %${ort.toFixed(0)}`)
+    console.log(`  en yuksek        : %${enYuksek.toFixed(0)}  (${skorlar[0][1]} ↔ ${skorlar[0][2]})`)
+
+    // Hüküm ORTALAMAYA DEĞİL, en kötü çifte de bakmalı. Kendi testimde
+    // ortalama %31 çıkıp "saglikli" dedi ama iki sayfa %93 aynıydı; üçüncü
+    // farklı sayfa ortalamayı aşağı çekmişti. Google tek tek sayfalara bakar,
+    // ortalamaya değil — bir çift bile yakın kopyaysa o iki sayfa sorunludur.
+    const esikAsan = skorlar.filter(([o]) => o > 70)
+    let hukum
+    if (enYuksek > 70) {
+      hukum = `KULLANILAMAZ — ${esikAsan.length} cift %70 uzerinde, doorway page riski`
+    } else if (ort > 50 || enYuksek > 55) {
+      hukum = 'SINIRDA — istem cesitlendirilmeli'
+    } else {
+      hukum = 'SAGLIKLI'
+    }
+    console.log(`  hukum            : ${hukum}`)
+    console.log(`  referans         : 20karot elle yazilmis 20 ilce sayfasi = ortalama %32, en yuksek %33`)
+
+    if (esikAsan.length) {
+      console.log('  esigi asan ciftler:')
+      esikAsan.slice(0, 5).forEach(([o, a, b]) => console.log(`     ✗ %${o.toFixed(0)}  ${a} ↔ ${b}`))
+    }
+  }
+}
+
 console.log(`
 Skor makinenin olcebildigi kismi. Geri kalanini gozle bakacagiz:
   1. Turkce dogal mi, ceviri kokuyor mu?
   2. Somut bilgi mi, genel gecer laf mi?
-  3. Istenen yapiyi (montaj / yanlis montaj / hazirlik) tutturmus mu?
+  3. Istenen konularin hepsini islemis mi?
 `)
