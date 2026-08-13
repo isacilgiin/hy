@@ -34,15 +34,37 @@ NVIDIA_API_KEY=nvapi-...
 ## Çalıştırma
 
 ```bash
-node arac/model-testi/calistir.mjs   # modelleri çağırır, ciktilar/ altına yazar
-node arac/model-testi/denetle.mjs    # uydurma taraması + sıralama
+node arac/model-testi/calistir.mjs --liste     # kullanılabilir model kimlikleri
+node arac/model-testi/calistir.mjs             # listedeki modelleri sırayla dener
+node arac/model-testi/calistir.mjs <kimlik>    # tek model dener
+node arac/model-testi/denetle.mjs              # uydurma taraması + sıralama
 ```
 
-## Model kimlikleri
+## Model kimlikleri — tahmin etmeyin
 
-`calistir.mjs` içindeki `modeller` dizisini kendi listenizle değiştirin.
-Kimlikleri **tahmin etmeyin**: build.nvidia.com'da modelin sayfasını açıp kod
-örneğindeki `model:` değerini birebir kopyalayın. Yayıncı öneki değişebiliyor.
+`--liste` API'den gerçek listeyi çeker. Oradan kopyalayın. Uydurulan bir kimlik
+`404 page not found` döner; ilk koşuda tam olarak bu oldu.
+
+Listede embed / rerank / safety / vision / TTS modelleri de görünür — bu test
+için uygun değiller, metin üreten bir model seçin.
+
+## İlk koşuda öğrenilenler (2026-08-13)
+
+Beş modelin beşi de farklı sebepten düştü ve araç bunlara göre yeniden yazıldı:
+
+| Belirti | Sebep | Çözüm |
+|---|---|---|
+| `504` — 302 saniye sonra | Ağ geçidi akışsız uzun isteği kesiyor | `stream: true` |
+| `200` ama **boş metin** | Model cevabı `reasoning_content`'e yazmış | İki alan da okunuyor |
+| `503 worker limit (17/16)` | Ücretsiz uç dolu | Geri çekilmeli 3 deneme |
+| `404 page not found` | Model kimliği uydurulmuş | `--liste` |
+| Cevap yarıda kesiliyor | Düşünme bütçeyi yiyor | `max_tokens` 1500 → 6000 |
+
+Model düşünüp cevap yazmazsa araç bunu ayrıca söyler ve düşünce metnini
+`<model>.DUSUNCE.txt` olarak kaydeder — bütçenin nereye gittiği görülsün diye.
+
+**503 senin hatan değil.** Ücretsiz uçlar paylaşımlı; yoğun saatte dolabiliyor.
+Tekrar deneme geçmiyorsa bir süre sonra dene.
 
 ## Denetçi ne yapar, ne yapmaz
 
