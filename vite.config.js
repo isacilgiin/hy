@@ -280,6 +280,20 @@ ${gtagKimlikleri.map((id) => `    gtag('config','${id}');`).join('\n')}
     // gibi var olmayan bir adrese 301 verirsiniz. Özel olan önce gelir.
     ['Eski kök ilçe sayfası (uygulama ekli)', '^([a-z0-9-]+-karot)-uygulama/?$', '/hizmet-bolgeleri/$1/'],
     ['Eski kök ilçe sayfaları', '^([a-z0-9-]+-karot)/?$', '/hizmet-bolgeleri/$1/'],
+    // İlçe sayfalarıyla AYNI hikâye, hizmetler için: eski WordPress'te hizmet
+    // sayfaları da köke düşüyordu (/kimyasal-dubel/ gibi). Taşınmadan sonra
+    // hepsi 404'e düştü. 2026-08-13'te Google'ın dizininde /kimyasal-dubel
+    // hâlâ dururken canlıda 404 verdiği görüldü.
+    //
+    // Burada ilçelerdeki gibi desen kullanılamaz: hizmet slug'larının ortak bir
+    // eki yok. Serbest bir '^([a-z0-9-]+)/?$' kuralı ise /hakkimizda/, /blog/,
+    // /iletisim/ dahil kökteki HER sayfayı vururdu. O yüzden liste açık — ama
+    // elle değil, services.js'ten üretiliyor: hizmet eklenince kural da büyür.
+    [
+      'Eski kök hizmet sayfaları',
+      `^(${services.map((s) => s.slug).join('|')})/?$`,
+      '/hizmetler/$1/',
+    ],
     // WordPress taksonomi arşivleri
     ['service-category -> hizmet detayı', '^service-category/([a-z0-9-]+)/?$', '/hizmetler/$1/'],
     ['portfolio-category -> hizmet detayı', '^portfolio-category/([a-z0-9-]+)/?$', '/hizmetler/$1/'],
