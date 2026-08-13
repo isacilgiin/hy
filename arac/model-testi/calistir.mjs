@@ -160,10 +160,15 @@ async function modeliCalistir(anahtar, model, istem, saglayici, secenek) {
         return { kod: 404, hata: 'bu model hesabiniza acik degil (listede var ama erisim yok)' }
       }
       const cozum = hatayiCozumle(govde)
+      // Google bekleme süresini gövdeye koyuyor, Groq ise `retry-after`
+      // başlığına — standart olan ikincisi. Gövdede yoksa başlığa bakılır.
+      const baslikSaniye = Number(cevap.headers.get('retry-after'))
       return {
         kod: cevap.status,
         hata: cozum.mesaj + (cozum.kota ? `  [kota: ${cozum.kota}]` : ''),
-        bekleSaniye: cozum.bekleSaniye,
+        bekleSaniye:
+          cozum.bekleSaniye ??
+          (Number.isFinite(baslikSaniye) && baslikSaniye > 0 ? Math.ceil(baslikSaniye) : null),
         umutsuz: cozum.umutsuz,
         dusunmeYok: cozum.dusunmeYok,
       }

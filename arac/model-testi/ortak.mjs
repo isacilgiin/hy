@@ -39,6 +39,31 @@ export const saglayicilar = {
     varsayilanAralikMs: 1500,
     govdeSecenekleri: [{ ad: 'duz + 16000', ek: {}, tavan: 16000 }],
   },
+  /**
+   * GROQ — üçüncü sağlayıcı (2026-08-13'te eklendi).
+   *
+   * KOTAYI İSTEK SAYISINDAN DEĞİL TOKEN'DAN OKUYUN. Panelde gpt-oss-120b için
+   * "1K istek/gün" yazıyor ama asıl tavan 200K token/gün: 1.500 kelimelik
+   * Türkçe yazı ~2.500-3.000 token ettiğine göre günde ~60 yazı çıkar, bin
+   * değil. Dakikalık tavan da dar (8K token/dk) — uzun görevde dakikada ~2
+   * istek demek, o yüzden aralık geniş tutuldu.
+   *
+   * gpt-oss-120b ilk aday listesindeydi ("talimat takibi güçlü") ama NIM
+   * kotası bitince sıra gelmemişti. İki Gemini'nin de kaçırdığı uzun metin
+   * hedefini tutturup tutturmadığı ölçülmeye değer.
+   */
+  groq: {
+    ad: 'Groq',
+    taban: 'https://api.groq.com/openai/v1',
+    anahtarDegiskeni: 'GROQ_API_KEY',
+    varsayilanAralikMs: 8000,
+    govdeSecenekleri: [
+      { ad: "reasoning_effort:'low' + 8000", ek: { reasoning_effort: 'low' }, tavan: 8000, dusunmeDenetimi: true },
+      { ad: "reasoning_effort:'low' + 16000", ek: { reasoning_effort: 'low' }, tavan: 16000, dusunmeDenetimi: true },
+      { ad: 'duz + 8000', ek: {}, tavan: 8000 },
+      { ad: 'duz + 16000', ek: {}, tavan: 16000 },
+    ],
+  },
   google: {
     ad: 'Google AI Studio',
     taban: 'https://generativelanguage.googleapis.com/v1beta/openai',

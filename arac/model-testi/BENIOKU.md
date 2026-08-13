@@ -67,6 +67,25 @@ dakikalık akış dar: 1.500 kelimelik yazı ~3-4K token, yani dakikada ~4 yazı
 
 NIM'in ücretsiz kotası ~7-8 istekte doluyor; ölçüldü, üretim için yetmiyor.
 
+### Groq — istek sütununa değil token sütununa bakın
+
+| Model | İstek/gün | Token/gün | Gerçek kapasite |
+|---|---|---|---|
+| `openai/gpt-oss-120b` | 1.000 | **200K** | ~60 uzun yazı |
+| `llama-3.1-8b-instant` | 14.400 | **500K** | ~155 uzun yazı |
+| `gemini-3.1-flash-lite` | 500 | günlük tavan yok | **~500 uzun yazı** |
+
+1.500 kelimelik Türkçe yazı ~2.500-3.000 token eder. Groq'un "1.000 istek"
+başlığı cazip görünüyor ama 200K token bütçesi 60 yazıda bitiyor; kalan 940
+isteği kullanmanın yolu yok. Gemini'nin 500 isteği küçük duruyor ama günlük
+token tavanı olmadığı için hepsi kullanılabiliyor.
+
+Dakikalık tavan da dar: gpt-oss-120b 8K token/dk, yani uzun görevde dakikada
+~2 istek. Groq için varsayılan aralık bu yüzden 8 saniye.
+
+Groq bekleme süresini gövdede değil `retry-after` BAŞLIĞINDA veriyor
+(Google gövdede veriyor); araç ikisini de okuyor.
+
 Koşular arası bekleme `--aralik=<saniye>` ile ayarlanır (Google'da varsayılan
 5 sn). 429 gelirse sağlayıcının gövdede söylediği süre kadar beklenir; günlük
 kota bittiyse (`quotaValue: 0`) beklemeden geçilir — pencere o gün açılmayacak.
