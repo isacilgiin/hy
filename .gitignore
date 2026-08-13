@@ -7,6 +7,12 @@ node_modules/
 dist/
 yayin/
 
+# Künye de build çıktısıdır: her build yeniden üretiliyor ve içinde onu üreten
+# commit'in SHA'sı yazıyor. Git'te izlenirse her build'den sonra "değişmiş"
+# görünür ve pull'u bloklar — bir kez yaşandı, 2b3eed2 yüzünden.
+# Diskte durur, git'te durmaz.
+rapor/
+
 # editor
 .vscode/
 .idea/
