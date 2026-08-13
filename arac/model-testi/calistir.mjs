@@ -63,7 +63,15 @@ const modeller = [
   'nvidia/nemotron-3-ultra-550b-a55b',
 ]
 
-const ZAMAN_ASIMI_MS = 180_000
+/**
+ * ZAMAN AŞIMI — toplam süreye değil SESSİZLİĞE bakılıyor.
+ *
+ * İlk sürümde 180 saniyelik toplam sınır vardı ve nemotron-3-super-120b'yi
+ * tam metin akarken kesti (178 parça gelmişti). Yavaş model ile ölü uç aynı
+ * şey değil: veri geliyorsa beklenir, gelmiyorsa kesilir.
+ */
+const BOSTA_ASIMI_MS = 75_000 // hiç parça gelmezse bu kadar bekle
+const TOPLAM_TAVAN_MS = 900_000 // güvenlik tavanı: sonsuza kadar sürmesin
 const DENEME_SAYISI = 3
 
 function anahtariOku() {
@@ -100,8 +108,15 @@ async function modelleriListele(anahtar) {
  */
 async function modeliCalistir(anahtar, model) {
   const kontrol = new AbortController()
-  const sayac = setTimeout(() => kontrol.abort(), ZAMAN_ASIMI_MS)
   const basla = Date.now()
+  let sonVeri = Date.now()
+  let bostaKesildi = false
+  const izleyici = setInterval(() => {
+    if (Date.now() - sonVeri > BOSTA_ASIMI_MS || Date.now() - basla > TOPLAM_TAVAN_MS) {
+      bostaKesildi = Date.now() - sonVeri > BOSTA_ASIMI_MS
+      kontrol.abort()
+    }
+  }, 2000)
 
   try {
     const cevap = await fetch(`${TABAN}/chat/completions`, {
@@ -131,6 +146,14 @@ async function modeliCalistir(anahtar, model) {
 
     if (!cevap.ok) {
       const govde = await cevap.text()
+      // İki ayrı 404 var ve karıştırılmamalı:
+      //   "404 page not found"        → model kimliği yanlış
+      //   "Not found for account ..." → kimlik doğru, HESABA AÇIK DEĞİL
+      // İkincisinde model listede görünür ama ücretsiz katmana dahil değildir;
+      // kimliği düzeltmeye çalışmak boşuna.
+      if (cevap.status === 404 && govde.includes('for account')) {
+        return { kod: 404, hata: 'bu model hesabiniza acik degil (listede var ama erisim yok)' }
+      }
       return { kod: cevap.status, hata: govde.slice(0, 200).replace(/\s+/g, ' ') }
     }
 
@@ -143,6 +166,7 @@ async function modeliCalistir(anahtar, model) {
     for (;;) {
       const { done, value } = await okuyucu.read()
       if (done) break
+      sonVeri = Date.now()
       tampon += cozucu.decode(value, { stream: true })
       const satirlar = tampon.split('\n')
       tampon = satirlar.pop() ?? ''
@@ -171,11 +195,16 @@ async function modeliCalistir(anahtar, model) {
     }
   } catch (e) {
     return {
-      hata: e.name === 'AbortError' ? `zaman asimi (${ZAMAN_ASIMI_MS / 1000}s)` : e.message,
+      hata:
+        e.name === 'AbortError'
+          ? bostaKesildi
+            ? `sessizlik — ${BOSTA_ASIMI_MS / 1000}s boyunca hic veri gelmedi`
+            : `toplam tavan (${TOPLAM_TAVAN_MS / 1000}s) asildi`
+          : e.message,
       sure: ((Date.now() - basla) / 1000).toFixed(1),
     }
   } finally {
-    clearTimeout(sayac)
+    clearInterval(izleyici)
   }
 }
 
