@@ -67,6 +67,57 @@ const yabanciYaziSistemleri = [
   { ad: 'Arapça', re: /[؀-ۿ]/g },
 ]
 
+/**
+ * İNGİLİZCE SIZINTI — yukarıdaki yazı sistemi taraması bunu YAKALAYAMAZ,
+ * çünkü İngilizce de Latin alfabesi kullanıyor.
+ *
+ * Gemma 4 31B ilçe metinlerinin içine sistem istemimizin İngilizce çevirisini
+ * yazdı: "1. Use ONLY provided facts. 2. No numbers/dates/percentages..."
+ * Denetçi bunu "teknik olabilecek sayılar" kovasına atıp 0 puan verdi ve
+ * çıktı sıralamada temiz göründü.
+ *
+ * Yoğunluk üzerinden bakılıyor, tek kelime üzerinden değil: Türkçe teknik
+ * metinde "split", "VRF", "inverter" geçer ve bunlar hata değildir. Ama
+ * "the / and / of / not" gibi işlev kelimeleri Türkçe bir metinde kümelenmez.
+ */
+const ingilizceIsaretler =
+  /\b(the|and|of|for|with|that|this|these|are|not|you|your|use|only|provided|facts|numbers|claims|write|section|following|must|should|words|list)\b/gi
+
+function ingilizceSizinti(metin) {
+  const kelime = metin.trim().split(/\s+/).filter(Boolean).length
+  if (kelime < 40) return null
+  const adet = [...metin.matchAll(ingilizceIsaretler)].length
+  const yogunluk = (100 * adet) / kelime
+  // Yüzde 2 eşiği: Türkçe metinde birkaç İngilizce terim doğal, kümelenme değil.
+  if (yogunluk < 2) return null
+  const ilk = metin.match(ingilizceIsaretler) ? metin.search(ingilizceIsaretler) : 0
+  return {
+    adet,
+    yogunluk,
+    ornek: metin.slice(Math.max(0, ilk - 40), ilk + 60).replace(/\s+/g, ' '),
+  }
+}
+
+/**
+ * BOZULMA — model kelimeleri numaralandırmaya başlıyor.
+ *
+ * İki ayrı modelde görüldü:
+ *   Gemini:  "klima 22: kullanımına 23: yönelik 24:"
+ *   Gemma:   "(192) bakımı, (193) gaz (194) dolumu, (195) VRF"
+ * Metin gibi görünüyor, kelime sayısı da yüksek çıkıyor — ama cümle değil.
+ * Artan sayı dizisi aranıyor; normal metinde böyle bir şey olmaz.
+ */
+function bozulma(metin) {
+  const sayilar = [...metin.matchAll(/\((\d{1,4})\)|(?:^|\s)(\d{1,4}):/g)].map((m) =>
+    Number(m[1] ?? m[2])
+  )
+  if (sayilar.length < 15) return null
+  let artan = 0
+  for (let i = 1; i < sayilar.length; i++) if (sayilar[i] === sayilar[i - 1] + 1) artan++
+  if (artan < 10) return null
+  return { adet: sayilar.length, artan }
+}
+
 function dilKirliligi(metin) {
   const bulgular = []
   for (const { ad, re } of yabanciYaziSistemleri) {
@@ -75,6 +126,14 @@ function dilKirliligi(metin) {
     const ilk = eslesmeler[0].index
     const baglam = metin.slice(Math.max(0, ilk - 30), ilk + 30).replace(/\s+/g, ' ')
     bulgular.push({ ad, adet: eslesmeler.length, ornek: baglam })
+  }
+  const ing = ingilizceSizinti(metin)
+  if (ing) {
+    bulgular.push({
+      ad: `Ingilizce (yogunluk %${ing.yogunluk.toFixed(1)})`,
+      adet: ing.adet,
+      ornek: ing.ornek,
+    })
   }
   return bulgular
 }
@@ -173,21 +232,31 @@ for (const dosya of dosyalar.sort()) {
   const b = denetle(metin)
   const kirlilik = dilKirliligi(metin)
   const yazim = yazimDenetimi(metin)
+  const bozuk = bozulma(metin)
   // Dil kirliliği ağır basıyor: uydurma bir sayı düzeltilebilir, ama içine
   // Korece karışmış bir metin baştan yazılmalı. Yazım hatası en hafifi —
   // düzeltmesi kolay ama düzeltilmeden yayına gitmemeli.
+  // Bozulmuş çıktı en ağırı: metin gibi görünüyor ama cümle değil, yani o
+  // koşudan kullanılabilir hiçbir şey çıkmıyor.
   const skor =
     b.yuksekRisk.length * 3 +
     b.belge.length * 3 +
     b.ustunluk.length +
     kirlilik.length * 5 +
-    yazim.length
+    yazim.length +
+    (bozuk ? 10 : 0)
 
   console.log(`\n${dosya.replace('.md', '')}`)
   console.log(`  ${kelime} kelime  |  ihlal skoru: ${skor}`)
 
+  if (bozuk) {
+    console.log(
+      `  BOZUK CIKTI — model kelimeleri numaralandirmis ` +
+        `(${bozuk.adet} sayi, ${bozuk.artan} tanesi ardisik). Bu metin cumle degil.`
+    )
+  }
   if (kirlilik.length) {
-    console.log(`  DIL KIRLILIGI — metin Turkce degil, yabanci yazi sistemi karismis:`)
+    console.log(`  DIL KIRLILIGI — metin Turkce degil, yabanci dil/yazi sistemi karismis:`)
     kirlilik.forEach((k) => console.log(`     ✗ ${k.ad}: ${k.adet} karakter — …${k.ornek}…`))
   }
   if (yazim.length) {
@@ -270,19 +339,29 @@ if (ilceDosyalari.length > 1) {
      * ölçülen şey içerik değil, birbirinden bağımsız şekilde kesilmiş
      * kırıntılardı. Yarım metinler doğal olarak birbirine benzemez.
      *
-     * Hedefin yarısının altındaki çıktı varsa hüküm bastırılıyor.
+     * AYNISI TERS YÖNDE DE GEÇERLİ — ilk sürümde bu unutulmuştu.
+     *
+     * Gemma 4 31B, 250-350 kelime istenen göreve 1072 / 1221 / 1281 / 2226
+     * kelime yazdı; içine sistem istemini İngilizce çevirip koydu ve Sarayköy
+     * çıktısında kelimeleri numaralandırmaya başladı ("(192) bakımı, (193)
+     * gaz"). Araç bu yığına bakıp "%21, SAGLIKLI" dedi. Ölçtüğü şey ilçe
+     * sayfası değildi — o görevin cevabı ortada yoktu.
+     *
+     * Kısa metin de uzun metin de aynı sebeple geçersiz: karşılaştırılan
+     * şeyler istenen işin örneği değil. Hedefin yarısının altı ya da 1,5
+     * katının üstü varsa hüküm bastırılıyor.
      */
-    const hedefAlt = gorevler.ilce?.hedef?.[0] ?? 250
-    const kisaOlanlar = grup
-      .map((d) => ({
-        ad: d.replace(`${model}__ilce__`, '').replace('.md', ''),
-        kelime: fs
-          .readFileSync(path.join(ciktiKlasoru, d), 'utf8')
-          .trim()
-          .split(/\s+/)
-          .filter(Boolean).length,
-      }))
-      .filter((x) => x.kelime < hedefAlt / 2)
+    const [hedefAlt, hedefUst] = gorevler.ilce?.hedef ?? [250, 350]
+    const kelimeSayilari = grup.map((d) => ({
+      ad: d.replace(`${model}__ilce__`, '').replace('.md', ''),
+      kelime: fs
+        .readFileSync(path.join(ciktiKlasoru, d), 'utf8')
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean).length,
+    }))
+    const kisaOlanlar = kelimeSayilari.filter((x) => x.kelime < hedefAlt / 2)
+    const uzunOlanlar = kelimeSayilari.filter((x) => x.kelime > hedefUst * 1.5)
 
     const skorlar = []
     for (let a = 0; a < kumeler.length; a++) {
@@ -312,6 +391,11 @@ if (ilceDosyalari.length > 1) {
         `OLCULEMEDI — ${kisaOlanlar.length} cikti hedefin yarisindan kisa ` +
         `(${kisaOlanlar.map((x) => `${x.ad}:${x.kelime}`).join(', ')}). ` +
         `Yarim metinler dogal olarak benzemez; once uretim duzeltilmeli.`
+    } else if (uzunOlanlar.length) {
+      hukum =
+        `OLCULEMEDI — ${uzunOlanlar.length} cikti hedefin 1,5 katindan uzun ` +
+        `(${uzunOlanlar.map((x) => `${x.ad}:${x.kelime}`).join(', ')}), hedef ${hedefAlt}-${hedefUst}. ` +
+        `Model istenen isi yapmamis; benzerlik sayisi baska bir seyi olcer.`
     } else if (enYuksek > 70) {
       hukum = `KULLANILAMAZ — ${esikAsan.length} cift %70 uzerinde, doorway page riski`
     } else if (ort > 50 || enYuksek > 55) {
