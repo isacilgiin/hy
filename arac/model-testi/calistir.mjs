@@ -165,6 +165,7 @@ async function modeliCalistir(anahtar, model, istem, saglayici, secenek) {
         hata: cozum.mesaj + (cozum.kota ? `  [kota: ${cozum.kota}]` : ''),
         bekleSaniye: cozum.bekleSaniye,
         umutsuz: cozum.umutsuz,
+        dusunmeYok: cozum.dusunmeYok,
       }
     }
 
@@ -293,6 +294,13 @@ if (!kosular.length && !listeModu) {
  */
 let calisanSecenek = null
 
+/**
+ * Uç "bu model düşünmeyi desteklemiyor" dediyse (Gemma) düşünme denetimli
+ * gövdeleri denemenin anlamı yok — ve daha önemlisi, düz gövdeye düşmek bu
+ * modelde KIRPILMA RİSKİ TAŞIMIYOR. Düşünmeyen model bütçeyi yiyemez.
+ */
+let dusunmeDesteklenmiyor = false
+
 async function merdivenleCalistir(model, istem) {
   const hepsi = saglayici.govdeSecenekleri
   const merdiven = calisanSecenek
@@ -301,6 +309,8 @@ async function merdivenleCalistir(model, istem) {
 
   let sonSonuc
   for (const [sira, secenek] of merdiven.entries()) {
+    if (dusunmeDesteklenmiyor && secenek.dusunmeDenetimi) continue
+
     let sonuc
     for (let deneme = 1; deneme <= DENEME_SAYISI; deneme++) {
       sonuc = await modeliCalistir(anahtar, model, istem, saglayici, secenek)
@@ -327,6 +337,11 @@ async function merdivenleCalistir(model, istem) {
     if (sonuc.kod !== 400) {
       if (!sonuc.hata) calisanSecenek = secenek
       return sonSonuc
+    }
+    if (sonuc.dusunmeYok && !dusunmeDesteklenmiyor) {
+      dusunmeDesteklenmiyor = true
+      process.stdout.write('\n    bu model dusunmuyor — dusunme alanlari atlaniyor\n    ')
+      continue
     }
     if (sira < merdiven.length - 1) {
       process.stdout.write(`\n    400 reddedildi (${secenek.ad}) — sonraki govde deneniyor\n    `)
@@ -406,6 +421,7 @@ for (const model of denenecek) {
           govde: sonuc.secenek.ad,
           maxTokens: sonuc.secenek.tavan,
           dusunmeDenetimi: Boolean(sonuc.secenek.dusunmeDenetimi),
+          dusunmeDesteklenmiyor,
           kelime: sonuc.kelime,
           sure: sonuc.sure,
         },
@@ -421,7 +437,7 @@ for (const model of denenecek) {
     // Merdivenin ilk basamağı düşünmeyi bastırıyordu; ona inemediysek çıktı
     // kırpılmış olabilir ve sayı geçersizdir. Sessizce geçilmemeli.
     const ilk = saglayici.govdeSecenekleri[0]
-    if (ilk.dusunmeDenetimi && !sonuc.secenek.dusunmeDenetimi) {
+    if (ilk.dusunmeDenetimi && !sonuc.secenek.dusunmeDenetimi && !dusunmeDesteklenmiyor) {
       console.log(`    ⚠ dusunme denetimsiz govde ile alindi (${sonuc.secenek.ad}) — kirpilma riski`)
     }
     console.log('')

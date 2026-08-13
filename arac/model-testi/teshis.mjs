@@ -133,12 +133,16 @@ async function main() {
   ]
 
   const redler = []
+  // Uç "düşünme desteklenmiyor" diyorsa bu bir kusur değil: model hiç
+  // düşünmüyor demektir, yani düşünme bütçesinin metni kırpması da imkânsız.
+  let dusunmeyenModel = false
   for (const t of tekAlanlar) {
     const govde = t.mesajlarla
       ? { ...tabanGovde, messages: [{ role: 'system', content: sistemIstemi }, ...kisaMesaj] }
       : { ...tabanGovde, ...t.alan }
     const sonuc = await dene(govde)
     yaz(t.ad, sonuc)
+    if (sonuc.dusunmeYok) dusunmeyenModel = true
     // Kota hatasi alan hakkinda bir sey soylemez — suclu listesine yazilmaz.
     if (!sonuc.olur && sonuc.kod !== 429) redler.push(t.ad)
   }
@@ -179,6 +183,11 @@ async function main() {
   } else if (tam.kod === 429) {
     console.log('SONUC: olculemedi — kota testin ortasinda doldu.')
     console.log('Govde hakkinda bir sey soylenemez. Pencere acilinca tekrar calistirin.')
+  } else if (dusunmeyenModel) {
+    console.log('SONUC: bu model DUSUNMUYOR — reddedilen alanlarin hepsi dusunme ayari.')
+    console.log('Kusur degil, avantaj: dusunme butcesi olmayan model metni kirpamaz.')
+    console.log('Duz govde bu model icin DOGRU govde; calistir.mjs kendisi ona geciyor')
+    console.log('ve sahte "kirpilma riski" uyarisi basmiyor. Bir sey yapmaniza gerek yok.')
   } else if (redler.length) {
     if (redler.every((r) => r.includes('birlesimde'))) {
       console.log('SONUC: tek tek hepsi kabul edildi — sorun bu alanlarin BIRLIKTE')

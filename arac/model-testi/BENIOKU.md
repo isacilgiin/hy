@@ -71,6 +71,29 @@ Koşular arası bekleme `--aralik=<saniye>` ile ayarlanır (Google'da varsayıla
 5 sn). 429 gelirse sağlayıcının gövdede söylediği süre kadar beklenir; günlük
 kota bittiyse (`quotaValue: 0`) beklemeden geçilir — pencere o gün açılmayacak.
 
+## Hangi model neyi kabul ediyor (2026-08-13, `teshis.mjs` ile ölçüldü)
+
+| Model | `reasoning_effort` | Sonuç |
+|---|---|---|
+| `gemini-3.1-flash-lite` | `none` ✓ `low` ✓ | tam gövde kabul, düşünme kapatılabiliyor |
+| `gemini-3.1-flash-lite-preview` | `none` ✓ `low` ✓ | aynı |
+| `gemini-3.5-flash-lite` | `none` ✗ `low` ✓ | düşünme kapatılamıyor, kısılabiliyor |
+| `gemini-flash-lite-latest` | `none` ✗ `low` ✓ | 3.5 ile aynı davranıyor (takma ad olabilir) |
+| `gemma-4-26b-a4b-it` / `gemma-4-31b-it` | hiçbiri | **model düşünmüyor** — aşağıya bakın |
+| `gemini-2.5-flash-lite` | — | 404, yeni kullanıcılara kapalı |
+| `gemini-3.1-flash-lite-image` | — | görsel modeli, metin için değil |
+
+`--liste` çıktısında görünen her model kullanılabilir değil: bazıları kapatılmış,
+bazıları `generateContent` desteklemiyor. Kimliği listeden alın ama önce
+`teshis.mjs` ile yoklayın — model başına tek istek.
+
+**"Thinking budget is not supported for this model" bir arıza değil.** Gemma
+düşünmeyen bir model; düşünme bütçesi olmayan model metni yarıda da kesemez.
+Yani bizim `reasoning_effort` uğraşımızın sebebi onda baştan yok. Araç bunu
+tanıyor: düşünme alanlarını bir kez deneyip atlıyor ve o modelin çıktılarına
+sahte "kırpılma riski" uyarısı basmıyor (`KOSUL.json` içinde
+`dusunmeDesteklenmiyor: true` olarak görünür).
+
 ## `400 INVALID_ARGUMENT` alıyorsanız
 
 Sağlayıcı isteği reddetti ama hangi alanı beğenmediğini söylemiyor. İki

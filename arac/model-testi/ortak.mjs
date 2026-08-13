@@ -121,6 +121,14 @@ export function hatayiCozumle(ham) {
     kota: ihlal ? [ihlal.quotaId, ihlal.quotaMetric].filter(Boolean).join(' / ') || null : null,
     // Limit sıfırsa bu model bu anahtara açık değil — beklemek çözmez.
     umutsuz: ihlal ? String(ihlal.quotaValue ?? '') === '0' : false,
+    /**
+     * "Thinking budget/level is not supported for this model" — Gemma'nın
+     * verdiği cevap. Bu bir ARIZA DEĞİL, iyi haber: model hiç düşünmüyor,
+     * dolayısıyla bütçeyi yiyip metni kırpma sorunu onda yok. Düz gövde
+     * onun için doğru gövde. Ayırt edilmezse her Gemma çıktısına sahte
+     * "kırpılma riski" uyarısı basılır ve geçerli sayılara güvenilmez olur.
+     */
+    dusunmeYok: /thinking (budget|level) is not supported/i.test(String(hata.message ?? '')),
   }
 }
 
