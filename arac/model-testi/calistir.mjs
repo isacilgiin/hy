@@ -39,7 +39,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { sistemIstemi, gorevler } from './gorev.js'
-import { govdeKur, saglayiciyiSec } from './ortak.mjs'
+import { govdeKur, saglayiciyiSec, hatayiCozumle } from './ortak.mjs'
 
 const buradan = path.dirname(fileURLToPath(import.meta.url))
 const ciktiKlasoru = path.join(buradan, 'ciktilar')
@@ -97,8 +97,11 @@ async function modelleriListele(anahtar, saglayici) {
     headers: { Authorization: `Bearer ${anahtar}` },
   })
   if (!cevap.ok) {
+    // process.exit YOK: Windows'ta acik baglanti varken zorla cikmak libuv
+    // cokmesine yol aciyor (UV_HANDLE_CLOSING). Cikis kodu boyle veriliyor.
     console.error(`Liste alinamadi: HTTP ${cevap.status}`)
-    process.exit(1)
+    process.exitCode = 1
+    return
   }
   const veri = await cevap.json()
   const kimlikler = (veri.data ?? []).map((m) => m.id).sort()
@@ -156,7 +159,13 @@ async function modeliCalistir(anahtar, model, istem, saglayici, secenek) {
       if (cevap.status === 404 && govde.includes('for account')) {
         return { kod: 404, hata: 'bu model hesabiniza acik degil (listede var ama erisim yok)' }
       }
-      return { kod: cevap.status, hata: govde.slice(0, 200).replace(/\s+/g, ' ') }
+      const cozum = hatayiCozumle(govde)
+      return {
+        kod: cevap.status,
+        hata: cozum.mesaj + (cozum.kota ? `  [kota: ${cozum.kota}]` : ''),
+        bekleSaniye: cozum.bekleSaniye,
+        umutsuz: cozum.umutsuz,
+      }
     }
 
     let metin = ''
@@ -214,6 +223,9 @@ async function modeliCalistir(anahtar, model, istem, saglayici, secenek) {
 const argumanlar = process.argv.slice(2)
 
 const { saglayici, anahtar, saglayiciAdi } = saglayiciyiSec(argumanlar)
+
+const aralikArg = Number(argumanlar.find((a) => a.startsWith('--aralik='))?.split('=')[1])
+const ARALIK_MS = Number.isFinite(aralikArg) && aralikArg >= 0 ? aralikArg * 1000 : saglayici.varsayilanAralikMs
 
 /**
  * `--liste` sonrası `process.exit(0)` vardı ve Windows'ta libuv çökmesine yol
@@ -293,11 +305,20 @@ async function merdivenleCalistir(model, istem) {
     for (let deneme = 1; deneme <= DENEME_SAYISI; deneme++) {
       sonuc = await modeliCalistir(anahtar, model, istem, saglayici, secenek)
       if (sonuc.kod !== 503 && sonuc.kod !== 429) break
-      // 429 kota, 503 kapasite. Kota daha uzun sürüyor: 15/30/45 saniye
-      // ilçe testinde üç koşuyu birden kaybettirdi.
-      const bekle = sonuc.kod === 429 ? [60, 150, 300][deneme - 1] : deneme * 15
+
+      // Günlük kota bittiyse limit "0" gelir. Beklemek pencereyi açmaz;
+      // sekiz dakika bekleyip yine 429 almanın anlamı yok.
+      if (sonuc.umutsuz) {
+        process.stdout.write('\n    kota bu model icin tukendi — beklemek cozmez, geciliyor')
+        break
+      }
+
+      // 429 kota, 503 kapasite. Sağlayıcı ne kadar bekleneceğini söylüyorsa
+      // ona uyulur; uydurduğumuz 60/150/300 saniyeden doğrusu bu.
+      const bekle = sonuc.bekleSaniye ?? (sonuc.kod === 429 ? [60, 150, 300][deneme - 1] : deneme * 15)
       process.stdout.write(
-        `\n    ${sonuc.kod === 429 ? 'kota' : 'uc dolu'} (${sonuc.kod}), ${bekle}s bekleniyor... `
+        `\n    ${sonuc.kod === 429 ? 'kota' : 'uc dolu'} (${sonuc.kod}), ${bekle}s bekleniyor` +
+          `${sonuc.bekleSaniye ? ' (saglayici soyledi)' : ''}... `
       )
       await new Promise((r) => setTimeout(r, bekle * 1000))
     }
@@ -314,9 +335,11 @@ async function merdivenleCalistir(model, istem) {
   return sonSonuc
 }
 
-fs.mkdirSync(ciktiKlasoru, { recursive: true })
-console.log(`\ngorev: ${gorev.ad}  (hedef ${gorev.hedef[0]}-${gorev.hedef[1]} kelime)`)
-console.log(`${denenecek.length} model x ${kosular.length} kosu (nokta = gelen metin)\n`)
+if (!listeModu) {
+  fs.mkdirSync(ciktiKlasoru, { recursive: true })
+  console.log(`\ngorev: ${gorev.ad}  (hedef ${gorev.hedef[0]}-${gorev.hedef[1]} kelime)`)
+  console.log(`${denenecek.length} model x ${kosular.length} kosu (nokta = gelen metin)\n`)
+}
 
 for (const model of denenecek) {
   for (const kosu of kosular) {
@@ -402,9 +425,12 @@ for (const model of denenecek) {
       console.log(`    ⚠ dusunme denetimsiz govde ile alindi (${sonuc.secenek.ad}) — kirpilma riski`)
     }
     console.log('')
-    await new Promise((r) => setTimeout(r, 1500))
+    // Dakikalık istek sınırına takılmamak için koşular arası bekleme.
+    await new Promise((r) => setTimeout(r, ARALIK_MS))
   }
 }
 
-console.log(`Ciktilar: ${path.relative(process.cwd(), ciktiKlasoru)}/`)
-console.log('Simdi: node arac/model-testi/denetle.mjs\n')
+if (!listeModu) {
+  console.log(`Ciktilar: ${path.relative(process.cwd(), ciktiKlasoru)}/`)
+  console.log('Simdi: node arac/model-testi/denetle.mjs\n')
+}

@@ -43,6 +43,34 @@ node arac/model-testi/teshis.mjs <kimlik>      # 400 alıyorsanız: hangi alan r
 
 Google için `--saglayici=google` ekleyin; anahtar `GOOGLE_API_KEY` olur.
 
+## Kota — ölçülen gerçek rakamlar (2026-08-13)
+
+Google AI Studio panelinden okundu. **Kota model başına işliyor** ve aradaki
+fark on kata kadar çıkıyor; model seçimi bir kalite kararı olduğu kadar bir
+kota kararı:
+
+| Model | RPM | RPD (günlük) | Üretim için |
+|---|---|---|---|
+| Gemini 3.6 / 3.5 / 3 / 2.5 Flash | 5 | **20** | kullanılamaz |
+| Gemini 2.5 Flash Lite | 10 | 20 | kullanılamaz |
+| **Gemini 3.5 / 3.1 Flash Lite** | 15 | **500** | 1.200 sayfa ≈ 3 gün |
+| **Gemma 4 26B / 31B** | 30 | **14.400** | tek günde biter (TPM 16K sınırlar) |
+| Gemini 3.1 Pro, 2.5 Pro | 0 | 0 | ücretsiz katmanda yok |
+
+Dolaşımdaki "günlük 1.500 ücretsiz istek" bilgisi metin üretimi için **yanlış**.
+Panelde 1.5K yazan tek satır *search grounding*; üretim modelleri yukarıdaki
+gibi. Flash'lar günde 20 istekle sınırlı — dört görevlik test bile (9 istek)
+iki koşuda kotayı bitiriyor.
+
+Gemma'nın TPM'i (dakikada 16K token) diğerlerinin 1/15'i. Günlük sayı bol ama
+dakikalık akış dar: 1.500 kelimelik yazı ~3-4K token, yani dakikada ~4 yazı.
+
+NIM'in ücretsiz kotası ~7-8 istekte doluyor; ölçüldü, üretim için yetmiyor.
+
+Koşular arası bekleme `--aralik=<saniye>` ile ayarlanır (Google'da varsayılan
+5 sn). 429 gelirse sağlayıcının gövdede söylediği süre kadar beklenir; günlük
+kota bittiyse (`quotaValue: 0`) beklemeden geçilir — pencere o gün açılmayacak.
+
 ## `400 INVALID_ARGUMENT` alıyorsanız
 
 Sağlayıcı isteği reddetti ama hangi alanı beğenmediğini söylemiyor. İki

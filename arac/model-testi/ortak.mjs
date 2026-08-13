@@ -36,6 +36,7 @@ export const saglayicilar = {
     ad: 'NVIDIA NIM',
     taban: 'https://integrate.api.nvidia.com/v1',
     anahtarDegiskeni: 'NVIDIA_API_KEY',
+    varsayilanAralikMs: 1500,
     govdeSecenekleri: [{ ad: 'duz + 16000', ek: {}, tavan: 16000 }],
   },
   google: {
@@ -46,6 +47,14 @@ export const saglayicilar = {
     // OpenAI uyumlu uç öneksiz istiyor. Listeden kopyalayıp yapıştıran
     // kişinin bunu bilmesi gerekmesin diye burada kırpılıyor.
     kimligiDuzelt: (m) => m.replace(/^models\//, ''),
+    /**
+     * Ücretsiz katmanda dakikalık istek sınırı (RPM) küçük — Flash'larda 5,
+     * Lite'larda 15, Gemma'da 30. Arka arkaya istek atmak 429 doğuruyor.
+     * 5 saniye 12 RPM eder; Lite ve Gemma için rahat, Flash için sınırda.
+     * Aşılırsa zaten sağlayıcının söylediği süre kadar beklenip tekrar denenir.
+     * `--aralik=<saniye>` ile değiştirilebilir.
+     */
+    varsayilanAralikMs: 5000,
     govdeSecenekleri: [
       { ad: "reasoning_effort:'none' + 16000", ek: dusunmeKapali, tavan: 16000, dusunmeDenetimi: true },
       { ad: 'thinking_budget:0 + 16000', ek: dusunmeBudcesiSifir, tavan: 16000, dusunmeDenetimi: true },
@@ -71,6 +80,47 @@ export function govdeKur({ model, saglayici, secenek, mesajlar, akis = true }) {
     max_tokens: secenek.tavan,
     stream: akis,
     ...(secenek.ek ?? {}),
+  }
+}
+
+/**
+ * HATA GÖVDESİNİ ÇÖZÜMLE.
+ *
+ * Google hata gövdesine işimize yarayan iki şey koyuyor ve ikisi de ham metni
+ * kırpıp basınca kayboluyordu:
+ *
+ *  · RetryInfo.retryDelay — "34s". Sağlayıcı ne kadar bekleneceğini kendisi
+ *    söylüyor; bizim uydurduğumuz 60/150/300 saniyeden iyisi bu.
+ *  · QuotaFailure.violations[].quotaValue — limit "0" ise o model o anahtara
+ *    HİÇ açık değil demektir. Beklemek bir şey değiştirmez; tekrar denemek
+ *    sekiz dakikayı boşa harcar. Bu durumda hemen vazgeçilir.
+ *
+ * Gövde bazen dizi `[{error}]`, bazen nesne `{error}` geliyor; ikisi de okunur.
+ */
+export function hatayiCozumle(ham) {
+  const duz = { mesaj: String(ham).replace(/\s+/g, ' ').slice(0, 200) }
+  let veri
+  try {
+    veri = JSON.parse(ham)
+  } catch {
+    return duz
+  }
+  const hata = Array.isArray(veri) ? veri[0]?.error : veri?.error
+  if (!hata) return duz
+
+  const detaylar = Array.isArray(hata.details) ? hata.details : []
+  const tur = (d) => String(d?.['@type'] ?? '')
+  const gecikme = detaylar.find((d) => tur(d).includes('RetryInfo'))?.retryDelay
+  const ihlal = detaylar.find((d) => tur(d).includes('QuotaFailure'))?.violations?.[0]
+
+  const saniye = gecikme ? Number(String(gecikme).replace(/s$/, '')) : null
+
+  return {
+    mesaj: String(hata.message ?? '').replace(/\s+/g, ' ').slice(0, 200) || duz.mesaj,
+    bekleSaniye: Number.isFinite(saniye) && saniye > 0 ? Math.ceil(saniye) : null,
+    kota: ihlal ? [ihlal.quotaId, ihlal.quotaMetric].filter(Boolean).join(' / ') || null : null,
+    // Limit sıfırsa bu model bu anahtara açık değil — beklemek çözmez.
+    umutsuz: ihlal ? String(ihlal.quotaValue ?? '') === '0' : false,
   }
 }
 
