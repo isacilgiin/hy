@@ -96,7 +96,12 @@ export default function HeroSection() {
 
             {/* Okunabilirlik katmanı — metnin bulunduğu sol tarafta koyu, sağda
                 fotoğraf görünsün diye açık. Metin `text-white` üzerinde en az
-                7:1 kontrast kalacak şekilde ayarlandı. */}
+                7:1 kontrast kalacak şekilde ayarlandı.
+
+                DİKKAT: Aşağıdaki üç örtü, ana sayfanın statik hero ön
+                boyamasında birebir kopyalanmıştır (vite.config.js >
+                heroOnizleme). Birini değiştirirsen oradakini de değiştir;
+                yoksa React devraldığı anda ekran kararır/açılır. */}
             <div className="absolute inset-0 bg-gradient-to-r from-dark/95 via-dark/78 to-dark/30" />
             <div className="absolute inset-0 bg-gradient-to-t from-dark/85 via-transparent to-dark/45" />
             {/* Bordo yıkama — paletin bordo tonu fotoğrafın üzerinde de görünsün */}

@@ -36,11 +36,48 @@ function seoFromConfig() {
    * farklı olursa tarayıcı iki ayrı görsel indirir.
    */
   const ilkSlayt = heroSlides[0]
+  const heroSrcset = ilkSlayt
+    ? `${ilkSlayt.image.replace('.webp', '-800.webp')} 800w, ${ilkSlayt.image} 1600w`
+    : ''
   const heroPreload = ilkSlayt
-    ? `<link rel="preload" as="image" href="${ilkSlayt.image}" imagesrcset="${ilkSlayt.image.replace(
-        '.webp',
-        '-800.webp'
-      )} 800w, ${ilkSlayt.image} 1600w" imagesizes="100vw" fetchpriority="high" />`
+    ? `<link rel="preload" as="image" href="${ilkSlayt.image}" imagesrcset="${heroSrcset}" imagesizes="100vw" fetchpriority="high" />`
+    : ''
+
+  /**
+   * HERO ÖN BOYAMASI — ana sayfanın LCP'sini JavaScript'ten kopartır.
+   *
+   * Sorun: sayfa istemcide çiziliyor. Ön yükleme sayesinde hero görseli ağdan
+   * 52 ms'de iniyor ama ekrana basılması için önce vendor (220 KB) + Swiper
+   * (109 KB) ayrıştırılıp çalıştırılmak zorundaydı. Ölçüm (2026-08-13):
+   * LCP 3,63 sn'nin yalnızca 94 ms'i ağ, gerisi render bekleyişi.
+   *
+   * Çözüm: aynı görseli #root içine statik olarak koymak. Tarayıcı HTML'i
+   * ayrıştırırken boyar; React açıldığında createRoot #root'un içini temizleyip
+   * gerçek hero'yu yerine koyar. Görsel adresi birebir aynı olduğu için ikinci
+   * indirme olmaz ve değişim gözle görülmez.
+   *
+   * DİKKAT — src/srcset/sizes üçlüsü HEM yukarıdaki ön yükleme HEM de
+   * HeroSection.jsx'teki <img> ile AYNI olmak zorunda. Sapma olursa tarayıcı
+   * görseli iki kez indirir.
+   *
+   * Perde katmanları HeroSection.jsx'teki üç örtüyle aynı sırada ve aynı
+   * değerlerde; sapma olursa React devraldığı anda ekranda kararma/açılma
+   * şeklinde göz kırpma olur. `bg-dark` = #14100F, `accent` = #6E1B2E.
+   *
+   * writeBundle diğer rotalarda <!--ho-->…<!--/ho--> arasını siliyor: o
+   * sayfalarda bu görsel hiç kullanılmıyor.
+   */
+  const heroOnizleme = ilkSlayt
+    ? `<!--ho--><style>` +
+      `.hero-on{position:relative;min-height:100vh;min-height:100svh;background:#14100F;overflow:hidden}` +
+      `.hero-on img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}` +
+      `.hero-on::after{content:"";position:absolute;inset:0;background:` +
+      `radial-gradient(75% 65% at 88% 15%,rgba(110,27,46,.42) 0%,rgba(110,27,46,.14) 45%,transparent 72%),` +
+      `linear-gradient(to top,rgba(20,16,15,.85),transparent 50%,rgba(20,16,15,.45)),` +
+      `linear-gradient(to right,rgba(20,16,15,.95),rgba(20,16,15,.78) 50%,rgba(20,16,15,.3))}` +
+      `</style><div class="hero-on"><img src="${ilkSlayt.image}" srcset="${heroSrcset}" sizes="100vw" ` +
+      `alt="${ilkSlayt.imageAlt.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;')}" ` +
+      `width="1600" height="900" fetchpriority="high" decoding="async" /></div><!--/ho-->`
     : ''
 
   // --- JSON-LD (Schema.org LocalBusiness) ---
@@ -185,6 +222,9 @@ ${gtagKimlikleri.map((id) => `    gtag('config','${id}');`).join('\n')}
     // HeroSection'daki <img> ile birebir aynı olsun; en ufak sapmada tarayıcı
     // görseli İKİ KEZ indirir ve ön yükleme fayda yerine zarar verir.
     SITE_HERO_PRELOAD: heroPreload,
+    // Hero ön boyaması — gerekçesi üretildiği yerde yazılı. Bu da yalnızca
+    // ana sayfaya ait; writeBundle diğer rotalarda siliyor.
+    SITE_HERO_ONIZLEME: heroOnizleme,
   }
 
   // Sondaki eğik çizgi (trailing slash) BİLİNÇLİ: eski WordPress sitesinde
@@ -703,9 +743,11 @@ ${paragraflar}
         if (rota.path === '/') continue // ana sayfa zaten dogru
 
         let html = anaHtml
-          // Hero ön yüklemesi yalnızca ana sayfaya ait. Diğer rotalarda o
-          // görsel hiç kullanılmadığı için kalırsa boşuna ~37 KB indirilir.
+          // Hero ön yüklemesi ve ön boyaması yalnızca ana sayfaya ait. Diğer
+          // rotalarda o görsel hiç kullanılmadığı için kalırsa boşuna ~37 KB
+          // indirilir, üstelik yanlış bir hero bir an ekranda görünür.
           .replace(/\s*<link rel="preload" as="image"[^>]*>/, '')
+          .replace(/<!--ho-->[\s\S]*?<!--\/ho-->/, '')
           .replace(/<title>[\s\S]*?<\/title>/, `<title>${kacis(rota.title)}</title>`)
           .replace(
             /<meta name="description" content="[^"]*" \/>/,
@@ -788,6 +830,7 @@ ${paragraflar}
        */
       const html404 = anaHtml
         .replace(/\s*<link rel="preload" as="image"[^>]*>/, '')
+        .replace(/<!--ho-->[\s\S]*?<!--\/ho-->/, '')
         .replace(/<title>[\s\S]*?<\/title>/, '<title>Sayfa Bulunamadı — 20 Karot</title>')
         .replace(
           /<meta name="description" content="[^"]*" \/>/,

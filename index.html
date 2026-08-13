@@ -81,7 +81,9 @@
   %SITE_ANALYTICS%
 </head>
 <body>
-  <div id="root"></div>
+  <!-- İçindeki hero ön boyaması YALNIZCA ana sayfada bulunur ve React açılınca
+       createRoot tarafından temizlenir. Gerekçesi vite.config.js > heroOnizleme. -->
+  <div id="root">%SITE_HERO_ONIZLEME%</div>
 
   <!-- JavaScript çalışmadığında görünen içerik (arama motorları ve erişilebilirlik için) -->
   <noscript>
