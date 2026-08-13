@@ -1,0 +1,4 @@
+# Model çıktıları yerelde kalır — her koşuda değişiyorlar ve depoda işleri yok.
+# Klasörün kendisi git'te dursun diye bu dosya izleniyor.
+*
+!.gitignore
