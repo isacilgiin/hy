@@ -58,6 +58,10 @@ const saglayicilar = {
     ad: 'Google AI Studio',
     taban: 'https://generativelanguage.googleapis.com/v1beta/openai',
     anahtarDegiskeni: 'GOOGLE_API_KEY',
+    // Liste ucu kimlikleri "models/gemini-3.6-flash" diye döndürüyor ama
+    // OpenAI uyumlu uç öneksiz istiyor. Listeden kopyalayıp yapıştıran
+    // kişinin bunu bilmesi gerekmesin diye burada kırpılıyor.
+    kimligiDuzelt: (m) => m.replace(/^models\//, ''),
   },
 }
 
@@ -157,7 +161,7 @@ async function modeliCalistir(anahtar, model, istem, saglayici) {
         Accept: 'text/event-stream',
       },
       body: JSON.stringify({
-        model,
+        model: saglayici.kimligiDuzelt ? saglayici.kimligiDuzelt(model) : model,
         messages: [
           { role: 'system', content: sistemIstemi },
           { role: 'user', content: istem },
@@ -257,9 +261,18 @@ if (!anahtar) {
   process.exit(1)
 }
 
-if (argumanlar.includes('--liste')) {
+/**
+ * `--liste` sonrası `process.exit(0)` vardı ve Windows'ta libuv çökmesine yol
+ * açıyordu:
+ *   Assertion failed: !(handle->flags & UV_HANDLE_CLOSING), src\win\async.c
+ * Sebebi, HTTP bağlantısı henüz kapanmadan süreci zorla sonlandırmak. Çıktı
+ * zaten basılmış oluyordu, yani zararsız görünüyor — ama hata mesajı gerçek
+ * bir sorun sanılıyor. Artık zorla çıkılmıyor; liste basılıp akış doğal
+ * olarak sonlanıyor.
+ */
+const listeModu = argumanlar.includes('--liste')
+if (listeModu) {
   await modelleriListele(anahtar, saglayici)
-  process.exit(0)
 }
 
 const gorevAdi = (argumanlar.find((a) => a.startsWith('--gorev='))?.split('=')[1] ?? 'bolum').trim()
@@ -267,7 +280,7 @@ const tekrar = Number(argumanlar.find((a) => a.startsWith('--tekrar='))?.split('
 const modelArg = argumanlar.find((a) => !a.startsWith('--'))
 
 const gorev = gorevler[gorevAdi]
-if (!gorev) {
+if (!gorev && !listeModu) {
   console.error(`\nBilinmeyen gorev: ${gorevAdi}`)
   console.error(`Secenekler: ${Object.keys(gorevler).join(', ')}\n`)
   process.exit(1)
@@ -283,7 +296,9 @@ const denenecek = modelArg ? [modelArg] : modeller
 // iyi. Tamamlananlar zaten atlanıyor.
 const degiskenFiltre = argumanlar.find((a) => a.startsWith('--degisken='))?.split('=')[1]
 
-const kosular = gorev.degiskenler
+const kosular = listeModu
+  ? []
+  : gorev.degiskenler
   ? gorev.degiskenler
       .filter((d) => !degiskenFiltre || d.toLowerCase() === degiskenFiltre.toLowerCase())
       .map((d) => ({ etiket: d, istem: gorev.istem(d) }))
@@ -292,7 +307,7 @@ const kosular = gorev.degiskenler
       istem: gorev.istem(),
     }))
 
-if (!kosular.length) {
+if (!kosular.length && !listeModu) {
   console.error(`\n"${degiskenFiltre}" bu gorevin degiskenleri arasinda yok.`)
   console.error(`Secenekler: ${(gorev.degiskenler ?? []).join(', ')}\n`)
   process.exit(1)
