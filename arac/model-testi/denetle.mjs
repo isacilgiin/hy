@@ -85,8 +85,17 @@ const ozet = []
 
 for (const dosya of dosyalar.sort()) {
   const metin = fs.readFileSync(path.join(ciktiKlasoru, dosya), 'utf8')
-  const b = denetle(metin)
   const kelime = metin.trim().split(/\s+/).filter(Boolean).length
+
+  // Boş çıktı "temiz" DEĞİLDİR — başarısız koşudur. Sıfır skorla sıralamaya
+  // girerse gerçek kazananların yanına oturuyor ve tabloyu yanıltıyor.
+  if (!kelime) {
+    console.log(`\n${dosya.replace('.md', '')}`)
+    console.log('  BOS — kosu basarisiz, siralamaya alinmadi')
+    continue
+  }
+
+  const b = denetle(metin)
   const skor = b.yuksekRisk.length * 3 + b.belge.length * 3 + b.ustunluk.length
 
   console.log(`\n${dosya.replace('.md', '')}`)
