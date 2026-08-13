@@ -79,6 +79,49 @@ function dilKirliligi(metin) {
   return bulgular
 }
 
+/**
+ * TÜRKÇE YAZIM HATALARI — dil kirliliğinden farklı, daha sinsi.
+ *
+ * glm-5.2 temiz görünen metinlerde şunları yazdı:
+ *   "süpriz maliyetlerle"      → sürpriz
+ *   "Kesif ücretsizdir"        → Keşif   (ş kaybolmuş)
+ *   "Merkezefendi'nde"         → Merkezefendi'de   (yanlış ek)
+ *
+ * Hiçbiri uydurma değil, hiçbiri yabancı karakter değil — denetçi üçünü de
+ * 0 puanla geçirdi. Ama müşterinin sayfasında duran yazım hatasıdır.
+ *
+ * Liste dar tutuluyor: yalnızca KESİN hatalar. "Şüpheli olabilir" diye
+ * eklenen her kalıp yanlış alarm üretir ve denetçiye güveni azaltır.
+ */
+const yazimHatalari = [
+  [/\bsüpriz/gi, 'sürpriz'],
+  [/\byalnış/gi, 'yanlış'],
+  [/\byanlız/gi, 'yalnız'],
+  [/\bherkez\b/gi, 'herkes'],
+  [/\bhiç bir\b/gi, 'hiçbir'],
+  [/\bbir kaç\b/gi, 'birkaç'],
+  [/\bher hangi\b/gi, 'herhangi'],
+  // "kesif" aslında Türkçe bir kelime (yoğun, sık) ama hizmet firması
+  // metninde geçtiğinde neredeyse her zaman "keşif"in ş'siz yazılmışıdır.
+  // Yanlış alarm ihtimali var, kabul ediyoruz — kaçırmak daha kötü.
+  [/\bkesif\b/gi, 'keşif'],
+  [/\bgorus/gi, 'görüş'],
+  // Özel isim + ek: "Merkezefendi'nde" gibi araya giren yanlış kaynaştırma.
+  // Ünlüyle biten isimlerde bulunma eki "'de/'da" olur, "'nde/'nda" değil.
+  [/[A-ZÇĞİÖŞÜ][a-zçğıöşü]+[aeıioöuü]'n(de|da|den|dan)\b/g, "'de / 'da (araya n girmemeli)"],
+]
+
+function yazimDenetimi(metin) {
+  const bulgular = []
+  for (const [re, dogrusu] of yazimHatalari) {
+    const eslesmeler = [...metin.matchAll(re)]
+    if (eslesmeler.length) {
+      bulgular.push({ yanlis: [...new Set(eslesmeler.map((e) => e[0]))].join(', '), dogrusu })
+    }
+  }
+  return bulgular
+}
+
 function denetle(metin) {
   const bulgular = { yuksekRisk: [], sayilar: [], ustunluk: [], belge: [] }
   const kucuk = metin.toLowerCase()
@@ -129,10 +172,16 @@ for (const dosya of dosyalar.sort()) {
 
   const b = denetle(metin)
   const kirlilik = dilKirliligi(metin)
+  const yazim = yazimDenetimi(metin)
   // Dil kirliliği ağır basıyor: uydurma bir sayı düzeltilebilir, ama içine
-  // Korece karışmış bir metin baştan yazılmalı.
+  // Korece karışmış bir metin baştan yazılmalı. Yazım hatası en hafifi —
+  // düzeltmesi kolay ama düzeltilmeden yayına gitmemeli.
   const skor =
-    b.yuksekRisk.length * 3 + b.belge.length * 3 + b.ustunluk.length + kirlilik.length * 5
+    b.yuksekRisk.length * 3 +
+    b.belge.length * 3 +
+    b.ustunluk.length +
+    kirlilik.length * 5 +
+    yazim.length
 
   console.log(`\n${dosya.replace('.md', '')}`)
   console.log(`  ${kelime} kelime  |  ihlal skoru: ${skor}`)
@@ -140,6 +189,10 @@ for (const dosya of dosyalar.sort()) {
   if (kirlilik.length) {
     console.log(`  DIL KIRLILIGI — metin Turkce degil, yabanci yazi sistemi karismis:`)
     kirlilik.forEach((k) => console.log(`     ✗ ${k.ad}: ${k.adet} karakter — …${k.ornek}…`))
+  }
+  if (yazim.length) {
+    console.log(`  YAZIM HATASI (${yazim.length}):`)
+    yazim.forEach((y) => console.log(`     ✗ "${y.yanlis}" → ${y.dogrusu}`))
   }
 
   if (b.yuksekRisk.length) {
