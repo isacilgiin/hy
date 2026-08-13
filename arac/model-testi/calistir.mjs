@@ -62,6 +62,18 @@ const saglayicilar = {
     // OpenAI uyumlu uç öneksiz istiyor. Listeden kopyalayıp yapıştıran
     // kişinin bunu bilmesi gerekmesin diye burada kırpılıyor.
     kimligiDuzelt: (m) => m.replace(/^models\//, ''),
+    /**
+     * Gemini 3.x varsayılan olarak "düşünen" model. İlk koşuda bunun bedeli
+     * ağır oldu: 1200-1500 kelime istenen görevde 115 kelime geldi, aynı
+     * görevin üç tekrarı 342 / 357 / 108 çıktı, bir çıktı da kelimeleri
+     * numaralandırarak bozuldu ("klima 22: kullanımına 23: yönelik 24:").
+     *
+     * Sebep model kalitesi değil, token bütçesi: düşünme `max_tokens`'ı
+     * yiyor ve cevaba yer kalmıyor. Nemotron Ultra'da da aynı şey olmuştu.
+     * `reasoning_effort: none` düşünmeyi kapatıyor; bütçe aşağıda ayrıca
+     * yükseltildi.
+     */
+    ekGovde: { reasoning_effort: 'none' },
   },
 }
 
@@ -170,10 +182,12 @@ async function modeliCalistir(anahtar, model, istem, saglayici) {
         // ki modeller arası fark üslup gürültüsüne karışmasın.
         temperature: 0.3,
         top_p: 0.9,
-        // Akıl yürüten modellerde bütçenin çoğu düşünmeye gidiyor; ilk koşuda
-        // 1500 yetmedi ve geriye yazacak token kalmadı.
-        max_tokens: 6000,
+        // Akıl yürüten modellerde bütçenin çoğu düşünmeye gidiyor. Önce 1500
+        // yetmedi, sonra 6000 da yetmedi (Gemini 1449 yerine 115 kelime yazdı).
+        // 1500 kelimelik Türkçe metin ~3000 token; gerisi düşünmeye pay.
+        max_tokens: 16000,
         stream: true,
+        ...(saglayici.ekGovde ?? {}),
       }),
     })
 

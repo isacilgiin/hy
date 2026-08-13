@@ -17,7 +17,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { olgular } from './gorev.js'
+import { olgular, gorevler } from './gorev.js'
 
 const buradan = path.dirname(fileURLToPath(import.meta.url))
 const ciktiKlasoru = path.join(buradan, 'ciktilar')
@@ -254,6 +254,29 @@ if (ilceDosyalari.length > 1) {
       k: shingle(fs.readFileSync(path.join(ciktiKlasoru, d), 'utf8')),
     }))
 
+    /**
+     * KIRPILMIŞ ÇIKTIYLA BENZERLİK ÖLÇÜLMEZ.
+     *
+     * Gemini'nin ilk koşusunda ilçe metinleri 69 / 120 / 201 kelime geldi
+     * (hedef 250-350) çünkü düşünme tokenları bütçeyi yemişti. Bu parçalar
+     * karşılaştırılınca %3 benzerlik çıktı ve araç "SAĞLIKLI" dedi — oysa
+     * ölçülen şey içerik değil, birbirinden bağımsız şekilde kesilmiş
+     * kırıntılardı. Yarım metinler doğal olarak birbirine benzemez.
+     *
+     * Hedefin yarısının altındaki çıktı varsa hüküm bastırılıyor.
+     */
+    const hedefAlt = gorevler.ilce?.hedef?.[0] ?? 250
+    const kisaOlanlar = grup
+      .map((d) => ({
+        ad: d.replace(`${model}__ilce__`, '').replace('.md', ''),
+        kelime: fs
+          .readFileSync(path.join(ciktiKlasoru, d), 'utf8')
+          .trim()
+          .split(/\s+/)
+          .filter(Boolean).length,
+      }))
+      .filter((x) => x.kelime < hedefAlt / 2)
+
     const skorlar = []
     for (let a = 0; a < kumeler.length; a++) {
       for (let b = a + 1; b < kumeler.length; b++) {
@@ -277,7 +300,12 @@ if (ilceDosyalari.length > 1) {
     // ortalamaya değil — bir çift bile yakın kopyaysa o iki sayfa sorunludur.
     const esikAsan = skorlar.filter(([o]) => o > 70)
     let hukum
-    if (enYuksek > 70) {
+    if (kisaOlanlar.length) {
+      hukum =
+        `OLCULEMEDI — ${kisaOlanlar.length} cikti hedefin yarisindan kisa ` +
+        `(${kisaOlanlar.map((x) => `${x.ad}:${x.kelime}`).join(', ')}). ` +
+        `Yarim metinler dogal olarak benzemez; once uretim duzeltilmeli.`
+    } else if (enYuksek > 70) {
       hukum = `KULLANILAMAZ — ${esikAsan.length} cift %70 uzerinde, doorway page riski`
     } else if (ort > 50 || enYuksek > 55) {
       hukum = 'SINIRDA — istem cesitlendirilmeli'
