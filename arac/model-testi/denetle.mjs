@@ -248,7 +248,14 @@ if (ilceDosyalari.length > 1) {
   console.log('='.repeat(70))
 
   for (const [model, grup] of Object.entries(gruplar)) {
-    if (grup.length < 2) continue
+    // Tek çıktıyla benzerlik ölçülmez. Sessizce atlanırsa o model sorunsuz
+    // sanılır — glm-5.2 kota yüzünden dört ilçeden birini alabilmişti ve
+    // listede hiç görünmemesi "geçti" diye okunuyordu. Ölçülmedi, geçmedi.
+    if (grup.length < 2) {
+      console.log(`\n${model}  —  yalnizca ${grup.length} ilce cikti var`)
+      console.log('  OLCULEMEDI: benzerlik icin en az 2 metin gerekiyor.')
+      continue
+    }
     const kumeler = grup.map((d) => ({
       ad: d.replace(`${model}__ilce__`, '').replace('.md', ''),
       k: shingle(fs.readFileSync(path.join(ciktiKlasoru, d), 'utf8')),
