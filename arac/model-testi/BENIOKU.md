@@ -146,6 +146,33 @@ Model düşünüp cevap yazmazsa araç bunu ayrıca söyler ve düşünce metnin
 **503 senin hatan değil.** Ücretsiz uçlar paylaşımlı; yoğun saatte dolabiliyor.
 Tekrar deneme geçmiyorsa bir süre sonra dene.
 
+## Kopya içerik iki ölçütle ölçülür — biri yetmiyor
+
+**Birebir kopya (5 kelimelik pencere).** Aynı cümlelerin tekrarını yakalar.
+Kelime sırası değişince "farklı" sayar.
+
+**Aynı şeyi söyleme (içerik kelimeleri).** Sıradan bağımsız. Parafrazı yakalar.
+
+Neden ikisi birden: `gemini-3.1-flash-lite` dört ilçe metnini birinci ölçütte
+%7 benzerlikle yazdı — kulağa mükemmel geliyor. Metinler okununca dördünün de
+aynı şeyi söylediği görüldü: hizmet listesi, ücretsiz keşif, çalışma saatleri.
+Aynı sayfa, eş anlamlıyla dört kez. İkinci ölçüt bunu %50'de yakalıyor.
+
+Google'ın sorduğu soru "bu cümleler başka yerde geçiyor mu" değil, **"bu
+sayfanın ayrı var olma sebebi ne"**. İkinci ölçüt o soruya daha yakın.
+
+**Referans hesaplanır, yazılmaz.** Araç `src/data/serviceAreas.js` içindeki
+elle yazılmış 20 ilçe metnini ölçüp eşiği oradan okur (birebir %0/0, içerik
+%14/28). Önceki sürümde "%32" diye bir sabit vardı ve verinin hiçbir
+okunuşundan çıkmıyordu; o sabitle model insandan iyi görünüyordu.
+
+## Ölçüm neyi çözmez
+
+İlçe sayfası sorunu bir **veri** sorunu, model sorunu değil. Olgu sayfasında
+ilçeye özgü hiçbir bilgi yoksa hiçbir model o sayfayı benzersizleştiremez —
+en iyi ihtimalle aynı şeyi farklı kelimelerle söyler. Çözüm daha iyi model
+değil, her ilçe için gerçek veri: yapılmış iş, mesafe, bina tipi, yerel koşul.
+
 ## Denetçi ne yapar, ne yapmaz
 
 **Yapar:** olgu sayfasında bulunmayan sayıları, üstünlük ifadelerini

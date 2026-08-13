@@ -291,10 +291,24 @@ for (const s of ozet.sort((a, b) => a.skor - b.skor)) {
  * Aynı modelin farklı ilçeler için yazdığı metinler birbirine ne kadar
  * benziyor? Bu, ilçe sayfası üretilip üretilemeyeceğini belirleyen tek soru.
  *
- * Ölçüm 5 kelimelik pencerelerle (shingle) yapılıyor; cümle sırası değişse de
- * yakalıyor. Referans: 20karot.com.tr'nin elle yazılmış 20 ilçe sayfası
- * ortalama %32 benziyor ve Google'da sorun yaşamıyor. Yakın kopya eşiği
- * genelde %70-80 kabul edilir.
+ * İKİ ÖLÇÜT, ÇÜNKÜ BİRİ YETMİYOR (2026-08-13'te öğrenildi):
+ *
+ *  · 5 kelimelik pencere — birebir kopyayı yakalar. Ama kelime sırası
+ *    değişince "farklı" sayar. gemini-3.1-flash-lite'ın dört ilçe metni bu
+ *    ölçütte %7 çıktı; okuyunca ikisinin de aynı şeyleri söylediği görüldü:
+ *    hizmet listesi, ücretsiz keşif, çalışma saatleri. Aynı sayfa, eş
+ *    anlamlıyla yeniden yazılmış.
+ *
+ *  · İçerik kelimeleri — sıradan bağımsız. Parafrazı yakalar. Google'ın
+ *    baktığı şey lafzın aynılığı değil, sayfanın ayrı bir varlık sebebi olup
+ *    olmadığı; ikinci ölçüt ona daha yakın.
+ *
+ * REFERANS ARTIK HESAPLANIYOR, YAZILMIYOR. Önceki sürümde "elle yazılmış 20
+ * ilçe sayfası = %32" sabiti vardı ve verinin hiçbir okunuşundan çıkmıyordu
+ * (intro metinleri %0-2, tam sayfa %5-18). Muhtemelen menü/altbilgi dahil
+ * render edilmiş HTML'den ölçülmüştü — yani modelin çıplak bölümüyle
+ * karşılaştırılamayacak bir şeyle. Yanlış referans, yanlış hüküm demek:
+ * o sabitle model "insandan iyi" görünüyordu, gerçekte 3-4 kat tekrarlı.
  */
 const shingle = (metin, n = 5) => {
   const kelimeler = metin.toLowerCase().replace(/[^\wçğıöşüâî\s]/g, ' ').split(/\s+/).filter(Boolean)
@@ -302,6 +316,69 @@ const shingle = (metin, n = 5) => {
   for (let i = 0; i + n <= kelimeler.length; i++) kume.add(kelimeler.slice(i, i + n).join(' '))
   return kume
 }
+
+// Türkçe işlev kelimeleri: her metinde geçerler, ayırt edici değiller.
+const durakKelimeler = new Set(
+  ('için ile bir bu şu her gibi daha çok olarak olan olur oluyor yapılır yapıyoruz ' +
+    'ediyoruz sonra önce kadar göre ama fakat ise mi mı ki veya ve ayrıca ancak')
+    .split(/\s+/)
+)
+
+const icerikKelimeleri = (metin) =>
+  new Set(
+    metin
+      .toLowerCase()
+      .replace(/[^\wçğıöşüâî\s]/g, ' ')
+      .split(/\s+/)
+      .filter((k) => k.length >= 4 && !durakKelimeler.has(k))
+  )
+
+const ortusmeOrani = (a, b) =>
+  (100 * [...a].filter((x) => b.has(x)).length) / Math.min(a.size, b.size) || 0
+
+/**
+ * Sitenin kendi ilçe sayfalarından referans üret. Sağlıklı olduğunu bildiğimiz
+ * içerik bu; eşiği ondan okuyoruz. Dosya taşınırsa ölçüm referanssız devam
+ * eder — araç çalışmaya devam etsin, sessizce yanlış sayı basmasın.
+ */
+async function referansOlc() {
+  try {
+    const modul = await import('../../src/data/serviceAreas.js')
+    const alanlar = (modul.default ?? []).map((a) => (a.intro ?? []).join(' ')).filter(Boolean)
+    if (alanlar.length < 2) return null
+    const sonuc = {}
+    for (const [anahtar, olc] of [['pencere', shingle], ['icerik', icerikKelimeleri]]) {
+      const kumeler = alanlar.map(olc)
+      const skorlar = []
+      for (let i = 0; i < kumeler.length; i++)
+        for (let j = i + 1; j < kumeler.length; j++)
+          skorlar.push(ortusmeOrani(kumeler[i], kumeler[j]))
+      sonuc[anahtar] = {
+        ort: skorlar.reduce((s, x) => s + x, 0) / skorlar.length,
+        enYuksek: Math.max(...skorlar),
+      }
+    }
+    sonuc.adet = alanlar.length
+    return sonuc
+  } catch {
+    return null
+  }
+}
+
+const referans = await referansOlc()
+
+/**
+ * İÇERİK ÖRTÜŞMESİ EŞİKLERİ — tahminle değil, ölçülen referansla belirlendi.
+ *
+ * Elle yazılmış 20 ilçe sayfamız: ortalama %14, en yüksek %28. Bunlar Google'da
+ * sorun yaşamıyor, yani %28 güvenli tarafta.
+ *
+ * Aynı sayfayı eş anlamlıyla yeniden yazan bir çift ölçüldüğünde %58 çıktı.
+ * Eşikler ikisinin arasına, bilinen iyi örneğin belirgin üstüne konuyor:
+ * %32'nin üstü şüpheli, %45'in üstü parafraz.
+ */
+const SINIRDA_ESIGI = 32
+const PARAFRAZ_ESIGI = 45
 
 const ilceDosyalari = dosyalar.filter((d) => d.includes('__ilce__'))
 if (ilceDosyalari.length > 1) {
@@ -325,10 +402,14 @@ if (ilceDosyalari.length > 1) {
       console.log('  OLCULEMEDI: benzerlik icin en az 2 metin gerekiyor.')
       continue
     }
-    const kumeler = grup.map((d) => ({
-      ad: d.replace(`${model}__ilce__`, '').replace('.md', ''),
-      k: shingle(fs.readFileSync(path.join(ciktiKlasoru, d), 'utf8')),
-    }))
+    const kumeler = grup.map((d) => {
+      const metin = fs.readFileSync(path.join(ciktiKlasoru, d), 'utf8')
+      return {
+        ad: d.replace(`${model}__ilce__`, '').replace('.md', ''),
+        k: shingle(metin),
+        i: icerikKelimeleri(metin),
+      }
+    })
 
     /**
      * KIRPILMIŞ ÇIKTIYLA BENZERLİK ÖLÇÜLMEZ.
@@ -364,21 +445,30 @@ if (ilceDosyalari.length > 1) {
     const uzunOlanlar = kelimeSayilari.filter((x) => x.kelime > hedefUst * 1.5)
 
     const skorlar = []
+    const icerikSkorlari = []
     for (let a = 0; a < kumeler.length; a++) {
       for (let b = a + 1; b < kumeler.length; b++) {
-        const kesisim = [...kumeler[a].k].filter((x) => kumeler[b].k.has(x)).length
-        const oran = (100 * kesisim) / Math.min(kumeler[a].k.size, kumeler[b].k.size) || 0
-        skorlar.push([oran, kumeler[a].ad, kumeler[b].ad])
+        skorlar.push([ortusmeOrani(kumeler[a].k, kumeler[b].k), kumeler[a].ad, kumeler[b].ad])
+        icerikSkorlari.push([ortusmeOrani(kumeler[a].i, kumeler[b].i), kumeler[a].ad, kumeler[b].ad])
       }
     }
     skorlar.sort((x, y) => y[0] - x[0])
+    icerikSkorlari.sort((x, y) => y[0] - x[0])
     const ort = skorlar.reduce((s, x) => s + x[0], 0) / skorlar.length
+    const icerikOrt = icerikSkorlari.reduce((s, x) => s + x[0], 0) / icerikSkorlari.length
 
     const enYuksek = skorlar[0][0]
+    const icerikEnYuksek = icerikSkorlari[0][0]
 
     console.log(`\n${model}  —  ${grup.length} ilce, ${skorlar.length} cift`)
-    console.log(`  ortalama benzerlik: %${ort.toFixed(0)}`)
-    console.log(`  en yuksek        : %${enYuksek.toFixed(0)}  (${skorlar[0][1]} ↔ ${skorlar[0][2]})`)
+    console.log(
+      `  birebir kopya (5 kelimelik pencere): ortalama %${ort.toFixed(0)}, ` +
+        `en yuksek %${enYuksek.toFixed(0)}  (${skorlar[0][1]} ↔ ${skorlar[0][2]})`
+    )
+    console.log(
+      `  ayni seyi soyleme (icerik kelimeleri): ortalama %${icerikOrt.toFixed(0)}, ` +
+        `en yuksek %${icerikEnYuksek.toFixed(0)}  (${icerikSkorlari[0][1]} ↔ ${icerikSkorlari[0][2]})`
+    )
 
     // Hüküm ORTALAMAYA DEĞİL, en kötü çifte de bakmalı. Kendi testimde
     // ortalama %31 çıkıp "saglikli" dedi ama iki sayfa %93 aynıydı; üçüncü
@@ -397,14 +487,31 @@ if (ilceDosyalari.length > 1) {
         `(${uzunOlanlar.map((x) => `${x.ad}:${x.kelime}`).join(', ')}), hedef ${hedefAlt}-${hedefUst}. ` +
         `Model istenen isi yapmamis; benzerlik sayisi baska bir seyi olcer.`
     } else if (enYuksek > 70) {
-      hukum = `KULLANILAMAZ — ${esikAsan.length} cift %70 uzerinde, doorway page riski`
-    } else if (ort > 50 || enYuksek > 55) {
-      hukum = 'SINIRDA — istem cesitlendirilmeli'
+      hukum = `KULLANILAMAZ — ${esikAsan.length} cift %70 uzerinde, birebir kopya`
+    } else if (icerikEnYuksek > PARAFRAZ_ESIGI) {
+      // Birebir kopya düşük ama içerik aynı: model sayfayı eş anlamlıyla
+      // yeniden yazmış. gemini-3.1-flash-lite tam olarak bunu yaptı — pencere
+      // ölçütünde %7, okununca dört metin de aynı şeyi söylüyordu. Google'ın
+      // sorduğu "bu sayfanın ayrı var olma sebebi ne?" sorusuna cevap yok.
+      hukum =
+        `PARAFRAZ — birebir kopya dusuk (%${enYuksek.toFixed(0)}) ama icerik ortusmesi ` +
+        `%${icerikEnYuksek.toFixed(0)}. Ayni sayfa es anlamliyla yeniden yazilmis; ` +
+        `ilceye ozgu VERI olmadan bu asilmaz.`
+    } else if (ort > 50 || enYuksek > 55 || icerikEnYuksek > SINIRDA_ESIGI) {
+      hukum = 'SINIRDA — istem cesitlendirilmeli ya da ilceye ozgu veri eklenmeli'
     } else {
       hukum = 'SAGLIKLI'
     }
     console.log(`  hukum            : ${hukum}`)
-    console.log(`  referans         : 20karot elle yazilmis 20 ilce sayfasi = ortalama %32, en yuksek %33`)
+    if (referans) {
+      console.log(
+        `  referans (${referans.adet} elle yazilmis ilce sayfamiz): ` +
+          `birebir %${referans.pencere.ort.toFixed(0)}/${referans.pencere.enYuksek.toFixed(0)}, ` +
+          `icerik %${referans.icerik.ort.toFixed(0)}/${referans.icerik.enYuksek.toFixed(0)}  (ortalama/en yuksek)`
+      )
+    } else {
+      console.log('  referans         : olculemedi (src/data/serviceAreas.js okunamadi)')
+    }
 
     if (esikAsan.length) {
       console.log('  esigi asan ciftler:')
