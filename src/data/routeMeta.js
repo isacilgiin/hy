@@ -27,6 +27,7 @@ import { faq } from './faq.js'
 import { gizlilik, sartlar } from './legal.js'
 import blog from './blog.js'
 import blogContent from './blogContent.js'
+import { hikaye } from './about.js'
 
 const { url, companyName, phone, phoneRaw, address, seo } = siteConfig
 const ogImage = `${url}/images/logo/og-image.jpg`
@@ -145,6 +146,11 @@ const sabitler = [
     title: `Hakkımızda | ${companyName} — Denizli Karot`,
     description: `${companyName}, Denizli ve çevre ilçelerde beton delme, kesme ve kırma hizmetleri veren karot firmasıdır. Önce ücretsiz keşif, sonra net fiyat.`,
     h1: `${companyName} Hakkında`,
+    // Doğrudan about.js'ten geliyor, kopyalanmıyor: About.jsx da aynı diziyi
+    // basıyor, yani noscript gövdesi ekranda görünenin BİREBİR aynısı.
+    // Elle yazılmış bir özet olsaydı sayfa değişince sessizce sapardı ve
+    // cloaking'e dönerdi. Tek kaynak = sapma imkânsız.
+    govde: hikaye,
     kirintilar: [{ ad: 'Hakkımızda', yol: '/hakkimizda/' }],
   },
   {
