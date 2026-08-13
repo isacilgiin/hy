@@ -5,7 +5,13 @@
  * blog listesi sayfası, okunmayan 6 yazının tam metnini indirmesin.
  * (services.js / serviceContent.js ayrımının aynısı.)
  *
- * BU DOSYA ÜRETİLİR — elle düzenlemek yerine kaynak JSON'ları güncelleyin.
+ * DÜZELTME (2026-08-13): Burada "BU DOSYA ÜRETİLİR, kaynak JSON'ları
+ * güncelleyin" yazıyordu. Öyle bir kaynak yok ve hiç olmamış — git geçmişinde
+ * ne bir üretici script ne silinmiş bir JSON var. Bu dosya ASIL KAYNAKTIR,
+ * elle düzenlenir. Yorum olduğu gibi kalsaydı sonraki düzenleyen olmayan
+ * dosyaları arardı.
+ *
+ * Sıralama slug'a göre alfabetik; yeni yazıyı doğru yere ekleyin.
  */
 
 const blog = [
@@ -23,6 +29,22 @@ const blog = [
     "tarih": "2026-08-12",
     "kategori": "Rehber",
     "image": "/images/hizmetler/beton-kesme.webp"
+  },
+  {
+    "slug": "beton-neyle-kesilir",
+    "title": "Beton Neyle Kesilir? Kalınlığa Göre Doğru Makine Seçimi",
+    "description": "Beton ne ile kesilir? Spiral, elmas disk, ray sistemli duvar testeresi, hidrolik sistem ve tel testere hangi kalınlıkta işe yarar, perde beton neyle kesilir?",
+    "ozet": "Betonu kesen makine kalınlığa ve yere göre değişir. Spiralin nerede bittiğini, duvar testeresinin nereye kadar indiğini, hidroliğin ve tel testerenin ne zaman gerektiğini sahadan anlattık.",
+    "okumaSuresi": 8,
+    "ilgiliHizmetler": [
+      "beton-kesme",
+      "hidrolik-beton-kesme",
+      "beton-kirma",
+      "karot"
+    ],
+    "tarih": "2026-08-13",
+    "kategori": "Rehber",
+    "image": "/images/hizmetler/hidrolik-beton-kesme.webp"
   },
   {
     "slug": "denizli-karot-fiyatlari",
@@ -53,6 +75,21 @@ const blog = [
     "tarih": "2026-08-12",
     "kategori": "Rehber",
     "image": "/images/hizmetler/filiz-ekimi.webp"
+  },
+  {
+    "slug": "karot-alinan-yere-ne-yapilir",
+    "title": "Karot Alınan Yere Ne Yapılır? Delik Kapatma ve Tamir",
+    "description": "Karot alınan yere ne yapılır? Numune deliğinin kapatılması, tamir harcı seçimi, su yalıtımı ve donatı kesilmişse ne yapılacağı sahadan anlatıldı.",
+    "ozet": "Numune alındıktan sonra geriye silindirik bir boşluk kalır. O boşluğun nasıl kapatılacağı, hangi harcın kullanılacağı ve deliğin bina için ne anlama geldiği çoğu zaman hiç konuşulmuyor.",
+    "okumaSuresi": 6,
+    "ilgiliHizmetler": [
+      "karot",
+      "kimyasal-dubel",
+      "beton-delme"
+    ],
+    "tarih": "2026-08-13",
+    "kategori": "Rehber",
+    "image": "/images/hizmetler/kimyasal-dubel.webp"
   },
   {
     "slug": "karot-firmasi-secerken",
@@ -98,6 +135,20 @@ const blog = [
     "tarih": "2026-08-12",
     "kategori": "Rehber",
     "image": "/images/hizmetler/karot.webp"
+  },
+  {
+    "slug": "karot-numunesi-nasil-alinir",
+    "title": "Binadan Karot Numunesi Nasıl Alınır? Kim Alır, Kim Rapor Verir",
+    "description": "Karot testi nasıl yapılıyor? Numune nereden ve kaç adet alınır, kim karar verir, kim uygular, raporu kim düzenler? Görev dağılımı ve süreç sahadan anlatıldı.",
+    "ozet": "Karot numunesi almak tek bir işmiş gibi konuşuluyor ama üç ayrı taraf var: karar veren mühendis, numuneyi alan ekip, deneyi yapan laboratuvar. Hangisinin ne yaptığını ve sınırların nerede olduğunu anlattık.",
+    "okumaSuresi": 7,
+    "ilgiliHizmetler": [
+      "karot",
+      "beton-delme"
+    ],
+    "tarih": "2026-08-13",
+    "kategori": "Rehber",
+    "image": "/images/hizmetler/beton-delme.webp"
   }
 ]
 

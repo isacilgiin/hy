@@ -4,7 +4,9 @@
  * Yalnızca /blog/<slug>/ sayfası açıldığında iniyor (BlogPost.jsx ayrı bir
  * lazy parça). Blog listesi ve diğer sayfalar bu dosyayı çekmez.
  *
- * BU DOSYA ÜRETİLİR — elle düzenlemek yerine kaynak JSON'ları güncelleyin.
+ * DÜZELTME (2026-08-13): "BU DOSYA ÜRETİLİR" yazıyordu; öyle bir üretici ya da
+ * kaynak JSON yok, hiç de olmamış. Bu dosya ASIL KAYNAKTIR, elle düzenlenir.
+ * Gerekçesi blog.js'in başında.
  */
 
 const blogContent = {
@@ -99,6 +101,105 @@ const blogContent = {
     ],
     "ilgiliHizmetler": [
       "beton-kesme",
+      "beton-kirma",
+      "karot"
+    ]
+  },
+  "beton-neyle-kesilir": {
+    "seoTitle": "Beton Neyle Kesilir? Kalınlığa Göre Makine Seçimi",
+    "giris": [
+      "Betonu neyle keseceğiniz, betonun ne kadar kalın olduğuna ve nerede durduğuna bağlı. Aynı malzeme için hem elde tutulan küçük bir makine hem de iki kişinin taşıyamadığı bir sistem var; ikisi de doğru, ama farklı işlerde. İnternette bu soru genelde tek bir makine adıyla cevaplanıyor. Sahada öyle olmuyor: 8 santimlik bir şap ile 60 santimlik bir perde arasında yöntem tamamen değişiyor.",
+      "Ortak nokta şu: beton kırılarak değil, aşındırılarak kesilir. Elmas segmentli bir disk ya da tel, çimento harcını, agregayı ve karşısına çıkan donatıyı öğüterek ilerler. Kırıcı ise darbeyle dağıtır. Bu yüzden kesimde kenar düz çıkar, titreşim çevre betona taşınmaz ve geriye tamir gerektiren bir yıkım kalmaz. Kesme yöntemleri arasındaki fark da tam olarak bu aşındırmayı ne kadar derine götürebildikleridir.",
+      "Aşağıda en küçüğünden en büyüğüne beş yöntemi, hangi kalınlıkta nerede durduklarıyla birlikte anlattım. Sonda iki soruya ayrı yer verdim: perde betonun neden diğerlerinden farklı olduğu ve \"betonu kolay kırmanın yolu\" diye aranan şeyin sahada karşılığının ne olduğu."
+    ],
+    "bolumler": [
+      {
+        "baslik": "Spiral (Avuç Taşlama) ile Beton Kesilir mi?",
+        "paragraflar": [
+          "Kısmen. Spirale takılan elmas disk betonu gerçekten keser, ama ne kadar derine indiğini diskin çapı belirler. Yaygın 115 ve 125 mm'lik disklerde diskin yarısından azı dışarıda kalır; makinenin göbeği ve muhafazası yüzeye dayandığı için pratikte 3 santim civarında bir derinliğe inersiniz. 230 mm'lik büyük spiralde bu 6-7 santime çıkar. Yani spiral, şap üzerinde derz açmak, seramik altı bir kanal çizmek ya da ince bir bölme duvarı iki taraftan kesip ortasını kırmak için iş görür.",
+          "Sınırı derinlik değil, güvenlik tarafında daha sert. Spiral kuru çalışır; betonda kuru kesim silis tozu çıkarır ve o tozun solunması ciddi bir meslek hastalığı sebebidir. Toz emişli sistem ya da uygun maske olmadan kapalı hacimde beton kesilmez. İkincisi geri tepme: disk kesim hattında sıkışırsa makine operatörün elinde ters yönde fırlar. Donatıya denk gelen bir spiral diski bunu her an yapabilir, çünkü demir diski aniden yavaşlatır.",
+          "Özetle spiral, kalın ya da donatılı betonda doğru alet değil. Bir duvarı spiralle kesmeye çalışmak genelde iki taraftan çizip ortasını kırıcıyla dağıtmakla biter — ki o zaman elinizde kesim değil, düzensiz kenarlı bir kırım vardır ve arkasından tamir gelir."
+        ]
+      },
+      {
+        "baslik": "Daire Testere ve Elmas Halka Testere",
+        "paragraflar": [
+          "Beton kesme için üretilmiş elde taşınan makineler, spiralden farklı olarak sulu çalışır ve çok daha büyük disk taşır. 300-400 mm'lik disklerle tek yüzden 12-15 santim civarı derinliğe inilir. Su hem segmenti soğutur hem tozu daha havaya kalkmadan bastırır, bu yüzden kapalı hacimde çalışmaya spiralden kıyaslanmayacak kadar uygundur.",
+          "Bu sınıfın içinde bir de halka testere var. Normal bir dairesel testerede diskin göbeği merkezdedir ve kesim derinliğini yarıçap sınırlar. Halka testerede disk ortasından tahrik edilmez, dıştan çevrilir; göbek olmadığı için aynı çapta belirgin şekilde daha derine iner. Kapı boşluğunun köşelerini tamamlamak, kalın kesitin son santimlerini bitirmek gibi işlerde bu fark işe yarar.",
+          "Buradaki asıl kısıt derinlik değil, düzgünlük. Elde tutulan bir makinede disk donatıya girdiği anda hattan kaçmaya çalışır; uzun bir kesimde bu, yüzeyde dalgalanma olarak görünür. Kısa kesimlerde sorun değil, ama bir açıklığın kenarı olacak hatta gözle belli olur."
+        ]
+      },
+      {
+        "baslik": "Ray Sistemli Duvar Testeresi: Kalın Betonun Asıl Aleti",
+        "paragraflar": [
+          "Duvar testeresinde sonucu belirleyen şey makinenin gücü değil, üzerinde yürüdüğü ray. Testere, duvara dübellenen bir kızağa oturur ve hat boyunca motorla ilerler. Elle tutulmadığı için disk donatıya girdiğinde sapmaz; kesim baştan sona aynı çizgide kalır. Açıklık açma işlerinde tercih edilmesinin sebebi budur — geriye kalan duvarın sağlam ve düz bir kenarı olmak zorunda.",
+          "Tek yüzden inilebilen derinlik disk çapının yarısından biraz azdır, çünkü diskin göbeği ve flanşı duvarın içine girmez. Kalın kesitlerde aynı hat karşı yüzden ikinci kez kesilir. İki yüzden çalışarak 600 mm kalınlığa kadar iniyoruz. Bunun için iki yüzün de erişilebilir olması ve hatların birbirini milimetrik tutturması gerekir; hat kayarsa kesit tam ayrılmaz.",
+          "Disk tek hamlede tam derinliğe dalmaz. Her geçişte birkaç santim daha inerek hat boyunca gider gelir. Motorun yükü böyle dengede kalır. Kesim boyunca hatta su verilir; çıkan çamurun nereye akacağı işin başında çözülmesi gereken bir konudur, sonradan çözülmeye kalkılırsa daire içindeyseniz iş büyür."
+        ]
+      },
+      {
+        "baslik": "Hidrolik Sistemler: Elektriğin ve Kalınlığın Yetmediği Yer",
+        "paragraflar": [
+          "Hidrolik kesme sisteminde makinenin ucundaki testereyi elektrik motoru değil, ayrı duran bir güç ünitesinin bastığı yağ döndürür. İki pratik faydası var. Birincisi güç: aynı boyuttaki elektrikli makineye göre daha büyük disk çevirebilir, kalın ve yoğun donatılı kesitte zorlanmaz. İkincisi kurulum esnekliği: güç ünitesi dışarıda kalır, kesim yapılan yere yalnızca hortum girer.",
+          "Bu ikincisi sahada sanılandan daha belirleyici. Şantiye elektriği yoksa, mevcut tesisat böyle bir yükü kaldırmıyorsa ya da ortamda su ve elektriğin bir arada bulunması istenmiyorsa hidrolik sistem tek makul seçenek olur. Su basmış bodrum katları, çalışan tesisler ve trafiğe açık yol kenarları bu tarife giriyor.",
+          "Karşılığı kurulum süresi. Güç ünitesi konumlandırılır, hortumlar çekilir, sistem basınçlanır. Küçük bir iş için bu hazırlık işin kendisinden uzun sürebilir; o yüzden her işe hidrolikle gidilmez. Keşifte karar verilmesi gereken şeylerden biri de budur."
+        ]
+      },
+      {
+        "baslik": "Tel Testere: Kalınlık Sınırının Kalktığı Yöntem",
+        "paragraflar": [
+          "Elmas boncuklu bir çelik tel, kesilecek kesitin etrafından dolandırılıp bir makara sistemiyle döndürülür ve halka gitgide daralarak betonu keser. Diskli yöntemlerde derinliği disk çapı sınırlar; telde böyle bir sınır yoktur. Kesit ne kadar kalın olursa olsun, telin etrafından dolanabildiği her şey kesilebilir.",
+          "Karşılığında kurulum ağırlaşır: telin geçeceği yolu açmak için genelde kesitin köşelerinden karot delikleri alınır, tel oradan geçirilir. Yani tel testere işi çoğu zaman bir karot işiyle başlar. Büyük temel blokları, köprü ve viyadük elemanları, kalın istinat duvarları bu yöntemin alanıdır.",
+          "Bir binadaki normal tadilat işi için tel testere gerekmez. Gereken yerde de zaten alternatifi yoktur; o yüzden \"hangisi daha iyi\" diye bir karşılaştırma değil, kesitin kalınlığına bakıp verilen bir karardır."
+        ]
+      },
+      {
+        "baslik": "Perde Beton Neyle Kesilir? Önce Makine Değil, Onay",
+        "paragraflar": [
+          "Bu sorunun teknik cevabı kolay: perde beton, kalınlığına göre ray sistemli duvar testeresiyle ya da hidrolik sistemle kesilir, çok kalınsa tel testereye gidilir. Ama bu cevap tek başına yanıltıcı, çünkü perdede belirleyici olan makine değil izindir.",
+          "Perde, kolon ve kiriş yapının taşıyıcı sistemidir. Perde binanın deprem sırasında gelen yatay kuvvetleri karşılayan elemanıdır; işlevi zaten kesitiyle ve içindeki donatıyla doğru orantılıdır. Oraya açılan bir boşluk kesiti küçültür, kesilen donatı bir daha eski işini görmez ve kaybolan taşıma gücü komşu elemanların üzerine biner. En kötü tarafı da şu: bu değişikliğin sonucu kesim günü görünmez, deprem günü görünür.",
+          "Bu yüzden taşıyıcı elemana müdahaleyi statik proje ve mühendis onayı olmadan yapmıyoruz. Onaylı proje varsa uygulamayı projede yazan yere, ölçüye ve çapa birebir yaparız; projede olmayan bir boşluğu kendi kararımızla açmayız. Onay yoksa işi almaz, sebebini anlatır, izlenmesi gereken sırayı söyleriz. Bu maddede pazarlık yapmıyoruz — kesim tekniği tartışılır, bu tartışılmaz.",
+          "Taşıyıcı olmayan bölme duvarlarda durum tamamen farklıdır; orada hem kesim hem delme çok daha rahat yapılır. Yine de duvarın gerçekten bölme olduğundan emin olmadan başlamayız. Gözle bakarak karar verilmez; projesine bakılır, kalınlığı ve konumu değerlendirilir."
+        ]
+      },
+      {
+        "baslik": "\"Beton Nasıl Kolay Kırılır?\" Sorusunun Sahadaki Cevabı",
+        "paragraflar": [
+          "Dürüst cevap: kolay bir yolu yok, ama doğru yolu var. Bu soruyu arayanların çoğu aslında \"en az uğraşla, çevreye zarar vermeden nasıl olur\" diye soruyor. Onun cevabı da genelde kırmak değil kesmek oluyor.",
+          "İnternette dolaşan kestirmelere girmeyelim: tuz ruhu ya da benzeri asitler betonu \"çözmez\". Çimento harcının yüzeyini aşındırır, donatıyı paslandırır, kanalizasyona ve zemine zarar verir; taşıyıcı bir kesitte hiçbir işe yaramaz, üstelik tehlikelidir. Beton, mekanik olarak ayrılır.",
+          "Küçük hacimlerde elektrikli kırıcı yeterlidir. Daha büyük ve donatılı kesitlerde hidrolik kırıcı ya da beton kırma pensesi kullanılır; pense kesiti darbe yerine basınçla ezerek ayırdığı için gürültü ve titreşim belirgin şekilde azalır — oturulan binalarda bu fark önemlidir. Bir bölümün tamamen alınması gerekiyorsa kontrollü yıkım devreye girer: parçalar önce kesilerek tanımlı hale getirilir, sonra planlanmış sırayla indirilir.",
+          "Karar verirken ölçümüz en hızlı biten yöntem değil, çevre yapıya en az yük bindiren yöntemdir. Zorlanan bir makine hem betona hem işe zarar verir; kırıcıyla dağıtılan bir kesitin arkasından gelen sıva, tesisat ve tamir masrafı çoğu zaman baştan doğru yöntemi seçmenin farkından büyük çıkar."
+        ]
+      },
+      {
+        "baslik": "Denizli'de Hangi Yöntemin Gerektiğine Nasıl Karar Veriyoruz",
+        "paragraflar": [
+          "Telefonda yöntem söylemiyoruz, çünkü kesilecek yeri görmeden verilecek cevap tahmin olur. Duvarın kalınlığı, taşıyıcı olup olmadığı, içinden geçen tesisat, iki yüzüne de erişilip erişilemediği, makinenin nereye sabitleneceği, su ve elektriğin nereden alınacağı ancak yerinde anlaşılır. Keşif ücretsizdir.",
+          "Gördükten sonra yöntemi ve fiyatı net söyleriz. Bazen keşifte o işin hiç gerekmediği ya da çok daha küçük bir müdahaleyle çözüldüğü ortaya çıkar; onu da söyleriz. Denizli merkez ve 20 ilçenin tamamına gidiyoruz, uzak ilçelere işi tek seferde bitirecek ekipmanla çıkıyoruz."
+        ]
+      }
+    ],
+    "sss": [
+      {
+        "q": "Spiral ile beton kesilir mi?",
+        "a": "Sığ kesimlerde evet. 115-125 mm diskle yaklaşık 3 santim, 230 mm diskle 6-7 santim derinliğe inersiniz. Şapta derz açmak ya da ince bir bölme duvarı iki taraftan çizmek için iş görür. Kalın veya donatılı betonda doğru alet değildir; ayrıca kuru çalıştığı için silis tozu çıkarır, toz emişi ya da uygun maske olmadan kapalı hacimde kullanılmamalıdır."
+      },
+      {
+        "q": "Daire testere ile beton kesilir mi?",
+        "a": "Beton için üretilmiş, sulu çalışan elmas diskli testerelerle evet. 300-400 mm disklerle tek yüzden 12-15 santim civarı derinliğe inilir. Ahşap veya metal için yapılmış bir daire testereye beton diski takmak doğru değildir: su beslemesi ve devir uyumu olmadığı için hem disk hem makine zarar görür."
+      },
+      {
+        "q": "Perde beton neyle kesilir?",
+        "a": "Kalınlığa göre ray sistemli duvar testeresi, hidrolik kesme sistemi ya da tel testereyle. Ama perdede asıl mesele makine değil: perde taşıyıcı sistemin parçasıdır ve müdahale, statik proje ile mühendis onayı olmadan yapılmaz. Onay yoksa işe başlamıyoruz."
+      },
+      {
+        "q": "En kalın kaç santimlik betonu kesebiliyorsunuz?",
+        "a": "Ray sistemli duvar testeresiyle, iki yüzden çalışarak 600 mm kalınlığa kadar iniyoruz. Bunun için kesitin iki yüzüne de erişilebilmesi gerekir. Daha kalın kesitlerde ya da tek yüzden çalışılması gereken durumlarda tel testere yöntemi gündeme gelir."
+      }
+    ],
+    "ilgiliHizmetler": [
+      "beton-kesme",
+      "hidrolik-beton-kesme",
       "beton-kirma",
       "karot"
     ]
@@ -301,6 +402,97 @@ const blogContent = {
       "filiz-ekimi",
       "kimyasal-dubel",
       "ankraj",
+      "beton-delme"
+    ]
+  },
+  "karot-alinan-yere-ne-yapilir": {
+    "seoTitle": "Karot Alınan Yere Ne Yapılır? Delik Kapatma ve Tamir",
+    "giris": [
+      "Karot işinin konuşulan kısmı deliğin açılmasıdır. Geriye kalan silindirik boşluğun ne olacağı ise çoğu zaman hiç gündeme gelmez — ekip gider, delik olduğu gibi kalır. Oysa o deliğin kapatılıp kapatılmayacağı, kapatılacaksa neyle kapatılacağı işin parçasıdır ve yanlış yapıldığında sonucu deliğin kendisinden büyük olur.",
+      "Delik iki farklı sebeple açılmış olabilir ve ikisinin devamı aynı değil. Tesisat, havalandırma ya da asansör için açılan bir delik kalıcıdır; içinden bir şey geçecektir, kapatılması değil doğru sızdırmazlıkla tamamlanması gerekir. Beton numunesi almak için açılan delikte ise geriye bir işlev kalmaz, boşluğun kapatılması istenir.",
+      "Aşağıda ikisini ayrı ayrı anlattım: numune deliğinin nasıl kapatıldığı, hangi harcın neden kullanıldığı, donatı kesilmişse ne olduğu, su ve yangın yalıtımının nerede devreye girdiği. Bir de sahada sık gördüğümüz yanlışlara ayrı bir bölüm ayırdım, çünkü bu deliklerin çoğu iyi niyetle ama yanlış malzemeyle kapatılıyor."
+    ],
+    "bolumler": [
+      {
+        "baslik": "Karot Deliği Kapatılmak Zorunda mı?",
+        "paragraflar": [
+          "Duruma göre değişir. Tesisat geçişi için açılan delik zaten kapatılmaz; içinden boru ya da kablo geçer, çevresi uygun malzemeyle sızdırmaz hale getirilir. Numune için açılan delikte ise geriye boş bir silindir kalır ve orası doldurulur.",
+          "Doldurmanın sebebi görüntü değil. Açık kalan bir boşluk suyu ve nemi betonun içine, oradan da donatıya taşır. Donatı paslandıkça hacmi büyür, büyüyen demir çevresindeki betonu iter ve zamanla yüzey çatlayıp dökülür. Delik ne kadar küçük olursa olsun süreç aynı işler; sadece daha yavaş.",
+          "Kararı kim verir sorusunun cevabı da net: numune alma işi yapının mühendisinin talimatıyla yürüdüğü için, deliğin nasıl kapatılacağını da o belirler. Biz uygulama tarafındayız. Onaylanmış bir tamir detayı varsa ona uyarız; yoksa mühendise sorulmasını isteriz. Taşıyıcı bir elemandaki boşluğun dolgusu tercih meselesi değildir."
+        ]
+      },
+      {
+        "baslik": "Hangi Harçla Kapatılır?",
+        "paragraflar": [
+          "Numune deliği normal çimento harcıyla kapatılmaz. Sıradan harç kürlenirken hacmi küçülür; delik boyunca çeperle dolgu arasında ince bir boşluk kalır ve dolgu yükü aktarmaz, sadece deliği görsel olarak kapatır. Bu iş için rötresi telafi edilmiş, yani kürlenirken büzülmeyen özel tamir harçları üretiliyor. Ürün ambalajında \"rötresiz\" ya da \"büzülme telafili\" ibaresi aranır.",
+          "Uygulamanın sonucu belirleyen kısmı harç değil hazırlık. Delik içi kesim çamurundan tamamen temizlenir, basınçlı hava ya da su ile yıkanır. Çeperde kalan ince çamur tabakası, yeni harcın betona yapışmasını engelleyen bir ayırıcı gibi davranır; harç ne kadar iyi olursa olsun tutunamaz. Temizlikten sonra yüzey doygun ama yüzeyde su birikintisi kalmayacak şekilde nemlendirilir, harç boşluk kalmayacak biçimde basılır.",
+          "Su geçirmesi istenmeyen yerlerde — bodrum perdesi, temel, teras, ıslak hacim döşemesi — tamir harcının üstüne ayrıca su yalıtımı gelir. Mevcut yalıtım tabakası delinmişse o tabakanın kendi detayıyla onarılması gerekir; deliği doldurmak yalıtımı geri getirmez. Bu ayrım atlandığında sorun aylar sonra alt kattaki tavanda leke olarak ortaya çıkar."
+        ]
+      },
+      {
+        "baslik": "Delikte Donatı Kesilmişse Ne Olur?",
+        "paragraflar": [
+          "Numune alırken kural, kesitin içinde donatı bulunmayacak şekilde yer seçmektir. Donatı taraması bu yüzden yapılır. Yine de her zaman mümkün olmayabilir ve bazen numunenin içinden demir çıkar.",
+          "Bu durumda mesele artık delik kapatmak değildir. Kesilen donatının o bölgedeki işlevini kaybettiği kabul edilir ve ne yapılacağına yapının mühendisi karar verir. Uygulanacak çözüm elemanın türüne, kesilen donatının konumuna ve yapının durumuna göre değişir; standart bir cevabı yoktur. Bizim yapmadığımız şey, kendi kararımızla \"nasılsa doldurulur\" deyip üstünü kapatmaktır.",
+          "Aynı sebeple, numune alınacak yeri biz seçmiyoruz. Hangi elemandan, kaç adet ve nereden alınacağını yapının mühendisi belirler. Bu bir sorumluluktan kaçma değil, işin gerçekten öyle yürümesi: o kararı vermek için yapının projesini ve taşıyıcı sistemini bilmek gerekir."
+        ]
+      },
+      {
+        "baslik": "Kat Geçişlerinde: Yangın ve Ses Yalıtımı",
+        "paragraflar": [
+          "Döşemeden geçen tesisat delikleri kapatılmaz ama boş da bırakılmaz. İki kat arasındaki bir boşluk yangında dumanın ve alevin üst kata taşınmasının en kolay yoludur. Bu yüzden boru veya kablo geçirildikten sonra delik çevresi yangına dayanıklı dolgu malzemeleriyle sızdırmaz hale getirilir.",
+          "Aynı boşluk ses için de bir köprü. Konutlarda alt kattan gelen sesin kaynağı sık sık tesisat şaftlarındaki kapatılmamış geçişlerdir. Doğru dolgu her iki sorunu birden çözer.",
+          "Bu iş genelde bizim işimizin devamında başka bir ekibe geçer, ama deliği açarken çevresinde dolgu için yer bırakıp bırakmadığımız o ekibin işini doğrudan etkiler. Keşifte deliğin ne için açıldığını sormamızın bir sebebi de bu."
+        ]
+      },
+      {
+        "baslik": "Sahada Sık Gördüğümüz Yanlışlar",
+        "paragraflar": [
+          "En yaygını deliğin alçı ya da sıva ile kapatılması. Yüzeyde düzgün görünür, birkaç ay içinde etrafından çatlar. Alçı nem alır, hacmi oynar ve betona yapışmaz; taşıyıcı bir elemanda hiçbir karşılığı yoktur.",
+          "İkincisi poliüretan köpük. Boşluğu doldurur, kolaydır ve tamamen yanlıştır: köpük yük taşımaz, zamanla ultraviyole ve nemle bozulur, üstelik yangında yanar. Tesisat çevresinde ses için kullanıldığında bile yangın dolgusu yerine geçmez.",
+          "Üçüncüsü çıkan karot silindirinin geri yerine sokulması. Mantıklı gibi durur ama silindir çeperle arasında birkaç milimetrelik boşluk bırakır, harçsız oturur ve hiçbir şeyi bağlamaz. Numune zaten laboratuvara gider; geri getirilse bile kesilmiş ve kırılmış haldedir.",
+          "Dördüncüsü deliğin unutulması. Özellikle görünmeyen yerlerde — asma tavan üstünde, şaft içinde, bodrum perdesinde — açılan delikler kapatılmadan iş kapanıyor. Numune alma işi bittiğinde deliklerin ne olacağı baştan konuşulmadıysa genelde kimse üstlenmiyor."
+        ]
+      },
+      {
+        "baslik": "Karot Alınan Binada Oturulur mu, Tehlikeli mi?",
+        "paragraflar": [
+          "Doğru yerden ve doğru sayıda alınmış bir numune binanın taşıyıcı sistemini zayıflatacak boyutta değildir. Alınan silindir, elemanın kesitinin yanında çok küçük kalır; yer seçimi zaten donatıya ve kritik bölgelere denk gelmeyecek şekilde yapılır. Bu yüzden numune alınmış bir binada oturulmasında bir sakınca doğmaz.",
+          "Buradaki asıl hassasiyet sayı ve yer. Aynı elemandan üst üste numune almak, kritik bölgelerden almak ya da yer seçimini rastgele yapmak farklı bir konudur — bunun için karar mühendise ait olmalı, sahada \"buradan alalım\" denerek ilerlenmemelidir.",
+          "İşlem sırasında ise gürültü ve su vardır. Su soğutmalı çalışıldığı için toz havaya kalkmaz, ama kesim suyunun ve çamurun nereye akacağı önceden planlanmazsa daire içinde iş büyür. Zemin ve mobilya başlamadan örtülür, su kontrol altına alınır, iş bitiminde saha toplanır. Numunenin çıkması dakikalar sürer; zamanın çoğu hazırlık ve toplanmaya gider."
+        ]
+      },
+      {
+        "baslik": "Deliği Kim Kapatır? Teklife Dahil mi?",
+        "paragraflar": [
+          "Bu sorunun sahada sık sık cevapsız kaldığını görüyoruz. Numune alma işi verilirken konuşulan şey numunenin alınmasıdır; deliklerin kapatılması ayrı bir iş kalemi olarak hiç gündeme gelmez. İş bitince delikler ortada kalır ve kimin yapacağı belli değildir.",
+          "Biz teklif verirken deliklerin ne olacağını baştan soruyoruz. Kapatma bizden isteniyorsa fiyata dahil edilir ve hangi malzemeyle yapılacağı yazılır; mühendisin onaylanmış bir tamir detayı varsa ona göre. İstenmiyorsa da bunu teklifte açıkça belirtiriz ki sonradan \"bu ayrıydı\" gibi bir durum çıkmasın. Verdiğimiz rakam işin tamamını kapsar; iş sırasında kalem eklenmez.",
+          "Kapatmayı başka bir ekip yapacaksa deliği ona göre bırakırız: çeper temizlenir, çevresi tamir malzemesinin tutunabileceği halde teslim edilir. Kesim çamuru kurumuş bir delik, sonradan gelen ekip için ekstra iştir ve genelde atlanır — atlandığında da harç tutunmaz.",
+          "Kısacası, numune alma işi konuşulurken şu soruyu sormakta fayda var: delikler kapatılacak mı, kim kapatacak, hangi malzemeyle? Üçünün de cevabı işe başlamadan belli olmalı."
+        ]
+      }
+    ],
+    "sss": [
+      {
+        "q": "Karot alınan yere ne yapılır?",
+        "a": "Numune için açılmış delik, rötresi telafi edilmiş (büzülmeyen) tamir harcıyla doldurulur. Öncesinde delik içi kesim çamurundan tamamen temizlenir, yoksa harç betona tutunmaz. Su geçirmesi istenmeyen yerlerde üstüne ayrıca su yalıtımı gelir. Nasıl kapatılacağına yapının mühendisi karar verir."
+      },
+      {
+        "q": "Karot deliği normal çimento harcıyla kapatılabilir mi?",
+        "a": "Kapatılmamalı. Sıradan harç kürlenirken büzülür ve çeperle dolgu arasında ince bir boşluk kalır; delik görsel olarak kapanır ama dolgu yük aktarmaz. Aynı sebeple alçı, sıva ve poliüretan köpük de bu iş için uygun değildir."
+      },
+      {
+        "q": "Karot alınan binada oturulur mu, tehlikeli mi?",
+        "a": "Doğru yerden ve doğru sayıda alınmış numune taşıyıcı sistemi zayıflatacak boyutta değildir; alınan silindir elemanın kesitinin yanında çok küçük kalır. Yer seçimi donatıya ve kritik bölgelere denk gelmeyecek şekilde yapılır. Bu yüzden numune alınmış binada oturulmasında sakınca doğmaz."
+      },
+      {
+        "q": "Delikten donatı çıkarsa ne olur?",
+        "a": "Numune alırken kural, kesitin içinde donatı bulunmayacak şekilde yer seçmektir; donatı taraması bunun için yapılır. Yine de demir kesilmişse mesele delik kapatmanın ötesine geçer ve ne yapılacağına yapının mühendisi karar verir. Standart bir çözüm yoktur, elemana ve konuma göre değişir."
+      }
+    ],
+    "ilgiliHizmetler": [
+      "karot",
+      "kimyasal-dubel",
       "beton-delme"
     ]
   },
@@ -600,6 +792,107 @@ const blogContent = {
       {
         "q": "Alınan karot numunesini kim değerlendirir?",
         "a": "Numuneyi almak ile dayanım değerini vermek iki ayrı iştir. Karotçu numuneyi doğru noktadan, yüzeye dik, donatısız ve kırılmadan çıkarmakla sorumludur. Silindirin ölçülmesi, hazırlanması ve kırılarak dayanımının belirlenmesi laboratuvarın işidir. Numunenin hangi elemandan alınacağını ve çıkan sonucun yapı için ne anlama geldiğini ise yapının mühendisi değerlendirir."
+      }
+    ],
+    "ilgiliHizmetler": [
+      "karot",
+      "beton-delme"
+    ]
+  },
+  "karot-numunesi-nasil-alinir": {
+    "seoTitle": "Karot Numunesi Nasıl Alınır? Kim Alır, Kim Raporlar",
+    "giris": [
+      "\"Karot testi\" tek bir işmiş gibi konuşuluyor ama sahada üç ayrı taraf var ve üçünün işi birbirinden net biçimde ayrı. Numunenin hangi elemandan, nereden ve kaç adet alınacağına yapının mühendisi karar verir. Numuneyi betondan çıkarma işini bizim gibi karot ekipleri yapar. Silindirin ölçülmesi, hazırlanması, kırılarak dayanımının belirlenmesi ve raporlanması ise yetkili laboratuvarın işidir.",
+      "Bu ayrımı baştan söylüyorum, çünkü bize gelen soruların çoğu aslında bizim cevaplayamayacağımız sorular: \"sonucum kaç çıkar\", \"binam riskli mi\", \"rapor ne zaman gelir\". Biz alma işini yaparız; deneyi ve raporlamayı laboratuvar yürütür, sonucun yapı için ne anlama geldiğini ise mühendis yorumlar. Bu sınırı bulandıran bir firma size iyilik yapmıyor.",
+      "Aşağıda numune almanın hangi durumlarda gündeme geldiğini, yerin nasıl seçildiğini, işlemin sahada nasıl yürüdüğünü ve sonrasında ne olduğunu anlattım. Sık sorulan birkaç şeyin — \"her daireden alınır mı\", \"tek başıma aldırabilir miyim\" — cevabı da göründüğünden farklı."
+    ],
+    "bolumler": [
+      {
+        "baslik": "Karot Hangi Durumlarda Alınır?",
+        "paragraflar": [
+          "En bilinen sebep mevcut bir yapının beton dayanımının belirlenmesi. Proje aşamasında hesaplanan beton sınıfının sahada gerçekten tutup tutmadığı, ancak yapıdan alınan numunenin kırılmasıyla anlaşılır. Güçlendirme projesi hazırlanacaksa mevcut dayanımın bilinmesi zorunludur; hesap onun üzerine kurulur.",
+          "İkinci sebep yeni yapılarda uyuşmazlık ya da şüphe. Dökümden alınan taze beton numuneleri beklenen sonucu vermediyse, ya da dökümde bir aksaklık olduğu düşünülüyorsa, sertleşmiş yapıdan numune alınarak durum kontrol edilir.",
+          "Üçüncüsü yapı stoğunun değerlendirilmesi kapsamındaki incelemeler. Bu süreçlerin nasıl yürüdüğü, kimin başvurabileceği ve sonucun ne doğuracağı mevzuatla belirlenmiştir; kararı da yetkili kurum ve kuruluşlar verir. Biz bu sürecin tarafı değiliz, yalnızca numune alma işini yaparız. Sürecin kendisiyle ilgili soruları ilgili kuruma ya da yapının mühendisine yöneltmek gerekir."
+        ]
+      },
+      {
+        "baslik": "Numune Nereden Alınır? Yeri Kim Seçer?",
+        "paragraflar": [
+          "Yeri biz seçmiyoruz. Hangi elemandan, kaç adet ve nereden alınacağını yapının mühendisi belirler. Bu karar için yapının projesini, taşıyıcı sistemini ve incelemenin amacını bilmek gerekir; sahada gözle bakarak verilecek bir karar değildir.",
+          "Belirlenen yerde bizim işimiz teknik kısıtları sağlamak. Numune yüzeye dik alınır, içinde donatı bulunmaması istenir, alındığı yer ve yön etiketlenir. Donatının nerede olduğu delik açılmadan önce donatı tarama cihazıyla belirlenir; bu adım atlandığında hem numune geçersiz olur hem de elemanın donatısı kesilir.",
+          "Kritik bölgelerden — kolon-kiriş birleşimleri, mesnet bölgeleri gibi — numune alınmaz. Numune elemanın taşıma gücünü etkilemeyecek bir konumdan seçilir. Silindirin çapı ve boyu da deneyin kendi kurallarına tabidir; laboratuvarın kabul edeceği ölçüler bellidir ve o ölçüde numune çıkarmak alma işinin sorumluluğudur."
+        ]
+      },
+      {
+        "baslik": "\"Karot Her Daireden Alınır mı?\" — Yanlış Kurulmuş Bir Soru",
+        "paragraflar": [
+          "Numune daireden alınmaz, yapı elemanından alınır. Kolondan, perdeden, döşemeden. Bir dairenin içinde bulunan bir kolondan numune alınması, o numunenin \"o daireye ait\" olduğu anlamına gelmez; o eleman binanın tamamının taşıyıcı sisteminin parçasıdır.",
+          "Bu yüzden \"her daireden alınacak mı\" sorusunun cevabı hayır, ama sebebi kapsamın dar tutulması değil. Numune sayısı ve dağılımı, incelenen yapının büyüklüğüne ve mühendisin kurduğu değerlendirme planına göre belirlenir. Bazı numunelerin farklı katlardan alınması istenebilir, çünkü döküm farklı zamanlarda yapılmış olabilir.",
+          "Pratikte şu olur: mühendis numune alınacak elemanları listeler, o elemanların hangi bağımsız bölümlerin içinde kaldığı ortaya çıkar ve o dairelere erişim gerekir. Yani hangi daireye girileceği bir tercih değil, seçilen elemanların nerede durduğunun sonucudur."
+        ]
+      },
+      {
+        "baslik": "İşlem Sahada Nasıl Yürüyor?",
+        "paragraflar": [
+          "Numune alma işi, teknik olarak bildiğimiz karot delme işinin kendisidir. Elmas uçlu silindirik uç, su soğutmalı olarak betona dik biçimde ilerler ve içinden silindir bir parça çıkarır. Makine yüzeye dübelle ya da vakumla sabitlenir; sabitleme gevşek olursa uç eksenden kaçar ve numune eğri çıkar, o numune de kabul edilmez.",
+          "Su soğutmalı çalışıldığı için toz havaya kalkmaz. Buna karşılık kesim suyu ve çamur ortaya çıkar; daire içinde çalışılıyorsa zemin ve mobilya başlamadan örtülür, suyun nereye akacağı önceden çözülür. Delme işleminin kendisi genelde birkaç dakika sürer; zamanın çoğu donatı taraması, sabitleme, örtme ve toplanmaya gider.",
+          "Çıkan silindir etiketlenir ve laboratuvara teslim edilir. Etiketin üzerinde numunenin hangi elemandan, hangi yönde alındığı yazar; bu bilgi olmadan laboratuvar sonucu doğru şekilde raporlayamaz. Bizim iş, doğru ölçüde ve zarar görmemiş bir numuneyi doğru etiketle teslim etmekle biter — bir de geriye kalan deliğin ne olacağıyla."
+        ]
+      },
+      {
+        "baslik": "Sonuç Ne Zaman Çıkar, Kaç Olmalı?",
+        "paragraflar": [
+          "Numune laboratuvara gittikten sonraki süre laboratuvarın kendi iş programına ve deney planına bağlıdır; bu konuda söz veremeyiz, çünkü o aşama bizim elimizde değil. Süreyi laboratuvardan ya da işi yürüten mühendisten öğrenmek gerekir.",
+          "\"Sonuç kaç çıkmalı\" sorusunun tek bir sayısı yok. Beton sınıfları — C25, C30 gibi — belirli bir karakteristik dayanımı ifade eder, ama yapıdan alınan numunenin sonucu ile proje beton sınıfı doğrudan aynı ölçekte karşılaştırılmaz; değerlendirmenin kendi kuralları vardır ve tek bir numuneye bakılarak yapılmaz. Numune sayısı, dağılımı ve istatistiksel değerlendirme birlikte anlam kazanır.",
+          "Sonucun yapı için ne anlama geldiğini yorumlamak da mühendisin işi. Aynı sayı, farklı taşıyıcı sistemlerde farklı sonuç doğurur. Bu yüzden laboratuvar raporunu alıp internetten yorum aramak yerine, raporu değerlendirmesi için yapının mühendisine götürmek doğru olan."
+        ]
+      },
+      {
+        "baslik": "Bizim Yapmadığımız Şeyler",
+        "paragraflar": [
+          "Rapor düzenlemiyoruz. Beton dayanım deneyi ve raporlaması yetkili laboratuvarların işidir; biz numune alma hizmeti veriyoruz. Karot raporu veren bir karot firması arıyorsanız, aradığınız şey aslında bir laboratuvardır.",
+          "Sonuç yorumlamıyoruz. Çıkan değerin yapı için ne ifade ettiği, güçlendirme gerekip gerekmediği, hangi kararın alınacağı mühendislik değerlendirmesidir. Sahada \"bu beton iyi görünüyor\" gibi bir cümle kurmuyoruz; numuneye bakarak dayanım tahmin edilemez.",
+          "Yapının durumuyla ilgili resmî tespit süreçlerinin tarafı değiliz. O süreçler mevzuatla düzenlenmiş, yetkili kuruluşlar tarafından yürütülüyor. Bize düşen, o sürecin ihtiyaç duyduğu numuneyi tekniğine uygun şekilde almak.",
+          "Bunları saymamızın sebebi işten kaçmak değil. Sınırı belirsiz bırakan bir firma, size cevaplayamayacağı sorulara cevap veriyor demektir; o cevaplara dayanarak alacağınız kararın bedeli de size kalır."
+        ]
+      },
+      {
+        "baslik": "Denizli'de Numune Alma İşi",
+        "paragraflar": [
+          "Denizli merkez ve 20 ilçenin tamamında numune alma işi yapıyoruz. Mühendis ya da laboratuvar tarafından belirlenmiş bir numune planı varsa doğrudan ona göre çalışırız; plan yoksa önce onun oluşturulması gerektiğini söyleriz.",
+          "Keşif ücretsizdir. Yerinde bakar, elemanlara erişimi, sabitleme imkânını, su ve elektriğin nereden alınacağını değerlendirir, işin ne tutacağını başlamadan net söyleriz. Oturulan binalarda çalışıyorsak giriş çıkış düzeni, örtme ve temizlik de planın parçasıdır — iş, son numune çıktığında değil saha toplandığında biter."
+        ]
+      },
+      {
+        "baslik": "Numune Alınacak Gün İçin Hazırlık",
+        "paragraflar": [
+          "Numune alınacak elemanların yüzeyine erişilebilir olması gerekiyor. Kolonun önünde dolap varsa çekilmesi, duvarda kaplama varsa o bölgede kaldırılması gerekir; makine yüzeye dübelle ya da vakumla sabitleniyor ve araya giren her tabaka sabitlemeyi bozar. Bunu önceden söylüyoruz ki ekip geldiğinde saat mobilya taşımakla geçmesin.",
+          "Su ve elektrik gerekiyor. Karot makinesi su soğutmalı çalışır; suyun nereden alınacağı ve çamurun nereye gideceği önceden çözülmezse daire içinde iş büyür. Elektriğin mevcut tesisattan alınamadığı durumlarda jeneratörle ya da hidrolik sistemle gidiyoruz, ama bunun keşifte belli olması gerekir.",
+          "Bağımsız bölüm içinde çalışılacaksa o gün birinin evde bulunması gerekiyor. İşlem sırasında gürültü olur, kesim suyu çıkar; zemin ve mobilya biz başlamadan önce örtülür. Numunenin çıkması dakikalar sürer ama hazırlık, örtme ve toplanma birlikte düşünüldüğünde bir elemanda geçen süre çok daha uzundur.",
+          "Kaç elemandan numune alınacağı belliyse gün planını ona göre kuruyoruz. Birden fazla katta çalışılacaksa sırayı, hangi daireye ne zaman girileceğini önceden paylaşırız — oturulan binalarda bu, işin en çok şikâyet üreten kısmı ve önceden konuşulduğunda tamamen ortadan kalkıyor."
+        ]
+      }
+    ],
+    "sss": [
+      {
+        "q": "Karot testi nasıl yapılıyor?",
+        "a": "Üç aşamalı bir iş. Yapının mühendisi numunenin hangi elemandan, nereden ve kaç adet alınacağını belirler. Karot ekibi elmas uçlu makineyle, su soğutmalı ve yüzeye dik biçimde silindir numuneyi çıkarır, etiketleyip teslim eder. Yetkili laboratuvar numuneyi hazırlar, kırar ve raporlar. Biz alma işini yapıyoruz; deney ve rapor laboratuvarın işi."
+      },
+      {
+        "q": "Numunenin alınacağı yeri kim seçer?",
+        "a": "Yapının mühendisi. Bu karar için projeyi ve taşıyıcı sistemi bilmek gerekir. Bizim tarafımızdaki kısıtlar teknik: numune yüzeye dik alınır, içinde donatı bulunmamalıdır, kritik bölgelerden alınmaz ve alındığı yer ile yön etiketlenir. Donatının konumu delme öncesi tarama cihazıyla belirlenir."
+      },
+      {
+        "q": "Karot her daireden alınır mı?",
+        "a": "Numune daireden değil, yapı elemanından alınır — kolondan, perdeden, döşemeden. Bir dairedeki kolondan alınan numune o daireye değil binanın taşıyıcı sistemine aittir. Hangi dairelere girileceği, mühendisin seçtiği elemanların nerede kaldığının sonucudur."
+      },
+      {
+        "q": "Karot sonucu kaç günde çıkar?",
+        "a": "Numune laboratuvara teslim edildikten sonraki süre laboratuvarın iş programına bağlıdır ve bu konuda söz veremeyiz, çünkü o aşama bizim elimizde değil. Süreyi laboratuvardan veya işi yürüten mühendisten öğrenmek gerekir. Sahadaki numune alma işlemi ise genelde aynı gün tamamlanır."
+      },
+      {
+        "q": "Karot raporunu siz veriyor musunuz?",
+        "a": "Hayır. Beton dayanım deneyi ve raporlaması yetkili laboratuvarların işi. Biz numune alma hizmeti veriyoruz. Çıkan sonucun yapı için ne anlama geldiğini yorumlamak da yapının mühendisine ait; numuneye bakarak dayanım tahmin edilemez."
       }
     ],
     "ilgiliHizmetler": [
