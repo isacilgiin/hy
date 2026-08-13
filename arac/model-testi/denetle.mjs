@@ -47,6 +47,38 @@ const belgeKaliplari = [
 const olguMetni = JSON.stringify(olgular)
 const izinliSayilar = new Set((olguMetni.match(/\d+/g) ?? []))
 
+/**
+ * DİL KİRLİLİĞİ — Türkçe metnin içine sızan yabancı yazı sistemleri.
+ *
+ * İlk karşılaştırmada nemotron-3-super-120b teknik olarak en iyi metni yazdı
+ * ama içine Korece, Çince ve Almanca parçalar karıştırdı:
+ *   "rüzgâr으로부터 korunan bir place"   "sistem에充填 edilir"
+ *   "Innen ünite"   "consequently water damage'e"
+ * İçerik doğru olsa bile böyle bir metin müşteri sitesine konamaz.
+ *
+ * Bu, uydurma iddiadan farklı olarak TAMAMEN mekanik yakalanabilir: Türkçe
+ * metinde Han, Hangul, Kiril, Arap veya Japon karakteri hiç bulunmamalı.
+ */
+const yabanciYaziSistemleri = [
+  { ad: 'Çince/Japonca (Han)', re: /[一-鿿㐀-䶿]/g },
+  { ad: 'Korece (Hangul)', re: /[가-힯ᄀ-ᇿ]/g },
+  { ad: 'Japonca (kana)', re: /[぀-ヿ]/g },
+  { ad: 'Kiril', re: /[Ѐ-ӿ]/g },
+  { ad: 'Arapça', re: /[؀-ۿ]/g },
+]
+
+function dilKirliligi(metin) {
+  const bulgular = []
+  for (const { ad, re } of yabanciYaziSistemleri) {
+    const eslesmeler = [...metin.matchAll(re)]
+    if (!eslesmeler.length) continue
+    const ilk = eslesmeler[0].index
+    const baglam = metin.slice(Math.max(0, ilk - 30), ilk + 30).replace(/\s+/g, ' ')
+    bulgular.push({ ad, adet: eslesmeler.length, ornek: baglam })
+  }
+  return bulgular
+}
+
 function denetle(metin) {
   const bulgular = { yuksekRisk: [], sayilar: [], ustunluk: [], belge: [] }
   const kucuk = metin.toLowerCase()
@@ -96,10 +128,19 @@ for (const dosya of dosyalar.sort()) {
   }
 
   const b = denetle(metin)
-  const skor = b.yuksekRisk.length * 3 + b.belge.length * 3 + b.ustunluk.length
+  const kirlilik = dilKirliligi(metin)
+  // Dil kirliliği ağır basıyor: uydurma bir sayı düzeltilebilir, ama içine
+  // Korece karışmış bir metin baştan yazılmalı.
+  const skor =
+    b.yuksekRisk.length * 3 + b.belge.length * 3 + b.ustunluk.length + kirlilik.length * 5
 
   console.log(`\n${dosya.replace('.md', '')}`)
   console.log(`  ${kelime} kelime  |  ihlal skoru: ${skor}`)
+
+  if (kirlilik.length) {
+    console.log(`  DIL KIRLILIGI — metin Turkce degil, yabanci yazi sistemi karismis:`)
+    kirlilik.forEach((k) => console.log(`     ✗ ${k.ad}: ${k.adet} karakter — …${k.ornek}…`))
+  }
 
   if (b.yuksekRisk.length) {
     console.log(`  UYDURMA IDDIA (${b.yuksekRisk.length}):`)
