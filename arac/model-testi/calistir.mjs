@@ -33,13 +33,34 @@ const ciktiKlasoru = path.join(buradan, 'ciktilar')
 const TABAN = 'https://integrate.api.nvidia.com/v1'
 
 /**
- * Denenecek modeller. Kimlikleri `--liste` çıktısından kopyalayın —
- * TAHMİN ETMEYİN, yanlış kimlik 404 döner.
+ * Denenecek modeller — 2026-08-13'te `--liste` çıktısından seçildi (102 model).
+ *
+ * Sıra bilinçli: Türkçe üretme ihtimali yüksek olanlar önde, en yavaş olan
+ * sonda. Ücretsiz uç dolarsa ya da kota biterse en değerli adaylar çoktan
+ * denenmiş olur.
+ *
+ * Seçim gerekçeleri:
+ *  · mistral-large-2  — Mistral bu modeli Türkçe dahil çok dilli olarak
+ *                       duyurdu; listedeki en açık Türkçe iddiası bu.
+ *  · llama-3.3-70b    — Llama'nın Türkçesi bilinen şekilde makul.
+ *  · gpt-oss-120b     — talimat takibi güçlü; kural listesine uyması beklenir.
+ *  · gemma-4-31b      — Google modelleri çok dilli tarafta iyi.
+ *  · glm-5.2          — ilk koşuda 404 vermişti; kimlik `zai/` değil `z-a i/`
+ *                       (tire ile). Uydurmanın bedeli buydu.
+ *  · nemotron 120b    — 1M bağlam; Ultra'dan hızlı olması beklenir.
+ *  · nemotron 550b    — en büyük ama ilk koşuda 221 saniye sürdü, en sonda.
+ *
+ * Listede ayrıca `writer/palmyra-creative-122b` var — doğrudan içerik yazımı
+ * için eğitilmiş. Bu turda denenmedi, adaylar tükenirse sıradaki o.
  */
 const modeller = [
-  'nvidia/nemotron-3-ultra-550b-a55b',
-  'openai/gpt-oss-120b',
+  'mistralai/mistral-large-2-instruct',
   'meta/llama-3.3-70b-instruct',
+  'openai/gpt-oss-120b',
+  'google/gemma-4-31b-it',
+  'z-ai/glm-5.2',
+  'nvidia/nemotron-3-super-120b-a12b',
+  'nvidia/nemotron-3-ultra-550b-a55b',
 ]
 
 const ZAMAN_ASIMI_MS = 180_000
