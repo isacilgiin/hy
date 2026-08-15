@@ -836,6 +836,26 @@ AddDefaultCharset UTF-8
   </FilesMatch>
   Header set X-Content-Type-Options "nosniff"
   Header set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # llms.txt ve llms-full.txt ARAMA SONUCUNA GIRMEZ.
+  #
+  # llms-full.txt, 19 sayfanin tam metnini iceriyor: 25 bin kelime, sitenin
+  # butun icerigi tek adreste. index.html sablonundaki <link rel="alternate">
+  # yuzunden 48 sayfadan link de aliyor. Google'in dizininde durursa ayni
+  # metnin ikinci bir kopyasi olur ve HTML sayfalarla ayni sorgulara girer --
+  # ustelik tam da eski WordPress adresleri dizinden temizlenirken.
+  #
+  # noindex yalnizca ARAMA SONUCUNA CIKMAYI engeller, indirmeyi degil:
+  # GPTBot, ClaudeBot, PerplexityBot dosyayi dogrudan cekiyor ve bu basligi
+  # bir yasak olarak yorumlamiyor. Yani dosyanin yazilma amaci (LLM okusun)
+  # calismaya devam eder. Google'in AI Overviews tarafi ise zaten HTML
+  # sayfalari goruyor, ayni metni orada buluyor -- kayip yok.
+  #
+  # ROBOTS.TXT'E "Disallow" YAZMAYIN: o gercekten indirmeyi yasaklar ve
+  # dosyayi tam da hedef kitlesine kapatir. Ayrimin tamami bu.
+  <FilesMatch "^llms(-full)?\\.txt$">
+    Header set X-Robots-Tag "noindex"
+  </FilesMatch>
 </IfModule>
 
 <IfModule mod_deflate.c>
