@@ -81,13 +81,16 @@ export default function ServiceAreaDetail() {
   // (keyword cannibalization). Ana sayfa "denizli karot" sorgusunu sahiplenir;
   // bu sayfa "denizli merkez karot" acisiyla ayrisir.
   const seoAd = area.slug === 'denizli-karot' ? 'Denizli Merkez' : area.name.replace(/\s*\(.*?\)/, '')
+  // Açıklamada ilçe adının önüne il adı gelir (Güney/Kale/Merkez gibi adlar
+  // birden fazla ilde var). Gerekçesi routeMeta.js'te, `acikAd` yanında.
+  const acikAd = seoAd.startsWith(siteConfig.address.city) ? seoAd : `${siteConfig.address.city} ${seoAd}`
 
   return (
     <div className="page-enter">
       <Seo
-        // routeMeta.js:218 ile AYNI kalmalı — gerekçesi orada yazıyor.
+        // routeMeta.js'teki bölge rotasıyla AYNI kalmalı — gerekçesi orada yazıyor.
         title={`${seoAd} Karot — Acil Beton Delme, Kesme | ${siteConfig.companyName}`}
-        description={`${seoAd} karot hizmeti: beton delme, beton kesme, beton kırma, filiz ekimi ve ankraj. Ücretsiz keşif ve net fiyat teklifi için ${siteConfig.phone}.`}
+        description={`${acikAd} karot: beton delme, beton kesme, beton kırma, filiz ekimi ve ankraj. Ücretsiz keşif ve net fiyat teklifi için ${siteConfig.phone}.`}
         path={`/hizmet-bolgeleri/${area.slug}/`}
         jsonLd={jsonLd}
       />

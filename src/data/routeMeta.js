@@ -97,7 +97,22 @@ const sabitler = [
   },
   {
     path: '/hizmetler/',
-    title: `Karot Hizmetleri | Denizli Beton Delme ve Kesme — ${companyName}`,
+    /**
+     * Başlık ŞEHİRLE başlar, hizmet kelimesiyle değil.
+     *
+     * Eskisi `Karot Hizmetleri | Denizli Beton Delme ve Kesme` idi. Hata,
+     * "hizmet" kelimesinin varlığı değil — YERİ. Kimse "karot hizmeti" diye
+     * aramıyor; aramalar "denizli karot", "beton delme denizli" biçiminde
+     * geliyor ve başlığın ilk kelimeleri hem Google'da hem kullanıcı gözünde
+     * en ağır basan yer. Şehir 32. karakterde başlıyordu.
+     *
+     * "Denizli Karot" ile BAŞLAMIYOR, bilerek: o sorguyu ANA SAYFA sahipleniyor
+     * (`seo.defaultTitle`, "Denizli Karot Firması" ile başlar) ve iki sayfayı
+     * aynı sorguya sürmek ikisini birden zayıflatır — services.js:26'daki
+     * yamyamlık notunun aynısı. Bu sayfa kardeş sorguları alıyor: "beton delme
+     * denizli", "beton kesme denizli".
+     */
+    title: `Denizli Beton Delme, Kesme ve Karot Hizmetleri | ${companyName}`,
     description:
       "Denizli'de karot, beton delme, beton kesme, beton kırma, filiz ekimi, ankraj ve kimyasal dübel hizmetleri. Ücretsiz keşif ve net fiyat teklifi.",
     h1: `${address.city}'de Verdiğimiz Karot Hizmetleri`,
@@ -221,6 +236,20 @@ const bolgeRotalari = serviceAreas.map((a) => {
   // anahtar kelimeyi hedeflemesin diye "Denizli Merkez" olur.
   const seoAd = a.slug === 'denizli-karot' ? 'Denizli Merkez' : a.name.replace(/\s*\(.*?\)/, '')
 
+  /**
+   * AÇIKLAMADA ilçe adının önüne il adı konur — başlıkta değil.
+   *
+   * Sebep coğrafi belirsizlik: Güney, Kale, Merkez, Çal gibi adlar Türkiye'de
+   * birden fazla ilde geçiyor. "Kale karot hizmeti" ile başlayan bir açıklama
+   * hangi Kale olduğunu söylemiyor; arama da çoğu zaman "denizli kale karot"
+   * biçiminde geliyor. Başlıkta yapılmadı çünkü orada bütçe 57 karakter ve
+   * ilçe adının en başta durması gerekiyor (aşağıdaki nota bakın); açıklamanın
+   * 155 karakterlik bütçesi en uzun ilçede bile buna yetiyor.
+   *
+   * Merkez sayfasında seoAd zaten "Denizli Merkez" — il adı iki kez yazılmaz.
+   */
+  const acikAd = seoAd.startsWith(address.city) ? seoAd : `${address.city} ${seoAd}`
+
   const hizmetSemasi = {
     '@context': 'https://schema.org',
     '@type': 'Service',
@@ -256,7 +285,7 @@ const bolgeRotalari = serviceAreas.map((a) => {
     // diğeri SPA gezinmesini besliyor. Biri değişip diğeri kalırsa tarayıcı ile
     // kullanıcı farklı başlık görür.
     title: `${seoAd} Karot — Acil Beton Delme, Kesme | ${companyName}`,
-    description: `${seoAd} karot hizmeti: beton delme, beton kesme, beton kırma, filiz ekimi ve ankraj. Ücretsiz keşif ve net fiyat teklifi için ${phone}.`,
+    description: `${acikAd} karot: beton delme, beton kesme, beton kırma, filiz ekimi ve ankraj. Ücretsiz keşif ve net fiyat teklifi için ${phone}.`,
     jsonLd: [hizmetSemasi, faqSemasi(a.sss)],
     h1: `${a.name} Karot`,
     kirintilar: [

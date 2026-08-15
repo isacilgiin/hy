@@ -56,6 +56,17 @@
   <!-- Canonical -->
   <link rel="canonical" href="%SITE_URL%/" />
 
+  <!-- llms.txt — LLM'ler ve AI arama motorlarının okuyacağı düz metin özet.
+       llms.txt'in KAYITLI bir keşif yöntemi yok: dosya kökte duruyor diye
+       kimse bakmıyor. Elimizdeki iki işaret bu satır ile robots.txt'teki
+       yorum satırı; ikisi de duruyor çünkü bazı tarayıcılar yalnız robots.txt
+       okuyor, bazıları yalnızca sayfa <head>'ini ayrıştırıyor.
+       Bu satır şablonda olduğu için 47 rotanın hepsine giriyor. Aşağıdaki
+       canonical'ı rotaya göre yeniden yazan düzenli ifade (vite.config.js:785)
+       rel="canonical" arıyor, buraya dokunmaz. -->
+  <link rel="alternate" type="text/plain" title="llms.txt" href="/llms.txt" />
+  <link rel="alternate" type="text/plain" title="llms-full.txt" href="/llms-full.txt" />
+
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="tr_TR" />

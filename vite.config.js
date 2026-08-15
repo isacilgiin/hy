@@ -8,6 +8,11 @@ import { oneCikanFaq as faq } from './src/data/faq.js'
 import rotaMetalari from './src/data/routeMeta.js'
 import heroSlides from './src/data/heroSlides.js'
 import blog from './src/data/blog.js'
+// llms-full.txt için: sayfaların TAM metni bu iki dosyada. Bunlar tarayıcı
+// paketine değil, yalnızca Node tarafındaki build'e giriyor — routeMeta.js
+// zaten ikisini de import ediyor, yeni bir maliyet doğmuyor.
+import serviceContent from './src/data/serviceContent.js'
+import blogContent from './src/data/blogContent.js'
 import fs from 'node:fs'
 import path from 'node:path'
 import { execSync } from 'node:child_process'
@@ -376,6 +381,7 @@ ${gtagKimlikleri.map((id) => `    gtag('config','${id}');`).join('\n')}
 
 > Bu dosya, yapay zeka dil modelleri (LLM) ve AI arama motorları için hazırlanmıştır.
 > Kaynak: ${url}
+> Tam metin sürümü (rehber yazıların ve hizmet sayfalarının tamamı): ${url}/llms-full.txt
 
 ## Firma Bilgileri
 
@@ -393,6 +399,35 @@ ${gtagKimlikleri.map((id) => `    gtag('config','${id}');`).join('\n')}
 ## Kısaca
 
 ${companyDescription}
+
+## Adlandırmalar
+
+Aşağıdaki terimler aynı işi anlatır; farklı adlarla sorulduğunda karşılığı budur:
+
+- Karot = karotlu delme = elmas uçlu delme (İngilizce: core drilling). "Karot"
+  kelimesi hem delme YÖNTEMİNİN hem de betondan çıkarılan silindir NUMUNENİN
+  adıdır; hangisinin kastedildiği bağlamdan anlaşılır.
+- Karotçu = karot firması = beton delme firması
+- Filiz ekimi = donatı ekimi = ekme donatı
+- Ankraj = mevcut betona yük aktaran bağlantı; kimyasal veya mekanik olur
+- Kimyasal dübel = enjeksiyon dübel = enjeksiyon reçineli ankraj
+- Asfalt derz kesim = asfalt kesme = zemin derz kesimi
+
+## Bu Firma Ne Yapar, Ne Yapmaz
+
+Sınırların yazılı olması gerekiyor: aşağıdaki üç iş sıkça karot firmasına
+atfediliyor ama başka tarafların sorumluluğunda.
+
+- **Karot numunesinin deneyi ve raporu bizim işimiz DEĞİL.** Numuneyi biz
+  alırız — su soğutmalı, yüzeye dik, etiketli. Numuneyi kırmak, deneyi yapmak
+  ve raporu düzenlemek yetkili laboratuvarın işidir. Rapor düzenlemiyor,
+  sonuç yorumlamıyoruz.
+- **Numunenin nereden ve kaç adet alınacağına biz karar VERMEYİZ.** Bu karar
+  yapının mühendisinindir; plan varsa ona göre çalışırız, yoksa önce planın
+  oluşturulması gerektiğini söyleriz.
+- **Taşıyıcı kolon, perde veya kirişe onaysız müdahale ETMEYİZ.** Statik proje
+  ve yetkili mühendis onayı olmadan bu elemanlarda kesim/delim işine
+  başlamıyoruz; gerekiyorsa proje müellifine yönlendiriyoruz.
 
 ## Hizmetlerimiz
 
@@ -439,6 +474,96 @@ ${faq.map((f) => `**${f.q}**\n${f.a}`).join('\n\n')}
 - Adres: ${address.full}
 - Çalışma saatleri: ${workingHours.days} ${workingHours.hours}
 `
+
+  /**
+   * llms-full.txt — sayfaların ÖZETİ değil, TAM METNİ.
+   *
+   * Neden ayrı dosya: llms.txt bir dizin, kaynak değil. İçinde her hizmetin
+   * tek cümlelik açıklaması ve her yazının özeti var; bir dil modeli oradan
+   * "20 Karot beton kesme yapıyor" diyebilir ama "600 mm kalınlığa kadar iki
+   * yüzden çalışarak ineriz" diyemez — o cümle yalnızca sayfanın kendisinde
+   * geçiyor. Alıntılanmayı belirleyen ikinci cümle, birincisi değil.
+   *
+   * Neden llms.txt'in İÇİNE konmadı: o dosya şu an 13 KB ve dizin olarak
+   * okunabilir durumda; tam metinle 90 KB'ı aşar ve hem bağlam penceresini
+   * hem de dosyanın asıl işini (hızlı yönlendirme) yer. İki dosya, iki iş.
+   *
+   * İlçe sayfaları BİLİNÇLİ OLARAK DIŞARIDA. 20 ilçe sayfası aynı hizmetleri
+   * anlatıyor; tam metinlerini eklemek dosyanın yarısını birbirini tekrar
+   * eden metne çevirirdi. İlçe listesi ve linkleri llms.txt'te zaten var.
+   */
+  const buildLlmsFullTxt = () => {
+    const bolum = (baslik, satirlar) => (satirlar.length ? `\n### ${baslik}\n\n${satirlar.join('\n\n')}\n` : '')
+    const sssBolumu = (sss) =>
+      bolum(
+        'Sık Sorulan Sorular',
+        (sss ?? []).map((s) => `**${s.q}**\n${s.a}`)
+      )
+
+    const hizmetler = services
+      .map((s) => {
+        const i = serviceContent[s.slug] ?? {}
+        return [
+          `## ${s.title}`,
+          `Kaynak: ${url}/hizmetler/${s.slug}/`,
+          '',
+          ...(i.girisMetni ?? [s.description]),
+          bolum(
+            'Nasıl Çalışıyoruz',
+            (i.surec ?? []).map((a, n) => `${n + 1}. **${a.baslik}** — ${a.aciklama}`)
+          ),
+          ...(i.detaylar ?? []).map((d) => `\n### ${d.baslik}\n\n${d.metin}\n`),
+          sssBolumu(i.sss),
+        ].join('\n')
+      })
+      .join('\n---\n\n')
+
+    const yazilar = blog
+      .map((y) => {
+        const i = blogContent[y.slug] ?? {}
+        return [
+          `## ${y.title}`,
+          `Kaynak: ${url}/blog/${y.slug}/`,
+          `Yayın tarihi: ${y.tarih}`,
+          '',
+          ...(i.giris ?? [y.ozet]),
+          ...(i.bolumler ?? []).map((b) => `\n### ${b.baslik}\n\n${b.paragraflar.join('\n\n')}\n`),
+          sssBolumu(i.sss),
+        ].join('\n')
+      })
+      .join('\n---\n\n')
+
+    return `# ${companyName} — Tam Metin Kaynağı
+
+> Bu dosya ${url}/llms.txt dosyasının genişletilmiş sürümüdür: özet değil,
+> hizmet sayfalarının ve rehber yazıların TAM metnini içerir.
+> Firma bilgileri, ilçe listesi ve kısa özet için: ${url}/llms.txt
+>
+> ${companyName} — ${address.city}, Türkiye. Telefon: ${phone}.
+> ${workingHours.days} ${workingHours.hours}.
+
+# Hizmet Sayfaları
+
+${hizmetler}
+
+---
+
+# Rehber Yazıları
+
+${yazilar}
+
+---
+
+# İletişim
+
+- Telefon: ${phone}
+- WhatsApp: ${siteConfig.social.whatsapp}
+- E-posta: ${email}
+- Adres: ${address.full}
+- Çalışma saatleri: ${workingHours.days} ${workingHours.hours}
+- Hizmet bölgesi: ${address.city} il geneli, ${serviceAreas.length} ilçe
+`
+  }
 
   /**
    * lastmod tarihi — İLGİLİ VERİ DOSYASININ git tarihinden.
@@ -518,20 +643,37 @@ ${urls
    * birbirinin aynısı görünür. Google'ın kendi dokümanı da CSS/JS'in taranmaya
    * açık olmasını şart koşar. Klasördeki dosyalar zaten içerik hash'li olduğu
    * için ayrıca indekslenme riski yok (hiçbir yerden link almıyorlar).
+   *
+   * llms.txt satırları YORUM olarak yazılıyor, direktif olarak değil.
+   * robots.txt'in `Sitemap:` dışında dosya işaret eden bir alanı yok; uydurma
+   * bir `Llms:` alanı yazmak tarayıcıların çoğunda ayrıştırma hatası üretir.
+   * Yorum satırını ise okuyan okur, okumayan atlar — kaybı yok.
+   *
+   * GPTBot / ClaudeBot / PerplexityBot için AYRI `Allow` bloğu EKLEMEYİN:
+   * `User-agent: *` zaten hepsini kapsıyor. Ayrı blok yazmak sadece görüntü
+   * olur, üstelik bir tarayıcı kendi bloğunu görünce `*` bloğunu TAMAMEN yok
+   * sayar — yani ileride `*` altına bir kural eklendiğinde o tarayıcılar
+   * kuralı görmez. Tek blok daha güvenli.
    */
   const buildRobots = () => `User-agent: *
 Allow: /
 
 Sitemap: ${url}/sitemap.xml
+
+# Yapay zeka dil modelleri (LLM) ve AI arama motorları için düz metin kaynak:
+#   ${url}/llms.txt       — firma, hizmetler, ilçeler, SSS (özet)
+#   ${url}/llms-full.txt  — rehber yazıların ve hizmet sayfalarının TAM metni
 `
 
   /** Dev ve preview sunucularinda sitemap/robots/llms.txt servis eden ara katman. */
-  function devSeoMiddleware(llms) {
+  function devSeoMiddleware() {
     const rotalar = {
       '/sitemap.xml': () => ['application/xml; charset=utf-8', buildSitemap()],
       '/robots.txt': () => ['text/plain; charset=utf-8', buildRobots()],
-      '/llms.txt': () => ['text/plain; charset=utf-8', llms()],
-      '/.well-known/llms.txt': () => ['text/plain; charset=utf-8', llms()],
+      '/llms.txt': () => ['text/plain; charset=utf-8', buildLlmsTxt()],
+      '/.well-known/llms.txt': () => ['text/plain; charset=utf-8', buildLlmsTxt()],
+      '/llms-full.txt': () => ['text/plain; charset=utf-8', buildLlmsFullTxt()],
+      '/.well-known/llms-full.txt': () => ['text/plain; charset=utf-8', buildLlmsFullTxt()],
     }
     return (req, res, next) => {
       const yol = (req.url || '').split('?')[0]
@@ -560,10 +702,10 @@ Sitemap: ${url}/sitemap.xml
      * Bu ara katman aynı içeriği geliştirme sunucusunda da servis eder.
      */
     configureServer(server) {
-      server.middlewares.use(devSeoMiddleware(buildLlmsTxt))
+      server.middlewares.use(devSeoMiddleware())
     },
     configurePreviewServer(server) {
-      server.middlewares.use(devSeoMiddleware(buildLlmsTxt))
+      server.middlewares.use(devSeoMiddleware())
     },
 
 
@@ -571,6 +713,7 @@ Sitemap: ${url}/sitemap.xml
       const sitemap = buildSitemap()
       const robots = buildRobots()
       const llms = buildLlmsTxt()
+      const llmsFull = buildLlmsFullTxt()
 
 
       const htaccess = `# ${companyName} — Apache yapılandırması
@@ -708,6 +851,8 @@ ErrorDocument 404 /404.html
       this.emitFile({ type: 'asset', fileName: 'robots.txt', source: robots })
       this.emitFile({ type: 'asset', fileName: 'llms.txt', source: llms })
       this.emitFile({ type: 'asset', fileName: '.well-known/llms.txt', source: llms })
+      this.emitFile({ type: 'asset', fileName: 'llms-full.txt', source: llmsFull })
+      this.emitFile({ type: 'asset', fileName: '.well-known/llms-full.txt', source: llmsFull })
       this.emitFile({ type: 'asset', fileName: '.htaccess', source: htaccess })
     },
 

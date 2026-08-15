@@ -76,7 +76,9 @@ export default function Services() {
   return (
     <div className="page-enter">
       <Seo
-        title={`Karot Hizmetleri | Denizli Beton Delme ve Kesme — ${siteConfig.companyName}`}
+        // routeMeta.js'teki '/hizmetler/' rotasıyla AYNI kalmalı — şehirle
+        // başlama gerekçesi orada yazıyor.
+        title={`Denizli Beton Delme, Kesme ve Karot Hizmetleri | ${siteConfig.companyName}`}
         description="Denizli'de karot, beton delme, beton kesme, beton kırma, filiz ekimi, ankraj ve kimyasal dübel hizmetleri. Ücretsiz keşif ve net fiyat teklifi."
         path="/hizmetler/"
       />
