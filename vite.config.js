@@ -105,6 +105,24 @@ function seoFromConfig() {
     '@type': 'LocalBusiness',
     '@id': `${url}/#localbusiness`,
     name: companyName,
+    /**
+     * Google İşletme Profili'ndeki TAM ad. 2026-08-15'te işletme sahibince
+     * doğrulandı; kaynağı `geo.embedSrc` içindeki profil adı.
+     *
+     * Neden gerekli: yerel aramada güven sinyallerinin çoğu (puan, yorum,
+     * fotoğraf, konum) profilde duruyor, sitede değil. Google ikisinin aynı
+     * işletme olduğunu ad/adres/telefon eşleşmesinden çıkarıyor — ve sitedeki
+     * ad "20 Karot" iken profildeki ad üç parçalıydı, yani en güçlü alan
+     * eşleşmiyordu. sameAs profilin ADRESİNİ veriyor, bu satır ADINI.
+     *
+     * `name` DEĞİŞTİRİLMEDİ: sitenin markası her yerde "20 Karot" ve başlıkların
+     * tamamı ondan üretiliyor. alternateName "bu işletme şu adla da biliniyor"
+     * demenin doğru yeri.
+     *
+     * BURAYA UYDURMA VARYANT EKLEMEYİN ("denizli karot", "karotçu" gibi).
+     * alternateName gerçek addır, anahtar kelime kutusu değil.
+     */
+    alternateName: '20 Karot | Denizli Karot Uygulama | Muhemmet Senekçi',
     description: companyDescription,
     url,
     telephone: phoneRaw,

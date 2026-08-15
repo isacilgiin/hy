@@ -497,7 +497,15 @@ const blogContent = {
     ]
   },
   "karot-firmasi-secerken": {
-    "seoTitle": "Karot Firması Seçerken Nelere Dikkat Edilir? Kontrol Listesi",
+    // Başlığa "Denizli" eklendi, "Kontrol Listesi" çıkarıldı (2026-08-15).
+    // Search Console: "denizli karot firmaları" 3 ayda 157 gösterim / 2 tık —
+    // sitenin en çok görünüp en az tıklanan sorgusu. Sorgu ÇOĞUL: "hangi
+    // firmalar, hangisini seçeyim". Bu yazı tam o soruyu cevaplıyordu ama
+    // başlığında şehir yoktu, açıklamasında vardı. Ana sayfayla yamyamlık
+    // riski var (o da "Denizli Karot Firması" ile başlıyor) ama niyet ayrı:
+    // ana sayfa "firma arıyorum", bu sayfa "nasıl seçerim" sorgusunu alıyor.
+    // Ana sayfanın "denizli karot" sorgusundaki %27 TO'suna dokunulmadı.
+    "seoTitle": "Denizli Karot Firması Seçerken Nelere Dikkat Edilir?",
     "giris": [
       "Karot firması seçerken çoğu kişi aynı yolu izler. Üç numara bulunur, üçüne de aynı soru sorulur, en düşük rakamı söyleyen iş alır. Sıkıntı şu ki o üç rakam çoğu zaman aynı işin karşılığı değildir. Biri kesilen parçayı indirmeyi ve molozu götürmeyi de hesaba katarak konuşmuştur, diğeri sadece makinenin duvarda geçireceği süreyi saymıştır. Aynı cümleyi duyup birbirinden çok farklı iki iş satın alırsınız.",
       "Firmalar arasındaki fark, uç betona daldığı anda görünmez. Fark ondan önce ve ondan sonra ortaya çıkar. İşe nasıl bakıldığında, hangi yöntemin neden seçildiğinde, çıkan molozun kimin sırtında kaldığında, duvarda bırakılan kenarın ne halde olduğunda. Delme ve kesme kısmı zaten makinenin işidir; geri kalanı firmanın işidir. Güvenilir karotçu arayan biri için asıl ayrım da tam burada başlar.",
