@@ -93,7 +93,7 @@ const blog = [
   },
   {
     "slug": "karot-firmasi-secerken",
-    "title": "Karot Firması Seçerken Nelere Dikkat Etmeli? Sahadan Bir Kontrol Listesi",
+    "title": "Denizli'de Karot Firması Seçerken Nelere Dikkat Etmeli?",
     "description": "Denizli karot firması ararken keşif, teklif kapsamı, iş güvenliği ve taşıyıcı eleman onayı gibi konularda nelere dikkat edeceğinizi anlatan kontrol listesi.",
     "ozet": "Karot ve beton kesme işi verirken hangi soruları sormak gerekir, hangi cevap tehlike işaretidir? Keşiften teklife, iş güvenliğinden moloza kadar kısa bir kontrol listesi.",
     "okumaSuresi": 9,
