@@ -13,6 +13,73 @@ import blog from './src/data/blog.js'
 // zaten ikisini de import ediyor, yeni bir maliyet doğmuyor.
 import serviceContent from './src/data/serviceContent.js'
 import blogContent from './src/data/blogContent.js'
+/**
+ * HERO ÖN BOYAMASINI SÖKME — ana sayfa DIŞINDAKİ her rotada.
+ *
+ * Hero ön boyaması ve LCP ön yüklemesi yalnızca ana sayfaya aittir. Başka bir
+ * rotada kalırsa iki zarar birden veriyor: (1) o sayfanın hiç kullanmadığı
+ * ~158 KB'lık hero görseli YÜKSEK ÖNCELİKLE iniyor, (2) React devralana kadar
+ * ekranda YANLIŞ BİR HERO duruyor — kullanıcı blog yazısını açtığında önce ana
+ * sayfanın fabrika fotoğrafını görüyor.
+ *
+ * BURASI PAYLAŞILAN TEK KAYNAK. Üç yerden çağrılıyor: build'in rota döngüsü,
+ * build'in 404 sayfası ve GELİŞTİRME SUNUCUSU. Üçüncüsü uzun süre eksikti:
+ * silme yalnızca writeBundle'daydı, transformIndexHtml ise belirteçleri her
+ * rotada dolduruyordu. Sonuç: build doğru, `npm run dev` yanlış — ve proje
+ * dev üzerinden geliştirildiği için hata aylarca "hero sıçraması" sanıldı.
+ * Yeni bir silme kuralı gerekirse BURAYA ekleyin, kopyalamayın.
+ */
+/**
+ * ROTA TABLOSU KAPISI — App.jsx ile routeMeta.js ayrışırsa build DURUR.
+ *
+ * İki liste var ve elle senkron tutuluyorlar:
+ *   src/App.jsx           — React Router'ın gerçekten tanıdığı rotalar
+ *   src/data/routeMeta.js — build'in HTML yazdığı 90 sayfa
+ * routeMeta'ya bir sayfa eklenip App.jsx'e eklenmezse build o sayfanın
+ * HTML'ini üretir, sitemap'e koyar, Google indeksler — ve ziyaretçi React'in
+ * 404'ünü görür. Hata sessizdir, çünkü ham HTML doğru görünür.
+ *
+ * Kapı App.jsx'i AYRIŞTIRIYOR; elle tutulan bir kopya daha üretmiyor.
+ *
+ * NOT — burada bir de rota parçası ön yüklemesi (<link rel="modulepreload">)
+ * denendi ve ÖLÇÜLÜP GERİ ALINDI. Suspense'in dönen halkası kısalıyordu
+ * (3G'de 996 → 305 ms) ama içeriğe varış 4G'de tutarlı biçimde ~130 ms
+ * GECİKİYORDU: React'in açılışı CPU'ya bağlı ve ana paketi bant genişliği
+ * yarışına sokmak her şeyi geciktiriyor. Kazanç yalnızca bant genişliği
+ * darboğazken var. Tekrar denemeden önce ÖLÇÜN.
+ */
+const appRotalariniOku = () => {
+  const kaynak = fs.readFileSync('src/App.jsx', 'utf8')
+  const tembel = new Map()
+  for (const m of kaynak.matchAll(
+    /const\s+(\w+)\s*=\s*lazy\(\s*(?:async\s*)?\(\)\s*=>[\s\S]*?import\(['"]\.\/pages\/(\w+)['"]\)/g
+  )) tembel.set(m[1], m[2])
+
+  const rotalar = []
+  for (const m of kaynak.matchAll(/<Route\s+path="([^"]+)"\s+element=\{<(\w+)\s*\/>\}/g))
+    rotalar.push({ kalip: m[1], bilesen: m[2], sayfa: tembel.get(m[2]) ?? null })
+  return rotalar
+}
+
+/**
+ * React Router kalıbını (`/blog/:slug`) routeMeta yoluna (`/blog/x/`) uydurur.
+ * routeMeta yolları sondaki eğik çizgiyle tutuluyor, kalıplar çizgisiz.
+ */
+const kalipEslesir = (kalip, yol) => {
+  if (kalip === '*') return true
+  const k = kalip === '/' ? '/' : kalip.endsWith('/') ? kalip : kalip + '/'
+  const desen = k
+    .split('/')
+    .map((parca) => (parca.startsWith(':') ? '[^/]+' : parca.replace(/[.*+?^${}()|[\]\\]/g, (c) => '\\' + c)))
+    .join('/')
+  return new RegExp('^' + desen + '$').test(yol)
+}
+
+const heroyuSil = (html) =>
+  html
+    .replace(/\s*<link rel="preload" as="image"[^>]*>/, '')
+    .replace(/<!--ho-->[\s\S]*?<!--\/ho-->/, '')
+
 import fs from 'node:fs'
 import path from 'node:path'
 import { execSync } from 'node:child_process'
@@ -760,10 +827,65 @@ Sitemap: ${url}/sitemap.xml
   return {
     name: 'seo-from-siteconfig',
 
-    transformIndexHtml(html) {
-      return html.replace(/%(SITE_[A-Z0-9_]+)%/g, (match, key) =>
+    /**
+     * GELİŞTİRME SUNUCUSU BUILD'İ TAKLİT ETMEK ZORUNDA.
+     *
+     * Vite dev'de her adrese AYNI index.html'i döndürüyor (SPA yönlendirmesi).
+     * Belirteçler doldurulduğu için o HTML ana sayfanın hero ön boyamasını,
+     * başlığını ve canonical'ını taşıyordu — hangi sayfada olursanız olun.
+     * Ctrl+R yapınca görülen şey buydu: önce ana sayfanın fabrika fotoğrafı
+     * tam ekran basılıyor, sonra React devralıp o rotayı yüklerken Suspense
+     * dönen halkayı gösteriyor, en sonunda sayfa geliyor.
+     *
+     * Build'de bu sorun yok (writeBundle her rotaya kendi HTML'ini yazıyor),
+     * o yüzden `npm run seo` de temiz diyordu. Ama proje dev üzerinden
+     * geliştiriliyor; dev'in yalan söylemesi hatayı görünmez yapmıştı.
+     *
+     * Burada build'in rota döngüsüyle AYNI heroyuSil() ve AYNI rotaMetalari
+     * kullanılıyor. Kasıtlı olarak yalnızca <head> düzeyi: <noscript> gövdesi
+     * ve JSON-LD build'e özel kalıyor, çünkü onları React zaten çalışma anında
+     * üretiyor ve dev'de görünür bir etkileri yok.
+     */
+    transformIndexHtml(html, ctx) {
+      const dolu = html.replace(/%(SITE_[A-Z0-9_]+)%/g, (match, key) =>
         key in tokens ? tokens[key] : match
       )
+
+      // ctx.server yalnızca dev/preview'da var; build'de anaHtml ana sayfadır.
+      if (!ctx?.server) return dolu
+
+      const yol = (ctx.originalUrl ?? ctx.path ?? '/').split('?')[0]
+      if (yol === '/' || yol === '/index.html') return dolu
+
+      // routeMeta yolları sondaki eğik çizgiyle tutuluyor (/blog/ gibi).
+      const normal = yol.endsWith('/') ? yol : yol + '/'
+      const rota = rotaMetalari.find((r) => r.path === normal)
+
+      // Tanınmayan adres = React'in 404'ü. Hero yine de gitmeli: ana sayfanın
+      // fotoğrafı 404 ekranında da yanlış.
+      let cikti = heroyuSil(dolu)
+      if (!rota) return cikti
+
+      const k = (t) =>
+        String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+      return cikti
+        .replace(/<title>[\s\S]*?<\/title>/, `<title>${k(rota.title)}</title>`)
+        .replace(
+          /<meta name="description" content="[^"]*" \/>/,
+          `<meta name="description" content="${k(rota.description)}" />`
+        )
+        .replace(
+          /<link rel="canonical" href="[^"]*" \/>/,
+          `<link rel="canonical" href="${rota.canonical}" />`
+        )
+        .replace(
+          /<meta property="og:title" content="[^"]*" \/>/,
+          `<meta property="og:title" content="${k(rota.title)}" />`
+        )
+        .replace(
+          /<meta property="og:url" content="[^"]*" \/>/,
+          `<meta property="og:url" content="${rota.canonical}" />`
+        )
     },
 
     /**
@@ -978,28 +1100,10 @@ ErrorDocument 404 /404.html
       fs.writeFileSync(yol, manifestDoldur(fs.readFileSync(yol, 'utf8')))
     },
 
-    writeBundle(secenekler) {
+    writeBundle(secenekler, paket) {
       const cikti = secenekler.dir ?? 'dist'
       const anaHtml = fs.readFileSync(path.join(cikti, 'index.html'), 'utf8')
-
-      /**
-       * DOLDURULMAMIŞ BELİRTEÇ KAPISI.
-       *
-       * transformIndexHtml bir belirteci tanımazsa onu OLDUĞU GİBİ bırakıyor
-       * (`key in tokens ? ... : match`). Build başarıyla biter ve ham
-       * "%SITE_XXX%" metni yayına çıkar. Bir kez yaşandı: token adı SITE_H1'di,
-       * regex [A-Z_]+ olduğu için rakamı görmedi ve belirteç ana sayfanın
-       * <h1>'inde kaldı. Sessiz hatayı gürültülü hataya çeviriyoruz.
-       */
-      const doldurulmamis = anaHtml.match(/%SITE_[A-Z0-9_]+%/g)
-      if (doldurulmamis) {
-        throw new Error(
-          `\n\nDOLDURULMAMIŞ BELİRTEÇ index.html'de kaldı: ${[...new Set(doldurulmamis)].join(', ')}\n` +
-            `Bu metin ham hâliyle yayına çıkardı.\n` +
-            `Çözüm: vite.config.js > tokens nesnesine ilgili alanı ekleyin.\n`
-        )
-      }
-
+      const appRotalari = appRotalariniOku()
       const kacis = (s) =>
         String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 
@@ -1042,12 +1146,7 @@ ${paragraflar}
       for (const rota of rotaMetalari) {
         if (rota.path === '/') continue // ana sayfa zaten dogru
 
-        let html = anaHtml
-          // Hero ön yüklemesi ve ön boyaması yalnızca ana sayfaya ait. Diğer
-          // rotalarda o görsel hiç kullanılmadığı için kalırsa boşuna ~37 KB
-          // indirilir, üstelik yanlış bir hero bir an ekranda görünür.
-          .replace(/\s*<link rel="preload" as="image"[^>]*>/, '')
-          .replace(/<!--ho-->[\s\S]*?<!--\/ho-->/, '')
+        let html = heroyuSil(anaHtml)
           .replace(/<title>[\s\S]*?<\/title>/, `<title>${kacis(rota.title)}</title>`)
           .replace(
             /<meta name="description" content="[^"]*" \/>/,
@@ -1112,6 +1211,15 @@ ${paragraflar}
           html = html.replace('</script>', ek)
         }
 
+        // Rota tablosu kapısı — gerekçesi appRotalariniOku() başında.
+        if (!appRotalari.some((x) => x.kalip !== '*' && kalipEslesir(x.kalip, rota.path))) {
+          throw new Error(
+            `[seoFromConfig] "${rota.path}" App.jsx'teki hiçbir rota kalıbıyla eşleşmiyor.\n` +
+              `Build bu sayfanın HTML'ini üretip sitemap'e koyar ama ziyaretçi React'in 404'ünü görür.\n` +
+              `App.jsx'e rotayı ekleyin ya da routeMeta.js'ten çıkarın.`
+          )
+        }
+
         const klasor = path.join(cikti, rota.path)
         fs.mkdirSync(klasor, { recursive: true })
         fs.writeFileSync(path.join(klasor, 'index.html'), html)
@@ -1128,9 +1236,7 @@ ${paragraflar}
        * noindex ŞART: 404 gövdesi yanlışlıkla 200 ile sunulursa (sunucu
        * yapılandırması değişirse) tek koruma bu etiket olur.
        */
-      const html404 = anaHtml
-        .replace(/\s*<link rel="preload" as="image"[^>]*>/, '')
-        .replace(/<!--ho-->[\s\S]*?<!--\/ho-->/, '')
+      const html404 = heroyuSil(anaHtml)
         .replace(/<title>[\s\S]*?<\/title>/, `<title>Sayfa Bulunamadı — ${companyShortName}</title>`)
         .replace(
           /<meta name="description" content="[^"]*" \/>/,

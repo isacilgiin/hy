@@ -53,7 +53,14 @@ const siteConfig = {
   // ===== İletişim =====
   phone: '0537 372 67 04',
   phoneRaw: '+905373726704',
-  email: '', // TODO: canlı sitede e-posta adresi hiç yok — varsa yazın
+  // İşletme sahibinden alındı (2026-08-25). Canlı eski sitede e-posta hiç yoktu;
+  // adresin tek kaynağı bu bilgi, olgu sayfasında da aynı kaynakla kayıtlı.
+  // BOŞ BIRAKILMAMALI: bu değeri okuyan yerlerin çoğunda boş-değer koruması YOK.
+  // Boşken JSON-LD'ye `"email": ""` yazılıyor, llms.txt'in İletişim bloğuna
+  // `[](mailto:)` düşüyor, Footer/İletişim/Yasal sayfalarda ise metinsiz ve
+  // hedefsiz bir `mailto:` bağlantısı çiziliyordu. Yeni bir adres girilmeden
+  // burası boşaltılmamalı.
+  email: 'bilgi@denizlihaliyikama.net.tr',
 
   // ===== Adres =====
   address: {

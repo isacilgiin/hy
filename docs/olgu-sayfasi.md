@@ -25,6 +25,7 @@
 | Telefon | 0537 372 67 04 | site geneli |
 | Telefon (ham) | +905373726704 | `tel:` linki |
 | WhatsApp | https://wa.me/905373726704 | site geneli |
+| E-posta | bilgi@denizlihaliyikama.net.tr | işletme sahibi, 2026-08-25 |
 | Instagram | https://www.instagram.com/tomay.hali.yikama | JSON-LD `sameAs` |
 | Adres | Eskihisar Mah. Pamukkale Sk. No:21/A | JSON-LD `streetAddress` |
 | İlçe / il | Merkezefendi / Denizli | JSON-LD |
@@ -35,7 +36,6 @@
 | Google Ads | AW-18007504148 | canlı sitenin gtag'i |
 
 ### BİLİNMEYEN — doldurulana kadar sitede KULLANILMAZ
-- E-posta adresi (canlı sitede hiç yok)
 - Google İşletme Profili: place ID, embed adresi, kısa bağlantı
 - Google puanı ve yorum sayısı → `rating` **null** kalır, puan yayınlanmaz
 - Kendi GA4 mülkü → `analytics.ga4` **null** kalır

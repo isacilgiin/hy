@@ -62,7 +62,11 @@ export default function BlogPost() {
       '@context': 'https://schema.org',
       '@type': 'Article',
       headline: yazi.title,
-      description: yazi.description,
+      // blog.js'te alan adı 'ozet' — 'description' diye bir alan YOK. Yanlış ad
+      // undefined döndürüyordu ve JSON.stringify undefined alanı atladığı için
+      // description şemadan komple düşüyordu: Google makaleyi açıklamasız
+      // görüyordu. Aynı hata routeMeta.js'te de vardı.
+      description: yazi.ozet,
       image: `${siteConfig.url}${yazi.image}`,
       datePublished: yazi.tarih,
       dateModified: yazi.tarih,
@@ -108,8 +112,13 @@ export default function BlogPost() {
   return (
     <div className="page-enter">
       <Seo
-        title={icerik.seoTitle}
-        description={yazi.description}
+        /* seoTitle blogContent.js'teki 11 kaydın HİÇBİRİNDE yok; Seo.jsx bunu
+           doğrudan document.title yapıyor, yani hidrasyondan sonra sekme
+           başlığı düz "undefined" oluyordu. Yedek kalıp routeMeta.js ile
+           BİREBİR AYNI olmalı — ayrışırsa build HTML'inin bastığı başlık ile
+           React'in ürettiği başlık farklı olur. */
+        title={icerik.seoTitle ?? yazi.title}
+        description={yazi.ozet}
         path={`/blog/${yazi.slug}/`}
         image={`${siteConfig.url}${yazi.image}`}
         jsonLd={jsonLd}

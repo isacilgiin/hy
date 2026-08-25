@@ -66,11 +66,43 @@ export default function Header() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
-          {/* Logo */}
+          {/* Logo — BOYUT BÜTÇESİ (büyütmeden önce oku)
+              Hero ve PageHeader içeriği `pt-32` (128px) ile başlıyor, header ise
+              `fixed`. Header'ın toplam yüksekliği 128px'i aşarsa başlık menünün
+              altında kalır. Ölçülmüş formül (logo, satırın en yüksek öğesi):
+                üstte        (bg-transparent + py-4)          → logo + 32px
+                kaydırılmış  (glass-dark py-2 + 1px kenarlık) → logo + 18px
+              Yani logo en fazla 96px olabilir. h-20 (80px) -> 112px, 16px pay kalir.
+
+              IKINCI BUTCE - GENISLIK (bu tur eklendi).
+              Logo dosyasi 273x112'ye kirpildi. Eskiden 283x286 tuvaldi ve
+              %62'si SAYDAM BOSLUKTU: h-20 verince ekranda gorunen marka
+              isareti ancak ~31px oluyordu. "Logo hala kucuk" sikayetinin
+              sebebi CSS degil, dosyanin kendisiydi - yukseklik bosluga
+              gidiyordu. Kirpma sonrasi oran 2,44:1, yani her 10px yukseklik
+              24px genislik demek; ayni sinif birden 79px yerine 195px
+              genislige cikti ve 1024'te menuyu IKI SATIRA sardirdi.
+
+              Menunun sarmadan sigmasi icin gereken genislik OLCULDU:
+                1280 ve uzeri : menu 755px + CTA 132px -> logoya 345px kaliyor
+                1024-1279     : menu 643px + CTA 132px -> logoya 201px kaliyor
+              Bu yuzden xl'de h-20 (195px) rahat, lg bandinda h-12 (117px).
+              Buyutmeden once bu iki rakami yeniden olcun.
+
+              Yalnizca yukseklik verilir, w-auto genisligi kendi bulur -
+              sabit bir w- sinifi gorseli ezer. */}
           <Link to="/" className="group shrink-0" aria-label={`${siteConfig.companyName} — ana sayfa`}>
             <Logo
               variant="light"
-              imgClassName="h-12 sm:h-14 w-auto transition-transform group-hover:scale-[1.04]"
+              /* Kaydırınca header py-4 → py-2 ile inceliyor; logo da bir kademe
+                 küçülüyor, yoksa yapışkan çubuk ekranın çok yerini yer. Geçiş
+                 süresi header'ınkiyle (duration-500) aynı, ikisi birlikte insin. */
+              imgClassName={`w-auto transition-all duration-500 group-hover:scale-[1.04] ${
+                scrolled ? 'h-10 xl:h-16' : 'h-12 xl:h-20'
+              }`}
+              /* Görsel yüklenemezse devreye giren gömülü işaret de logoyla aynı
+                 ölçekte dursun; varsayılan w-10 yanında cüce kalıyordu. */
+              markClassName="w-12 h-12 sm:w-14 sm:h-14"
             />
           </Link>
 
@@ -80,7 +112,12 @@ export default function Header() {
               <div key={link.to} className="relative group">
                 <Link
                   to={link.to}
-                  className={`inline-flex items-center gap-1 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                  /* px-2 xl:px-4 — 1024–1279 arası dar bant: 7 bağlantı + CTA +
+                     büyütülmüş logo bir satıra sığmayınca bağlantı yazıları iki
+                     satıra sarıyor, header da bu yüzden şişiyordu. Bu bantta
+                     bağlantı başına 8px geri kazanılıyor; 1280'den itibaren yer
+                     bol olduğu için eski dolguya dönülüyor. */
+                  className={`inline-flex items-center gap-1 px-2 xl:px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                     location.pathname === link.to
                       ? 'text-primary bg-white/10'
                       : 'text-white/80 hover:text-white hover:bg-white/5'

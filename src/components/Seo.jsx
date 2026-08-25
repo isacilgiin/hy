@@ -86,7 +86,18 @@ export default function Seo({ title, description, path = '/', image, jsonLd }) {
 
     buildSemalariniTemizle()
 
-    document.title = title
+    /**
+     * document.title bir DOMString: undefined verilirse "undefined" DİZESİNE
+     * çevirir, hata vermez. Blog yazılarında tam olarak bu oldu — bileşen
+     * var olmayan bir alanı (icerik.seoTitle) geçiriyordu ve sekme başlığı
+     * hidrasyondan sonra düz "undefined" kalıyordu. Build HTML'i doğru
+     * olduğu için de kimse fark etmedi; bozulma yalnızca React devraldıktan
+     * SONRA, yani Googlebot'un render edip indekslediği anda ortaya çıkıyor.
+     *
+     * Başlık yoksa build'in yazdığı doğru başlığa DOKUNMAMAK, yanlış bir
+     * başlık yazmaktan iyidir.
+     */
+    if (title) document.title = title
     upsertMeta('name', 'description', desc)
     upsertLink('canonical', url)
 

@@ -9,6 +9,19 @@ import siteConfig from '../data/siteConfig'
  *   logo.webp       → açık zeminde
  *
  * ┌──────────────────────────────────────────────────────────────────────────┐
+ * │ DOSYADAKİ SAYDAM PAY — "logo hâlâ küçük" şikâyetinin gerçek sebebi       │
+ * │ İkisi de 283×286 tuval, ama GÖRÜNÜR mürekkep yalnızca 273×112: üstte     │
+ * │ 81px, altta 93px saydam boşluk var, yani kutunun %61'i boş (alfa kanalı  │
+ * │ taranarak ölçüldü, 2026-08). Sonuç: CSS'te h-20 (80px) verilse bile      │
+ * │ marka işareti ekranda ancak ~31px görünüyor. Header'ın 128px tavanı      │
+ * │ (aşağıya bakın) yüzünden bu boy CSS ile en fazla ~38px'e çıkabilir.      │
+ * │ Kalıcı çözüm CSS değil: dosyaları 273×112'ye kırpıp yeniden dışa         │
+ * │ aktarmak ve aşağıdaki width/height değerlerini o ölçüye güncellemek.     │
+ * │ Bu dosyaları başka hiçbir yer kullanmıyor (og-image.jpg ayrı), yani      │
+ * │ kırpmanın JSON-LD/OG tarafına yan etkisi yok.                            │
+ * └──────────────────────────────────────────────────────────────────────────┘
+ *
+ * ┌──────────────────────────────────────────────────────────────────────────┐
  * │ LOGO WORDMARK MI, AMBLEM Mİ? — bu ayrım kodu değiştiriyor                │
  * │ Aşağıdaki dal, gerçek logo yüklendiğinde YANINA AYRICA YAZI BASMAZ. Bu,  │
  * │ logonun içinde firma adının zaten yazılı olduğu (wordmark) varsayımına   │
@@ -57,12 +70,19 @@ export function LogoMark({ className = 'w-10 h-10' }) {
 }
 /**
  * @param {'light'|'dark'} variant   light = koyu zeminde, dark = açık zeminde
- * @param {string} imgClassName      logo görselinin boyutu (yükseklik ver, genişlik auto)
+ * @param {string} imgClassName      logo görselinin boyutu
+ *
+ * BOYUT KURALI: yalnızca YÜKSEKLİK verilir, genişlik `w-auto` bırakılır.
+ * Dosya 283×286, yani neredeyse KARE; sabit bir `w-` sınıfı görseli yatayda ezer.
+ * Boyutu çağıran taraf belirler, çünkü header'da tavan var: header `fixed` ve
+ * sayfa içerikleri `pt-32` (128px) ile başlıyor — ayrıntılı hesap Header.jsx'te.
+ * Varsayılan, imgClassName geçilmeyen yeni bir kullanım için makul bir orta boy;
+ * Header ve Footer kendi ölçülerini zaten geçiyor.
  */
 export default function Logo({
   variant = 'light',
   className = '',
-  imgClassName = 'h-11 sm:h-12 w-auto',
+  imgClassName = 'h-14 sm:h-16 w-auto',
   markClassName = 'w-10 h-10',
   showSloganOnFallback = true,
 }) {
@@ -81,8 +101,8 @@ export default function Logo({
            (devralınan iskeletin geniş wordmark'ından kalma) ve yanlış oran,
            görsel inene kadar tarayıcının ayırdığı yeri bozuyordu: logo
            gelince satır zıplıyordu (CLS). */
-        width="283"
-        height="286"
+        width="273"
+        height="112"
       />
     )
   }

@@ -104,7 +104,7 @@ Bu sayfaları oluşturunca `vite.config.js` içindeki `redirects` dizisinden ilg
 
 | Alan | Durum | Not |
 |---|---|---|
-| Firma adı, telefon, e-posta, adres | ✅ | 20 Karot / 0545 678 91 94 / 20karot20@gmail.com |
+| Firma adı, telefon, e-posta, adres | ✅ | Denizli Tomay Halı Yıkama / 0537 372 67 04 / bilgi@denizlihaliyikama.net.tr / Eskihisar Mah. Pamukkale Sk. No:21/A, Merkezefendi |
 | `geo.lat/lng`, `placeId`, `embedSrc` | ✅ | Google İşletme Profili'nden alındı, harita tam pini gösteriyor |
 | `workingHours` | ✅ | Google profiline göre "24 saat açık" |
 | `rating` | ✅ | 5,0 / 32 yorum — **JSON-LD'ye yazılmıyor** (aşağıya bak) |

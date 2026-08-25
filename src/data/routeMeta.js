@@ -343,7 +343,7 @@ const blogRotalari = [
       '@context': 'https://schema.org',
       '@type': 'Article',
       headline: y.title,
-      description: y.description,
+      description: y.ozet, // blog.js'te alan adi 'ozet' — 'description' diye bir alan YOK
       image: `${url}${y.image}`,
       datePublished: y.tarih,
       dateModified: y.tarih,
@@ -355,7 +355,7 @@ const blogRotalari = [
     return {
       path: `/blog/${y.slug}/`,
       title: icerik.seoTitle ?? y.title,
-      description: y.description,
+      description: y.ozet, // blog.js'te alan adi 'ozet' — 'description' diye bir alan YOK
       image: `${url}${y.image}`,
       h1: y.title,
       kirintilar: [
