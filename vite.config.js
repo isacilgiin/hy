@@ -1334,14 +1334,22 @@ export default defineConfig({
         // Vite 8 (rolldown) manualChunks yalnızca fonksiyon formunu destekler.
         manualChunks(id) {
           if (!id.includes('node_modules')) return
-          if (id.includes('swiper')) return 'swiper'
-          // yet-another-react-lightbox'ı BURAYA EKLEMEYİN.
-          // ProjectGallery.jsx onu `await import()` ile tembel yüklüyor; ama
-          // adlandırılmış bir parçaya atandığında statik parça grafiğine
-          // giriyor ve Vite her sayfanın HTML'ine hem <link rel="modulepreload">
-          // hem de RENDER BLOKLAYAN bir <link rel="stylesheet"> basıyordu.
-          // Kural kaldırılınca kendi asenkron parçasını oluşturuyor ve CSS'i
-          // yalnızca lightbox gerçekten açıldığında çalışma anında ekleniyor.
+          // SWIPER'I ADLANDIRILMIŞ PARÇAYA ATAMAYIN — buradaydı, kaldırıldı.
+          //
+          // Aynı tuzağa iki kez düşüldü. Bir paketi adlandırılmış parçaya
+          // atamak, o paketi TEMBEL YÜKLENSE BİLE statik parça grafiğine
+          // sokuyor; Vite de üretilen HER sayfanın HTML'ine hem
+          //   <link rel="modulepreload">  hem de
+          //   <link rel="stylesheet">     (RENDER BLOKLAYAN)
+          // basıyor. Ölçüldü: slider yalnızca ana sayfada olmasına rağmen
+          // 90 sayfanın 90'ı swiper'ı (106 kB / 32 kB gzip) ön yüklüyor ve
+          // CSS'i ilk boyamayı geciktiriyordu.
+          //
+          // Kural kaldırılınca swiper kendi asenkron parçasına düşüyor ve
+          // yalnızca ana sayfa hero'su mount olduğunda iniyor.
+          //
+          // yet-another-react-lightbox de aynı sebeple buraya eklenmemişti;
+          // o paket artık projede yok ama kural aynen geçerli.
           if (/[\\/](react|react-dom|react-router|react-router-dom|scheduler)[\\/]/.test(id)) return 'vendor'
         },
       },

@@ -1,5 +1,22 @@
+import { lazy, Suspense } from 'react'
 import { Link } from 'react-router-dom'
-import HeroSection from '../components/HeroSection'
+
+/**
+ * HERO TEMBEL YÜKLENİYOR — ölçülmüş sebep.
+ *
+ * HeroSection Swiper'ı çekiyor. Home eager import edildiği için Swiper ORTAK
+ * paket grafiğine giriyordu ve sonuç, ÜRETİLEN 90 SAYFANIN HEPSİNDE şuydu:
+ *   <link rel="modulepreload" href="/assets/swiper-*.js">    106 kB / 32 kB gzip
+ *   <link rel="stylesheet"    href="/assets/swiper-*.css">   RENDER BLOKLUYOR
+ * Slider yalnızca ana sayfada var; 89 sayfa onu boşuna indiriyordu ve CSS
+ * ilk boyamayı geciktiriyordu.
+ *
+ * LCP ETKİLENMİYOR: ana sayfanın hero'su build sırasında statik olarak ÖN
+ * BOYANIYOR (vite.config.js > heroOnizleme) — görsel, React açılmadan ekranda.
+ * Tembel yükleme tam da o ön boyamanın kapattığı aralığa denk geliyor.
+ * Yedek ekran da aynı zemin rengiyle geliyor, yani düzen kaymıyor.
+ */
+const HeroSection = lazy(() => import('../components/HeroSection'))
 import ServiceCard from '../components/ServiceCard'
 import StatsSection from '../components/StatsSection'
 import BeforeAfter from '../components/BeforeAfter'
@@ -29,7 +46,15 @@ export default function Home() {
         path="/"
       />
 
-      <HeroSection />
+      <Suspense
+        fallback={
+          /* Ön boyamayla AYNI yükseklik ve AYNI zemin: bir piksel bile
+             kaymasın (CLS). vite.config.js > heroOnizleme ile eşleşir. */
+          <div className="min-h-[100svh] bg-dark" aria-hidden="true" />
+        }
+      >
+        <HeroSection />
+      </Suspense>
 
       {/* ===== Hizmetler ===== */}
       <section className="section-padding bg-white" id="hizmetler">
