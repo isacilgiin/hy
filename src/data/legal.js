@@ -38,7 +38,7 @@ export const gizlilik = {
     {
       baslik: 'Hangi verileri işliyoruz?',
       paragraflar: [
-        'Bize telefon, WhatsApp veya e-posta ile ulaştığınızda paylaştığınız ad, telefon numarası, e-posta adresi, iş adresi ve projenize dair bilgileri işleriz. Bu verileri yalnızca talebinizi değerlendirmek, keşif planlamak, teklif hazırlamak ve işi yürütmek için kullanırız.',
+        'Bize telefon, WhatsApp veya e-posta ile ulaştığınızda paylaştığınız ad, telefon numarası, alım-teslim adresi ve halınıza dair bilgileri (cins, ölçü, leke durumu, gönderdiğiniz fotoğraflar) işleriz. Bu verileri yalnızca fiyat vermek, alım-teslim randevusunu planlamak ve işi yürütmek için kullanırız.',
         'Bu bilgileri pazarlama amacıyla üçüncü kişilere satmıyor, kiralamıyor veya devretmiyoruz.',
       ],
     },
@@ -95,16 +95,16 @@ export const sartlar = {
     {
       baslik: 'Fiyat ve teklifler',
       paragraflar: [
-        'Sitede yer alan hizmet açıklamaları fiyat taahhüdü içermez. Kesin fiyat, keşif sonrası işin kapsamına göre belirlenir ve tarafınıza yazılı veya sözlü olarak bildirilir.',
+        'Sitede yer alan hizmet açıklamaları fiyat taahhüdü içermez. Fiyat; metrekare, halının cinsi, tüy uzunluğu ve lekenin durumuna göre belirlenir ve alım sırasında tarafınıza bildirilir. Alımda konuşulan rakam teslimde de geçerlidir.',
         'Verilen teklif; işin tarifi, ölçüler ve saha koşulları esas alınarak hazırlanır. Sahada bu koşulların önemli ölçüde farklı çıkması hâlinde teklif yeniden değerlendirilir ve işe başlamadan önce sizinle paylaşılır.',
       ],
     },
     {
       baslik: 'İşin yürütülmesi ve sorumluluk',
       paragraflar: [
-        'Taşıyıcı sistem elemanlarına (kolon, perde, kiriş, döşeme) müdahale gerektiren işlerde statik proje ve yetkili mühendis onayı aranır. Onay olmadan bu tür işlere başlanmaz.',
-        'İş sahibinin bildirmediği gizli tesisat, gizli donatı veya belgelenmemiş yapısal değişikliklerden kaynaklanan durumlarda sorumluluk kabul edilmez. Bu nedenle keşif sırasında bildiğiniz tüm detayları paylaşmanız önemlidir.',
-        'Çalışma alanının işe hazır hâle getirilmesi (eşyaların kaldırılması, erişim sağlanması, gerekli izinlerin alınması) aksi kararlaştırılmadıkça iş sahibine aittir.',
+        'Halının cinsine uygun olmayan bir işlem talep edilirse (örneğin yün ya da ipek halının yüksek ısıda yıkanması) bu talep yerine getirilmez; sebebi açıklanır. Halı tamiri, saçak yenileme, halı boyama ve renk yenileme hizmet kapsamımız dışındadır.',
+        'Halının önceden var olan yırtık, sökük, güve hasarı, renk akması veya solma gibi durumlarından sorumluluk kabul edilmez. Bu tür durumları alım sırasında tespit edip size bildiriyoruz; bildirilmemiş olması hâlinde de yıkama öncesi mevcut olan hasar kapsam dışındadır. Halınızla ilgili bildiğiniz özel bir durumu (daha önce yapılmış onarım, evde yıkama denemesi, kimyasal uygulama) alım sırasında paylaşmanız önemlidir.',
+        'Yerinde yapılan işlerde (koltuk, yatak, perde) çalışma alanına erişim, su ve elektrik ile gerekiyorsa site/apartman izni aksi kararlaştırılmadıkça hizmet alana aittir. Halının bulunduğu kata erişimle ilgili özel bir durum varsa (asansör yok, dar merdiven, araç yanaşamıyor) randevu sırasında bildirilmesi gerekir.',
       ],
     },
     {

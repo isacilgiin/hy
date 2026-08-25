@@ -236,7 +236,7 @@ const services = [
       'Tül ve fon perde',
       'Dikey (vertical) perde',
       'Mutfak perdeleri — yağ ve is lekesi',
-      'Yol kenarı ve şantiye yakını daireler',
+      'Yola ve caddeye bakan daireler — dışarıdan gelen toz',
       'Sigara kokusu almış perdeler',
     ],
   },

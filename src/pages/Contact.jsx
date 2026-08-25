@@ -215,7 +215,7 @@ export default function Contact() {
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       className={`${inputClass} resize-none`}
-                      placeholder="Projeniz hakkında kısa bilgi verin..."
+                      placeholder="Halının cinsi, yaklaşık ölçüsü, varsa leke durumu..."
                     />
                   </div>
 

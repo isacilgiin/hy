@@ -129,9 +129,9 @@ export default function Services() {
             Hangi Hizmete <span className="text-gradient-accent">İhtiyacınız</span> Var?
           </h2>
           <p className="section-subtitle text-center mb-12">
-            Beton üzerinde yapılacak işler dört ana grupta toplanıyor. Hangisinin gerektiği
-            çoğu zaman işin kendisinden değil çevresinden belli oluyor: elemanın taşıyıcı olup
-            olmadığı, çevrede kimlerin bulunduğu ve kenarın düzgün kalması gerekip gerekmediği.
+            Yıkadığımız tekstil iki gruba ayrılıyor: tesise gelenler ve adresinizde
+            temizlenenler. Hangisinin gerektiği işin kendisinden değil, eşyanın
+            taşınabilirliğinden belli oluyor.
           </p>
 
           <div className="space-y-8">
