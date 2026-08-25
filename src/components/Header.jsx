@@ -70,7 +70,7 @@ export default function Header() {
           <Link to="/" className="group shrink-0" aria-label={`${siteConfig.companyName} — ana sayfa`}>
             <Logo
               variant="light"
-              imgClassName="h-10 sm:h-12 w-auto transition-transform group-hover:scale-105"
+              imgClassName="h-12 sm:h-14 w-auto transition-transform group-hover:scale-[1.04]"
             />
           </Link>
 

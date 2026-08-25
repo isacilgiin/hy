@@ -17,6 +17,7 @@ import { Link } from 'react-router-dom'
  * Yedek ekran da aynı zemin rengiyle geliyor, yani düzen kaymıyor.
  */
 const HeroSection = lazy(() => import('../components/HeroSection'))
+import HeroOnizleme from '../components/HeroOnizleme'
 import ServiceCard from '../components/ServiceCard'
 import StatsSection from '../components/StatsSection'
 import BeforeAfter from '../components/BeforeAfter'
@@ -47,11 +48,10 @@ export default function Home() {
       />
 
       <Suspense
-        fallback={
-          /* Ön boyamayla AYNI yükseklik ve AYNI zemin: bir piksel bile
-             kaymasın (CLS). vite.config.js > heroOnizleme ile eşleşir. */
-          <div className="min-h-[100svh] bg-dark" aria-hidden="true" />
-        }
+        /* Yedek, statik ön boyamanın BİREBİR AYNISI. Düz koyu bir kutu
+           olsaydı sayfa yenilenirken "görsel → koyu boşluk → görsel" diye
+           göze çarpan bir sıçrama olurdu. Gerekçe HeroOnizleme.jsx'te. */
+        fallback={<HeroOnizleme />}
       >
         <HeroSection />
       </Suspense>

@@ -62,7 +62,7 @@ export function LogoMark({ className = 'w-10 h-10' }) {
 export default function Logo({
   variant = 'light',
   className = '',
-  imgClassName = 'h-9 sm:h-10 w-auto',
+  imgClassName = 'h-11 sm:h-12 w-auto',
   markClassName = 'w-10 h-10',
   showSloganOnFallback = true,
 }) {
@@ -77,8 +77,12 @@ export default function Logo({
         alt={`${siteConfig.companyName} — ${siteConfig.companySlogan}`}
         className={`${imgClassName} object-contain ${className}`}
         onError={() => setImgFailed(true)}
-        width="300"
-        height="100"
+        /* Gerçek logo 283×286 — neredeyse KARE. Burada 300×100 yazıyordu
+           (devralınan iskeletin geniş wordmark'ından kalma) ve yanlış oran,
+           görsel inene kadar tarayıcının ayırdığı yeri bozuyordu: logo
+           gelince satır zıplıyordu (CLS). */
+        width="283"
+        height="286"
       />
     )
   }
