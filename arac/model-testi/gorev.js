@@ -5,8 +5,8 @@
  * üretim kalitesini ölçmek. Ölçtüğümüz asıl şey üslup değil, ŞU: model
  * kendisine verilmeyen bir olguyu uyduruyor mu?
  *
- * Test 20 Karot üzerinden yapılmıyor. Sebebi kasıtlı: elimizde onun gerçek
- * metinleri var ve model o metinlere benzer bir şey üretirse "iyi yazmış"
+ * Test halı yıkama üzerinden yapılmıyor. Sebebi kasıtlı: elimizde bu sitenin
+ * gerçek metinleri var ve model onlara benzer bir şey üretirse "iyi yazmış"
  * sanabiliriz. Bilmediği bir sektör verince ne uydurduğu net görünüyor.
  *
  * İLK TURDAN SONRA GENİŞLETİLDİ (2026-08-13). Tek örnek yeterli değil:
@@ -124,9 +124,10 @@ Yalnızca bölüm metnini döndür.`,
    * KOPYA İÇERİK — bu işin can damarı.
    *
    * Dört ilçe için ayrı ayrı metin üretilir, sonra denetçi aralarındaki
-   * benzerliği ölçer. 20 Karot'un ilçe sayfaları %32 benzerlikte ve sağlıklı;
-   * bir model %70'in üstünde üretiyorsa o modelle ilçe sayfası yapılamaz,
-   * çünkü Google'ın doorway page tarifine girer.
+   * benzerliği ölçer. Eşik SABİT DEĞİL: `denetle.mjs` referansı bu deponun
+   * kendi elle yazılmış bölge metinlerinden (`src/data/serviceAreas.js`)
+   * hesaplıyor. Model o referansın belirgin üstünde üretiyorsa onunla bölge
+   * sayfası yapılamaz, çünkü Google'ın doorway page tarifine girer.
    */
   ilce: {
     ad: 'İlçe sayfası bölümü',

@@ -56,3 +56,36 @@ export function baglantiTikTuru(el) {
   if (href.includes('google.com/maps') || href.includes('maps.app.goo.gl')) return 'harita'
   return null
 }
+
+/**
+ * SAYFA GÖRÜNTÜLEME — BURADAN gönderilir, rota değişiminden DEĞİL.
+ *
+ * İki hata ölçülerek bulundu (sahte dataLayer ile kaydedildi):
+ *
+ * 1) ÇİFT SAYIM. gtag snippet'indeki `config` kendiliğinden bir page_view
+ *    gönderiyor, ConversionTracking rota etkisiyle bir tane daha
+ *    gönderiyordu. Tek sayfa açılışı GA4'te İKİ görüntüleme oluyordu.
+ *    Çözüm: snippet artık `send_page_view:false` ile yapılandırılıyor
+ *    (vite.config.js > analyticsScript) ve tek kaynak burası.
+ *
+ * 2) YANLIŞ BAŞLIK. ConversionTracking, App.jsx ağacında sayfa
+ *    bileşenlerinden ÖNCE geliyor; React etkileri ağaç sırasıyla çalıştığı
+ *    için onun etkisi Seo'nunkinden önce koşuyordu ve document.title hâlâ
+ *    ÖNCEKİ sayfanınkiydi. Ölçüm: /blog/ adresine geçişte
+ *      page_path=/blog/  ama  page_title="Halı Yıkama Denizli | Koltuk..."
+ *    Yani GA4'teki "Sayfa başlığı" boyutu her iç gezinmede bir öncekini
+ *    gösteriyordu.
+ *
+ * Bu yüzden çağrı Seo bileşeninin İÇİNDE, document.title yazıldıktan SONRA
+ * yapılıyor. Buraya taşımayın; sıra bu hatanın ta kendisi.
+ */
+export function sayfaGoruntuleme() {
+  if (typeof window === 'undefined' || typeof window.gtag !== 'function') return
+  const { ga4, googleAds } = siteConfig.analytics
+  if (!ga4 && !googleAds) return
+  window.gtag('event', 'page_view', {
+    page_location: window.location.href,
+    page_path: window.location.pathname,
+    page_title: document.title,
+  })
+}

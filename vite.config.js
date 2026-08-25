@@ -330,6 +330,12 @@ function seoFromConfig() {
   const gtagKimlikleri = analytics.gtm ? [] : [analytics.ga4, analytics.googleAds].filter(Boolean)
   const gtmKullaniliyor = Boolean(analytics.gtm)
 
+  /*
+   * send_page_view:false — page_view TEK yerden gonderiliyor:
+   * src/components/Seo.jsx, document.title yazildiktan SONRA. Gerekcesi ve
+   * olculen iki hata src/utils/analytics.js > sayfaGoruntuleme() basinda.
+   * Buradan kaldirirsaniz her sayfa acilisi GA4te iki kez sayilir.
+   */
   const analyticsScript = gtmKullaniliyor
     ? `<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});
     var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
@@ -341,7 +347,7 @@ function seoFromConfig() {
     window.dataLayer=window.dataLayer||[];
     function gtag(){dataLayer.push(arguments)}
     gtag('js',new Date());
-${gtagKimlikleri.map((id) => `    gtag('config','${id}');`).join('\n')}
+${gtagKimlikleri.map((id) => `    gtag('config','${id}',{send_page_view:false});`).join('\n')}
   </script>`
     : '<!-- Google Analytics / Ads: siteConfig.analytics doldurulunca otomatik eklenir -->'
 

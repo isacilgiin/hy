@@ -165,9 +165,10 @@ halı saklama/depolama, oto döşeme. İşletme sahibi teyit ederse eklenir.
 Merkezefendi, Pamukkale, Acıpayam, Babadağ, Baklan, Bekilli, Beyağaç, Bozkurt,
 Buldan, Çal, Çameli, Çardak, Çivril, Güney, Honaz, Kale, Sarayköy, Serinhisar, Tavas.
 
-**19'dur, 20 değil.** (20karot iskeletinde 20. kayıt sentetik `Denizli (Merkez)`
-sayfasıdır; halı yıkamada ana sayfa zaten "Denizli halı yıkama" sorgusunu
-hedeflediği için o kayıt AÇILMAZ.)
+**19'dur, 20 değil.** (Devralınan iskelette 20. bir kayıt vardı: sentetik bir
+`Denizli (Merkez)` sayfası. Burada AÇILMAZ — "Denizli halı yıkama" sorgusunun
+sahibi zaten ana sayfa; ayrı bir merkez sayfası aynı sorguya ikinci kez girer
+ve § 8'deki "bir sorgu, tek sayfa" kuralını bozar.)
 
 ---
 
@@ -240,8 +241,12 @@ Karar alındı; o hâlde uygulama kuralı şu:
 3. Mahalle sayfası **kendi ilçe sayfasının konusunu tekrarlamaz**; ilçe sayfası
    bölgeyi, mahalle sayfası o mahallenin somut yerleşim dokusunu anlatır.
 4. Her mahalle sayfası **kendi görselini** alır.
-5. Hiçbir mahalle sayfası hedef benzerlik eşiğini (%32) geçemez —
+5. Hiçbir mahalle sayfası benzerlik referansını aşamaz —
    `arac/model-testi/denetle.mjs` ile ölçülür, geçemeyen yayına çıkmaz.
+   **Sabit bir yüzde hedeflemeyin:** araç eşiği bu sitenin kendi elle yazılmış
+   bölge metinlerinden hesaplıyor, o günkü veriye göre değişir. (Buradaki eski
+   "%32" sabiti devralınan iskeletten kalmıştı ve verinin hiçbir okunuşundan
+   çıkmıyordu; gerekçesi `arac/model-testi/BENIOKU.md` içinde yazılı.)
 
 **Mahalle sayfaları için kullanılabilir ayrım eksenleri** (ilçe eksenlerinden farklı):
 - Yerleşim dokusu: toplu konut / apartman / müstakil / site — halı ebadı ve

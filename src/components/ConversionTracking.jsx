@@ -1,7 +1,5 @@
 import { useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
 import { trackConversion, baglantiTikTuru } from '../utils/analytics'
-import siteConfig from '../data/siteConfig'
 
 /**
  * Tek sayfa uygulaması (SPA) olduğu için iki şey elle yapılmak zorunda:
@@ -18,20 +16,19 @@ import siteConfig from '../data/siteConfig'
  * Analytics kimlikleri tanımlı değilse bu bileşen hiçbir şey yapmaz.
  */
 export default function ConversionTracking() {
-  const { pathname } = useLocation()
-
-  // Rota değişiminde sayfa görüntüleme
-  useEffect(() => {
-    if (typeof window.gtag !== 'function') return
-    const { ga4, googleAds } = siteConfig.analytics
-    const sayfa = {
-      page_path: pathname,
-      page_location: window.location.href,
-      page_title: document.title,
-    }
-    if (ga4) window.gtag('config', ga4, sayfa)
-    if (googleAds) window.gtag('config', googleAds, sayfa)
-  }, [pathname])
+  /*
+   * SAYFA GÖRÜNTÜLEME BURADAN KALDIRILDI — geri koymayın.
+   *
+   * Buradaydı ve iki hata üretiyordu; ikisi de sahte dataLayer ile ölçüldü:
+   *   - snippet'in kendi page_view'ü ile çakışıp her açılışı İKİ kez sayıyordu
+   *   - bu bileşen App.jsx ağacında sayfalardan ÖNCE geldiği için etkisi
+   *     Seo'nunkinden önce koşuyor ve document.title hâlâ ÖNCEKİ sayfanınki
+   *     oluyordu; GA4'e her iç gezinmede yanlış başlık gidiyordu
+   * Şimdi tek kaynak: src/components/Seo.jsx, başlık yazıldıktan sonra.
+   * Ayrıntı: src/utils/analytics.js > sayfaGoruntuleme()
+   *
+   * Bu bileşen artık YALNIZCA dönüşüm tıklamalarını dinliyor.
+   */
 
   // Dönüşüm bağlantıları
   useEffect(() => {

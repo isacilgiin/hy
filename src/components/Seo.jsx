@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { sayfaGoruntuleme } from '../utils/analytics'
 import siteConfig from '../data/siteConfig'
 
 /**
@@ -127,6 +128,9 @@ export default function Seo({ title, description, path = '/', image, jsonLd, kan
     upsertMeta('name', 'twitter:image', ogImage)
 
     upsertJsonLd('page', jsonLd)
+
+    /* Basliktan SONRA — gerekcesi sayfaGoruntuleme() basinda. */
+    sayfaGoruntuleme()
 
     return () => upsertJsonLd('page', null)
   }, [title, description, path, image, jsonLd, kanonikYok])

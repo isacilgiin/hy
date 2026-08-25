@@ -150,9 +150,10 @@ const siteConfig = {
   // ===== Analytics =====
   // Boş bırakıldığında ilgili script hiç yüklenmez.
   analytics: {
-    // TODO: Canlı sitede GA4 mülkü YOK, yalnızca Ads etiketi var.
-    // GA4 açıldığında kimliği buraya yazın.
-    ga4: '',
+    /* GA4 mülkü 2026-08-25'te açıldı (akış adı "site",
+       https://denizlihaliyikama.net.tr). Devralınan canlı sitede GA4 yoktu,
+       yalnızca Ads etiketi vardı. */
+    ga4: 'G-FF3630L3MG',
     // Canlı sitenin gtag'inden okundu.
     googleAds: 'AW-18007504148',
 

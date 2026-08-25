@@ -15,8 +15,10 @@ müşteri öder. Bu yüzden test, olgu sayfasında **bilinçli boşluklar** bır
 modelin onları doldurup doldurmadığına bakıyor: kuruluş yılı yok, iş sayısı yok,
 ekip mevcudu yok, sertifika yok, fiyat yok.
 
-Test 20 Karot üzerinden yapılmıyor. Model bilmediği bir sektöre (klima servisi)
-sokuluyor ki ne uydurduğu net görünsün.
+Test halı yıkama üzerinden yapılmıyor. Model bilmediği bir sektöre (klima
+servisi) sokuluyor ki ne uydurduğu net görünsün: bu sitenin gerçek metinleri
+elimizde olduğu için, model onlara benzer bir şey üretse "iyi yazmış"
+sanabilirdik.
 
 ## Kurulum
 
@@ -181,9 +183,11 @@ Google'ın sorduğu soru "bu cümleler başka yerde geçiyor mu" değil, **"bu
 sayfanın ayrı var olma sebebi ne"**. İkinci ölçüt o soruya daha yakın.
 
 **Referans hesaplanır, yazılmaz.** Araç `src/data/serviceAreas.js` içindeki
-elle yazılmış 20 ilçe metnini ölçüp eşiği oradan okur (birebir %0/0, içerik
-%14/28). Önceki sürümde "%32" diye bir sabit vardı ve verinin hiçbir
-okunuşundan çıkmıyordu; o sabitle model insandan iyi görünüyordu.
+elle yazılmış bölge metinlerini ölçüp eşiği oradan okur. Eşik bir sabit değil,
+o günkü verinin çıktısı — aşağıdaki tablodaki referans satırı da 2026-08-13
+ölçümünün rakamıdır, bugünkü veriye ait değildir. Önceki sürümde "%32" diye bir
+sabit vardı ve verinin hiçbir okunuşundan çıkmıyordu; o sabitle model insandan
+iyi görünüyordu.
 
 ## Ölçülen sonuç — ilçe sayfası (2026-08-13)
 
@@ -192,7 +196,11 @@ okunuşundan çıkmıyordu; o sabitle model insandan iyi görünüyordu.
 | `gemini-3.1-flash-lite` | %7 | **%61** | PARAFRAZ |
 | `gemini-3.5-flash-lite` | %16 | **%59** | PARAFRAZ |
 | `gemma-4-31b-it` | %24 | %70 | ölçülemedi — çıktı bozuk |
-| elle yazılmış 20 sayfamız | %0 | **%14 / %28** | referans |
+| elle yazılmış 20 sayfa (o günkü referans) | %0 | **%14 / %28** | referans |
+
+> Referans satırı devralınan iskeletin o tarihteki 20 ilçe metninden çıkmıştı.
+> Bugünkü referans bu sitenin kendi bölge metinlerinden hesaplanıyor; güncel
+> sayı için `node arac/model-testi/denetle.mjs` çalıştırın.
 
 **Üç modelin üçü de aynı yere düştü.** Model kalitesiyle ilgili değil: olgu
 sayfasında ilçeye özgü hiçbir bilgi yok, o yüzden üçü de hizmet listesini,
