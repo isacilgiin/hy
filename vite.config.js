@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import siteConfig from './src/data/siteConfig.js'
 import services from './src/data/services.js'
-import serviceAreas from './src/data/serviceAreas.js'
+import serviceAreas, { ilceler, mahalleler } from './src/data/serviceAreas.js'
 import { oneCikanFaq as faq } from './src/data/faq.js'
 import rotaMetalari from './src/data/routeMeta.js'
 import heroSlides from './src/data/heroSlides.js'
@@ -39,7 +39,7 @@ function tumHtmlDosyalari(kok) {
  * siteConfig.js'i güncelle, hepsi otomatik güncellensin.
  */
 function seoFromConfig() {
-  const { url, domain, companyName, companyDescription, seo, phone, phoneRaw, email, address, workingHours, themeColor, rating, social, analytics } =
+  const { url, domain, companyName, companyShortName, companyDescription, seo, phone, phoneRaw, email, address, workingHours, themeColor, rating, social, analytics } =
     siteConfig
 
   const ogImage = `${url}/images/logo/og-image.jpg`
@@ -81,19 +81,19 @@ function seoFromConfig() {
    *
    * Perde katmanları HeroSection.jsx'teki üç örtüyle aynı sırada ve aynı
    * değerlerde; sapma olursa React devraldığı anda ekranda kararma/açılma
-   * şeklinde göz kırpma olur. `bg-dark` = #14100F, `accent` = #6E1B2E.
+   * şeklinde göz kırpma olur. `bg-dark` = #10262B, `accent` = #0B6B5F.
    *
    * writeBundle diğer rotalarda <!--ho-->…<!--/ho--> arasını siliyor: o
    * sayfalarda bu görsel hiç kullanılmıyor.
    */
   const heroOnizleme = ilkSlayt
     ? `<!--ho--><style>` +
-      `.hero-on{position:relative;min-height:100vh;min-height:100svh;background:#14100F;overflow:hidden}` +
+      `.hero-on{position:relative;min-height:100vh;min-height:100svh;background:#10262B;overflow:hidden}` +
       `.hero-on img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}` +
       `.hero-on::after{content:"";position:absolute;inset:0;background:` +
-      `radial-gradient(75% 65% at 88% 15%,rgba(110,27,46,.42) 0%,rgba(110,27,46,.14) 45%,transparent 72%),` +
-      `linear-gradient(to top,rgba(20,16,15,.85),transparent 50%,rgba(20,16,15,.45)),` +
-      `linear-gradient(to right,rgba(20,16,15,.95),rgba(20,16,15,.78) 50%,rgba(20,16,15,.3))}` +
+      `radial-gradient(75% 65% at 88% 15%,rgba(11,107,95,.42) 0%,rgba(11,107,95,.14) 45%,transparent 72%),` +
+      `linear-gradient(to top,rgba(16,38,43,.85),transparent 50%,rgba(16,38,43,.45)),` +
+      `linear-gradient(to right,rgba(16,38,43,.95),rgba(16,38,43,.78) 50%,rgba(16,38,43,.3))}` +
       `</style><div class="hero-on"><img src="${ilkSlayt.image}" srcset="${heroSrcset}" sizes="100vw" ` +
       `alt="${ilkSlayt.imageAlt.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;')}" ` +
       `width="1600" height="900" fetchpriority="high" decoding="async" /></div><!--/ho-->`
@@ -110,19 +110,19 @@ function seoFromConfig() {
      * doğrulandı; kaynağı `geo.embedSrc` içindeki profil adı.
      *
      * Neden gerekli: yerel aramada güven sinyallerinin çoğu (puan, yorum,
-     * fotoğraf, konum) profilde duruyor, sitede değil. Google ikisinin aynı
-     * işletme olduğunu ad/adres/telefon eşleşmesinden çıkarıyor — ve sitedeki
-     * ad "20 Karot" iken profildeki ad üç parçalıydı, yani en güçlü alan
-     * eşleşmiyordu. sameAs profilin ADRESİNİ veriyor, bu satır ADINI.
+     * fotoğraf, konum) Google İşletme Profili'nde duruyor, sitede değil. Google
+     * ikisinin aynı işletme olduğunu ad/adres/telefon eşleşmesinden çıkarıyor.
+     * Profildeki ad siteden FARKLIYSA en güçlü alan eşleşmez; alternateName
+     * "bu işletme şu adla da biliniyor" demenin doğru yeridir.
      *
-     * `name` DEĞİŞTİRİLMEDİ: sitenin markası her yerde "20 Karot" ve başlıkların
-     * tamamı ondan üretiliyor. alternateName "bu işletme şu adla da biliniyor"
-     * demenin doğru yeri.
+     * ŞU AN BOŞ ve boşken JSON-LD'ye hiç yazılmıyor. Google İşletme Profili'ndeki
+     * ad öğrenildiğinde siteConfig.js'e `googleBusinessName` olarak eklenip
+     * buraya bağlanmalı.
      *
-     * BURAYA UYDURMA VARYANT EKLEMEYİN ("denizli karot", "karotçu" gibi).
-     * alternateName gerçek addır, anahtar kelime kutusu değil.
+     * BURAYA UYDURMA VARYANT EKLEMEYİN ("denizli halı yıkama", "halı yıkamacı"
+     * gibi). alternateName gerçek addır, anahtar kelime kutusu değil.
      */
-    alternateName: '20 Karot | Denizli Karot Uygulama | Muhemmet Senekçi',
+    ...(siteConfig.googleBusinessName ? { alternateName: siteConfig.googleBusinessName } : {}),
     description: companyDescription,
     url,
     telephone: phoneRaw,
@@ -150,10 +150,23 @@ function seoFromConfig() {
           opens: workingHours.hours.split(' - ')[0],
           closes: workingHours.hours.split(' - ')[1],
         },
-    areaServed: serviceAreas.map((a) => ({ '@type': 'City', name: `${a.name}, ${address.city}` })),
+    /**
+     * areaServed TEK BİR İDARİ ALAN — 61 öğelik liste DEĞİL.
+     *
+     * Devralınan iskelette buraya bütün bölge kayıtları City olarak basılıyordu.
+     * Üç sorun vardı: (1) liste her sayfada birebir tekrarlanıp hizmet
+     * sayfalarının ham HTML'ini yaklaşık iki katına çıkarıyordu, (2) mahalle
+     * bir City değil — schema.org'da yanlış tip, (3) 61 öğelik bir kapsam
+     * listesi hiçbir sayfaya değer katmıyor; Google zaten adresten ve
+     * içerikten hizmet alanını çıkarıyor.
+     *
+     * İlçe/mahalle kırılımı KAYBOLMUYOR: her bölge sayfası kendi Service
+     * şemasında kendi areaServed'ini taşıyor (routeMeta.js > bolgeRotalari).
+     */
+    areaServed: { '@type': 'AdministrativeArea', name: address.city },
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
-      name: 'Karot Hizmetleri',
+      name: siteConfig.sector.hizmetKatalogAdi,
       itemListElement: services.map((s) => ({
         '@type': 'Offer',
         itemOffered: { '@type': 'Service', name: s.title, url: `${url}/hizmetler/${s.slug}/` },
@@ -262,6 +275,25 @@ ${gtagKimlikleri.map((id) => `    gtag('config','${id}');`).join('\n')}
     // Hero ön boyaması — gerekçesi üretildiği yerde yazılı. Bu da yalnızca
     // ana sayfaya ait; writeBundle diğer rotalarda siliyor.
     SITE_HERO_ONIZLEME: heroOnizleme,
+
+    // ---- Sektör metni artık siteConfig.js'ten geliyor, BURAYA GÖMÜLMÜYOR ----
+    // Devralınan iskelette ana sayfanın noscript H1'i başka bir sektörün
+    // Delme & Kesme Hizmetleri") index.html'e SABİT yazılıydı; yalnızca şehir
+    // tokenize edilmişti. Sektör değiştiğinde o başlık yerinde kalıyordu ve
+    // ekranda görünen H1 ile ayrıştığı an cloaking oluyordu.
+    // Ana sayfanın noscript H1'i EKRANDA GÖRÜNEN H1'DEN türetiliyor, ayrıca
+    // yazılmıyor. Sebep: ikisi ayrı yerde tutulursa biri değişip diğeri kalır
+    // ve sayfanın ham HTML'i ile render edilmiş hâli farklı başlık söyler —
+    // bu cloaking'dir. Tek kaynak = sapma imkânsız.
+    SITE_H1: [heroSlides[0].title, heroSlides[0].titleAccent, heroSlides[0].titleAfter]
+      .filter(Boolean)
+      .join(' '),
+
+    // manifest.json build'e hiç girmiyordu, public/'ten aynen kopyalanıyordu —
+    // yani PWA olarak eklenen cihazda eski firma adı kalıyordu. Artık şablon.
+    SITE_MANIFEST_NAME: companyName,
+    SITE_MANIFEST_SHORT: siteConfig.companyShortName,
+    SITE_MANIFEST_DESC: seo.defaultDescription,
   }
 
   // Sondaki eğik çizgi (trailing slash) BİLİNÇLİ: eski WordPress sitesinde
@@ -280,68 +312,68 @@ ${gtagKimlikleri.map((id) => `    gtag('config','${id}');`).join('\n')}
   ]
 
   /**
-   * Eski WordPress URL'lerinden yeni yapıya 301 yönlendirmeleri.
+   * PHP sitesinden React'e göç — 301 yönlendirme haritası.
    *
-   * Karşılığı BİREBİR AYNI olan URL'ler (ör. /hizmetler/beton-kesme/) burada YOK —
-   * onlar zaten aynı adreste çalışıyor, yönlendirmeye gerek yok. Burada yalnızca
-   * adresi DEĞİŞEN veya karşılığı olmayan sayfalar var.
+   * ┌──────────────────────────────────────────────────────────────────────────┐
+   * │ BU HARİTA ÖLÇÜLEREK YAZILDI, TAHMİNLE DEĞİL.                            │
+   * │ Kaynak: denizlihaliyikama.net.tr/sitemap.xml (2026-08-25 ölçümü)         │
+   * │ Canlı sitede İNDEKSLİ 80 URL var:                                        │
+   * │   42 mahalle  /mahalleler/<mahalle>-hali-yikama                          │
+   * │   19 ilçe     /ilceler/<ilce>-hali-yikama                                │
+   * │    9 blog     /blog/<slug>                                               │
+   * │    3 hizmet   /hizmetler/<slug>                                          │
+   * │    7 diğer    /  /about  /contact  /services  /blog  /hizmet-bolgeleri   │
+   * │               /denizli-hali-yikama                                       │
+   * └──────────────────────────────────────────────────────────────────────────┘
+   *
+   * BURADA YALNIZCA YOLU DEĞİŞEN URL'LER VAR. Yolu aynı kalanlar (blog yazıları
+   * ve üç hizmet sayfası) listede YOK, çünkü onları aşağıdaki 2. blok — sondaki
+   * eğik çizgiyi zorunlu kılan kural — zaten hallediyor:
+   *   /blog/cay-lekesi-nasil-cikar  ->  /blog/cay-lekesi-nasil-cikar/
+   *   /hizmetler/koltuk-yikama      ->  /hizmetler/koltuk-yikama/
+   * Buraya ayrıca kural yazmak çift 301 zinciri üretirdi.
+   *
+   * DİKKAT — EĞİK ÇİZGİ KARARI HENÜZ KESİNLEŞMEDİ:
+   * Canlı site çizgisiz servis ediyor ve çizgili istek 500/404 dönüyor. Bu
+   * iskelet ise çizgili üretiyor. Şu anki kurgu "çizgiliye 301" yönünde, yani
+   * indeksteki 80 URL'nin hepsi bir kez 301 yiyor — kabul edilebilir ama
+   * bedavaya gelmiyor. Alternatif, iskeleti çizgisiz üretmeye çevirmek ve
+   * indeksteki biçimi aynen korumak; bunun için sunucuda (LiteSpeed) tek
+   * seferlik bir test gerekiyor. Gerekçe ve test adımları:
+   * scratchpad > HY-DONUSUM-DENETIMI.md §3.
    */
   const redirects = [
-    ['Hizmetler sayfası adı değişti', '^hizmetlerimiz/?$', '/hizmetler/'],
-    // Blog yazısı: konusu karot ve beton delme
-    [
-      'Tek blog yazısı',
-      '^denizlide-profesyonel-karot-ve-beton-delme-hizmetleri-20-karot-guvencesiyle/?$',
-      '/hizmetler/karot/',
-    ],
-    // NOT: Eski WordPress'in /blog/ arşivi için burada bir 301 VARDI. Kaldırıldı:
-    // yeni sitede /blog/ GERÇEK bir sayfa. Kural dursaydı, fiziksel
-    // dist/blog/index.html hiç sunulmadan /blog/ -> / 301'i yerdi (RewriteRule'un
-    // RewriteCond guard'ı yok, dosya var mı diye bakmaz) ve blog dizini ölürdü.
-    // 6 yazının siteden TEK girişi o dizin — kapalı devre kalırlardı.
-    // Eski /blog/ adresi zaten yeni /blog/ adresine denk düşüyor; taşımaya gerek yok.
-    // Eski sitede /en/... adresleri vardı ama içerikleri TÜRKÇEYDİ ve
-    // canonical'ları Türkçe sayfayı gösteriyordu — gerçek bir İngilizce sürüm
-    // yoktu. Aynı yoldaki Türkçe sayfaya taşınıyorlar.
-    ['/en/ kopyaları', '^en/(.*)$', '/$1'],
-    // Eski WordPress'te ilçe sayfaları KÖKTEYDİ: /denizli-karot/, /tavas-karot/ ...
-    // Yeni sitede aynı slug'larla /hizmet-bolgeleri/ altına taşındılar, yani
-    // eşleme birebir. Search Console 14 tanesini "taranmış ama dizine
-    // eklenmemiş" olarak tutuyordu ve taşınmadan sonra hepsi 404'e düştü —
-    // aralarında ana hedef kelimemizin sayfası /denizli-karot/ da vardı.
-    //
-    // İKİ AYRI KURAL, birleştirmeyin: '-uygulama' ekini tek kuralda opsiyonel
-    // grup yapmak ÇALIŞMAZ. [a-z0-9-]+ açgözlüdür ve '-uygulama' da yalnızca
-    // kabul ettiği karakterlerden oluşur; girdinin tamamını yutar, opsiyonel
-    // grup hiç devreye girmez ve /hizmet-bolgeleri/saraykoy-karot-uygulama/
-    // gibi var olmayan bir adrese 301 verirsiniz. Özel olan önce gelir.
-    ['Eski kök ilçe sayfası (uygulama ekli)', '^([a-z0-9-]+-karot)-uygulama/?$', '/hizmet-bolgeleri/$1/'],
-    ['Eski kök ilçe sayfaları', '^([a-z0-9-]+-karot)/?$', '/hizmet-bolgeleri/$1/'],
-    // İlçe sayfalarıyla AYNI hikâye, hizmetler için: eski WordPress'te hizmet
-    // sayfaları da köke düşüyordu (/kimyasal-dubel/ gibi). Taşınmadan sonra
-    // hepsi 404'e düştü. 2026-08-13'te Google'ın dizininde /kimyasal-dubel
-    // hâlâ dururken canlıda 404 verdiği görüldü.
-    //
-    // Burada ilçelerdeki gibi desen kullanılamaz: hizmet slug'larının ortak bir
-    // eki yok. Serbest bir '^([a-z0-9-]+)/?$' kuralı ise /hakkimizda/, /blog/,
-    // /iletisim/ dahil kökteki HER sayfayı vururdu. O yüzden liste açık — ama
-    // elle değil, services.js'ten üretiliyor: hizmet eklenince kural da büyür.
-    [
-      'Eski kök hizmet sayfaları',
-      `^(${services.map((s) => s.slug).join('|')})/?$`,
-      '/hizmetler/$1/',
-    ],
-    // WordPress taksonomi arşivleri
-    ['service-category -> hizmet detayı', '^service-category/([a-z0-9-]+)/?$', '/hizmetler/$1/'],
-    ['portfolio-category -> hizmet detayı', '^portfolio-category/([a-z0-9-]+)/?$', '/hizmetler/$1/'],
-    ['category arşivleri', '^category/.*$', '/hizmetler/'],
-    ['tag arşivleri', '^tag/.*$', '/hizmetler/'],
-    ['portfolio kayıtları', '^portfolio/.*$', '/projeler/'],
-    // WordPress kalıntıları
-    ['RSS beslemeleri', '^(.*/)?feed/?$', '/'],
-    ['WordPress yönetim', '^wp-(admin|login\\.php).*$', '/'],
-    // NOT: /sikca-sorulan-sorular/, /gizlilik-politikasi/ ve /sartlar-ve-kosullar/
-    // artık yeni sitede GERÇEK sayfa olarak var; yönlendirmeleri kaldırıldı.
+    // ---- İlçe sayfaları: /ilceler/ -> /hizmet-bolgeleri/ ----
+    // Slug'lar BİREBİR korunuyor (tavas-hali-yikama gibi), yalnızca üst dizin
+    // değişiyor. serviceAreas.js'teki slug'lar bu yüzden canlı sitedekiyle
+    // aynı; oradaki uyarı kutusu bunun içindir.
+    ['İlçe sayfaları yeni dizine taşındı', '^ilceler/([a-z0-9-]+)/?$', '/hizmet-bolgeleri/$1/'],
+
+    // ---- Mahalle sayfaları: /mahalleler/ -> /hizmet-bolgeleri/ ----
+    // 42 mahalle sayfası da aynı hub'ın altına giriyor. İlçe ve mahalle aynı
+    // dizinde duruyor çünkü ikisi de "hizmet bölgesi"; ayrımı kaydın kendi
+    // `tur` alanı taşıyor, URL değil.
+    ['Mahalle sayfaları yeni dizine taşındı', '^mahalleler/([a-z0-9-]+)/?$', '/hizmet-bolgeleri/$1/'],
+
+    // ---- İngilizce kök sayfalar Türkçeye ----
+    // Canlı sitede URL şeması karışıktı: /about ve /contact İngilizce,
+    // /hizmetler ve /ilceler Türkçe. Tek dile indiriliyor.
+    ['/about -> /hakkimizda/', '^about/?$', '/hakkimizda/'],
+    ['/contact -> /iletisim/', '^contact/?$', '/iletisim/'],
+    ['/services -> /hizmetler/', '^services/?$', '/hizmetler/'],
+
+    // ---- Anahtar kelime yamyamlığı: /denizli-hali-yikama -> / ----
+    // Canlı sitede bu sayfa (70 kelime) ile ANA SAYFA (652 kelime) aynı sorguyu
+    // hedefliyor ve ikisi de canonical'ı kendine veriyor. Google hangisini
+    // göstereceğine kendi karar veriyor, ikisi birden zayıflıyor. Sorgunun
+    // sahibi ana sayfa; bu adres oraya birleşiyor.
+    ['Ana sayfayla aynı sorguyu hedefleyen kopya', '^denizli-hali-yikama/?$', '/'],
+
+    // ---- PHP kalıntıları ----
+    // robots.txt bunları gizliyordu, yani indekste olmamaları bekleniyor;
+    // yine de doğrudan istek gelirse 404 yerine doğru yere gitsin.
+    ['ilce.php sorgu biçimi', '^ilce\\.php$', '/hizmet-bolgeleri/'],
+    ['mahalle.php sorgu biçimi', '^mahalle\\.php$', '/hizmet-bolgeleri/'],
   ]
 
   /**
@@ -392,10 +424,14 @@ ${gtagKimlikleri.map((id) => `    gtag('config','${id}');`).join('\n')}
 
   /**
    * llms.txt — LLM'ler ve AI arama motorları için düz metin firma özeti.
-   * Elle tutulan bir kopya olarak duruyordu ve bayatlamıştı (8 hizmet yazıyordu,
-   * eski slug'ları gösteriyordu, çalışma saati yanlıştı). Artık veriden üretiliyor.
+   *
+   * SEKTÖR METNİ ARTIK BURAYA GÖMÜLÜ DEĞİL. Devralınan iskelette başlık,
+   * "Sektör:" satırı, Adlandırmalar sözlüğü ve "Ne Yapar, Ne Yapmaz" bloğu
+   * bu fonksiyonun İÇİNE sabit yazılmıştı; siteConfig tamamen değiştirilse
+   * bile llms.txt eski sektörü ilan etmeye devam ediyordu. Hepsi
+   * siteConfig.sector altına taşındı.
    */
-  const buildLlmsTxt = () => `# ${companyName} — ${address.city} Beton Delme, Kesme & Kırma Hizmetleri
+  const buildLlmsTxt = () => `# ${companyName} — ${address.city} ${siteConfig.sector.baslikHizmetleri}
 
 > Bu dosya, yapay zeka dil modelleri (LLM) ve AI arama motorları için hazırlanmıştır.
 > Kaynak: ${url}
@@ -404,15 +440,16 @@ ${gtagKimlikleri.map((id) => `    gtag('config','${id}');`).join('\n')}
 ## Firma Bilgileri
 
 - Firma Adı: ${companyName}
-- Sektör: Beton delme, kesme, kırma (karot) hizmetleri
+- Sektör: ${siteConfig.sector.tanim}
 - Konum: ${address.city}, Türkiye
 - Adres: ${address.full}
 - Telefon: ${phone}
-- WhatsApp: ${siteConfig.social.whatsapp}
-- E-posta: ${email}
+- WhatsApp: ${siteConfig.social.whatsapp}${email ? `\n- E-posta: ${email}` : ''}
 - Web: [${url.replace(/^https?:\/\//, '')}](${url}/)
 - Çalışma Saatleri: ${workingHours.days} ${workingHours.hours}
-- Google İşletme Puanı: ${rating.value != null ? `${String(rating.value).replace('.', ',')} / 5 (${rating.count} yorum)` : 'belirtilmemiş'}
+- ${siteConfig.workingHours.pickup}
+- Teslim Süresi: ${siteConfig.service.teslimSuresi}
+- Ödeme: ${siteConfig.service.odeme}${rating.value != null ? `\n- Google İşletme Puanı: ${String(rating.value).replace('.', ',')} / 5 (${rating.count} yorum)` : ''}
 
 ## Kısaca
 
@@ -422,31 +459,14 @@ ${companyDescription}
 
 Aşağıdaki terimler aynı işi anlatır; farklı adlarla sorulduğunda karşılığı budur:
 
-- Karot = karotlu delme = elmas uçlu delme (İngilizce: core drilling). "Karot"
-  kelimesi hem delme YÖNTEMİNİN hem de betondan çıkarılan silindir NUMUNENİN
-  adıdır; hangisinin kastedildiği bağlamdan anlaşılır.
-- Karotçu = karot firması = beton delme firması
-- Filiz ekimi = donatı ekimi = ekme donatı
-- Ankraj = mevcut betona yük aktaran bağlantı; kimyasal veya mekanik olur
-- Kimyasal dübel = enjeksiyon dübel = enjeksiyon reçineli ankraj
-- Asfalt derz kesim = asfalt kesme = zemin derz kesimi
+${siteConfig.sector.adlandirmalar.map((a) => `- ${a}`).join('\n')}
 
 ## Bu Firma Ne Yapar, Ne Yapmaz
 
-Sınırların yazılı olması gerekiyor: aşağıdaki üç iş sıkça karot firmasına
-atfediliyor ama başka tarafların sorumluluğunda.
+Sınırların yazılı olması gerekiyor: aşağıdaki işler sıkça bu sektöre
+atfediliyor ama bizim kapsamımızda değil.
 
-- **Karot numunesinin deneyi ve raporu bizim işimiz DEĞİL.** Numuneyi biz
-  alırız — su soğutmalı, yüzeye dik, etiketli. Numuneyi kırmak, deneyi yapmak
-  ve raporu düzenlemek yetkili laboratuvarın işidir. Rapor düzenlemiyor,
-  sonuç yorumlamıyoruz.
-- **Numunenin nereden ve kaç adet alınacağına biz karar VERMEYİZ.** Bu karar
-  yapının mühendisinindir; plan varsa ona göre çalışırız, yoksa önce planın
-  oluşturulması gerektiğini söyleriz.
-- **Taşıyıcı kolon, perde veya kirişe onaysız müdahale ETMEYİZ.** Statik proje
-  ve yetkili mühendis onayı olmadan bu elemanlarda kesim/delim işine
-  başlamıyoruz; gerekiyorsa proje müellifine yönlendiriyoruz.
-
+${siteConfig.sector.kapsamSiniri.map((k) => `- ${k}`).join('\n')}
 ## Hizmetlerimiz
 
 ${services
@@ -457,9 +477,16 @@ ${services
 
 ## Hizmet Bölgeleri
 
-${address.city} il genelinde ${serviceAreas.length} ilçe:
+${address.city} il genelinde ${ilceler.length} ilçe ve ${mahalleler.length} mahalle:
 
-${serviceAreas.map((a) => `- [${a.name} karot, beton delme ve kesme](${url}/hizmet-bolgeleri/${a.slug}/)`).join('\n')}
+${ilceler.map((a) => `- [${a.name} halı yıkama](${url}/hizmet-bolgeleri/${a.slug}/)`).join('\n')}
+
+### Mahalleler (${mahalleler.length})
+
+Merkezefendi ve Pamukkale'nin ${mahalleler.length} mahallesinin her biri için ayrı
+sayfa var. Tam liste ve bağlantılar: ${url}/hizmet-bolgeleri/
+
+${mahalleler.map((m) => `- [${m.name}, ${m.ilce}](${url}/hizmet-bolgeleri/${m.slug}/)`).join('\n')}
 
 Listede olmayan bölgeler ve çevre iller için telefonla değerlendirme yapılır.
 
@@ -498,7 +525,7 @@ ${faq.map((f) => `**${f.q}**\n${f.a}`).join('\n\n')}
    *
    * Neden ayrı dosya: llms.txt bir dizin, kaynak değil. İçinde her hizmetin
    * tek cümlelik açıklaması ve her yazının özeti var; bir dil modeli oradan
-   * "20 Karot beton kesme yapıyor" diyebilir ama "600 mm kalınlığa kadar iki
+   * "Tomay koltuk yıkıyor" diyebilir ama "koltuk yerinde, vakumlu üniteyle
    * yüzden çalışarak ineriz" diyemez — o cümle yalnızca sayfanın kendisinde
    * geçiyor. Alıntılanmayı belirleyen ikinci cümle, birincisi değil.
    *
@@ -579,7 +606,7 @@ ${yazilar}
 - E-posta: ${email}
 - Adres: ${address.full}
 - Çalışma saatleri: ${workingHours.days} ${workingHours.hours}
-- Hizmet bölgesi: ${address.city} il geneli, ${serviceAreas.length} ilçe
+- Hizmet bölgesi: ${address.city} il geneli, ${ilceler.length} ilçe ve ${mahalleler.length} mahalle
 `
   }
 
@@ -609,7 +636,6 @@ ${yazilar}
     const tarihSabit = gitTarihi('src/data/routeMeta.js')
     const tarihHizmet = gitTarihi('src/data/serviceContent.js')
     const tarihBolge = gitTarihi('src/data/serviceAreas.js')
-    const tarihBlog = gitTarihi('src/data/blogContent.js')
 
     const urls = [
         ...staticRoutes.map((r) => ({ ...r, lastmod: tarihSabit })),
@@ -707,7 +733,7 @@ Sitemap: ${url}/sitemap.xml
     name: 'seo-from-siteconfig',
 
     transformIndexHtml(html) {
-      return html.replace(/%(SITE_[A-Z_]+)%/g, (match, key) =>
+      return html.replace(/%(SITE_[A-Z0-9_]+)%/g, (match, key) =>
         key in tokens ? tokens[key] : match
       )
     },
@@ -907,9 +933,56 @@ ErrorDocument 404 /404.html
      * ve JSON-LD değiştirilerek dist/<rota>/index.html olarak yazılıyor.
      * Uygulama yine istemcide çalışıyor; değişen yalnızca ilk HTML.
      */
+    /**
+     * manifest.json TOKEN DOLDURMA — closeBundle'da, writeBundle'da DEĞİL.
+     *
+     * manifest.json `public/` altında duruyor ve Vite public klasörünü rollup
+     * yazımından SONRA kopyalıyor. writeBundle'da doldurulursa kopyalama onun
+     * üzerine yazar ve %SITE_*% belirteçleri yayına çıkar. closeBundle en son
+     * çalışır, o yüzden doğru yer burası.
+     *
+     * Devralınan iskelette manifest hiç işlenmiyordu: PWA olarak eklenen
+     * cihazda uygulama adı eski firmanın adı kalıyordu.
+     */
+    closeBundle() {
+      const yol = path.join(yayinKlasoru, 'manifest.json')
+      if (!fs.existsSync(yol)) return
+      let m = fs.readFileSync(yol, 'utf8')
+      for (const [k, deger] of Object.entries(tokens)) {
+        m = m.replaceAll(`%${k}%`, JSON.stringify(String(deger)).slice(1, -1))
+      }
+      const kalan = m.match(/%SITE_[A-Z0-9_]+%/g)
+      if (kalan) {
+        throw new Error(
+          `\n\nmanifest.json'da doldurulmamış belirteç kaldı: ${[...new Set(kalan)].join(', ')}\n` +
+            `Çözüm: vite.config.js > tokens nesnesine ilgili alanı ekleyin.\n`
+        )
+      }
+      JSON.parse(m) // bozuk JSON yayına çıkmasın
+      fs.writeFileSync(yol, m)
+    },
+
     writeBundle(secenekler) {
       const cikti = secenekler.dir ?? 'dist'
       const anaHtml = fs.readFileSync(path.join(cikti, 'index.html'), 'utf8')
+
+      /**
+       * DOLDURULMAMIŞ BELİRTEÇ KAPISI.
+       *
+       * transformIndexHtml bir belirteci tanımazsa onu OLDUĞU GİBİ bırakıyor
+       * (`key in tokens ? ... : match`). Build başarıyla biter ve ham
+       * "%SITE_XXX%" metni yayına çıkar. Bir kez yaşandı: token adı SITE_H1'di,
+       * regex [A-Z_]+ olduğu için rakamı görmedi ve belirteç ana sayfanın
+       * <h1>'inde kaldı. Sessiz hatayı gürültülü hataya çeviriyoruz.
+       */
+      const doldurulmamis = anaHtml.match(/%SITE_[A-Z0-9_]+%/g)
+      if (doldurulmamis) {
+        throw new Error(
+          `\n\nDOLDURULMAMIŞ BELİRTEÇ index.html'de kaldı: ${[...new Set(doldurulmamis)].join(', ')}\n` +
+            `Bu metin ham hâliyle yayına çıkardı.\n` +
+            `Çözüm: vite.config.js > tokens nesnesine ilgili alanı ekleyin.\n`
+        )
+      }
 
       const kacis = (s) =>
         String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
@@ -942,7 +1015,7 @@ ${paragraflar}
         ${services.map((s) => `<li><a href="/hizmetler/${s.slug}/">${kacis(s.title)}</a></li>`).join('\n        ')}
       </ul>
       <h2>Hizmet Bölgeleri</h2>
-      <p><a href="/hizmet-bolgeleri/">${address.city} genelinde ${serviceAreas.length} ilçede hizmet veriyoruz.</a></p>
+      <p><a href="/hizmet-bolgeleri/">${address.city} genelinde ${ilceler.length} ilçede hizmet veriyoruz.</a></p>
       <h2>İletişim</h2>
       <p>Telefon: <a href="tel:${phoneRaw}">${kacis(phone)}</a></p>
       <p>Adres: ${kacis(address.full)}</p>
@@ -1042,7 +1115,7 @@ ${paragraflar}
       const html404 = anaHtml
         .replace(/\s*<link rel="preload" as="image"[^>]*>/, '')
         .replace(/<!--ho-->[\s\S]*?<!--\/ho-->/, '')
-        .replace(/<title>[\s\S]*?<\/title>/, '<title>Sayfa Bulunamadı — 20 Karot</title>')
+        .replace(/<title>[\s\S]*?<\/title>/, `<title>Sayfa Bulunamadı — ${companyShortName}</title>`)
         .replace(
           /<meta name="description" content="[^"]*" \/>/,
           '<meta name="description" content="Aradığınız sayfa bulunamadı." />'
@@ -1058,7 +1131,7 @@ ${paragraflar}
         // kalır ve og:url olmayan bir adresi ANA SAYFA diye paylaştırır.
         .replace(
           /<meta property="og:title" content="[^"]*" \/>/,
-          '<meta property="og:title" content="Sayfa Bulunamadı — 20 Karot" />'
+          `<meta property="og:title" content="Sayfa Bulunamadı — ${companyShortName}" />`
         )
         .replace(
           /<meta property="og:description" content="[^"]*" \/>/,
@@ -1067,7 +1140,7 @@ ${paragraflar}
         .replace(/\s*<meta property="og:url" content="[^"]*" \/>/, '')
         .replace(
           /<meta name="twitter:title" content="[^"]*" \/>/,
-          '<meta name="twitter:title" content="Sayfa Bulunamadı — 20 Karot" />'
+          `<meta name="twitter:title" content="Sayfa Bulunamadı — ${companyShortName}" />`
         )
         .replace(
           /<meta name="twitter:description" content="[^"]*" \/>/,
