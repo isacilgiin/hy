@@ -13,6 +13,10 @@
  * │ bıraktığı iki sorgu için eklendi — siteConfig.js > seo.hedefSorgular.     │
  * └──────────────────────────────────────────────────────────────────────────┘
  *
+ * `image`: her yazının KENDİ görseli (/images/blog/<slug>.webp). Önceden
+ * hizmet görselleri yeniden kullanılıyordu ve on bir yazının yedisi aynı üç
+ * kareyi paylaşıyordu — blog listesi tek tip görünüyordu.
+ *
  * `ilgiliHizmetler`: yazının hangi hizmet sayfalarında "İlgili Rehberler"
  * olarak görüneceği. ServiceDetail.jsx bu alanı okuyor — ALANI ATLAMAYIN,
  * atlanınca o sayfa çöküyordu (`undefined.includes`). Şema doğrulaması
@@ -31,7 +35,7 @@ const blog = [
     okumaSuresi: 6,
     tarih: "2026-08-25",
     kategori: 'Rehber',
-    image: "/images/hizmetler/hali-yikama.webp",
+    image: "/images/blog/cay-lekesi-nasil-cikar.webp",
     ilgiliHizmetler: ["hali-yikama"],
   },
   {
@@ -41,7 +45,7 @@ const blog = [
     okumaSuresi: 6,
     tarih: "2026-08-25",
     kategori: 'Rehber',
-    image: "/images/hizmetler/hali-yikama.webp",
+    image: "/images/blog/denizli-hali-yikama-fiyatlari-2026.webp",
     ilgiliHizmetler: ["hali-yikama", "koltuk-yikama", "stor-perde-yikama"],
   },
   {
@@ -51,7 +55,7 @@ const blog = [
     okumaSuresi: 6,
     tarih: "2026-08-25",
     kategori: 'Rehber',
-    image: "/images/hizmetler/el-dokuma-hali-yikama.webp",
+    image: "/images/blog/elde-yikama-vs-makine.webp",
     ilgiliHizmetler: ["hali-yikama", "el-dokuma-hali-yikama", "ipek-nepal-hali-yikama"],
   },
   {
@@ -61,7 +65,7 @@ const blog = [
     okumaSuresi: 6,
     tarih: "2026-08-25",
     kategori: 'Rehber',
-    image: "/images/hizmetler/shaggy-hali-yikama.webp",
+    image: "/images/blog/evde-hali-bakimi-icin-ipuclari.webp",
     ilgiliHizmetler: ["hali-yikama", "shaggy-hali-yikama"],
   },
   {
@@ -71,7 +75,7 @@ const blog = [
     okumaSuresi: 6,
     tarih: "2026-08-25",
     kategori: 'Rehber',
-    image: "/images/hizmetler/hali-yikama.webp",
+    image: "/images/blog/evde-profesyonel-hali-temizligi.webp",
     ilgiliHizmetler: ["hali-yikama", "yorgan-battaniye-yikama"],
   },
   {
@@ -81,7 +85,7 @@ const blog = [
     okumaSuresi: 6,
     tarih: "2026-08-25",
     kategori: 'Rehber',
-    image: "/images/hizmetler/hali-yikama.webp",
+    image: "/images/blog/hali-yikama-sureci-kac-gun.webp",
     ilgiliHizmetler: ["hali-yikama", "el-dokuma-hali-yikama", "shaggy-hali-yikama"],
   },
   {
@@ -91,7 +95,7 @@ const blog = [
     okumaSuresi: 6,
     tarih: "2026-08-25",
     kategori: 'Rehber',
-    image: "/images/hizmetler/hali-yikama.webp",
+    image: "/images/blog/hali-yikamaci-secerken-nelere-bakmali.webp",
     ilgiliHizmetler: ["hali-yikama", "ipek-nepal-hali-yikama"],
   },
   {
@@ -101,7 +105,7 @@ const blog = [
     okumaSuresi: 6,
     tarih: "2026-08-25",
     kategori: 'Rehber',
-    image: "/images/hizmetler/koltuk-yikama.webp",
+    image: "/images/blog/koltuk-yikama-sikligi.webp",
     ilgiliHizmetler: ["koltuk-yikama"],
   },
   {
@@ -111,7 +115,7 @@ const blog = [
     okumaSuresi: 6,
     tarih: "2026-08-25",
     kategori: 'Rehber',
-    image: "/images/hizmetler/koltuk-yikama.webp",
+    image: "/images/blog/pamukkale-koltuk-yikama-rehberi.webp",
     ilgiliHizmetler: ["koltuk-yikama", "yatak-baza-temizligi"],
   },
   {
@@ -121,7 +125,7 @@ const blog = [
     okumaSuresi: 6,
     tarih: "2026-08-25",
     kategori: 'Rehber',
-    image: "/images/hizmetler/stor-perde-yikama.webp",
+    image: "/images/blog/stor-perde-yikama-rehberi.webp",
     ilgiliHizmetler: ["stor-perde-yikama"],
   },
   {
@@ -131,7 +135,7 @@ const blog = [
     okumaSuresi: 6,
     tarih: "2026-08-25",
     kategori: 'Rehber',
-    image: "/images/hizmetler/yatak-baza-temizligi.webp",
+    image: "/images/blog/yatak-hijyeni-ve-alerji.webp",
     ilgiliHizmetler: ["yatak-baza-temizligi", "yorgan-battaniye-yikama"],
   },
 ]
