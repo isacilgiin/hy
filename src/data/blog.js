@@ -76,7 +76,7 @@ const blog = [
   {
     slug: "hali-yikamaci-secerken-nelere-bakmali",
     title: "Denizli'de Halı Yıkamacı Seçerken Nelere Bakmalı? Beş Soru",
-    ozet: "Denizli'de halı yıkamacı seçerken sorulacak beş somut soru: kurutma, halı cinsine göre program, teslim süresi, etiketleme ve hasar tespitinin zamanı.",
+    ozet: "Denizli'de halı yıkamacı seçerken telefonda sorulacak altı soru ve gelen cevabın neyi ele verdiği: kurutma yeri, program, tespit, etiket, fiyat, gün.",
     okumaSuresi: 6,
     tarih: "2026-08-25",
     kategori: 'Rehber',
@@ -84,8 +84,8 @@ const blog = [
   },
   {
     slug: "koltuk-yikama-sikligi",
-    title: "Koltuk Yıkama Sıklığı: Koltuk Ne Zaman Yıkanmalı, Neye Bağlı?",
-    ozet: "Koltuk yıkama sıklığını takvim değil kullanım belirler: hane, çocuk, evcil hayvan, sigara ve güneş. Geç kalındığını gösteren işaretler nelerdir?",
+    title: "Koltuk Ne Sıklıkla Yıkanmalı? Sıklığı Belirleyen Koşullar",
+    ozet: "Koltuk yıkama sıklığını takvim değil kullanım belirler. Hanenin yükünü, kokunun nereye yerleştiğini ve kendi koltuğunuzu nasıl yoklayacağınızı yazdık.",
     okumaSuresi: 6,
     tarih: "2026-08-25",
     kategori: 'Rehber',
@@ -111,8 +111,8 @@ const blog = [
   },
   {
     slug: "yatak-hijyeni-ve-alerji",
-    title: "Yatak Temizliği ve Toz Akarı: Çarşaf Yıkamak Neden Yetmez",
-    ozet: "Toz akarı ölü deriyle beslenir, nemli ortamı sever. Yatak temizliğinde yüzey ile iç dolgu neden ayrılır, çarşaf yıkamak nereye kadar yeter? Anlatıyoruz.",
+    title: "Yatak Hijyeni ve Toz Akarı: Evde Neye Dikkat Etmek Gerekir",
+    ozet: "Yatağı sabah açık bırakmak, çarşaf sıcaklığı ve sıklığı, alez seçimi, döndürme takvimi ve yatağın ne zaman değişmesi gerektiği tek tek anlatılıyor.",
     okumaSuresi: 6,
     tarih: "2026-08-25",
     kategori: 'Rehber',
