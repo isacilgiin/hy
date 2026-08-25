@@ -109,7 +109,7 @@ export default function HeroSection() {
               className="absolute inset-0"
               style={{
                 background:
-                  'radial-gradient(75% 65% at 88% 15%, rgba(110,27,46,0.42) 0%, rgba(110,27,46,0.14) 45%, transparent 72%)',
+                  'radial-gradient(75% 65% at 88% 15%, rgba(11,107,95,0.42) 0%, rgba(11,107,95,0.14) 45%, transparent 72%)',
               }}
             />
 
@@ -137,7 +137,7 @@ export default function HeroSection() {
                 {/* {' '} ŞART: parçalar arasında boşluk olmazsa görsel olarak
                     (span'lar block) fark edilmez ama textContent kelimeleri
                     birleştirir. Google ve ekran okuyucular H1'i
-                    "ProfesyonelBeton Delme & KesmeHizmetleri" diye okuyordu. */}
+                    üç satırı bitişik, tek kelime gibi okuyordu. */}
                 {slideIndex === 0 ? (
                   <h1 className="animate-fade-in-up text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
                     {slide.title}{' '}
@@ -213,7 +213,7 @@ export default function HeroSection() {
         >
           <path
             d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z"
-            fill="#ffffff"
+            fill="var(--color-surface)"
           />
         </svg>
       </div>

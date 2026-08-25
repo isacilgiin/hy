@@ -8,13 +8,13 @@ import Icon from './Icon'
  * değil, "kasıtlı tasarım" gibi görünür. Dosya eklendiği anda otomatik
  * olarak gerçek görsel devreye girer — kodda değişiklik gerekmez.
  *
- * <SmartImage src="/images/hizmetler/beton-delme.jpg" alt="Beton delme"
- *             icon="drill" label="Beton Delme" className="w-full h-full" />
+ * <SmartImage src="/images/hizmetler/hali-yikama.webp" alt="Halı yıkama"
+ *             icon="carpetRoll" label="Halı Yıkama" className="w-full h-full" />
  */
 export default function SmartImage({
   src,
   alt = '',
-  icon = 'drill',
+  icon = 'carpetRoll',
   label,
   className = '',
   imgClassName = 'w-full h-full object-cover',
@@ -40,15 +40,15 @@ export default function SmartImage({
         aria-label={alt || label || 'Görsel yakında eklenecek'}
         {...rest}
       >
-        {/* Beton dokusunu andıran çapraz tarama */}
+        {/* Halı dokusunu andıran çapraz tarama */}
         <div
           className="absolute inset-0 opacity-[0.07]"
           style={{
             backgroundImage:
-              'repeating-linear-gradient(45deg, #C8A24A 0, #C8A24A 1px, transparent 1px, transparent 9px)',
+              'repeating-linear-gradient(45deg, #5FD3C4 0, #5FD3C4 1px, transparent 1px, transparent 9px)',
           }}
         />
-        {/* Bordo ışıma */}
+        {/* Aksan ışıması */}
         <div className="absolute -bottom-1/3 -right-1/4 w-2/3 h-2/3 rounded-full bg-accent/30 blur-3xl" />
         <div className="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 rounded-full bg-primary/10 blur-3xl" />
 

@@ -36,7 +36,7 @@ export default function Footer() {
             </Link>
             <p className="text-white/60 text-sm leading-relaxed mb-6">
               {siteConfig.stats.yearsExperience}+ yıllık saha tecrübesiyle Denizli ve çevresinde
-              profesyonel beton delme, kesme ve kırma hizmetleri sunuyoruz.
+              halı, koltuk, perde ve yorgan yıkama hizmeti veriyoruz.
             </p>
 
             {socials.length > 0 && (

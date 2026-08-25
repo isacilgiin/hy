@@ -16,100 +16,112 @@
  */
 
 const icons = {
-  /* ===== HİZMET İKONLARI (sektöre özel, özel çizim) ===== */
+  /* ===== HİZMET İKONLARI (sektöre özel, özel çizim) =====
+     Devralınan iskeletteki 10 sektör ikonu (drill, saw, hammer, rebar, anchor…)
+     KALDIRILDI. Anahtar adları bilinçli olarak eskisinden FARKLI: aynı adı
+     yeniden kullansaydık yanlış çizim sessizce doğru ada bağlanırdı.
 
-  // Karot / beton delme — eşmerkezli karot ucu
-  drill: (
+     DİKKAT: Eksik ikon build'i DURDURMAZ. Bilinmeyen ad için bu dosya null
+     döndürüyor ve ikon production'da sessizce kaybolur, CI'da da yakalanmaz.
+     Bu yüzden services.js / heroSlides.js / projects.js içindeki icon
+     değerleri AYNI COMMIT'te güncellenmeli. Kontrol:
+       grep -rhoE "icon: '[a-zA-Z]+'" src/data | sort -u                       */
+
+  // Halı yıkama — rulo halı (uç kesiti + gövde)
+  carpetRoll: (
+    <>
+      <ellipse cx="6.75" cy="12" rx="2.75" ry="5.5" />
+      <path d="M6.75 6.5h9.5M6.75 17.5h9.5" />
+      <path d="M16.25 6.5a5.5 5.5 0 0 1 0 11" />
+      <path d="M6.75 12a1.4 1.4 0 0 1 1.4-1.4" />
+    </>
+  ),
+
+  // El dokuma & yün — yün yumağı
+  wool: (
     <>
       <circle cx="12" cy="12" r="8.25" />
-      <circle cx="12" cy="12" r="3.25" />
-      <path d="M12 3.75v2.5M12 17.75v2.5M3.75 12h2.5M17.75 12h2.5" />
+      <path d="M5.9 7.2c4.3 1.7 9.1 4.6 12.3 8.4" />
+      <path d="M8.9 4.5c1.4 4.4 3.6 9.2 6.7 12.9" />
+      <path d="M16.6 5.4c-2.3 3.9-5.6 8.9-9.5 12.2" />
     </>
   ),
 
-  // Beton delme — duvarda açılmış delik
-  wallHole: (
+  // İpek & Nepal — akan ipek + parlaklık işareti
+  silk: (
     <>
-      <path d="M3.5 4.5h17v15h-17z" />
-      <path d="M3.5 9.5h4.5M16 9.5h4.5M3.5 14.5h4.5M16 14.5h4.5" />
-      <circle cx="12" cy="12" r="3.5" />
+      <path d="M3.25 9.5c2.9-3.1 5.8-3.1 8.75 0s5.85 3.1 8.75 0" />
+      <path d="M3.25 15c2.9-3.1 5.8-3.1 8.75 0s5.85 3.1 8.75 0" />
+      <path d="M17.5 4.25v2.5M16.25 5.5h2.5" />
     </>
   ),
 
-  // Kimyasal dübel — kimyasal ankraj kartuşu
-  chemical: (
+  // Shaggy & uzun tüylü — taban + uzun tüyler
+  shaggy: (
     <>
-      <path d="M9.5 2.75h5v3.5h-5z" />
-      <path d="M7.75 6.25h8.5v11h-8.5z" />
-      <path d="M10.75 17.25h2.5v4h-2.5z" />
-      <path d="M10 9.75h4M10 12.75h4" />
+      <path d="M2.75 8h18.5" />
+      <path d="M5 8v8.5M8 8v10.5M11 8v7.75M14 8v10.5M17 8v8.75M20 8v9.75" />
     </>
   ),
 
-  // Beton kesme — elmas testere diski + kol
-  saw: (
+  // Koltuk yıkama — koltuk
+  sofa: (
     <>
-      <circle cx="9.5" cy="13.5" r="6.25" />
-      <circle cx="9.5" cy="13.5" r="1.5" />
-      <path d="M9.5 7.25v1.75M15.75 13.5H14M9.5 19.75V18M3.25 13.5H5M13.9 9.1l-1.2 1.2M13.9 17.9l-1.2-1.2M5.1 17.9l1.2-1.2M5.1 9.1l1.2 1.2" />
-      <path d="M14.2 9 20.5 3.5" />
+      <path d="M5 11.25V8.5A2.5 2.5 0 0 1 7.5 6h9A2.5 2.5 0 0 1 19 8.5v2.75" />
+      <path d="M3.25 13.25a1.75 1.75 0 0 1 3.5 0V16h10.5v-2.75a1.75 1.75 0 0 1 3.5 0V18.5H3.25z" />
+      <path d="M8 11.25h8" />
     </>
   ),
 
-  // Beton kırma — hidrolik kırıcı / jackhammer
-  hammer: (
+  // Yatak & baza — yatak
+  bed: (
     <>
-      <path d="M9.25 3h5.5v4h-5.5z" />
-      <path d="M6.25 5h3M14.75 5h3" />
-      <path d="M11 7h2v7h-2z" />
-      <path d="M10.25 14h3.5L12 21.25z" />
+      <path d="M3 19v-9.5" />
+      <path d="M3 13.5h18V19" />
+      <path d="M3 13.5V9h7a2 2 0 0 1 2 2v2.5" />
+      <circle cx="6.75" cy="11" r="1.5" />
     </>
   ),
 
-  // Asfalt derz kesim — yol + derz çizgileri
-  road: (
+  // Stor & perde — mekanizmalı perde (zebra/stor lamelleri)
+  curtain: (
     <>
-      <path d="M6.5 3.25 3.5 20.75M17.5 3.25l3 17.5" />
-      <path d="M12 4.5v3M12 10.5v3M12 16.5v3" />
+      <rect x="3.5" y="3.75" width="17" height="16.5" rx="1.75" />
+      <path d="M3.5 8.25h17M3.5 12h17M3.5 15.75h17" />
+      <path d="M18.75 3.75v-1.5" />
     </>
   ),
 
-  // Hidrolik beton kesme — hidrolik piston
-  hydraulic: (
+  // Yorgan & battaniye — kapitone yorgan
+  blanket: (
     <>
-      <path d="M3.5 20.75h17" />
-      <path d="M7.75 12.5h8.5v8.25h-8.5z" />
-      <path d="M12 12.5V6.5" />
-      <path d="M8.75 3.25h6.5v3.25h-6.5z" />
+      <path d="M3.5 7.75A2.25 2.25 0 0 1 5.75 5.5h12.5a2.25 2.25 0 0 1 2.25 2.25v10.5H3.5z" />
+      <path d="M3.5 11.5h17M9.5 5.5v12.75M15 5.5v12.75" />
     </>
   ),
 
-  // Filiz ekimi — betona ekilmiş donatı filizleri
-  rebar: (
+
+  // Toz çırpma / havalandırma — hava akımı
+  wind: (
     <>
-      <path d="M3.25 14.75h17.5v6H3.25z" />
-      <path d="M8 14.75V6.5a2.25 2.25 0 0 1 4.5 0v1.25" />
-      <path d="M15 14.75V9.25a1.9 1.9 0 0 1 3.8 0" />
+      <path d="M3.5 8.5h9.25a2.75 2.75 0 1 0-2.75-2.75" />
+      <path d="M3.5 12h13a2.75 2.75 0 1 1-2.75 2.75" />
+      <path d="M3.5 15.75h6.5a2.25 2.25 0 1 1-2.25 2.25" />
     </>
   ),
 
-  // Kimyasal dübel & ankraj — dişli ankraj çubuğu
-  anchor: (
+  // Leke kontrolü — büyüteç
+  search: (
     <>
-      <path d="M3.75 14h16.5v6.75H3.75z" />
-      <path d="M12 3.25v14.5" />
-      <path d="M9.25 3.25h5.5" />
-      <path d="M9.75 6.25h4.5M9.75 8.75h4.5M9.75 11.25h4.5" />
+      <circle cx="10.75" cy="10.75" r="6.5" />
+      <path d="M15.5 15.5 20.25 20.25" />
     </>
   ),
 
-  // Kontrollü bina yıkımı — çatlamış yapı
-  demolition: (
+  // Durulama / su — damla
+  droplet: (
     <>
-      <path d="M4.75 20.75V7.5l6.5-3.25v16.5" />
-      <path d="M11.25 20.75h8V11.5l-8-2.75" />
-      <path d="M7.75 10.25h.01M7.75 14h.01M15 14.5h.01M15 18h.01" />
-      <path d="M17.5 3.5 19 6.5l3.25-.5" />
+      <path d="M12 3.25c3.5 4 5.75 6.9 5.75 9.75a5.75 5.75 0 0 1-11.5 0c0-2.85 2.25-5.75 5.75-9.75z" />
     </>
   ),
 

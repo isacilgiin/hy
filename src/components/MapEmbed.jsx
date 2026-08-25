@@ -41,7 +41,7 @@ export default function MapEmbed({ className = '' }) {
         className="absolute inset-0 opacity-[0.07]"
         style={{
           backgroundImage:
-            'linear-gradient(rgba(200,162,74,.6) 1px, transparent 1px), linear-gradient(90deg, rgba(200,162,74,.6) 1px, transparent 1px)',
+            'linear-gradient(rgba(95,211,196,.6) 1px, transparent 1px), linear-gradient(90deg, rgba(95,211,196,.6) 1px, transparent 1px)',
           backgroundSize: '40px 40px',
         }}
         aria-hidden="true"

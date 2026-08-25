@@ -15,13 +15,13 @@ import SmartImage from './SmartImage'
 /** Gerçek fotoğraf yüklenemediğinde lightbox'ta gösterilecek tasarım karesi. */
 function placeholderSlide(project) {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900">
-    <rect width="1200" height="900" fill="#14100F"/>
-    <circle cx="880" cy="720" r="320" fill="#6E1B2E" opacity="0.35"/>
-    <circle cx="300" cy="200" r="240" fill="#C8A24A" opacity="0.08"/>
-    <circle cx="600" cy="420" r="86" fill="none" stroke="#C8A24A" stroke-width="6"/>
-    <circle cx="600" cy="420" r="36" fill="none" stroke="#C8A24A" stroke-width="6"/>
-    <text x="600" y="560" fill="#F2EDE7" font-size="34" font-family="sans-serif" text-anchor="middle">${project.title.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</text>
-    <text x="600" y="606" fill="#C8A24A" font-size="22" font-family="sans-serif" text-anchor="middle">${project.category}</text>
+    <rect width="1200" height="900" fill="#10262B"/>
+    <circle cx="880" cy="720" r="320" fill="#0B6B5F" opacity="0.35"/>
+    <circle cx="300" cy="200" r="240" fill="#5FD3C4" opacity="0.08"/>
+    <circle cx="600" cy="420" r="86" fill="none" stroke="#5FD3C4" stroke-width="6"/>
+    <circle cx="600" cy="420" r="36" fill="none" stroke="#5FD3C4" stroke-width="6"/>
+    <text x="600" y="560" fill="#F4F1EA" font-size="34" font-family="sans-serif" text-anchor="middle">${project.title.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</text>
+    <text x="600" y="606" fill="#5FD3C4" font-size="22" font-family="sans-serif" text-anchor="middle">${project.category}</text>
   </svg>`
   return `data:image/svg+xml,${encodeURIComponent(svg)}`
 }

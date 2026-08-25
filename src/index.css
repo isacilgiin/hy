@@ -5,33 +5,57 @@
    SATIR İÇİ duruyor (gerekçesi orada yazılı). Buraya @font-face veya @import
    eklemeyin — bu dosya CSS paketine giriyor ve font keşfi bir adım gecikirdi. */
 
-/* ===== CUSTOM THEME ===== */
-/* ===== PALET: Kömür + Bordo + Altın (endüstriyel premium) =====
-   KONTRAST KURALI — tasarımda buna uy:
-     • ALTIN (primary) yalnızca KOYU zeminde metin/ikon rengidir.
-       Altın üzerine krem/beyaz zemin = 2.07:1 → WCAG AA (4.5:1) başarısız.
-     • Açık zeminde metin/ikon aksanı BORDO (accent) olmalıdır → 9.7:1 başarılı.
-     • Altın DOLGU (buton/rozet) üzerine KÖMÜR yazı → 7.9:1 başarılı.
-     • Bordo DOLGU üzerine BEYAZ yazı → 11.3:1 başarılı. */
+/* ===== CUSTOM THEME =====
+   PALET: Koyu Petrol + Derin Çam + Turkuaz (temiz / hijyen)
+
+   ┌──────────────────────────────────────────────────────────────────────┐
+   │ RENGİN TEK KAYNAĞI BU BLOKTUR. siteConfig.js'teki `colors` yalnızca  │
+   │ belgelemedir, koda beslenmez. Renk değiştirirken BURAYI düzenleyin.  │
+   └──────────────────────────────────────────────────────────────────────┘
+
+   KONTRAST KURALI — rengin adına göre değil, LUMİNANS ROLÜNE göre:
+     • primary = KOYU zeminde okunan AÇIK aksan. Açık zeminde KULLANILMAZ.
+     • accent  = AÇIK zeminde okunan KOYU aksan. Koyu zeminde kullanılmaz.
+   Bu ayrım korunduğu sürece palet değiştirilebilir; ayrım bozulursa
+   erişilebilirlik sessizce kırılır (renk "çalışır" ama okunmaz).
+
+   ÖLÇÜLMÜŞ ORANLAR (WCAG 2.1 rölatif luminans, AA metin eşiği 4.5, odak 3.0):
+     primary / dark ................ 8.70  ✓
+     primary-light / dark .......... 11.22 ✓
+     primary / dark-light .......... 7.20  ✓
+     accent / surface .............. 5.67  ✓
+     accent / surface-dark ......... 4.87  ✓
+     accent / beyaz ................ 6.40  ✓   (odak halkası eşiği 3.0 ✓)
+     accent-light / beyaz .......... 5.28  ✓
+     accent-light / surface ........ 4.69  ✓
+     beyaz / dark .................. 15.74 ✓
+     beyaz / accent (dolgu buton) .. 6.40  ✓
+     dark / surface ................ 13.95 ✓
+   YASAK KOMBİNASYONLAR (ölçüldü, okunmuyor):
+     primary / surface ............. 1.60  ✗
+     primary / beyaz ............... 1.81  ✗
+     accent-light / surface-dark ... 4.02  ✗ (bu zeminde accent kullanın)
+*/
 @theme {
-  /* Altın — koyu zeminde vurgu, dolgu butonlar */
-  --color-primary: #C8A24A;
-  --color-primary-dark: #A8863A;
-  --color-primary-light: #E3C77E;
+  /* Turkuaz — YALNIZCA koyu zeminde vurgu; koyu zemin üstü dolgu buton */
+  --color-primary: #5FD3C4;
+  --color-primary-dark: #3BB5A6;
+  --color-primary-light: #9BE8DC;
 
-  /* Bordo — açık zeminde vurgu, ikincil dolgu */
-  --color-accent: #6E1B2E;
-  --color-accent-dark: #4E1220;
-  --color-accent-light: #8E2B40;
+  /* Derin çam/petrol — YALNIZCA açık zeminde vurgu; beyaz yazılı dolgu buton */
+  --color-accent: #0B6B5F;
+  --color-accent-dark: #084C43;
+  --color-accent-light: #10796C;
 
-  /* Kömür — koyu zeminler */
-  --color-dark: #14100F;
-  --color-dark-light: #1F1917;
-  --color-dark-lighter: #2A2320;
+  /* Koyu petrol — koyu zeminler */
+  --color-dark: #10262B;
+  --color-dark-light: #17353C;
+  --color-dark-lighter: #22454C;
 
-  /* Krem — açık zeminler */
-  --color-surface: #F2EDE7;
-  --color-surface-dark: #E4DACE;
+  /* Sıcak krem — açık zeminler. Halı/tekstil sıcaklığını taşıyan tek yer;
+     saf beyaz zemin bu sektörde klinik duruyor. */
+  --color-surface: #F4F1EA;
+  --color-surface-dark: #E6E0D4;
 
   --font-kanit: 'Kanit', sans-serif;
 }
@@ -49,8 +73,10 @@
   }
 
   body {
-    background-color: #ffffff;
-    color: #1a1a1a;
+    /* Token'a bağlı: eskiden #ffffff / #1a1a1a sabitti ve palet değişince
+       gövde zemini yerinde kalıyordu (iki paletli site). */
+    background-color: var(--color-surface);
+    color: var(--color-dark);
     line-height: 1.6;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
@@ -205,7 +231,7 @@
   }
 
   .glass-dark {
-    background: rgba(20, 16, 15, 0.88);
+    background: rgba(16, 38, 43, 0.88);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -226,7 +252,7 @@
 
   /* Kömür → bordo geçişi: hero ve sayfa başlıklarının zemini */
   .gradient-hero {
-    background: linear-gradient(135deg, #14100f 0%, #241417 45%, #4e1220 78%, #6e1b2e 100%);
+    background: linear-gradient(135deg, var(--color-dark) 0%, var(--color-dark-light) 45%, var(--color-accent-dark) 78%, var(--color-accent) 100%);
   }
 
   /* ===== TEXT GRADIENT ===== */
@@ -248,11 +274,11 @@
 
   /* ===== GOLDEN GLOW ===== */
   .glow-gold {
-    box-shadow: 0 0 20px rgba(200, 162, 74, 0.28), 0 0 60px rgba(200, 162, 74, 0.1);
+    box-shadow: 0 0 20px rgba(95, 211, 196, 0.28), 0 0 60px rgba(95, 211, 196, 0.1);
   }
 
   .glow-gold-hover:hover {
-    box-shadow: 0 0 30px rgba(200, 162, 74, 0.45), 0 0 80px rgba(200, 162, 74, 0.18);
+    box-shadow: 0 0 30px rgba(95, 211, 196, 0.45), 0 0 80px rgba(95, 211, 196, 0.18);
   }
 
   /* ===== BUTTON STYLES ===== */
@@ -290,7 +316,7 @@
 
   .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(200, 162, 74, 0.35);
+    box-shadow: 0 8px 25px rgba(95, 211, 196, 0.35);
   }
 
   .btn-primary:hover::before {
@@ -320,7 +346,7 @@
     background: var(--color-primary);
     color: var(--color-dark);
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(200, 162, 74, 0.35);
+    box-shadow: 0 8px 25px rgba(95, 211, 196, 0.35);
   }
 
   /* AÇIK zeminde kullanılacak çerçeveli buton — altın çerçeve/yazı krem zeminde
@@ -346,9 +372,9 @@
 
   .btn-outline-accent:hover {
     background: var(--color-accent);
-    color: #ffffff;
+    color: var(--color-surface);
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(110, 27, 46, 0.3);
+    box-shadow: 0 8px 25px rgba(11, 107, 95, 0.3);
   }
 
   /* ===== SECTION STYLES ===== */
@@ -383,7 +409,7 @@
 
   .section-subtitle {
     font-size: 1.125rem;
-    /* Krem zeminde (--color-surface #F2EDE7) #6b7280 yalnızca 4,15:1 veriyordu;
+    /* Krem zeminde (--color-surface var(--color-surface)) #6b7280 yalnızca 4,15:1 veriyordu;
        WCAG AA normal metin için 4,5:1 ister. #4a5565 (gray-600) 6,49:1. */
     color: #4a5565;
     max-width: 600px;
@@ -460,7 +486,7 @@
   .mobile-menu-overlay {
     position: fixed;
     inset: 0;
-    background: linear-gradient(160deg, rgba(20, 16, 15, 0.97) 0%, rgba(78, 18, 32, 0.97) 100%);
+    background: linear-gradient(160deg, rgba(16, 38, 43, 0.97) 0%, rgba(8, 76, 67, 0.97) 100%);
     backdrop-filter: blur(10px);
     z-index: 40;
     overflow-y: auto;
