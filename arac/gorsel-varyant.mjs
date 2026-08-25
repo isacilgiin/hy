@@ -74,7 +74,57 @@ if (eksik.length) {
   console.log('Kodun aradığı tüm varyantlar diskte. ✓')
 }
 
-if (YALNIZCA_DENETIM) process.exit(eksik.length ? 1 : 0)
+/* ---- Ölçü denetimi: hero görselleri gerçekten srcset'in vaat ettiği kadar mı? ----
+ *
+ * hero-1/2/3 uzun süre 1376x768 olduğu halde srcset onları "1600w" diye
+ * bildiriyordu. Kimse fark etmedi çünkü kırık bir şey yok: tarayıcı en büyük
+ * adayı zaten seçiyor, yalnızca 1920px ekranda LCP görselini %39 büyütüyor —
+ * yani sitenin en görünür fotoğrafı yumuşak çıkıyordu.
+ *
+ * sharp'sız çalışır: WebP başlığından okuyor. Üç kapsayıcı biçimin üçü de var,
+ * çünkü Gemini/Antigravity çıktısı bazen VP8L (kayıpsız) geliyor.
+ */
+const webpOlcu = (dosya) => {
+  const b = fs.readFileSync(dosya)
+  if (b.toString('ascii', 0, 4) !== 'RIFF' || b.toString('ascii', 8, 12) !== 'WEBP') return null
+  const tip = b.toString('ascii', 12, 16)
+  if (tip === 'VP8X') return [(b.readUIntLE(24, 3) & 0xffffff) + 1, (b.readUIntLE(27, 3) & 0xffffff) + 1]
+  if (tip === 'VP8 ') return [b.readUInt16LE(26) & 0x3fff, b.readUInt16LE(28) & 0x3fff]
+  if (tip === 'VP8L') { const n = b.readUInt32LE(21); return [(n & 0x3fff) + 1, ((n >> 14) & 0x3fff) + 1] }
+  return null
+}
+
+/** Dosya adındaki ek genişliği verir; ek yoksa klasörün ana genişliği. */
+const ANA_GENISLIK = { 'public/images/hero': 1600 }
+const olcuSorunlari = []
+for (const { dizin } of KURALLAR) {
+  const ana = ANA_GENISLIK[dizin]
+  if (!ana || !fs.existsSync(dizin)) continue
+  for (const dosya of fs.readdirSync(dizin).filter((f) => /\.webp$/i.test(f))) {
+    // DİKKAT: /-(\d+)\.webp$/ KULLANMAYIN — "hero-1.webp" dosyasının kendi adı
+    // da ona uyuyor ve dosya "1px genişlik varyantı" sanılıyor. Yukarıdaki
+    // üretim döngüsü de aynı sebeple açık listeyle eliyor.
+    const ek = dosya.match(/-(600|800|900|1200)\.webp$/i)
+    const beklenen = ek ? Number(ek[1]) : ana
+    const o = webpOlcu(`${dizin}/${dosya}`)
+    if (!o) continue
+    // Küçük varyant kaynaktan büyütülmüyor (withoutEnlargement), o yüzden
+    // beklenenden DAR olması normal; sorun ana dosyanın vaadini tutmaması.
+    if (!ek && o[0] < beklenen) olcuSorunlari.push([`${dizin}/${dosya}`, o, beklenen])
+  }
+}
+if (olcuSorunlari.length) {
+  console.log(`\nSRCSET'İN VAAT ETTİĞİNDEN KÜÇÜK ${olcuSorunlari.length} ANA GÖRSEL:`)
+  for (const [f, o, bek] of olcuSorunlari) {
+    const oran = ((bek / o[0] - 1) * 100).toFixed(0)
+    console.log(`  - ${f.replace('public/images/', '').padEnd(24)} ${o[0]}x${o[1]}  ->  ${bek}px ekranda %${oran} büyütülüyor`)
+  }
+  console.log('  (yeniden üretirken en az bu genişlikte isteyin; büyütmek keskinlik getirmez)')
+} else {
+  console.log('Ana görsellerin hepsi srcset\'in vaat ettiği genişlikte. ✓')
+}
+
+if (YALNIZCA_DENETIM) process.exit(eksik.length || olcuSorunlari.length ? 1 : 0)
 
 /* ---- Üretim: yalnızca buradan sonrası sharp istiyor ---- */
 let sharp

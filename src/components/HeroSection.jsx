@@ -49,7 +49,19 @@ const heroStats = [
 
 export default function HeroSection() {
   const [aktif, setAktif] = useState(0)
-  const [durdu, setDurdu] = useState(false)
+
+  /**
+   * Otomatik geçişi durduran İKİ AYRI sebep, İKİ AYRI bayrak.
+   *
+   * Tek boolean ile şu kırılıyordu: kullanıcı sekme ile hero'ya giriyor
+   * (odak → dur), sonra fareyi hero'nun üzerinden geçirip çıkarıyor
+   * (onMouseLeave → devam). Odak hâlâ içerideyken slayt değişiyor, odaklı
+   * öğenin slaytı inert oluyor ve ODAK <body>'ye düşüyor. Swiper'da inert
+   * olmadığı için bu kırılma yoktu; birlikte geldiler.
+   */
+  const [fareUzerinde, setFareUzerinde] = useState(false)
+  const [odakIcinde, setOdakIcinde] = useState(false)
+  const durdu = fareUzerinde || odakIcinde
 
   /**
    * GÖRSEL YÜKLEME KONTROLÜ
@@ -101,14 +113,19 @@ export default function HeroSection() {
     return () => clearTimeout(sayac)
   }, [aktif, durdu, git])
 
+  /**
+   * Ok tuşları. Odak, basıldıktan sonra YENİ aktif noktaya taşınıyor —
+   * yoksa odak eski noktada kalır, aria-current başkasındadır ve ekran
+   * okuyucu "seçili olmayan düğme" okur. WAI karusel deseninde beklenen
+   * davranış budur.
+   */
   const tusaBasildi = (e) => {
-    if (e.key === 'ArrowRight') {
-      e.preventDefault()
-      git((aktif + 1) % heroSlides.length, true)
-    } else if (e.key === 'ArrowLeft') {
-      e.preventDefault()
-      git((aktif - 1 + heroSlides.length) % heroSlides.length, true)
-    }
+    const yon = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0
+    if (!yon) return
+    e.preventDefault()
+    const sonraki = (aktif + yon + heroSlides.length) % heroSlides.length
+    git(sonraki, true)
+    e.currentTarget.children[sonraki]?.focus()
   }
 
   const stats = heroStats
@@ -125,10 +142,10 @@ export default function HeroSection() {
          İkincisi WCAG 2.2.2 "Pause, Stop, Hide" için: klavyeyle gezen
          kullanıcının altındaki bağlantılar 6,5 saniyede bir değişmesin.
          onFocus/onBlur React'te kabarcıklanır — focusin/focusout gibi. */
-      onMouseEnter={() => setDurdu(true)}
-      onMouseLeave={() => setDurdu(false)}
-      onFocus={() => setDurdu(true)}
-      onBlur={() => setDurdu(false)}
+      onMouseEnter={() => setFareUzerinde(true)}
+      onMouseLeave={() => setFareUzerinde(false)}
+      onFocus={() => setOdakIcinde(true)}
+      onBlur={() => setOdakIcinde(false)}
     >
       <div className="hero-yigin">
         {heroSlides.map((slide, slideIndex) => (
@@ -143,9 +160,34 @@ export default function HeroSection() {
             aria-roledescription="slayt"
             aria-label={`${slideIndex + 1} / ${heroSlides.length}`}
           >
-            {/* Arka plan görseli — ilk slayt LCP olduğu için eager ve yüksek
-                öncelikli; diğerleri ancak sırası gelince DOM'a giriyor. */}
-            <div className="absolute inset-0 bg-dark">
+            {/* FOTOĞRAF KATMANI — yüksekliği TAM 100svh, içeriğe bağlı DEĞİL.
+                Ölçülen sebep (playwright, dört kırılma noktası):
+
+                  ekran       ön boyama   React (eskiden)
+                  1366x768      768px        869px   +101
+                  1024x768      768px        963px   +195
+                   390x844      844px        875px    +31
+                  1920x1080    1080px       1080px      0
+
+                Statik ön boyamanın kutusu her zaman 100svh; React'inki ise
+                slaytın içeriği kadardı. İçerik 100svh'ye sığmayınca kutu
+                büyüyor, object-fit:cover BAŞKA BİR KIRPMA veriyor ve React
+                devraldığı anda fotoğraf gözle görülür şekilde kayıyordu.
+                Sayfa yenilemede görülen sıçramanın ikinci sebebi buydu —
+                birincisi tembel yüklemeydi (bkz. src/pages/Home.jsx).
+
+                Kutuyu 100svh'ye sabitleyince iki taraf her ekranda birebir
+                aynı; içeriğin taşması artık fotoğrafı etkilemiyor. Taşan
+                kısım düz --color-dark üzerine oturuyor, alttaki degrade de
+                tam koyuya varıyor (aşağıda) — dolayısıyla ek yerinde çizgi
+                oluşmuyor.
+
+                YÜKSEKLİĞİ İÇERİĞE BAĞLAMAYIN (inset-0 yapmayın): ön boyamayla
+                farkı geri getirir. */}
+            <div className="hero-foto">
+              {/* Arka plan görseli — ilk slayt LCP olduğu için eager ve yüksek
+                  öncelikli; diğerleri ancak sırası gelince DOM'a giriyor. */}
+              <div className="absolute inset-0 bg-dark">
               {yuklenecek.has(slideIndex) && (
                 <SmartImage
                   src={slide.image}
@@ -160,11 +202,11 @@ export default function HeroSection() {
                   fetchPriority={slideIndex === 0 ? 'high' : undefined}
                   width="1600"
                   height="900"
-                />
-              )}
-            </div>
+                  />
+                )}
+              </div>
 
-            {/* Okunabilirlik katmanı — metnin bulunduğu sol tarafta koyu, sağda
+              {/* Okunabilirlik katmanı — metnin bulunduğu sol tarafta koyu, sağda
                 fotoğraf görünsün diye açık. Metin `text-white` üzerinde en az
                 7:1 kontrast kalacak şekilde ayarlandı.
 
@@ -178,26 +220,31 @@ export default function HeroSection() {
                 içinde ve orada İLK katman üste geliyor, o yüzden liste
                 ters yazılmış (radyal → yukarı → sağa). İkisi aynı sonucu
                 veriyor; birini değiştirirken bunu unutma. */}
-            <div className="absolute inset-0 bg-gradient-to-r from-dark/95 via-dark/78 to-dark/30" />
-            <div className="absolute inset-0 bg-gradient-to-t from-dark/85 via-transparent to-dark/45" />
-            {/* Lacivert yıkama — paletin lacivert tonu fotoğrafın üzerinde de görünsün */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  'radial-gradient(75% 65% at 88% 15%, rgba(16,56,140,0.42) 0%, rgba(16,56,140,0.14) 45%, transparent 72%)',
-              }}
-            />
+              <div className="absolute inset-0 bg-gradient-to-r from-dark/95 via-dark/78 to-dark/30" />
+              {/* Alt uç TAM koyu (dark/85 değil): fotoğraf kutusu 100svh'de
+                  bitiyor, altında düz --color-dark var. Uç %85'te kalırsa
+                  içeriğin taştığı ekranlarda birleşme yerinde soluk bir yatay
+                  çizgi görünüyor. */}
+              <div className="absolute inset-0 bg-gradient-to-t from-dark via-transparent to-dark/45" />
+              {/* Lacivert yıkama — paletin lacivert tonu fotoğrafın üzerinde de görünsün */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    'radial-gradient(75% 65% at 88% 15%, rgba(16,56,140,0.42) 0%, rgba(16,56,140,0.14) 45%, transparent 72%)',
+                }}
+              />
 
-            {/* Izgara dokusu */}
-            <div
-              className="absolute inset-0 opacity-[0.04]"
-              style={{
-                backgroundImage:
-                  'linear-gradient(rgba(255,255,255,.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.5) 1px, transparent 1px)',
-                backgroundSize: '60px 60px',
-              }}
-            />
+              {/* Izgara dokusu */}
+              <div
+                className="absolute inset-0 opacity-[0.04]"
+                style={{
+                  backgroundImage:
+                    'linear-gradient(rgba(255,255,255,.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.5) 1px, transparent 1px)',
+                  backgroundSize: '60px 60px',
+                }}
+              />
+            </div>
 
             {/* İçerik */}
             <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[100svh] flex items-center pt-32 pb-40 sm:pb-48 lg:pb-52">

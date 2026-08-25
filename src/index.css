@@ -520,6 +520,25 @@
     transition: opacity 0.9s ease;
   }
 
+  /*
+   * FOTOĞRAF KUTUSU — yüksekliği TAM 100svh, slaytın içeriğine bağlı değil.
+   * Gerekçesi ve ölçümü HeroSection.jsx'te, bu sınıfın kullanıldığı yerde.
+   *
+   * ÇİFT BİLDİRİM ŞART ve vite.config.js > heroOnizleme'deki .hero-on
+   * kuralının birebir aynası: svh desteklemeyen tarayıcı ikinci satırı atıp
+   * 100vh'de kalıyor, ön boyama da öyle. Tek satır bırakılırsa (yalnız svh)
+   * o tarayıcılarda kural düşer, yükseklik auto olur ve fotoğraf kaybolur.
+   */
+  .hero-foto {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    height: 100svh;
+    overflow: hidden;
+  }
+
   .hero-yigin > .hero-slayt[data-aktif='true'] {
     opacity: 1;
     pointer-events: auto;

@@ -92,7 +92,7 @@ function seoFromConfig() {
       `.hero-on img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}` +
       `.hero-on::after{content:"";position:absolute;inset:0;background:` +
       `radial-gradient(75% 65% at 88% 15%,rgba(16,56,140,.42) 0%,rgba(16,56,140,.14) 45%,transparent 72%),` +
-      `linear-gradient(to top,rgba(10,24,50,.85),transparent 50%,rgba(10,24,50,.45)),` +
+      `linear-gradient(to top,rgba(10,24,50,1),transparent 50%,rgba(10,24,50,.45)),` +
       `linear-gradient(to right,rgba(10,24,50,.95),rgba(10,24,50,.78) 50%,rgba(10,24,50,.3))}` +
       `</style><div class="hero-on"><img src="${ilkSlayt.image}" srcset="${heroSrcset}" sizes="100vw" ` +
       `alt="${ilkSlayt.imageAlt.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;')}" ` +
