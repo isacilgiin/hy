@@ -18,11 +18,16 @@ doğru olan bu, yanlış markanın fotoğrafı durmaz.
 | `og/` | `<slug>.jpg` (1200×630) | — | `routeMeta.js:33,217,346` |
 | `logo/` | `logo.webp`, `logo-beyaz.webp`, `og-image.jpg`, `apple-touch-icon.png` (180×180) | 192/512 PNG | `Logo.jsx`, `index.html:53` |
 
-**Varyant üretilmezse `srcset` 404'e gider.** Üretim sonrası kontrol:
+**Varyant üretilmezse `srcset` 404'e gider ve MOBİLDE görsel hiç gelmez.**
+
+Üretim ve denetim tek araçta:
 ```
-grep -rhoE '"/images/[^"]+\.(webp|jpg|png)' src/data src/components | sort -u | \
-  while read p; do p=${p#\"}; [ -f "public$p" ] || echo EKSIK $p; done
+npm run varyant              # eksikleri listeler, sharp varsa üretir
+node arac/gorsel-varyant.mjs --denetle   # yalnız denetle (eksik varsa çıkış kodu 1)
 ```
+`sharp` bilerek kalıcı bağımlılık değil — platforma özel ikili paket getiriyor
+ve `package-lock.json`'ı Windows ile Linux arasında çakıştırıyor. Yalnızca
+üretim için gerekiyor: `npm i -D sharp`
 
 ## OG görselleri atlanmasın
 `og/` altındaki 1200×630 JPG'ler **WhatsApp ve sosyal paylaşımda görünen resim**.
