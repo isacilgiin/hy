@@ -23,7 +23,8 @@ export default function ProcessSteps({
 }) {
   if (!adimlar?.length) return null
 
-  const zemin = koyu ? 'bg-dark text-white' : 'bg-surface text-dark'
+  // .doku: düz koyu yüzey steril duruyor; çok ince tane katmanı malzeme hissi veriyor
+  const zemin = koyu ? 'doku bg-dark text-white' : 'bg-surface text-dark'
   const kartZemin = koyu
     ? 'bg-dark-light/70 border-white/10 hover:border-primary/40'
     : 'bg-white border-dark/10 hover:border-accent/40'

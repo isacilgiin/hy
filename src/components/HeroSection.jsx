@@ -149,13 +149,13 @@ export default function HeroSection() {
                     birleştirir. Google ve ekran okuyucular H1'i
                     üç satırı bitişik, tek kelime gibi okuyordu. */}
                 {slideIndex === 0 ? (
-                  <h1 className="animate-fade-in-up text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+                  <h1 className="animate-fade-in-up text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-[1.05] tracking-[-0.03em] mb-6 text-balance">
                     {slide.title}{' '}
                     <span className="text-gradient block mt-2">{slide.titleAccent}</span>{' '}
                     {slide.titleAfter && <span className="block mt-2">{slide.titleAfter}</span>}
                   </h1>
                 ) : (
-                  <p className="animate-fade-in-up text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+                  <p className="animate-fade-in-up text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-[1.05] tracking-[-0.03em] mb-6 text-balance">
                     {slide.title}{' '}
                     <span className="text-gradient block mt-2">{slide.titleAccent}</span>{' '}
                     {slide.titleAfter && <span className="block mt-2">{slide.titleAfter}</span>}

@@ -37,7 +37,9 @@ export default function Blog() {
 
       <section className="section-padding bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* İlk yazı iki sütun kaplıyor: eşit kartlardan oluşan ızgarada
+              hiçbir yazı öne çıkmıyor ve en yeni/en önemli yazı kayboluyor. */}
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 [&>*:first-child]:sm:col-span-2 [&>*:first-child]:lg:col-span-2">
             {yazilar.map((yazi, i) => (
               <Link
                 key={yazi.slug}

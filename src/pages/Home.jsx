@@ -34,7 +34,9 @@ export default function Home() {
       {/* ===== Hizmetler ===== */}
       <section className="section-padding bg-white" id="hizmetler">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-14">
+          {/* Başlık SOLA yaslı: her bölümü ortalamak sayfayı tekdüze ve
+              "şablondan çıkmış" gösteriyor. Metin sola, ızgara altına. */}
+          <div className="mb-14 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 mb-4">
               <Icon name="cog" className="w-4 h-4 text-accent" strokeWidth={2} />
               <span className="text-accent text-sm font-semibold">Profesyonel Çözümler</span>
@@ -46,13 +48,17 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* ASİMETRİK IZGARA — eşit kartlardan oluşan sıra, tasarımda en sık
+              görülen şablon kalıbı: hepsi aynı boyutta olunca hiçbiri önemli
+              görünmüyor. İlk kart (halı yıkama, ana hizmet) iki sütun kaplıyor
+              ve uzun açıklamayla geliyor; göz oradan başlıyor. */}
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {services.map((service, idx) => (
-              <ServiceCard key={service.id} service={service} index={idx} />
+              <ServiceCard key={service.id} service={service} index={idx} one={idx === 0} />
             ))}
           </div>
 
-          <div className="text-center mt-12">
+          <div className="mt-12">
             <Link to="/hizmetler/" className="btn-primary">
               Tüm Hizmetlerimiz
               <Icon name="arrowRight" className="w-5 h-5" strokeWidth={2} />
@@ -140,7 +146,7 @@ export default function Home() {
       {projects.length > 0 && (
       <section className="section-padding bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-14">
+          <div className="mb-14 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 mb-4">
               <Icon name="camera" className="w-4 h-4 text-accent" strokeWidth={2} />
               <span className="text-accent text-sm font-semibold">Aynı Kare, İki Hâl</span>
@@ -167,7 +173,7 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="text-center mt-12">
+          <div className="mt-12">
             <Link to="/projeler/" className="btn-primary">
               Tüm Öncesi &amp; Sonrası
               <Icon name="arrowRight" className="w-5 h-5" strokeWidth={2} />

@@ -4,7 +4,7 @@ import { whatsappUrl } from '../utils/links'
 
 export default function CTASection() {
   return (
-    <section className="relative py-20 overflow-hidden">
+    <section className="doku relative overflow-hidden py-24">
       {/* Zemin */}
       <div className="absolute inset-0 gradient-hero" />
       <div
