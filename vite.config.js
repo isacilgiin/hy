@@ -963,6 +963,17 @@ Sitemap: ${url}/sitemap.xml
 # dist/ içeriğini hostinge yüklerken BU DOSYAYI DA yükleyin (gizli dosyadır;
 # FileZilla > Sunucu > Gizli dosyaları göstermeye zorla).
 
+# ---------------------------------------------------------------
+# DirectoryIndex — index.html, index.php'den ÖNCE.
+#
+# Bu site devralınan PHP sitesinin ÜZERİNE yükleniyor. Eski dosyalardan
+# index.php sunucuda kalırsa, sunucunun varsayılan sırasına göre ziyaretçiye
+# ESKİ SAYFA açılabilir; üstelik aşağıdaki 301 kurallarının hiçbiri
+# çalışmaz çünkü istek zaten var olan bir dosyayla karşılanmıştır.
+# Bu satır sırayı garanti eder. Yine de doğrusu eski dosyaları SİLMEK.
+# ---------------------------------------------------------------
+DirectoryIndex index.html index.php
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
