@@ -493,7 +493,70 @@
     animation: fadeInUp 0.5s ease-out backwards;
   }
 
-  /* ===== SWIPER CUSTOM ===== */
+  /* ===== HERO KARUSELİ ===== */
+  /*
+   * ÇAPRAZ GEÇİŞ YIĞINI — kütüphanesiz.
+   *
+   * Burada Swiper vardı; gerekçesi ve ölçümü HeroSection.jsx başında.
+   * Bütün slaytlar TEK grid gözünde üst üste duruyor: konumlandırma
+   * `position:absolute` ile yapılsaydı konteyner çökerdi ve yüksekliği elle
+   * vermek gerekirdi. Grid'de konteynerin yüksekliği en uzun slayttan gelir.
+   *
+   * .hero-slayt'ın `position: relative` olması ŞART: içindeki
+   * `absolute inset-0` örtüler ve arka plan görseli buraya tutunuyor.
+   * Kaldırılırsa en yakın konumlanmış ata <section> olur ve örtüler
+   * bütün bölüme yayılır.
+   */
+  .hero-yigin {
+    display: grid;
+  }
+
+  .hero-yigin > .hero-slayt {
+    grid-area: 1 / 1;
+    position: relative;
+    opacity: 0;
+    pointer-events: none;
+    /* Süre eski Swiper speed={900} karşılığı. */
+    transition: opacity 0.9s ease;
+  }
+
+  .hero-yigin > .hero-slayt[data-aktif='true'] {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Hareketi azalt: geçiş anında olsun; otomatik oynatma zaten JS'te kapalı. */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-yigin > .hero-slayt {
+      transition: none;
+    }
+  }
+
+  /* Noktalar alttaki dalganın ÜSTÜNDE kalsın */
+  .hero-noktalar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 5.5rem;
+    z-index: 25;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+  }
+
+  @media (min-width: 640px) {
+    .hero-noktalar {
+      bottom: 6.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-noktalar {
+      bottom: 8.5rem;
+    }
+  }
+
   /*
    * Slider noktaları: görünen boyut 10px, DOKUNMA HEDEFİ 24x24px.
    *
@@ -506,42 +569,35 @@
    * Bu yüzden 12px veriliyor: 12-7 = 5px iç yarıçap, 10px'lik kutuda tam daire
    * (aktif haldeki 32px'lik kutuda da hap görünümü). Buraya 5px yazılırsa
    * iç yarıçap 0'a kırpılır ve noktalar KÖŞELİ KARE olarak çıkar.
+   *
+   * !important'lar kalktı: Swiper'ın kendi kurallarını ezmek için duruyorlardı,
+   * artık ezilecek kural yok.
    */
-  .swiper-pagination-bullet {
-    width: 10px !important;
-    height: 10px !important;
-    box-sizing: content-box !important;
-    padding: 7px !important;
-    margin: 0 !important;
-    background-color: rgba(255, 255, 255, 0.45) !important;
-    background-clip: content-box !important;
-    border-radius: 12px !important;
-    opacity: 1 !important;
+  .hero-nokta {
+    width: 10px;
+    height: 10px;
+    box-sizing: content-box;
+    padding: 7px;
+    margin: 0;
+    border: 0;
+    background-color: rgba(255, 255, 255, 0.45);
+    background-clip: content-box;
+    border-radius: 12px;
+    cursor: pointer;
     transition: width 0.3s ease, background-color 0.3s ease;
   }
 
-  .swiper-pagination-bullet-active {
-    background-color: var(--color-primary) !important;
-    width: 32px !important;
-    border-radius: 12px !important;
+  .hero-nokta[aria-current='true'] {
+    background-color: var(--color-primary);
+    width: 32px;
   }
 
-  /* Hero slider — noktalar alttaki dalganın ÜSTÜNDE kalsın */
-  .hero-swiper .swiper-pagination {
-    bottom: 5.5rem !important;
-    z-index: 25;
-  }
-
-  @media (min-width: 640px) {
-    .hero-swiper .swiper-pagination {
-      bottom: 6.5rem !important;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .hero-swiper .swiper-pagination {
-      bottom: 8.5rem !important;
-    }
+  /* Klavye odağı görünür olmalı — koyu hero üzerinde altın halka.
+     Nokta 24px'lik kutunun ortasındaki 10px olduğu için outline dış kutuya
+     basılıyor ve doğal olarak nokta ile arasında boşluk kalıyor. */
+  .hero-nokta:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: -2px;
   }
 
   /* ===== MOBILE MENU ===== */

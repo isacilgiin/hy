@@ -1,20 +1,34 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { Autoplay, EffectFade, Pagination, Keyboard, A11y } from 'swiper/modules'
-import 'swiper/css'
-import 'swiper/css/effect-fade'
-import 'swiper/css/pagination'
 
 import siteConfig from '../data/siteConfig'
 import heroSlides from '../data/heroSlides'
 import Icon from './Icon'
 import SmartImage from './SmartImage'
 
-/** Kullanıcı "hareketi azalt" dediyse otomatik oynatma çalışmaz. */
-const prefersReducedMotion =
-  typeof window !== 'undefined' &&
-  window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+/**
+ * ÇAPRAZ GEÇİŞ ELLE YAZILDI — buraya slider kütüphanesi EKLEMEYİN.
+ *
+ * Burada Swiper vardı ve yalnızca şunlar için kullanılıyordu: fade geçişi,
+ * otomatik oynatma, nokta göstergesi, ok tuşları, erişilebilirlik duyurusu.
+ * Hepsi aşağıda, kütüphanesiz.
+ *
+ * Neden çıkarıldı — ölçüm:
+ *   Swiper tembel yüklenirse hero da tembel yüklenmek zorunda kalıyor; o da
+ *   ekranı üç kez boyatıp sayfa yenilemede görünür sıçrama yapıyor
+ *   (gerekçesi src/pages/Home.jsx başında). Hero eager olunca Swiper ortak
+ *   pakete giriyor ve slider'ı OLMAYAN 89 sayfa da bedelini ödüyor:
+ *   ilk ekran 94,4 → 126,1 KB gzip (+31,7 KB js, +1,6 KB css).
+ *   Elle yazınca ikisi de gitti: eager hero, sıfır kütüphane.
+ *
+ * Yığın CSS ile kuruluyor (.hero-yigin / .hero-slayt, src/index.css):
+ * bütün slaytlar aynı grid gözünde üst üste; yalnızca opaklık değişiyor.
+ * Konteynerin yüksekliği en uzun slayttan geliyor — mutlak konumlandırmada
+ * olduğu gibi çökmüyor.
+ */
+
+/** Slayt süresi ve fade uzunluğu — CSS'teki .hero-slayt geçişiyle eşleşmeli. */
+const SLAYT_SURESI = 6500
 
 /**
  * Hero'daki dört rakam.
@@ -34,24 +48,67 @@ const heroStats = [
 ]
 
 export default function HeroSection() {
+  const [aktif, setAktif] = useState(0)
+  const [durdu, setDurdu] = useState(false)
+
   /**
    * GÖRSEL YÜKLEME KONTROLÜ
    *
-   * Swiper'ın fade efektinde bütün slaytlar aynı konumda üst üste durur.
-   * Tarayıcı hepsini "görünür" saydığı için loading="lazy" işe yaramıyor ve
-   * ana sayfa açılışında 6 hero görselinin TAMAMI iniyordu (~1,4 MB).
-   * Burada yalnızca gösterilmiş olan slaytların + bir sonrakinin görseli
-   * DOM'a konuyor; geri kalanların yerinde koyu zemin duruyor.
+   * Fade yığınında bütün slaytlar aynı konumda üst üste duruyor. Tarayıcı
+   * hepsini "görünür" saydığı için loading="lazy" işe yaramıyor ve ana sayfa
+   * açılışında 5 hero görselinin TAMAMI iniyordu (~1,4 MB). Burada yalnızca
+   * gösterilmiş olan slaytların + bir sonrakinin görseli DOM'a konuyor;
+   * geri kalanların yerinde koyu zemin duruyor.
    */
   const [yuklenecek, setYuklenecek] = useState(() => new Set([0, 1]))
 
-  const slaytDegisti = (swiper) => {
+  /**
+   * Ekran okuyucu duyurusu. Boş = sessiz.
+   *
+   * Ref DEĞİL state: ref'i render sırasında okumak eşzamanlı (concurrent)
+   * render'da bayat değer verebiliyor. İki setState aynı olayda toplu
+   * işleniyor, ekstra render yok.
+   */
+  const [duyuru, setDuyuru] = useState('')
+
+  const git = useCallback((sonraki, elle = false) => {
+    setDuyuru(
+      elle ? `Slayt ${sonraki + 1} / ${heroSlides.length}: ${heroSlides[sonraki].badge}` : ''
+    )
+    setAktif(sonraki)
     setYuklenecek((oncekiler) => {
-      const sonraki = new Set(oncekiler)
-      sonraki.add(swiper.realIndex)
-      sonraki.add((swiper.realIndex + 1) % heroSlides.length)
-      return sonraki
+      if (oncekiler.has(sonraki) && oncekiler.has((sonraki + 1) % heroSlides.length)) return oncekiler
+      const yeni = new Set(oncekiler)
+      yeni.add(sonraki)
+      yeni.add((sonraki + 1) % heroSlides.length)
+      return yeni
     })
+  }, [])
+
+  /**
+   * Otomatik oynatma.
+   *
+   * setInterval değil setTimeout: bağımlılıkta `aktif` olduğu için kullanıcı
+   * bir noktaya bastığında sayaç sıfırdan başlıyor. Swiper'daki
+   * disableOnInteraction:false karşılığı — etkileşimden sonra duruyor değil,
+   * baştan sayıyor.
+   */
+  useEffect(() => {
+    if (heroSlides.length < 2 || durdu) return
+    /* Kullanıcı "hareketi azalt" dediyse otomatik oynatma çalışmaz. */
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return
+    const sayac = setTimeout(() => git((aktif + 1) % heroSlides.length), SLAYT_SURESI)
+    return () => clearTimeout(sayac)
+  }, [aktif, durdu, git])
+
+  const tusaBasildi = (e) => {
+    if (e.key === 'ArrowRight') {
+      e.preventDefault()
+      git((aktif + 1) % heroSlides.length, true)
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault()
+      git((aktif - 1 + heroSlides.length) % heroSlides.length, true)
+    }
   }
 
   const stats = heroStats
@@ -59,30 +116,33 @@ export default function HeroSection() {
     .filter((s) => s.resolved !== null)
 
   return (
-    <section className="relative bg-dark overflow-hidden" aria-label="Öne çıkanlar">
-      <Swiper
-        className="hero-swiper"
-        modules={[Autoplay, EffectFade, Pagination, Keyboard, A11y]}
-        effect="fade"
-        fadeEffect={{ crossFade: true }}
-        speed={900}
-        loop={heroSlides.length > 1}
-        autoplay={
-          prefersReducedMotion || heroSlides.length < 2
-            ? false
-            : { delay: 6500, disableOnInteraction: false, pauseOnMouseEnter: true }
-        }
-        pagination={{ clickable: true }}
-        onSlideChange={slaytDegisti}
-        keyboard={{ enabled: true }}
-        a11y={{
-          prevSlideMessage: 'Önceki slayt',
-          nextSlideMessage: 'Sonraki slayt',
-          paginationBulletMessage: '{{index}}. slayta git',
-        }}
-      >
+    <section
+      className="relative bg-dark overflow-hidden"
+      aria-label="Öne çıkanlar"
+      aria-roledescription="karusel"
+      /* Otomatik geçiş fare hero'nun üzerindeyken duruyor (eski Swiper
+         pauseOnMouseEnter karşılığı) ve ODAK hero'nun içindeyken de duruyor.
+         İkincisi WCAG 2.2.2 "Pause, Stop, Hide" için: klavyeyle gezen
+         kullanıcının altındaki bağlantılar 6,5 saniyede bir değişmesin.
+         onFocus/onBlur React'te kabarcıklanır — focusin/focusout gibi. */
+      onMouseEnter={() => setDurdu(true)}
+      onMouseLeave={() => setDurdu(false)}
+      onFocus={() => setDurdu(true)}
+      onBlur={() => setDurdu(false)}
+    >
+      <div className="hero-yigin">
         {heroSlides.map((slide, slideIndex) => (
-          <SwiperSlide key={slide.id}>
+          <div
+            key={slide.id}
+            className="hero-slayt"
+            data-aktif={slideIndex === aktif ? 'true' : 'false'}
+            /* inert: görünmeyen slayttaki bağlantı ve düğmelere sekme ile
+               girilemesin; aria-hidden'ı da kendisi getiriyor. React 19'da
+               boolean olarak veriliyor. */
+            inert={slideIndex !== aktif}
+            aria-roledescription="slayt"
+            aria-label={`${slideIndex + 1} / ${heroSlides.length}`}
+          >
             {/* Arka plan görseli — ilk slayt LCP olduğu için eager ve yüksek
                 öncelikli; diğerleri ancak sırası gelince DOM'a giriyor. */}
             <div className="absolute inset-0 bg-dark">
@@ -111,10 +171,16 @@ export default function HeroSection() {
                 DİKKAT: Aşağıdaki üç örtü, ana sayfanın statik hero ön
                 boyamasında birebir kopyalanmıştır (vite.config.js >
                 heroOnizleme). Birini değiştirirsen oradakini de değiştir;
-                yoksa React devraldığı anda ekran kararır/açılır. */}
+                yoksa React devraldığı anda ekran kararır/açılır.
+
+                SIRA DA ÖNEMLİ: burada sonraki kardeş ÜSTE boyanıyor
+                (sağa → yukarı → radyal). Ön boyamada hepsi tek ::after
+                içinde ve orada İLK katman üste geliyor, o yüzden liste
+                ters yazılmış (radyal → yukarı → sağa). İkisi aynı sonucu
+                veriyor; birini değiştirirken bunu unutma. */}
             <div className="absolute inset-0 bg-gradient-to-r from-dark/95 via-dark/78 to-dark/30" />
             <div className="absolute inset-0 bg-gradient-to-t from-dark/85 via-transparent to-dark/45" />
-            {/* Bordo yıkama — paletin bordo tonu fotoğrafın üzerinde de görünsün */}
+            {/* Lacivert yıkama — paletin lacivert tonu fotoğrafın üzerinde de görünsün */}
             <div
               className="absolute inset-0"
               style={{
@@ -184,12 +250,41 @@ export default function HeroSection() {
                 </div>
               </div>
             </div>
-          </SwiperSlide>
+          </div>
         ))}
-      </Swiper>
+      </div>
+
+      {/* Nokta göstergesi. Slaytların DIŞINDA: inert olan slayta girmemeli,
+          yoksa aktif slayt değişince odak kaybolur. */}
+      {heroSlides.length > 1 && (
+        <div
+          className="hero-noktalar"
+          role="group"
+          aria-label="Slayt seçimi"
+          onKeyDown={tusaBasildi}
+        >
+          {heroSlides.map((slide, i) => (
+            <button
+              key={slide.id}
+              type="button"
+              className="hero-nokta"
+              aria-current={i === aktif}
+              aria-label={`${i + 1}. slayta git: ${slide.badge}`}
+              onClick={() => git(i, true)}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Ekran okuyucu duyurusu. Otomatik geçişte susuyor — 6,5 saniyede bir
+          konuşan bir bölge sayfayı kullanılamaz hale getiriyor; Swiper'ın a11y
+          modülü de aynı sebeple otomatik oynatmada bölgeyi kapatıyordu. */}
+      <span className="sr-only" aria-live="polite" aria-atomic="true">
+        {duyuru}
+      </span>
 
       {/* Sağ sütun istatistik kartları — slaytlarla birlikte değişmediği için
-          Swiper'ın DIŞINDA, sabit katman olarak duruyor. */}
+          yığının DIŞINDA, sabit katman olarak duruyor. */}
       {stats.length > 0 && (
         <div className="pointer-events-none absolute inset-0 z-10 hidden lg:block">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-end pb-40">

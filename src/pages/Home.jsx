@@ -1,23 +1,24 @@
-import { lazy, Suspense } from 'react'
 import { Link } from 'react-router-dom'
 
 /**
- * HERO TEMBEL YÜKLENİYOR — ölçülmüş sebep.
+ * HERO EAGER IMPORT — bilinçli, tembel YAPMAYIN.
  *
- * HeroSection Swiper'ı çekiyor. Home eager import edildiği için Swiper ORTAK
- * paket grafiğine giriyordu ve sonuç, ÜRETİLEN 90 SAYFANIN HEPSİNDE şuydu:
- *   <link rel="modulepreload" href="/assets/swiper-*.js">    106 kB / 32 kB gzip
- *   <link rel="stylesheet"    href="/assets/swiper-*.css">   RENDER BLOKLUYOR
- * Slider yalnızca ana sayfada var; 89 sayfa onu boşuna indiriyordu ve CSS
- * ilk boyamayı geciktiriyordu.
+ * Bir kez tembel yapıldı ve geri alındı. Sebep ölçüldü: tembel yüklemede iki
+ * ayrı boyama oluyor —
+ *   1) statik ön boyama (build çıktısındaki HTML)
+ *   2) createRoot #root'u temizliyor, Suspense YEDEĞİ boyanıyor
+ *   3) parça inince GERÇEK hero boyanıyor
+ * Yedek, ön boyamanın birebir aynısı çizilse bile 2 → 3 geçişinde <img>
+ * elemanı yeniden oluşturuluyor ve sayfa yenilenirken gözle görülür bir
+ * sıçrama kalıyor.
  *
- * LCP ETKİLENMİYOR: ana sayfanın hero'su build sırasında statik olarak ÖN
- * BOYANIYOR (vite.config.js > heroOnizleme) — görsel, React açılmadan ekranda.
- * Tembel yükleme tam da o ön boyamanın kapattığı aralığa denk geliyor.
- * Yedek ekran da aynı zemin rengiyle geliyor, yani düzen kaymıyor.
+ * Eager import'ta ön boyama TEK ADIMDA gerçek hero'ya devrediyor.
+ *
+ * Bedeli: HeroSection Swiper'ı çekiyor ve Swiper ortak pakete giriyor
+ * (~32 kB gzip, 90 sayfada). Bu bedeli kaldırmanın doğru yolu tembel yükleme
+ * DEĞİL, slider'ı tek statik hero'ya indirmek — o zaman Swiper hiç girmez.
  */
-const HeroSection = lazy(() => import('../components/HeroSection'))
-import HeroOnizleme from '../components/HeroOnizleme'
+import HeroSection from '../components/HeroSection'
 import ServiceCard from '../components/ServiceCard'
 import StatsSection from '../components/StatsSection'
 import BeforeAfter from '../components/BeforeAfter'
@@ -47,14 +48,7 @@ export default function Home() {
         path="/"
       />
 
-      <Suspense
-        /* Yedek, statik ön boyamanın BİREBİR AYNISI. Düz koyu bir kutu
-           olsaydı sayfa yenilenirken "görsel → koyu boşluk → görsel" diye
-           göze çarpan bir sıçrama olurdu. Gerekçe HeroOnizleme.jsx'te. */
-        fallback={<HeroOnizleme />}
-      >
-        <HeroSection />
-      </Suspense>
+      <HeroSection />
 
       {/* ===== Hizmetler ===== */}
       <section className="section-padding bg-white" id="hizmetler">
