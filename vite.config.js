@@ -81,19 +81,19 @@ function seoFromConfig() {
    *
    * Perde katmanları HeroSection.jsx'teki üç örtüyle aynı sırada ve aynı
    * değerlerde; sapma olursa React devraldığı anda ekranda kararma/açılma
-   * şeklinde göz kırpma olur. `bg-dark` = #10262B, `accent` = #0B6B5F.
+   * şeklinde göz kırpma olur. `bg-dark` = #0A1832, `accent` = #10388C.
    *
    * writeBundle diğer rotalarda <!--ho-->…<!--/ho--> arasını siliyor: o
    * sayfalarda bu görsel hiç kullanılmıyor.
    */
   const heroOnizleme = ilkSlayt
     ? `<!--ho--><style>` +
-      `.hero-on{position:relative;min-height:100vh;min-height:100svh;background:#10262B;overflow:hidden}` +
+      `.hero-on{position:relative;min-height:100vh;min-height:100svh;background:#0A1832;overflow:hidden}` +
       `.hero-on img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}` +
       `.hero-on::after{content:"";position:absolute;inset:0;background:` +
-      `radial-gradient(75% 65% at 88% 15%,rgba(11,107,95,.42) 0%,rgba(11,107,95,.14) 45%,transparent 72%),` +
-      `linear-gradient(to top,rgba(16,38,43,.85),transparent 50%,rgba(16,38,43,.45)),` +
-      `linear-gradient(to right,rgba(16,38,43,.95),rgba(16,38,43,.78) 50%,rgba(16,38,43,.3))}` +
+      `radial-gradient(75% 65% at 88% 15%,rgba(16,56,140,.42) 0%,rgba(16,56,140,.14) 45%,transparent 72%),` +
+      `linear-gradient(to top,rgba(10,24,50,.85),transparent 50%,rgba(10,24,50,.45)),` +
+      `linear-gradient(to right,rgba(10,24,50,.95),rgba(10,24,50,.78) 50%,rgba(10,24,50,.3))}` +
       `</style><div class="hero-on"><img src="${ilkSlayt.image}" srcset="${heroSrcset}" sizes="100vw" ` +
       `alt="${ilkSlayt.imageAlt.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;')}" ` +
       `width="1600" height="900" fetchpriority="high" decoding="async" /></div><!--/ho-->`

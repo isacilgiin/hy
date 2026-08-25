@@ -2,10 +2,10 @@
   <!-- Denizli Tomay Halı Yıkama — rulo halı kesiti.
        Motif bilinçli olarak tek parça ve kalın: 16 px'te de okunur.
        Renkler src/index.css @theme ile aynı olmalı (dark / primary / surface). -->
-  <rect width="48" height="48" rx="10" fill="#10262B"/>
+  <rect width="48" height="48" rx="10" fill="#0A1832"/>
   <!-- Rulo halının sarmalı: dıştan içe üç tur -->
   <path d="M35 24a11 11 0 1 1-11-11h9"
-        fill="none" stroke="#5FD3C4" stroke-width="3.6" stroke-linecap="round"/>
+        fill="none" stroke="#E2AC4A" stroke-width="3.6" stroke-linecap="round"/>
   <path d="M28.5 24a4.5 4.5 0 1 1-4.5-4.5h6"
-        fill="none" stroke="#F4F1EA" stroke-width="3.2" stroke-linecap="round"/>
+        fill="none" stroke="#F6F3EC" stroke-width="3.2" stroke-linecap="round"/>
 </svg>

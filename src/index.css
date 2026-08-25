@@ -1,63 +1,76 @@
 @import "tailwindcss";
 
 /* ===== YAZI TİPİ ===== */
-/* Kanit KENDİ SUNUCUMUZDAN geliyor; @font-face blokları index.html'in <head>'inde
+/* Outfit KENDİ SUNUCUMUZDAN geliyor; @font-face blokları index.html'in <head>'inde
    SATIR İÇİ duruyor (gerekçesi orada yazılı). Buraya @font-face veya @import
    eklemeyin — bu dosya CSS paketine giriyor ve font keşfi bir adım gecikirdi. */
 
 /* ===== CUSTOM THEME =====
-   PALET: Koyu Petrol + Derin Çam + Turkuaz (temiz / hijyen)
+   PALET: Derin Lacivert + Altın — MARKANIN KENDİ RENKLERİ
 
    ┌──────────────────────────────────────────────────────────────────────┐
    │ RENGİN TEK KAYNAĞI BU BLOKTUR. siteConfig.js'teki `colors` yalnızca  │
    │ belgelemedir, koda beslenmez. Renk değiştirirken BURAYI düzenleyin.  │
    └──────────────────────────────────────────────────────────────────────┘
 
-   KONTRAST KURALI — rengin adına göre değil, LUMİNANS ROLÜNE göre:
-     • primary = KOYU zeminde okunan AÇIK aksan. Açık zeminde KULLANILMAZ.
-     • accent  = AÇIK zeminde okunan KOYU aksan. Koyu zeminde kullanılmaz.
-   Bu ayrım korunduğu sürece palet değiştirilebilir; ayrım bozulursa
+   NEREDEN GELDİ: Logodan ÖLÇÜLEREK. public/images/logo/logo.webp'in baskın
+   pikselleri örneklendi: lacivert #073AA9 ve altın #F8B72B. Önceki palet
+   (petrol + turkuaz) logoyla çakışıyordu — sitede iki ayrı marka rengi
+   vardı. Logo sabit varlık; palet ona uyar, tersi değil.
+
+   ROL DAĞILIMI — bu ayrım rengin ADINA değil LUMİNANSINA dayanıyor:
+     • primary = ALTIN. KOYU zeminde okunan açık aksan. Açık zeminde KULLANILMAZ.
+     • accent  = LACİVERT. AÇIK zeminde okunan koyu aksan. Koyu zeminde kullanılmaz.
+     • dark    = derin lacivert zemin. Saf siyah DEĞİL, saf mavi de değil —
+                 ikisi de bu sektörde soğuk duruyor.
+     • surface = sıcak krem. Halı/tekstil sıcaklığını taşıyan tek yüzey;
+                 saf beyaz klinik görünüyor.
+   Ayrım korunduğu sürece palet yine değiştirilebilir; bozulursa
    erişilebilirlik sessizce kırılır (renk "çalışır" ama okunmaz).
 
-   ÖLÇÜLMÜŞ ORANLAR (WCAG 2.1 rölatif luminans, AA metin eşiği 4.5, odak 3.0):
-     primary / dark ................ 8.70  ✓
-     primary-light / dark .......... 11.22 ✓
-     primary / dark-light .......... 7.20  ✓
-     accent / surface .............. 5.67  ✓
-     accent / surface-dark ......... 4.87  ✓
-     accent / beyaz ................ 6.40  ✓   (odak halkası eşiği 3.0 ✓)
-     accent-light / beyaz .......... 5.28  ✓
-     accent-light / surface ........ 4.69  ✓
-     beyaz / dark .................. 15.74 ✓
-     beyaz / accent (dolgu buton) .. 6.40  ✓
-     dark / surface ................ 13.95 ✓
+   ÖLÇÜLMÜŞ ORANLAR (WCAG 2.1 rölatif luminans · AA metin 4.5 · odak 3.0):
+     primary / dark ................ 8.60  ✓
+     primary-light / dark .......... 11.49 ✓
+     primary / dark-light .......... 7.43  ✓
+     primary / dark-lighter ........ 6.04  ✓
+     dark / primary (dolgu buton) .. 8.60  ✓
+     accent / surface .............. 9.64  ✓
+     accent / surface-dark ......... 8.44  ✓
+     accent / beyaz ................ 10.68 ✓
+     accent-light / beyaz .......... 7.84  ✓
+     accent-light / surface ........ 7.08  ✓
+     beyaz / accent (dolgu buton) .. 10.68 ✓
+     beyaz / dark .................. 17.65 ✓
+     dark / surface ................ 15.93 ✓
    YASAK KOMBİNASYONLAR (ölçüldü, okunmuyor):
-     primary / surface ............. 1.60  ✗
-     primary / beyaz ............... 1.81  ✗
-     accent-light / surface-dark ... 4.02  ✗ (bu zeminde accent kullanın)
+     primary / surface ............. 1.87  ✗
+     primary / beyaz ............... 2.08  ✗
+     accent / dark ................. 1.65  ✗
+
+   DOYGUNLUK bilerek sınırlı (primary %72, accent %79): tam doygun altın ve
+   mavi ekranda bağırıyor ve "yapay zekâ paleti" izlenimi veriyor.
 */
 @theme {
-  /* Turkuaz — YALNIZCA koyu zeminde vurgu; koyu zemin üstü dolgu buton */
-  --color-primary: #5FD3C4;
-  --color-primary-dark: #3BB5A6;
-  --color-primary-light: #9BE8DC;
+  /* Altın — YALNIZCA koyu zeminde vurgu; koyu zemin üstü dolgu buton */
+  --color-primary: #E2AC4A;
+  --color-primary-dark: #C08F33;
+  --color-primary-light: #EFCC88;
 
-  /* Derin çam/petrol — YALNIZCA açık zeminde vurgu; beyaz yazılı dolgu buton */
-  --color-accent: #0B6B5F;
-  --color-accent-dark: #084C43;
-  --color-accent-light: #10796C;
+  /* Lacivert — YALNIZCA açık zeminde vurgu; beyaz yazılı dolgu buton */
+  --color-accent: #10388C;
+  --color-accent-dark: #0A2560;
+  --color-accent-light: #1A4BB0;
 
-  /* Koyu petrol — koyu zeminler */
-  --color-dark: #10262B;
-  --color-dark-light: #17353C;
-  --color-dark-lighter: #22454C;
+  /* Derin lacivert — koyu zeminler */
+  --color-dark: #0A1832;
+  --color-dark-light: #12244A;
+  --color-dark-lighter: #1B3266;
 
-  /* Sıcak krem — açık zeminler. Halı/tekstil sıcaklığını taşıyan tek yer;
-     saf beyaz zemin bu sektörde klinik duruyor. */
-  --color-surface: #F4F1EA;
-  --color-surface-dark: #E6E0D4;
+  /* Sıcak krem — açık zeminler */
+  --color-surface: #F6F3EC;
+  --color-surface-dark: #EAE4D8;
 
-  --font-kanit: 'Kanit', sans-serif;
+  --font-govde: 'Outfit', ui-sans-serif, system-ui, sans-serif;
 }
 
 /* ===== GLOBAL STYLES =====
@@ -69,7 +82,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    font-family: var(--font-kanit);
+    font-family: var(--font-govde);
   }
 
   body {
@@ -77,7 +90,8 @@
        gövde zemini yerinde kalıyordu (iki paletli site). */
     background-color: var(--color-surface);
     color: var(--color-dark);
-    line-height: 1.6;
+    line-height: 1.65;
+    text-wrap: pretty;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -231,7 +245,7 @@
   }
 
   .glass-dark {
-    background: rgba(16, 38, 43, 0.88);
+    background: rgba(10,24,50, 0.88);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -273,12 +287,13 @@
   }
 
   /* ===== GOLDEN GLOW ===== */
+  /* Ad artık doğru: palet gerçekten altın. */
   .glow-gold {
-    box-shadow: 0 0 20px rgba(95, 211, 196, 0.28), 0 0 60px rgba(95, 211, 196, 0.1);
+    box-shadow: 0 0 20px rgba(226,172,74, 0.28), 0 0 60px rgba(226,172,74, 0.1);
   }
 
   .glow-gold-hover:hover {
-    box-shadow: 0 0 30px rgba(95, 211, 196, 0.45), 0 0 80px rgba(95, 211, 196, 0.18);
+    box-shadow: 0 0 30px rgba(226,172,74, 0.45), 0 0 80px rgba(226,172,74, 0.18);
   }
 
   /* ===== BUTTON STYLES ===== */
@@ -290,7 +305,7 @@
     padding: 0.875rem 2rem;
     background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
     color: var(--color-dark);
-    font-family: var(--font-kanit);
+    font-family: var(--font-govde);
     font-weight: 600;
     font-size: 1rem;
     line-height: 1.2;
@@ -316,7 +331,7 @@
 
   .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(95, 211, 196, 0.35);
+    box-shadow: 0 8px 25px rgba(226,172,74, 0.35);
   }
 
   .btn-primary:hover::before {
@@ -331,7 +346,7 @@
     padding: 0.875rem 2rem;
     background: transparent;
     color: var(--color-primary);
-    font-family: var(--font-kanit);
+    font-family: var(--font-govde);
     font-weight: 600;
     font-size: 1rem;
     line-height: 1.2;
@@ -346,7 +361,7 @@
     background: var(--color-primary);
     color: var(--color-dark);
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(95, 211, 196, 0.35);
+    box-shadow: 0 8px 25px rgba(226,172,74, 0.35);
   }
 
   /* AÇIK zeminde kullanılacak çerçeveli buton — altın çerçeve/yazı krem zeminde
@@ -359,7 +374,7 @@
     padding: 0.875rem 2rem;
     background: transparent;
     color: var(--color-accent);
-    font-family: var(--font-kanit);
+    font-family: var(--font-govde);
     font-weight: 600;
     font-size: 1rem;
     line-height: 1.2;
@@ -374,7 +389,7 @@
     background: var(--color-accent);
     color: var(--color-surface);
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(11, 107, 95, 0.3);
+    box-shadow: 0 8px 25px rgba(16,56,140, 0.3);
   }
 
   /* ===== SECTION STYLES ===== */
@@ -394,36 +409,83 @@
     }
   }
 
+  /* Büyük başlıkta harf aralığı NEGATİF olmalı: Outfit geometrik bir yazı
+     tipi ve varsayılan aralıkla 48px'te dağınık duruyor. text-wrap: balance
+     son satırda tek kelime kalmasını (yetim kelime) engelliyor. */
   .section-title {
     font-size: 2.25rem;
     font-weight: 700;
-    line-height: 1.2;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
     margin-bottom: 1rem;
   }
 
   @media (min-width: 768px) {
     .section-title {
       font-size: 3rem;
+      letter-spacing: -0.03em;
     }
   }
 
+  /* Satır uzunluğu ~65 karakterle sınırlı (okunabilirlik eşiği). `ch` birimi
+     piksel yerine KARAKTER genişliğine bağlı, yazı tipi değişse de tutuyor.
+     text-wrap: pretty son satırdaki yetim kelimeyi önlüyor. */
   .section-subtitle {
     font-size: 1.125rem;
-    /* Krem zeminde (--color-surface var(--color-surface)) #6b7280 yalnızca 4,15:1 veriyordu;
-       WCAG AA normal metin için 4,5:1 ister. #4a5565 (gray-600) 6,49:1. */
+    line-height: 1.7;
+    /* Krem zeminde #6b7280 yalnızca 4,15:1 veriyordu; WCAG AA 4,5:1 ister.
+       #4a5565 krem zeminde 6,49:1. */
     color: #4a5565;
-    max-width: 600px;
-    margin: 0 auto;
+    max-width: 65ch;
+    text-wrap: pretty;
   }
 
   /* ===== CARD STYLES ===== */
+  /* Gölge SİYAH DEĞİL, zeminin tonunda (lacivert). Saf siyah gölge krem
+     zeminde gri bir kir gibi duruyor; zemin tonlu gölge malzemeye oturuyor.
+     transform + box-shadow GPU'da çalışıyor; width/height animasyonu değil. */
   .card-hover {
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition:
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .card-hover:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    transform: translateY(-6px);
+    box-shadow:
+      0 1px 2px rgba(10, 24, 50, 0.06),
+      0 12px 28px -8px rgba(10, 24, 50, 0.18);
+  }
+
+  /* Basıldığında fiziksel geri bildirim — tıklamanın kaydedildiğini söyler. */
+  .card-hover:active {
+    transform: translateY(-2px);
+    transition-duration: 0.08s;
+  }
+
+  /* ===== DOKU =====
+     Düz renk yüzeyler dijital ve steril duruyor. Çok ince bir tane (grain)
+     katmanı yüzeye malzeme hissi veriyor. pointer-events YOK — tıklamayı
+     engellemez. SVG satır içi: ek istek yok. */
+  .doku {
+    position: relative;
+  }
+
+  .doku::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Sayaç rakamları için EŞİT GENİŞLİKLİ rakam. Orantılı rakamda "1"
+     dardır ve sayaç 0'dan 15.000'e sayarken satır sürekli oynuyor. */
+  .rakam {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
   }
 
   /* ===== PAGE TRANSITION ===== */
@@ -486,7 +548,7 @@
   .mobile-menu-overlay {
     position: fixed;
     inset: 0;
-    background: linear-gradient(160deg, rgba(16, 38, 43, 0.97) 0%, rgba(8, 76, 67, 0.97) 100%);
+    background: linear-gradient(160deg, rgba(10,24,50, 0.97) 0%, rgba(10,37,96, 0.97) 100%);
     backdrop-filter: blur(10px);
     z-index: 40;
     overflow-y: auto;

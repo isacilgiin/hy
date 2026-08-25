@@ -131,14 +131,14 @@ const siteConfig = {
   // düzenleyin. (Devralınan iskelette bu blok ölü veriydi ve @theme'den ayrışmıştı.)
   // Ölçülmüş kontrast oranları için: src/index.css başındaki tablo.
   colors: {
-    primary: '#5FD3C4', // turkuaz — YALNIZCA koyu zeminde
-    accent: '#0B6B5F', // derin petrol — YALNIZCA açık zeminde
-    dark: '#10262B', // koyu petrol
-    surface: '#F4F1EA', // sıcak krem
+    primary: '#E2AC4A', // altın — YALNIZCA koyu zeminde
+    accent: '#10388C', // lacivert — YALNIZCA açık zeminde
+    dark: '#0A1832', // derin lacivert
+    surface: '#F6F3EC', // sıcak krem
   },
 
   // Tema rengi (mobil tarayıcı adres çubuğu)
-  themeColor: '#10262B',
+  themeColor: '#0A1832',
 
   // ===== Analytics =====
   // Boş bırakıldığında ilgili script hiç yüklenmez.

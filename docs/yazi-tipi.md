@@ -1,82 +1,60 @@
-# Yazı tipi (Kanit) — neden kendi sunucumuzda
+# Yazı Tipi — Outfit (değişken)
 
-`index.html` içindeki font kurallarını değiştirmeden önce burayı okuyun.
+## Neden Outfit
 
-## Google Fonts `<link>`'ini geri koymayın
+Logonun wordmark'ı geometrik ve uçları hafif yuvarlatılmış bir sans. Outfit aynı
+ailede: geometrik, açık formlu, modern. Marka işaretiyle gövde metni aynı dili
+konuşuyor.
 
-Eskiden `<head>`'de şu vardı:
+Önceki yazı tipi **Kanit** idi ve devralınan iskeletten geliyordu — başka bir
+sektör için seçilmişti, bu markayla bir ilgisi yoktu.
 
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&display=swap" rel="stylesheet" />
-```
+## Neden değişken font
 
-Bu kurulum tarayıcıyı **seri bir zincire** sokuyordu:
+Outfit **tek dosyada** 400–700 arası bütün ağırlıkları taşıyor.
 
-1. Birinci origin'e bağlan, CSS'i indir
-2. CSS'i ayrıştır, içindeki font adreslerini keşfet
-3. **İkinci** origin'e bağlan, woff2'leri indir
-
-Ölçülen render engeli **820 ms**, 46 sayfanın hepsinde. `preconnect` 1. ve 3.
-adımdaki el sıkışmayı kısaltıyordu ama zinciri kaldırmıyordu — CSS inmeden font
-adresleri bilinmiyor.
-
-Şimdi kurallar `<head>` içinde satır içi duruyor. Tarayıcı HTML'i ayrıştırırken
-font isteğini başlatabiliyor, ikinci origin yok.
-
-Kurallar neden `src/index.css`'te değil: o dosya CSS paketine giriyor, yani
-tarayıcı önce paketi indirip ayrıştırmak zorunda kalırdı — zinciri bir adım
-kısaltıp geri koymuş olurduk.
-
-## Dosyalar nasıl üretildi
-
-Google Fonts'un `text=` parametresi sunucu tarafında alt küme üretiyor. İstenen
-karakter kümesi verilince ağırlık başına **tek** dosya dönüyor; latin ve
-latin-ext ayrımı kalkıyor.
-
-| | Dosya | Toplam |
+| | Kanit (önceki) | Outfit (şimdi) |
 |---|---|---|
-| Eski (latin + latin-ext × 4 ağırlık) | 8 | 153,8 KB |
-| Şimdi (alt küme × 4 ağırlık) | 4 | 84,4 KB |
+| Dosya | 4 (400/500/600/700) | 2 (latin + latin-ext) |
+| Toplam | 84 KB | **45 KB** |
+| Preload edilen | yalnızca 2 dosya | **ikisi de** |
+| Kapsanan ağırlık | preload'da 2 | **dördü de** |
 
-Karakter kümesi (238 karakter): Türkçe + Latin-1 + Orta Avrupa aksanları +
-noktalama + para birimleri + oklar + matematik işaretleri.
+Önceki kurulumda 500 ve 600 ağırlıkları preload edilmiyordu; metin görünürken
+iniyorlardı ve o anda tarayıcı 400'ü kalınlaştırarak sahte bir ağırlık
+üretiyordu (faux bold). Değişken fontta bu sorun yok.
 
-Üretim adımları:
+## Neden iki alt küme ve neden ikisi de preload
 
-1. Karakter kümesini URL-encode et
-2. `https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&display=swap&text=<encoded>`
-   adresini **tarayıcı User-Agent'ıyla** çek (UA yoksa woff2 yerine ttf döner)
-3. Dönen 4 adresi indir, `public/fonts/kanit-{400,500,600,700}.woff2` olarak kaydet
+Türkçe iki Unicode aralığına yayılıyor:
 
-Üretilen dosyalar tam birer font: 250 glif, doğru PostScript adları
-(Kanit-Regular/Medium/SemiBold/Bold), `GSUB`/`GPOS` tabloları yerinde
-(kerning kaybı yok).
+- **latin**: `ı` (U+0131), `ç`, `ö`, `ü`
+- **latin-ext**: `ş` `Ş` (U+015F/015E), `ğ` `Ğ` (U+011F/011E), `İ` (U+0130)
 
-## Yeni içerik eklerken dikkat
+Yani sıradan bir Türkçe cümle ikisini de istiyor. `unicode-range` sayesinde
+tarayıcı yalnızca gerekeni indirir — ama burada ikisi de gerekli ve ikisi de
+ilk ekranda. Bu yüzden **ikisi de preload ediliyor**; birini bırakmak o alt
+kümedeki harfleri metin görünürken indirmek demek olurdu.
 
-Alt kümede olmayan bir karakter **sistem yazı tipine düşer**. Türkçe metin,
-rakam, para birimi ve olağan noktalama güvende. Yunanca, Kiril, emoji veya
-egzotik matematik sembolü kullanacaksanız kümeyi genişletip dosyaları yeniden
-üretin.
+## Nerede tanımlı
 
-Kontrol için: sitedeki tüm metni tarayıp alt küme dışında karakter arayın.
-Son taramada bulunan 10 karakterin hepsi **kaynak dosyalardaki yorum
-satırlarındaydı** (ASCII kutu çizimleri, `┌─┐│└┘`) — render edilen HTML'de yok.
+- `@font-face` ve `preload`: `index.html` `<head>` içinde **satır içi**.
+  `src/index.css`'e taşınmamalı — o dosya CSS paketine giriyor ve font keşfi
+  bir tur gecikirdi.
+- Tailwind tokenı: `src/index.css` `@theme` içinde `--font-govde`.
+  (Eski ad `--font-kanit` idi; yazı tipi adını token adına gömmek, tipi
+  değiştirince yanlış isim bırakıyor.)
 
-## Preload neden sadece 2 dosya
+## Değiştirmek gerekirse
 
-Ağırlık kullanımı: 400 gövde metni (varsayılan), 500 → 12 yer, 600 → 41 yer,
-700 → 51 yer. Dördü de gerçekten kullanılıyor, hiçbiri atılamaz.
-
-Ama preload edilen **yalnızca 400 ve 700**. Sebep: ana sayfanın LCP görseli de
-`fetchpriority="high"` ile preload ediliyor ve o görsel 1 numaralı sıralama
-hedefimizin LCP'si. Dört fontu birden preload etmek onunla bant genişliği
-yarışına sokar. 500 ve 600 satır içi kurallardan normal keşifle iniyor —
-ilk ekranda kritik değiller.
+1. Yeni fontun `latin` ve `latin-ext` woff2 alt kümelerini `public/fonts/` içine koy
+2. `index.html`'deki iki `preload` ve iki `@font-face` bloğunu güncelle
+   (`unicode-range` değerlerini AYNEN koru — Türkçe kapsaması onlara bağlı)
+3. `src/index.css`'te `--font-govde` değerini değiştir
+4. Eski woff2 dosyalarını **sil** — yoksa yayına ölü varlık gider
+5. `public/fonts/OFL.txt` lisansını yeni fontunkiyle değiştir
 
 ## Lisans
 
-Kanit, SIL Open Font License 1.1 — `public/fonts/OFL.txt`. Kendi sunucumuzda
-barındırmak lisansa uygun; lisans metni dosyalarla birlikte durmalı.
+Outfit, SIL Open Font License 1.1 ile dağıtılıyor. Lisans metni
+`public/fonts/OFL.txt` içinde.

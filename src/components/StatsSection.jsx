@@ -58,7 +58,7 @@ function AnimatedNumber({ target, prefix = '', suffix = '', duration = 2000 }) {
   }, [started, target, duration])
 
   return (
-    <span ref={ref}>
+    <span ref={ref} className="rakam">
       {/* prefix/suffix ile sayi ARASINDA satir sonu olmamali: JSX ayri
           satirdaki iki ifadenin arasina bosluk koyar ve "% 100" diye render
           eder. Bitisik yaziliyor. */}

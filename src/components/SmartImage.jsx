@@ -45,7 +45,7 @@ export default function SmartImage({
           className="absolute inset-0 opacity-[0.07]"
           style={{
             backgroundImage:
-              'repeating-linear-gradient(45deg, #5FD3C4 0, #5FD3C4 1px, transparent 1px, transparent 9px)',
+              'repeating-linear-gradient(45deg, #E2AC4A 0, #E2AC4A 1px, transparent 1px, transparent 9px)',
           }}
         />
         {/* Aksan ışıması */}

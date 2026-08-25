@@ -37,18 +37,18 @@ export function LogoMark({ className = 'w-10 h-10' }) {
       aria-label={`${siteConfig.companyName} logosu`}
       xmlns="http://www.w3.org/2000/svg"
     >
-      <rect width="48" height="48" rx="11" fill="#10262B" />
+      <rect width="48" height="48" rx="11" fill="#0A1832" />
       <path
         d="M35 24a11 11 0 1 1-11-11h9"
         fill="none"
-        stroke="#5FD3C4"
+        stroke="#E2AC4A"
         strokeWidth="3.6"
         strokeLinecap="round"
       />
       <path
         d="M28.5 24a4.5 4.5 0 1 1-4.5-4.5h6"
         fill="none"
-        stroke="#F4F1EA"
+        stroke="#F6F3EC"
         strokeWidth="3.2"
         strokeLinecap="round"
       />
