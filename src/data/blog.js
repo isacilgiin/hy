@@ -1,155 +1,123 @@
 /**
- * Blog yazılarının HAFİF dizini — liste sayfası ve iç link kartları bunu kullanır.
+ * Blog yazıları — HAFİF İNDEKS.
  *
- * Yazıların gövdesi (giriş, bölümler, SSS) blogContent.js'te. Ayrım bilinçli:
- * blog listesi sayfası, okunmayan 6 yazının tam metnini indirmesin.
- * (services.js / serviceContent.js ayrımının aynısı.)
+ * Burada yalnızca liste görünümünün ihtiyacı olan alanlar var. Yazıların TAM
+ * METNİ src/data/blogContent.js içinde; ikisi ayrı çünkü blog listesi sayfası
+ * 11 yazının tamamını indirmek zorunda kalmasın.
  *
- * DÜZELTME (2026-08-13): Burada "BU DOSYA ÜRETİLİR, kaynak JSON'ları
- * güncelleyin" yazıyordu. Öyle bir kaynak yok ve hiç olmamış — git geçmişinde
- * ne bir üretici script ne silinmiş bir JSON var. Bu dosya ASIL KAYNAKTIR,
- * elle düzenlenir. Yorum olduğu gibi kalsaydı sonraki düzenleyen olmayan
- * dosyaları arardı.
+ * ┌──────────────────────────────────────────────────────────────────────────┐
+ * │ SLUG'LAR CANLI SİTEDEKİ İNDEKSLİ URL'LERLE EŞLEŞİR                       │
+ * │ Dokuz slug denizlihaliyikama.net.tr sitemap'inde İNDEKSLİ. Değiştirirseniz│
+ * │ o yazılar 404'e düşer. İki yeni yazı (hali-yikamaci-secerken-nelere-      │
+ * │ bakmali, stor-perde-yikama-rehberi) anahtar kelime haritasının boş        │
+ * │ bıraktığı iki sorgu için eklendi — siteConfig.js > seo.hedefSorgular.     │
+ * └──────────────────────────────────────────────────────────────────────────┘
  *
  * Sıralama slug'a göre alfabetik; yeni yazıyı doğru yere ekleyin.
+ * İNDEKS ile İÇERİK ayrışmasın: blogContent.js'te karşılığı olmayan bir slug
+ * eklenirse sayfa 200 döner ama hidrasyonda /blog/'a yönlenir (BlogPost.jsx).
  */
 
 const blog = [
   {
-    "slug": "beton-kesme-nasil-yapilir",
-    "title": "Beton Kesme Nasıl Yapılır? Duvara Kapı Boşluğu Açma İşi Baştan Sona",
-    "description": "Betonarme duvara kapı boşluğu açma işi baştan sona nasıl yürür? Ray sistemli duvar testeresi, taşıyıcı duvar kontrolü ve Denizli'de beton kesme süreci.",
-    "ozet": "Betonarme bir duvara kapı ya da pencere boşluğu açma işinin sahadaki sırası: duvarın taşıyıcı olup olmadığının tespiti, tesisat kontrolü, ray sistemli kesim ve serbest kalan parçanın indirilmesi.",
-    "okumaSuresi": 8,
-    "ilgiliHizmetler": [
-      "beton-kesme",
-      "beton-kirma",
-      "karot"
-    ],
-    "tarih": "2026-08-12",
-    "kategori": "Rehber",
-    "image": "/images/hizmetler/beton-kesme.webp"
+    slug: "cay-lekesi-nasil-cikar",
+    title: "Halıda Çay Lekesi Nasıl Çıkar? İlk Dakikalar Belirleyici",
+    ozet: "Halıda çay lekesinin arkasında tanen var: soğuk suyla bastırarak emdirmek çıkarır, ovmak ve sıcak su kalıcı yapar. Hangi leke çıkar, hangisi çıkmaz.",
+    okumaSuresi: 6,
+    tarih: "2026-08-25",
+    kategori: 'Rehber',
+    image: "/images/hizmetler/hali-yikama.webp",
   },
   {
-    "slug": "beton-neyle-kesilir",
-    "title": "Beton Neyle Kesilir? Kalınlığa Göre Doğru Makine Seçimi",
-    "description": "Beton ne ile kesilir? Spiral, elmas disk, ray sistemli duvar testeresi, hidrolik sistem ve tel testere hangi kalınlıkta işe yarar, perde beton neyle kesilir?",
-    "ozet": "Betonu kesen makine kalınlığa ve yere göre değişir. Spiralin nerede bittiğini, duvar testeresinin nereye kadar indiğini, hidroliğin ve tel testerenin ne zaman gerektiğini sahadan anlattık.",
-    "okumaSuresi": 8,
-    "ilgiliHizmetler": [
-      "beton-kesme",
-      "hidrolik-beton-kesme",
-      "beton-kirma",
-      "karot"
-    ],
-    "tarih": "2026-08-13",
-    "kategori": "Rehber",
-    "image": "/images/hizmetler/hidrolik-beton-kesme.webp"
+    slug: "denizli-hali-yikama-fiyatlari-2026",
+    title: "Halı Yıkama Fiyatları Denizli: Fiyatı Neye Göre Belirlenir",
+    ozet: "Denizli halı yıkama fiyatlarını belirleyen kalemler: ölçü, adet, halının cinsi, tüy uzunluğu, leke durumu ve ucuz teklifin nerede pahalıya patladığı.",
+    okumaSuresi: 6,
+    tarih: "2026-08-25",
+    kategori: 'Rehber',
+    image: "/images/hizmetler/hali-yikama.webp",
   },
   {
-    "slug": "denizli-karot-fiyatlari",
-    "title": "Denizli'de Karot Fiyatları Neye Göre Belirlenir?",
-    "description": "Denizli karot fiyatlarını belirleyen kalemler: çap, kalınlık, delik adedi, donatı, erişim, su, elektrik, moloz ve mesafe. Teklif alırken sorulacak sorular.",
-    "ozet": "Karot işinde fiyatı çap, kalınlık, delik adedi, donatı, erişim ve saha koşulları birlikte belirliyor. Rakamın nasıl oluştuğunu ve teklif alırken neyi sormanız gerektiğini anlattık.",
-    "okumaSuresi": 8,
-    "ilgiliHizmetler": [
-      "karot",
-      "beton-delme"
-    ],
-    "tarih": "2026-08-12",
-    "kategori": "Fiyatlandırma",
-    "image": "/images/hizmetler/beton-delme.webp"
+    slug: "elde-yikama-vs-makine",
+    title: "Halı Elde mi Makinede mi Yıkanmalı? Fark Nerede Başlıyor",
+    ozet: "Halı elde yıkama ile makinede halı yıkama rakip değil, farklı işler. Hangisi nerede üstün, ikisi nerede birlikte çalışır, evde sınır nerede biter.",
+    okumaSuresi: 6,
+    tarih: "2026-08-25",
+    kategori: 'Rehber',
+    image: "/images/hizmetler/el-dokuma-hali-yikama.webp",
   },
   {
-    "slug": "filiz-ekimi-nedir",
-    "title": "Filiz Ekimi Nedir, Nasıl Yapılır? Sahadan Uygulama Rehberi",
-    "description": "Filiz ekimi nedir, nasıl yapılır? Delik çapı ve derinliği, delik temizliği, reçine enjeksiyonu, kürlenme süresi ve kimyasal dübel farkı sahadan anlatıldı.",
-    "ozet": "Mevcut betonarmeye sonradan donatı bağlamanın doğru yolu filiz ekimi. Delik açmadan kürlenmeye kadar bütün adımları, en kritik nokta olan delik temizliğine ağırlık vererek anlattık.",
-    "okumaSuresi": 7,
-    "ilgiliHizmetler": [
-      "filiz-ekimi",
-      "kimyasal-dubel",
-      "ankraj",
-      "beton-delme"
-    ],
-    "tarih": "2026-08-12",
-    "kategori": "Rehber",
-    "image": "/images/hizmetler/filiz-ekimi.webp"
+    slug: "evde-hali-bakimi-icin-ipuclari",
+    title: "Evde Halı Bakımı: Yıkamalar Arasında Nasıl Temiz Tutulur",
+    ozet: "Evde halı bakımı süpürme sıklığı ve yönüyle başlıyor. Döner fırça hangi halıda kullanılmaz, altlık ne işe yarar, mobilya izi ve güneş nasıl yönetilir.",
+    okumaSuresi: 6,
+    tarih: "2026-08-25",
+    kategori: 'Rehber',
+    image: "/images/hizmetler/shaggy-hali-yikama.webp",
   },
   {
-    "slug": "karot-alinan-yere-ne-yapilir",
-    "title": "Karot Alınan Yere Ne Yapılır? Delik Kapatma ve Tamir",
-    "description": "Karot alınan yere ne yapılır? Numune deliğinin kapatılması, tamir harcı seçimi, su yalıtımı ve donatı kesilmişse ne yapılacağı sahadan anlatıldı.",
-    "ozet": "Numune alındıktan sonra geriye silindirik bir boşluk kalır. O boşluğun nasıl kapatılacağı, hangi harcın kullanılacağı ve deliğin bina için ne anlama geldiği çoğu zaman hiç konuşulmuyor.",
-    "okumaSuresi": 6,
-    "ilgiliHizmetler": [
-      "karot",
-      "kimyasal-dubel",
-      "beton-delme"
-    ],
-    "tarih": "2026-08-13",
-    "kategori": "Rehber",
-    "image": "/images/hizmetler/kimyasal-dubel.webp"
+    slug: "evde-profesyonel-hali-temizligi",
+    title: "Evde Halı Yıkama: Hangi Halı Yıkanır, Hangisi Yıkanmaz?",
+    ozet: "Evde halı yıkanır mı? Ebat, taban ve etiket sınırı, ıslak halının ağırlığı, balkonda kurutmanın toz ve rutubet tarafı ile küf kokusunun geri dönüşü.",
+    okumaSuresi: 6,
+    tarih: "2026-08-25",
+    kategori: 'Rehber',
+    image: "/images/hizmetler/hali-yikama.webp",
   },
   {
-    "slug": "karot-firmasi-secerken",
-    "title": "Denizli'de Karot Firması Seçerken Nelere Dikkat Etmeli?",
-    "description": "Denizli karot firması ararken keşif, teklif kapsamı, iş güvenliği ve taşıyıcı eleman onayı gibi konularda nelere dikkat edeceğinizi anlatan kontrol listesi.",
-    "ozet": "Karot ve beton kesme işi verirken hangi soruları sormak gerekir, hangi cevap tehlike işaretidir? Keşiften teklife, iş güvenliğinden moloza kadar kısa bir kontrol listesi.",
-    "okumaSuresi": 9,
-    "ilgiliHizmetler": [
-      "karot",
-      "beton-kesme",
-      "beton-delme"
-    ],
-    "tarih": "2026-08-12",
-    "kategori": "Rehber",
-    "image": "/images/hizmetler/hidrolik-beton-kesme.webp"
+    slug: "hali-yikama-sureci-kac-gun",
+    title: "Halı Yıkama Kaç Gün Sürer? Teslim Süresini Kuruma Belirler",
+    ozet: "Halı yıkama kaç gün sürer? Teslim ortalama 3-4 iş günü; süreyi kuruma belirliyor. Halı cinsi, tüy uzunluğu ve mevsim bu süreyi nasıl değiştiriyor?",
+    okumaSuresi: 6,
+    tarih: "2026-08-25",
+    kategori: 'Rehber',
+    image: "/images/hizmetler/hali-yikama.webp",
   },
   {
-    "slug": "karot-mu-kirici-mi",
-    "title": "Karot mu Kırıcı mı? Betonda Doğru Yöntemi Nasıl Seçersiniz",
-    "description": "Bir işi karotla mı kırıcıyla mı yapmalı? Geometri, darbe, toz, gürültü, donatı ve tamir masrafı üzerinden dürüst bir karşılaştırma ve saha karar rehberi.",
-    "ozet": "Karot mu kırıcı mı sorusunun tek bir cevabı yok. Geometri, darbe, toz, donatı, süre ve sonradan çıkan tamir masrafı üzerinden hangi işte hangisinin doğru olduğunu anlattık.",
-    "okumaSuresi": 8,
-    "ilgiliHizmetler": [
-      "karot",
-      "beton-delme",
-      "beton-kirma",
-      "beton-kesme"
-    ],
-    "tarih": "2026-08-12",
-    "kategori": "Karşılaştırma",
-    "image": "/images/hizmetler/beton-kirma.webp"
+    slug: "hali-yikamaci-secerken-nelere-bakmali",
+    title: "Denizli'de Halı Yıkamacı Seçerken Nelere Bakmalı? Beş Soru",
+    ozet: "Denizli'de halı yıkamacı seçerken sorulacak beş somut soru: kurutma, halı cinsine göre program, teslim süresi, etiketleme ve hasar tespitinin zamanı.",
+    okumaSuresi: 6,
+    tarih: "2026-08-25",
+    kategori: 'Rehber',
+    image: "/images/hizmetler/hali-yikama.webp",
   },
   {
-    "slug": "karot-nedir",
-    "title": "Karot Nedir? Delme Yöntemi, Karot Makinesi ve Beton Numunesi",
-    "description": "Karot nedir, karotçu ne yapar? Elmas uçlu karot makinesi betonu keserek deler. Çap, derinlik, su soğutması ve beton numunesi alma sahadan anlatılıyor.",
-    "ozet": "Karot hem bir delme yönteminin hem de betondan alınan silindir numunenin adı. İkisinin farkını, makinenin nasıl çalıştığını, çap ve derinlik sınırlarını sahadan anlatıyoruz.",
-    "okumaSuresi": 8,
-    "ilgiliHizmetler": [
-      "karot",
-      "beton-delme"
-    ],
-    "tarih": "2026-08-12",
-    "kategori": "Rehber",
-    "image": "/images/hizmetler/karot.webp"
+    slug: "koltuk-yikama-sikligi",
+    title: "Koltuk Yıkama Sıklığı: Koltuk Ne Zaman Yıkanmalı, Neye Bağlı?",
+    ozet: "Koltuk yıkama sıklığını takvim değil kullanım belirler: hane, çocuk, evcil hayvan, sigara ve güneş. Geç kalındığını gösteren işaretler nelerdir?",
+    okumaSuresi: 6,
+    tarih: "2026-08-25",
+    kategori: 'Rehber',
+    image: "/images/hizmetler/koltuk-yikama.webp",
   },
   {
-    "slug": "karot-numunesi-nasil-alinir",
-    "title": "Binadan Karot Numunesi Nasıl Alınır? Kim Alır, Kim Rapor Verir",
-    "description": "Karot testi nasıl yapılıyor? Numune nereden ve kaç adet alınır, kim karar verir, kim uygular, raporu kim düzenler? Görev dağılımı ve süreç sahadan anlatıldı.",
-    "ozet": "Karot numunesi almak tek bir işmiş gibi konuşuluyor ama üç ayrı taraf var: karar veren mühendis, numuneyi alan ekip, deneyi yapan laboratuvar. Hangisinin ne yaptığını ve sınırların nerede olduğunu anlattık.",
-    "okumaSuresi": 7,
-    "ilgiliHizmetler": [
-      "karot",
-      "beton-delme"
-    ],
-    "tarih": "2026-08-13",
-    "kategori": "Rehber",
-    "image": "/images/hizmetler/beton-delme.webp"
-  }
+    slug: "pamukkale-koltuk-yikama-rehberi",
+    title: "Pamukkale ve Merkezefendi Koltuk Yıkama: Yerinde Nasıl Olur?",
+    ozet: "Pamukkale ve Merkezefendi'de yerinde koltuk yıkama nasıl yürür: randevu öncesi hazırlık, oda düzeni, su ve elektrik, kuruma süresi ve aynı gün randevu.",
+    okumaSuresi: 6,
+    tarih: "2026-08-25",
+    kategori: 'Rehber',
+    image: "/images/hizmetler/koltuk-yikama.webp",
+  },
+  {
+    slug: "stor-perde-yikama-rehberi",
+    title: "Stor ve Zebra Perde Yıkama Denizli: Evde Neden Yıkanmaz?",
+    ozet: "Stor ve zebra perde neden evde yıkanmaz: pencerenizdeki sistemi ayırt etme, mekanizmanın su görmesi, evde denenen yöntemler ve aramadan önceki hazırlık.",
+    okumaSuresi: 6,
+    tarih: "2026-08-25",
+    kategori: 'Rehber',
+    image: "/images/hizmetler/stor-perde-yikama.webp",
+  },
+  {
+    slug: "yatak-hijyeni-ve-alerji",
+    title: "Yatak Temizliği ve Toz Akarı: Çarşaf Yıkamak Neden Yetmez",
+    ozet: "Toz akarı ölü deriyle beslenir, nemli ortamı sever. Yatak temizliğinde yüzey ile iç dolgu neden ayrılır, çarşaf yıkamak nereye kadar yeter? Anlatıyoruz.",
+    okumaSuresi: 6,
+    tarih: "2026-08-25",
+    kategori: 'Rehber',
+    image: "/images/hizmetler/yatak-baza-temizligi.webp",
+  },
 ]
 
 export default blog

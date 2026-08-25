@@ -1,332 +1,272 @@
 /**
- * Hizmet Verileri
+ * Hizmet Verileri — Denizli Tomay Halı Yıkama
  *
  * Her hizmetin slug'ı, başlığı, açıklaması, ikon ANAHTARI ve detay içeriği burada.
  * Navigasyon, sitemap ve tüm sayfalar bu veriden beslenir.
  *
  * icon  : src/components/Icon.jsx içindeki ikon adı (emoji DEĞİL)
- * image : public/images/hizmetler/<slug>.jpg — görsel yoksa otomatik olarak
+ * image : public/images/hizmetler/<slug>.webp — görsel yoksa otomatik olarak
  *         tasarım placeholder'ı gösterilir, kırık görsel çıkmaz.
+ *         Kod srcset'i dosya adından türetiyor: -600 ve -900 varyantları da şart.
  *
  * ┌──────────────────────────────────────────────────────────────────────┐
- * │ NOT: Ekipman açıklamaları bilinçli olarak MARKA/MODEL İÇERMEZ.       │
- * │ Referans sitedeki "Hilti DD 150-U", "Hilti TE 3000-AVR" gibi model   │
- * │ iddiaları o firmanın envanteriydi; sizin makine parkurunuzu bilmeden │
- * │ yazmak uydurma iddia olurdu. Kendi makinelerinizin marka/modelini    │
- * │ eklemek isterseniz `features` listelerine yazın.                     │
+ * │ BU LİSTEDE YALNIZCA KANITLI HİZMETLER VAR.                           │
+ * │ Sekizinin de karşılığı canlı sitede (denizlihaliyikama.net.tr) ya    │
+ * │ makine parkı listesinde ya da hizmet sayfasında geçiyor.             │
+ * │ Kanıtı olmadığı için EKLENMEDİ: cami halısı yıkama, ofis/işyeri      │
+ * │ halıfleks, halı tamiri, halı boyama, oto döşeme, halı depolama.      │
+ * │ İşletme sahibi teyit ederse eklenir — teyitsiz eklenmez.             │
+ * │ Tam gerekçe: docs/olgu-sayfasi.md §5                                 │
  * └──────────────────────────────────────────────────────────────────────┘
+ *
+ * BAŞLIK KALIBI: "<Hizmet> Denizli | <ayırt edici> - Tomay"
+ * Şehir adı BAŞTA değil, hizmetin HEMEN ARDINDAN. Hedef sorgu "halı yıkama
+ * denizli"; başlığın başındaki kelimeler daha ağır tartıyor.
+ * Gerekçe ve tam sorgu haritası: siteConfig.js > seo.hedefSorgular
  */
 
 const services = [
   {
     id: 1,
-    slug: 'karot',
-    seoTitle: 'Karot Nedir, Nasıl Yapılır? | Denizli Karot — 20 Karot',
+    slug: 'hali-yikama',
+    seoTitle: 'Halı Yıkama Denizli | Ücretsiz Alım Teslim - Tomay',
     /**
      * h1: Yalnızca bu hizmette var — ANAHTAR KELİME YAMYAMLIĞINI önlemek için.
      *
-     * Bu sayfanın H1'i de "Denizli Karot"tu; ana sayfanın H1'i de artık
-     * "Denizli'de Karot, Beton Delme & Kesme Hizmetleri". İki sayfa aynı head
-     * sorguyu hedeflediğinde Google hangisini göstereceğine kendi karar verir
-     * ve ikisi de zayıflar. Karar: "denizli karot" sorgusunu ANA SAYFA
-     * sahiplenir (en çok link ve otorite orada). Bu sayfa, seoTitle'ında zaten
-     * söz verdiği bilgi amaçlı sorguya ("karot nedir", "karot nasıl yapılır")
-     * geçer. Diğer hizmetlerde çakışma olmadığı için h1 alanı yok; onlar
-     * "Denizli {hizmet}" kalıbını kullanmaya devam eder.
+     * "halı yıkama denizli" sorgusunu ANA SAYFA sahipleniyor (en çok link ve
+     * otorite orada). Bu sayfanın H1'i de "Denizli Halı Yıkama" olsaydı iki
+     * sayfa aynı sorguya girer ve Google hangisini göstereceğine kendi karar
+     * verirdi — ikisi de zayıflar. Canlı sitede bugün tam olarak bu hata var:
+     * ana sayfa ile /denizli-hali-yikama aynı başlığı taşıyor.
+     *
+     * Bu sayfa süreç ve yöntem sorgularına geçiyor. Diğer hizmetlerde çakışma
+     * olmadığı için h1 alanı yok; onlar "<Hizmet> Denizli" kalıbını kullanır.
      */
-    h1: 'Karot Nedir, Nasıl Yapılır?',
-    title: 'Karot',
-    shortTitle: 'Karot',
-    icon: 'drill',
-    image: '/images/hizmetler/karot.webp',
+    h1: 'Halı Yıkama Nasıl Yapılır?',
+    title: 'Halı Yıkama',
+    shortTitle: 'Halı Yıkama',
+    icon: 'carpetRoll',
+    image: '/images/hizmetler/hali-yikama.webp',
     shortDescription:
-      'Elmas uçlu karot makineleriyle betonarmede dairesel, pürüzsüz ve titreşimsiz delik açma yöntemi.',
+      'Halınızı adresinizden alıp 16 fırçalı tam otomatik makinelerde, cinsine uygun fırça sertliği ve şampuanla yıkıyoruz.',
     description:
-      'Karot, betonarme bir yapıya kırıcı kullanmadan, elmas uçlu silindirik bir uçla dairesel delik açma yöntemidir. Kırıcıyla açılan bir delik çevresindeki betonu çatlatır ve donatıyı zorlar; karotta ise uç betonu keserek ilerlediği için çevre yapıya yük binmez. Bu yüzden oturulan binalarda, taşıyıcı elemanların yakınında ve hassas işlerde tercih edilen yöntemdir. 20 Karot olarak Denizli ve çevre ilçelerde her çapta karot uygulaması yapıyoruz.',
+      'Halı yıkama, halının tesise getirilip makinede yıkanmasıdır — evde yapılan yüzey temizliğinden farklı bir iştir. Halı önce toz çırpma makinesinden geçirilerek dokusunun dibindeki kuru kir alınır, sonra cinsine uygun fırça sertliği ve bitkisel şampuanla yıkanır, rulo sıkma makinesinde suyunun %95\'i alınır ve kapalı kurutma odalarında nemi giderilir. Balkonda kurutulan bir halı toz ve rutubet alır; kapalı odada kurutulan almaz. Fark buradadır.',
     features: [
-      'Elmas uçlu, su soğutmalı karot makineleri',
-      '50mm - 1000mm arası çap seçenekleri',
-      'Kırıcıya göre çok daha az toz, gürültü ve titreşim',
-      'Delik kenarı pürüzsüz — ek sıva/tamir gerekmez',
-      'Yatay, dikey ve tavan (yukarı doğru) delme',
-      'Donatıyı zorlamadan, kesip geçerek ilerleme',
+      '16 fırçalı tam otomatik yıkama makinesi',
+      'Fırça sertliği halının cinsine göre ayarlanır',
+      'Bitkisel, antialerjik ve antibakteriyel şampuan',
+      'Rulo sıkma ile %95 su alımı — kısa kuruma süresi',
+      'Tozdan izole kapalı kurutma odaları',
+      'Ambalajlı teslim, ortalama 3-4 iş günü',
     ],
     applications: [
-      'Oturulan binalarda tadilat delikleri',
-      'Taşıyıcı eleman yakınındaki hassas delimler',
-      'Beton numunesi (karot numunesi) alma',
-      'Su ve pis su tesisat geçişleri',
-      'Klima ve havalandırma geçişleri',
-      'Ankraj ve montaj delikleri',
+      'Makine halısı ve baskılı halı',
+      'Ev ve daire halıları',
+      'Mevsimlik bahar temizliği',
+      'Taşınma öncesi ve sonrası yıkama',
+      'Evcil hayvan tüyü ve koku sorunu',
+      'Alerji ve toz akarı kaynaklı şikâyetler',
     ],
   },
   {
     id: 2,
-    slug: 'beton-delme',
-    seoTitle: 'Denizli Beton Delme | Her Çapta Karot Delme — 20 Karot',
-    title: 'Beton Delme',
-    shortTitle: 'Beton Delme',
-    icon: 'wallHole',
-    image: '/images/hizmetler/beton-delme.webp',
+    slug: 'el-dokuma-hali-yikama',
+    seoTitle: 'El Dokuma & Yün Halı Yıkama Denizli | Düşük Isı - Tomay',
+    title: 'El Dokuma & Yün Halı Yıkama',
+    shortTitle: 'El Dokuma & Yün',
+    icon: 'wool',
+    image: '/images/hizmetler/el-dokuma-hali-yikama.webp',
     shortDescription:
-      'Karot makineleriyle 50mm\'den 1000mm\'ye kadar her çapta hassas beton delme işlemi.',
+      'Yün ve el dokuma halılar makine halısıyla aynı programda yıkanmaz — düşük ısı, yumuşak fırça ve renk akması kontrolü ister.',
     description:
-      'Profesyonel karot makinelerimizle her çapta beton delme işlemi gerçekleştiriyoruz. Tesisat geçişleri, havalandırma kanalları, baca delikleri ve daha fazlası için minimum titreşim ve toz ile çalışıyoruz. Su soğutmalı elmas uçlarımız sayesinde delik kenarları pürüzsüz kalır, ek sıva veya tamir işi gerektirmez.',
+      'El dokuma ve yün halılarda kullanılan boyalar makine halısındaki sentetik boyalar gibi sabit değildir; sıcak suyla ve sert fırçayla yıkandığında renk komşu alana akabilir. Bu yüzden bu halıları ayrı programda, düşük ısıda ve yumuşak fırçayla yıkıyoruz. Yıkamadan önce görünmeyen bir noktadan renk akma testi yapılır. Doğal elyaf ıslakken çeker; kuruma da bu yüzden kontrollü olmak zorundadır.',
     features: [
-      '50mm - 1000mm arası çap seçenekleri',
-      'Su soğutmalı elmas karot uçları',
-      'Minimum titreşim ve toz',
-      'Hassas ve düzgün yüzey kalitesi',
-      'Yatay, dikey ve açılı delme',
-      'Betonarme, taş ve tuğlada uygulama',
+      'Yıkama öncesi renk akma testi',
+      'Düşük ısı — sıcak su yün elyafı keçeleştirir',
+      'Yumuşak fırça ayarı, düşük devir',
+      'Saçak temizliği ayrı elde yapılır',
+      'Kontrollü kurutma — çekme riskine karşı',
+      'Kilim ve el dokuma yolluklar dâhil',
     ],
     applications: [
-      'Tesisat geçiş delikleri',
-      'Havalandırma ve klima kanalları',
-      'Baca delikleri',
-      'Elektrik ve data kablo geçişleri',
-      'Merdiven korkuluk delikleri',
-      'Ankraj delikleri',
+      'Yün halı ve kilim',
+      'Milas, Isparta, Hereke gibi el dokumalar',
+      'Miras kalan ve yıllanmış halılar',
+      'Saçaklı halı ve yolluklar',
+      'Renk akması yaşamış halılar',
+      'Uzun süre sarılı kalmış halılar',
     ],
   },
   {
     id: 3,
-    slug: 'beton-kesme',
-    seoTitle: 'Denizli Beton Kesme | Duvar ve Döşeme Kesimi — 20 Karot',
-    title: 'Beton Kesme',
-    shortTitle: 'Beton Kesme',
-    icon: 'saw',
-    image: '/images/hizmetler/beton-kesme.webp',
+    slug: 'ipek-nepal-hali-yikama',
+    seoTitle: 'İpek & Nepal Halı Yıkama Denizli | Hassas Program - Tomay',
+    title: 'İpek & Nepal Halı Yıkama',
+    shortTitle: 'İpek & Nepal',
+    icon: 'silk',
+    image: '/images/hizmetler/ipek-nepal-hali-yikama.webp',
     shortDescription:
-      'Duvar, döşeme ve temel kesimi için elmas diskli profesyonel beton kesme hizmeti.',
+      'En hassas gruptur. İpeğin parlaklığı aşırı ıslanmayla ve yanlış şampuanla kalıcı olarak kaybolur.',
     description:
-      'Elmas diskli duvar testerelerimizle duvar, döşeme, kolon ve temel gibi tüm betonarme yapılarda hassas kesim yapıyoruz. Kapı-pencere açıklığı, asansör boşluğu ve yapısal düzenlemeler için ideal çözüm. Kesim hattı düzgün çıktığı için çevre yapıya zarar vermez.',
+      'İpek ve Nepal halılarda değerli olan şey desen kadar elyafın parlaklığıdır; o parlaklık lifin yüzey yapısından gelir ve zarar gördüğünde geri gelmez. Bu halılar bol suyla, yüksek devirde ve alkali şampuanla yıkanmaz. Islanma süresi sınırlı tutulur, müdahalenin bir bölümü elle yapılır ve kuruma kontrollü nemde yürütülür. Bir halının bu gruba girip girmediğine yıkamadan önce birlikte karar veriyoruz.',
     features: [
-      'Elmas diskli duvar testeresi',
-      'Ray sistemli düz kesim',
-      '600mm derinliğe kadar kesim kapasitesi',
-      'Düz ve hassas kesim yüzeyi',
-      'Su ile toz kontrolü',
-      'Taşıyıcı sisteme zarar vermeden kesim',
+      'Sınırlı ıslanma süresi — aşırı su parlaklığı bozar',
+      'Nötr pH şampuan, alkali ürün kullanılmaz',
+      'Kritik bölgelerde elle müdahale',
+      'Kontrollü nemde kurutma',
+      'Yıkama öncesi elyaf ve boya değerlendirmesi',
+      'Değerlendirme sonucu olumsuzsa yıkamıyoruz, sebebini söylüyoruz',
     ],
     applications: [
-      'Kapı ve pencere açıklıkları',
-      'Asansör boşluğu açma',
-      'Merdiven boşluğu açma',
-      'Duvar kaldırma / inceltme',
-      'Döşeme kesimi',
-      'Temel kesimi',
+      'İpek halı ve ipek karışımlı halılar',
+      'Nepal ve bambu ipeği halılar',
+      'Duvar halısı ve pano halılar',
+      'Küçük ebatlı değerli seccadeler',
+      'Parlaklığını kaybetmiş halılar',
     ],
   },
   {
     id: 4,
-    slug: 'beton-kirma',
-    seoTitle: 'Denizli Beton Kırma | Kontrollü Kırım ve Söküm — 20 Karot',
-    title: 'Beton Kırma',
-    shortTitle: 'Beton Kırma',
-    icon: 'hammer',
-    image: '/images/hizmetler/beton-kirma.webp',
+    slug: 'shaggy-hali-yikama',
+    seoTitle: 'Shaggy Halı Yıkama Denizli | Uzun Tüylü Halı - Tomay',
+    title: 'Shaggy & Uzun Tüylü Halı Yıkama',
+    shortTitle: 'Shaggy & Uzun Tüylü',
+    icon: 'shaggy',
+    image: '/images/hizmetler/shaggy-hali-yikama.webp',
     shortDescription:
-      'Kontrollü beton kırma işlemleri ile minimum gürültü ve titreşimde yıkım hizmeti.',
+      'Uzun tüyde kir yüzeyde değil dipte birikir. Yanlış fırça ayarı tüyü yatırır ve halı bir daha eski dokusuna dönmez.',
     description:
-      'Elektrikli ve hidrolik kırıcılarımızla kontrollü beton kırma işlemleri gerçekleştiriyoruz. Tadilat, renovasyon ve yıkım projelerinde taşıyıcı sisteme zarar vermeden hassas kırım yapıyoruz. İş bitiminde moloz toplama ve nakliye de bizde.',
+      'Shaggy halılarda asıl sorun görünen kir değil, tüplerin dibine inen ve elektrikli süpürgenin ulaşamadığı tozdur. O tozu çıkarmak için tüyü dibinden hareket ettirmek gerekir; ama fırça fazla sert olursa tüy yatar ve keçeleşir. Fırça sertliğini tüy uzunluğuna göre ayarlıyoruz. Uzun tüy suyu da fazla tutar, bu yüzden bu halıların kuruma süresi makine halısından daha uzundur — sıkıştırmak yerine gerektiği kadar bekletiyoruz.',
     features: [
-      'Elektrikli ve hidrolik kırıcılar',
-      'Kontrollü ve hassas kırım',
-      'Minimum gürültü ve titreşim',
-      'Toz kontrol önlemleri',
-      'Taşıyıcı sistem koruması',
-      'Moloz toplama ve nakliye',
+      'Tüy uzunluğuna göre fırça sertliği ayarı',
+      'Tüy dibindeki tozun çıkarılması',
+      'Keçeleşmeye karşı düşük devirli fırçalama',
+      'Uzun tüyde daha uzun kurutma süresi',
+      'Kuruma sonrası tüy kabartma',
+      'Bambu ve peluş halılar da bu grupta',
     ],
     applications: [
-      'Tadilat ve renovasyon yıkımları',
-      'Temel ve döşeme kırımı',
-      'Duvar kaldırma',
-      'Havuz yıkımı',
-      'Beton blok kırma',
-      'Kaldırım ve asfalt sökümü',
+      'Shaggy ve uzun tüylü halılar',
+      'Bambu ve peluş halılar',
+      'Oturma odası ve yatak odası halıları',
+      'Tüyü yatmış, matlaşmış halılar',
+      'Evcil hayvan tüyü biriken halılar',
     ],
   },
   {
     id: 5,
-    slug: 'asfalt-derz-kesim',
-    seoTitle: 'Denizli Asfalt Derz Kesim | Yol ve Zemin Kesimi — 20 Karot',
-    title: 'Asfalt Derz Kesim',
-    shortTitle: 'Asfalt Kesim',
-    icon: 'road',
-    image: '/images/hizmetler/asfalt-derz-kesim.webp',
+    slug: 'koltuk-yikama',
+    seoTitle: 'Koltuk Yıkama Denizli | Yerinde Vakumlu Temizlik - Tomay',
+    title: 'Koltuk Yıkama',
+    shortTitle: 'Koltuk Yıkama',
+    icon: 'sofa',
+    image: '/images/hizmetler/koltuk-yikama.webp',
     shortDescription:
-      'Yol ve zemin çalışmalarında düzgün derz kesimi ve asfalt kesme hizmeti.',
+      'Koltuk taşınmaz — ekip adresinize gelir. Yüksek basınçlı vakumlu üniteyle yerinde yıkıyoruz.',
     description:
-      'Asfalt ve beton yol kesimi, derz açma, tesisat hendek kesimi ve yenileme çalışmalarında hizmet veriyoruz. Elmas diskli yol kesme makinelerimizle düzgün, temiz ve hızlı kesim sağlıyor; trafiği en az etkileyecek şekilde çalışıyoruz.',
+      'Koltuk yıkamada halıdan farklı olarak eşya yerinden kımıldamaz; işlem evinizde yapılır. Kumaş özel solüsyonlu suyla ıslatılır, yumuşak fırçayla kir yumuşatılır ve yüksek emişli vakumla kirli su geri çekilir. İşin kritik adımı vakumlamadır: kumaşın içinde deterjan kalıntısı kalırsa koltuk kısa sürede yeniden ve daha hızlı kirlenir. Bu yüzden vakumlamanın ardından temiz suyla ayrıca durulama yapıyoruz.',
     features: [
-      'Elmas diskli yol kesme makineleri',
-      '300mm derinliğe kadar kesim',
-      'Düzgün ve temiz kesim hattı',
-      'Derz genişliği ayarlanabilir',
-      'Hızlı iş teslimi',
-      'Trafik akışına minimum etki',
+      'Yerinde hizmet — koltuk taşınmaz',
+      'Kumaş tipine göre solüsyon seçimi',
+      'Yumuşak fırça — kumaşa zarar vermez',
+      'Yüksek emişli vakumla kirli suyun çekilmesi',
+      'Temiz suyla durulama, kalıntı bırakılmaz',
+      'Randevu ile planlanır, her gün çıkılabilir',
     ],
     applications: [
-      'Yol genişletme çalışmaları',
-      'Altyapı hendek kesimleri',
-      'Derz açma ve yenileme',
-      'Asfalt yama kenarı düzeltme',
-      'Kaldırım kesimi',
-      'Kanal açma çalışmaları',
+      'Koltuk takımı ve köşe koltuk',
+      'Tekli berjer ve puf',
+      'Sandalye ve yemek odası takımı',
+      'Ofis koltukları',
+      'Leke ve koku sorunu olan koltuklar',
+      'Evcil hayvan tüyü biriken kumaşlar',
     ],
   },
   {
     id: 6,
-    slug: 'hidrolik-beton-kesme',
-    seoTitle: 'Denizli Hidrolik Beton Kesme | Ağır İş Kesimi — 20 Karot',
-    title: 'Hidrolik Beton Kesme',
-    shortTitle: 'Hidrolik Kesme',
-    icon: 'hydraulic',
-    image: '/images/hizmetler/hidrolik-beton-kesme.webp',
+    slug: 'yatak-baza-temizligi',
+    seoTitle: 'Yatak & Baza Temizliği Denizli | Akar Temizliği - Tomay',
+    title: 'Yatak & Baza Temizliği',
+    shortTitle: 'Yatak & Baza',
+    icon: 'bed',
+    image: '/images/hizmetler/yatak-baza-temizligi.webp',
     shortDescription:
-      'Büyük çaplı projelerde hidrolik güçle yüksek kapasiteli beton kesme.',
-    // NOT: Bu hizmette önceden "baraj", "deniz yapıları", "enerji santralleri",
-    // "köprü/viyadük" ve "su altı kesim" yazıyordu. Hiçbiri firmanın yaptığı
-    // işlerle örtüşmüyordu — su altı kesim ayrıca dalgıç ekip gerektirir.
-    // Kanıtlanamayan kapasite iddiaları hem ziyaretçiyi yanıltır hem de
-    // gelen talebi firmanın karşılayamayacağı işlere kaydırır.
+      'Yatak yüzeyinde biriken ölü deri, toz akarının besin kaynağıdır. Yerinde vakumlu temizlik yapıyoruz.',
     description:
-      'Hidrolik kesme sistemlerinde güç, kesme başlığından ayrı duran bir üniteden gelir. Bu sayede kesim noktasındaki ekipman küçük kalırken arkasındaki güç yükselir; bir metreyi aşan kesitlerde ve şantiye elektriğinin yetmediği sahalarda elektrikli testerelerin yetersiz kaldığı yerde iş görür.',
+      'Yatakta gözle görülen leke çoğu zaman asıl sorun değildir. Yüzeyde biriken ölü deri hücreleri toz akarının beslendiği şeydir ve akar da alerji şikâyetlerinin sık rastlanan sebeplerinden biridir. Yatak yerinde, vakumlu üniteyle temizlenir. Buradaki en önemli sınır ıslatma miktarıdır: yatağın iç dolgusuna su geçerse dolgu tam kurumaz ve içeride nem kalır. Bu yüzden yüzeyle sınırlı çalışıyor ve kurumayı teslim etmeden kontrol ediyoruz.',
     features: [
-      'Hidrolik güç üniteli sistemler',
-      'Yüksek kesim kapasitesi',
-      '1 metreyi aşan derinliklerde kesim',
-      'Elmas tel, zincir ve disk seçenekleri',
-      'Şantiye elektriği gerekmez (dizel ünite)',
-      'Dar ve erişimi zor noktalarda çalışabilme',
+      'Yerinde hizmet — yatak taşınmaz',
+      'Yüzeyle sınırlı, kontrollü ıslatma',
+      'İç dolguya su geçirilmez',
+      'Yüksek emişli vakumla toz ve kalıntı alımı',
+      'Bebekli ve alerjili evler için bitkisel solüsyon',
+      'Baza ve başlık da aynı ziyarette temizlenir',
     ],
     applications: [
-      'Kalın perde ve istinat duvarı kesimi',
-      'Temel ve kütle beton kesimi',
-      'Bir metreyi aşan kesitler',
-      'Kazık başı kesimi',
-      'Sanayi tesisinde makine kaidesi sökümü',
-      'Elektrik çekilemeyen şantiyeler',
+      'Yatak yüzeyi ve kenar fitilleri',
+      'Baza ve yatak başlığı',
+      'Çocuk ve bebek yatakları',
+      'Alerji ve astım şikâyeti olan evler',
+      'Uzun süre kullanılmamış yataklar',
+      'Leke ve koku sorunu olan yataklar',
     ],
   },
   {
     id: 7,
-    slug: 'filiz-ekimi',
-    seoTitle: 'Denizli Filiz Ekimi | Kimyasal Ankrajla Donatı — 20 Karot',
-    title: 'Filiz Ekimi',
-    shortTitle: 'Filiz Ekimi',
-    icon: 'rebar',
-    image: '/images/hizmetler/filiz-ekimi.webp',
+    slug: 'stor-perde-yikama',
+    seoTitle: 'Stor Perde Yıkama Denizli | Ücretsiz Sökme Takma - Tomay',
+    title: 'Stor & Perde Yıkama',
+    shortTitle: 'Stor & Perde',
+    icon: 'curtain',
+    image: '/images/hizmetler/stor-perde-yikama.webp',
     shortDescription:
-      'Kimyasal dübel ve demir filiz ekimi ile güçlü yapısal bağlantılar.',
+      'Stor ve zebra perde mekanizmalıdır; evde yıkanınca kumaş kırılır ya da mekanizma bozulur. Ultrasonik makinede yıkıyoruz.',
     description:
-      'Mevcut betonarme yapılara yeni bağlantı noktaları oluşturmak için demir filiz ekimi ve kimyasal ankraj uygulamaları yapıyoruz. Güçlendirme ve ek yapı projelerinde projeye uygun çap ve derinlikte, kürleme sürelerine uyarak güvenilir bağlantılar sağlıyoruz.',
+      'Stor ve zebra perdelerin evde yıkanmasının zor olmasının sebebi kirli olmaları değil, mekanizmalı olmalarıdır. Katlanarak yıkanan bir stor perdede kumaş kalıcı olarak kırılır; makinede döndürülen bir mekanizma da bozulur. Perdeleri ultrasonik yıkama makinesinde, katlamadan ve düz hâlde yıkıyoruz. Sökme ve tekrar takma işini ekibimiz yapıyor, bunun için ayrıca ücret almıyoruz.',
     features: [
-      'Kimyasal ankraj ile filiz ekimi',
-      'Farklı çaplarda filiz seçenekleri',
-      'Yüksek çekme dayanımı',
-      'Deprem yönetmeliğine uygun uygulama',
-      'Delik temizliği ve kürleme kontrolü',
-      'Talep halinde çekme testi',
+      'Ultrasonik yıkama — mekanizmaya zarar vermez',
+      'Ücretsiz sökme ve tekrar takma',
+      'Katlanmadan, düz yıkama ve kurutma',
+      'Kırışmaz — kumaş kırığı oluşmaz',
+      'Sineklik, yağ ve is lekelerine özel solüsyon',
+      'Sökme-takma ekip işi olduğu için randevuludur',
     ],
     applications: [
-      'Bina güçlendirme projeleri',
-      'Ek kat çıkma',
-      'Balkon ekleme',
-      'Kolon mantolama bağlantıları',
-      'Perde duvar bağlantıları',
-      'Çelik yapı ankraj noktaları',
+      'Stor perde ve zebra perde',
+      'Tül ve fon perde',
+      'Dikey (vertical) perde',
+      'Mutfak perdeleri — yağ ve is lekesi',
+      'Yol kenarı ve şantiye yakını daireler',
+      'Sigara kokusu almış perdeler',
     ],
   },
   {
     id: 8,
-    slug: 'ankraj',
-    seoTitle: 'Denizli Ankraj | Çelik ve Makine Bağlantısı — 20 Karot',
-    title: 'Ankraj',
-    shortTitle: 'Ankraj',
-    icon: 'anchor',
-    image: '/images/hizmetler/ankraj.webp',
+    slug: 'yorgan-battaniye-yikama',
+    seoTitle: 'Yorgan & Battaniye Yıkama Denizli | Endüstriyel - Tomay',
+    title: 'Yorgan & Battaniye Yıkama',
+    shortTitle: 'Yorgan & Battaniye',
+    icon: 'blanket',
+    image: '/images/hizmetler/yorgan-battaniye-yikama.webp',
     shortDescription:
-      'Mevcut betonarmeye yük aktaran güvenli bağlantı noktaları oluşturma.',
+      'Ev makinesi yorgana dar gelir; dönmeyen yorgan yıkanmaz, sadece ıslanır. Endüstriyel makinede yıkıyoruz.',
     description:
-      'Ankraj, mevcut bir betonarme elemana yeni bir yük taşıyıcı bağlantı kazandırma işlemidir. Çelik konstrüksiyon ayakları, makine kaideleri, korkuluk ve bariyerler gibi yük taşıyan her bağlantı, doğru çapta ve doğru derinlikte açılmış bir deliğe düzgün ankrajlanmadığında zamanla gevşer. Delik çapı, gömme derinliği ve kenar mesafesi proje detayına göre belirlenir; delik temizliği yapılmadan ankraj uygulanmaz.',
+      'Bir yorganın temizlenebilmesi için makine içinde serbestçe dönebilmesi gerekir. Ev tipi makinede sıkışan yorgan dönmez; su ve deterjan içeri işlemez, dışarı da çıkmaz. Endüstriyel makinede yorgan rahat döner, iç dolgusuna kadar durulanır. Asıl kritik adım kurutmadır: dolgu tam kurumadan katlanan bir yorgan içeriden küflenir ve o koku bir daha çıkmaz. Bu yüzden kuruma bizde teslim şartıdır, süre değil.',
     features: [
-      'Projeye uygun çap ve gömme derinliği',
-      'Kenar mesafesi ve donatı konumu kontrolü',
-      'Delik temizliği (basınçlı hava + fırça)',
-      'Mekanik ve kimyasal ankraj seçenekleri',
-      'Yüksek çekme ve kesme dayanımı',
-      'Talep halinde çekme testi',
+      'Endüstriyel yorgan/battaniye makinesi',
+      'Dolgu tipine göre program (elyaf, yün, pamuk)',
+      'İç dolguya kadar durulama',
+      'Topaklanmayı önleyen kurutma',
+      'Tam kuruma teslim şartıdır',
+      'Mevsim geçişinde toplu yıkama',
     ],
     applications: [
-      'Çelik konstrüksiyon kolon ayakları',
-      'Makine ve ekipman kaideleri',
-      'Korkuluk, bariyer ve merdiven bağlantıları',
-      'Cephe kaplama taşıyıcıları',
-      'Güneş paneli montaj altyapısı',
-      'Asma tavan ve tesisat askı sistemleri',
-    ],
-  },
-  {
-    id: 9,
-    slug: 'kimyasal-dubel',
-    seoTitle: 'Denizli Kimyasal Dübel | Enjeksiyon Ankraj — 20 Karot',
-    title: 'Kimyasal Dübel',
-    shortTitle: 'Kimyasal Dübel',
-    icon: 'chemical',
-    image: '/images/hizmetler/kimyasal-dubel.webp',
-    shortDescription:
-      'Enjeksiyon reçineli dübel uygulaması — mekanik dübelin yetmediği yerlerde.',
-    description:
-      'Kimyasal dübel, deliğe enjekte edilen iki bileşenli reçinenin donatı veya saplamayı betona kimyasal olarak kenetlemesiyle çalışır. Mekanik dübel betonu içeriden iterek tuttuğu için kenara yakın ve çatlaklı betonda risklidir; kimyasal dübelde bu genleşme yükü olmadığından kenar mesafesi kısıtlı işlerde ve çatlaklı betonda güvenle kullanılır. Uygulama sıcaklığına bağlı kürleme sürelerine uyulmadan yük verilmez.',
-    features: [
-      'ETA onaylı enjeksiyon reçineleri',
-      'M8 - M30 arası saplama ve donatı çapları',
-      'Çatlaklı ve çatlaksız betonda uygulama',
-      'Kenar mesafesi kısıtlı işlerde güvenli çözüm',
-      'Ortam sıcaklığına göre kürleme süresi takibi',
-      'Uygulama sonrası raporlama',
-    ],
-    applications: [
-      'Filiz ekimi (donatı ekleme)',
-      'Ağır makine kaide saplamaları',
-      'Kenar mesafesi az olan ankrajlar',
-      'Çatlaklı betonda bağlantı noktaları',
-      'Perde ve kolon güçlendirme bağlantıları',
-      // "Su altı uygulamaları" yazıyordu — dalgıç ekip gerektiren, firmanın
-      // yapmadığı bir iş. Islak/nemli delikte uygulama ise gerçek ve reçine
-      // seçimiyle ilgili bir konu; iddia o ölçeğe çekildi.
-      'Islak ve nemli delikte uygulama',
-    ],
-  },
-  {
-    id: 10,
-    slug: 'kontrollu-bina-yikimi',
-    seoTitle: 'Denizli Kontrollü Bina Yıkımı | Kentsel Dönüşüm — 20 Karot',
-    title: 'Kontrollü Bina Yıkımı',
-    shortTitle: 'Bina Yıkımı',
-    icon: 'demolition',
-    image: '/images/hizmetler/kontrollu-bina-yikimi.webp',
-    shortDescription:
-      'Çevreye ve komşu yapılara zarar vermeden kontrollü yıkım hizmetleri.',
-    description:
-      'Kentsel dönüşüm ve yenileme projelerinde kontrollü bina yıkımı hizmeti veriyoruz. Çevre güvenliği, toz kontrolü ve moloz yönetimiyle planlı yıkım operasyonları gerçekleştiriyoruz.',
-    features: [
-      'Kontrollü yıkım planlaması',
-      'Çevre güvenlik önlemleri',
-      'Toz ve gürültü kontrolü',
-      'İş güvenliği ekipmanları',
-      'Moloz toplama ve nakliye',
-      'Belediye izin süreçlerinde destek',
-    ],
-    applications: [
-      'Kentsel dönüşüm yıkımları',
-      'Hasarlı bina yıkımı',
-      'Sanayi tesisi söküm',
-      'Kısmi yıkım (kat indirme)',
-      'Eski yapı yenileme',
-      'Arazi temizleme',
+      'Yorgan, battaniye ve pike',
+      'Yatak örtüsü ve kuş tüyü ürünler',
+      'Uyku tulumu ve polar battaniye',
+      'Mevsimlik kaldırma öncesi yıkama',
+      'Uzun süre dolapta kalmış tekstil',
+      'Bebek battaniyesi ve çocuk yorganı',
     ],
   },
 ]

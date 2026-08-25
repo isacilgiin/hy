@@ -1,203 +1,163 @@
 /**
- * Sık Sorulan Sorular.
+ * Sık Sorulan Sorular — Denizli Tomay Halı Yıkama.
  *
  * Tek kaynak: hem /sikca-sorulan-sorular/ sayfası, hem llms.txt, hem de
  * FAQPage yapılandırılmış verisi (Google'da soru-cevap kutusu) buradan beslenir.
  *
  * `oneCikan: true` işaretli sorular llms.txt'ye ve ana FAQ şemasına girer.
+ *
+ * ┌──────────────────────────────────────────────────────────────────────────┐
+ * │ İÇERİK KURALI                                                            │
+ * │ • FİYAT RAKAMI YAZILMAZ. Site teklif usulü çalışıyor; fiyatı NEYİN       │
+ * │   belirlediği anlatılır, rakam verilmez.                                 │
+ * │ • Taahhüt verilmez: "her leke çıkar", "alerjinizi geçirir" gibi cümleler │
+ * │   hem doğrulanamaz hem de sahada karşılığı yok.                          │
+ * │ • Cevaplar docs/olgu-sayfasi.md §3'teki ekipman ve sürece dayanır.       │
+ * │ • Blog yazılarıyla çakışmasın: burada KISA cevap, blogda uzun anlatım.   │
+ * └──────────────────────────────────────────────────────────────────────────┘
  */
 
 export const faqCategories = [
-  { id: 'genel', title: 'Genel & Fiyatlandırma' },
-  { id: 'teknik', title: 'Teknik Sorular' },
-  { id: 'guvenlik', title: 'Güvenlik & Yapısal Konular' },
+  { id: 'genel', title: 'Servis & Fiyat' },
+  { id: 'hali', title: 'Halı Cinsleri ve Program' },
+  { id: 'yerinde', title: 'Yerinde Hizmet' },
   { id: 'sure', title: 'Süreç & Teslimat' },
 ]
 
 export const faq = [
-  // ===== GENEL =====
+  // ===== SERVİS & FİYAT =====
   {
     kategori: 'genel',
     oneCikan: true,
-    q: 'Keşif ücretli mi?',
-    a: 'Hayır, keşif ücretsizdir. Denizli merkez ve yakın ilçelerde yerinde geliyoruz. Uzak ilçelerde ilk değerlendirmeyi WhatsApp’tan göndereceğiniz fotoğraf ve ölçülerle yapıp bir fiyat aralığı söyleyebiliyoruz; kesin teklif gerekirse yerinde keşifle veriliyor.',
+    q: 'Halıyı evden alıyor musunuz, servis ücretli mi?',
+    a: 'Halıyı adresinizden biz alıyoruz ve yıkandıktan sonra yine adresinize teslim ediyoruz. Alım ve teslim için ayrıca ücret almıyoruz. Alma-teslim aracı her gün çıkıyor; tesisimiz ise Pazartesi–Cumartesi 07:00–18:00 arasında açık. Randevuyu telefonda evde birinin bulunduğu saate göre kuruyoruz ve alım ile teslimin aynı saate düşmesi gerekmiyor.',
   },
   {
     kategori: 'genel',
     oneCikan: true,
     q: 'Fiyat neye göre belirleniyor?',
-    a: 'Karot işlerinde delik çapı, beton kalınlığı ve delik adedi; kesim işlerinde kesim metrajı ve derinliği belirleyicidir. Bunlara donatı yoğunluğu, çalışma yüksekliği ve sahaya erişim eklenir. Keşiften sonra bu kalemlerin hepsi dahil tek bir net rakam veriyoruz — iş bitiminde ek kalem çıkmıyor.',
+    a: 'Halıda metrekare, halının cinsi ve tüy uzunluğu belirleyici; bunlara lekenin durumu ve adet ekleniyor. Koltukta oturma birimi sayısı ve kumaş tipi, perdede ise perde türü ile sökme-takma gerekliliği hesaba giriyor. Bu kalemler halıyı görmeden tam bilinemediği için siteye fiyat listesi koymuyoruz. Cinsini ve ölçüsünü söylediğinizde ya da WhatsApp\'tan fotoğraf gönderdiğinizde net fiyatı hemen iletiyoruz.',
   },
   {
     kategori: 'genel',
-    oneCikan: false,
-    q: 'Küçük bir iş için de geliyor musunuz?',
-    a: 'Geliyoruz. Tek bir klima veya tesisat deliği gibi küçük işler de yapıyoruz. Uzak ilçelerde maliyeti düşürmek için, aynı bölgedeki başka işlerle aynı güne denk getirmeye çalışıyoruz.',
+    q: 'Ödemeyi nasıl yapıyorum?',
+    a: 'Ödeme teslimde, kapıda alınıyor: nakit ya da kredi kartı. Yıkamadan önce peşin ödeme istemiyoruz. Fiyat alım sırasında netleşiyor ve teslimde aynı rakam geçerli oluyor; halıyı gördükten sonra fiyat değiştirmek gibi bir uygulamamız yok. Değişiklik gerektiren tek durum, alım sırasında bilinmeyen bir işin sonradan ortaya çıkması — o da size sorulmadan yapılmıyor.',
   },
   {
     kategori: 'genel',
-    oneCikan: true,
-    q: 'Hangi bölgelere hizmet veriyorsunuz?',
-    a: 'Denizli il genelindeki tüm ilçelere gidiyoruz: Merkezefendi, Pamukkale, Honaz, Sarayköy, Babadağ, Serinhisar, Tavas, Buldan, Çivril, Çal, Acıpayam, Kale, Çameli, Çardak, Bozkurt, Beyağaç, Bekilli, Baklan ve Güney. Çevre illerdeki işleri de kapsamına göre değerlendiriyoruz.',
-  },
-
-  // Aşağıdaki iki soru Google'ın "Diğer sorular" kutusundan alındı; ikisi de
-  // sık aranıyor ama sitede karşılığı yoktu.
-  {
-    kategori: 'genel',
-    oneCikan: true,
-    q: 'Karot firması ne iş yapar?',
-    a: 'Karot firması, betonarme yapılarda elmas uçlu makinelerle delik açma ve kesim işlerini yapar. Tesisat, havalandırma ve asansör geçişleri için delik açmak; duvar ve döşemede kapı, pencere ya da boşluk kesmek; filiz ekimi, kimyasal dübel ve ankraj uygulamak bu işin kapsamındadır. Beton numunesi alma işini de karot ekipleri yapar — ancak numunenin deneyi ve raporlanması yetkili laboratuvarın işidir, karot firmasının değil.',
+    q: 'Hangi ilçelere gidiyorsunuz?',
+    a: 'Denizli\'nin 19 ilçesinin tamamına gidiyoruz. Değişen şey hizmetin kendisi değil planlaması: merkez ve yakın ilçelerde alma-teslim günübirlik yapılabiliyor, uzak ilçelerde aynı bölgedeki adresleri aynı güne toplayarak çıkıyoruz. Bu yüzden uzak ilçelerde alma günü telefonda birlikte belirleniyor. Her ilçenin kendi sayfasında o bölgede işin nasıl kurulduğu ayrıca yazılı.',
   },
   {
     kategori: 'genel',
-    oneCikan: false,
-    q: 'Karot ücretli mi, ücreti ne kadar?',
-    a: 'İşin kendisi ücretlidir, keşif ücretsizdir. Tek bir fiyat listesi veremiyoruz çünkü rakamı delik çapı, beton kalınlığı, delik adedi, donatı yoğunluğu, çalışma yüksekliği, sahaya erişim ve mesafe birlikte belirliyor. Sahayı görmeden verilen fiyat tahmin olur. Keşiften sonra bütün kalemler dahil tek bir net rakam söylüyoruz ve iş bitiminde ek kalem çıkmıyor.',
+    q: 'Halımda yırtık veya sökük var, yine de yıkar mısınız?',
+    a: 'Yıkarız, ama önce size söyleriz. Alım sırasında ve yıkamadan önce halıyı gözden geçiriyoruz; yırtık, sökük, güve hasarı veya daha önce yapılmış bir onarım varsa bunu teslimde değil baştan bildiriyoruz. Yıkama sırasında mevcut hasarın büyüme ihtimali varsa bunu da söylüyoruz. Halı tamiri, dokuma onarımı ve saçak yenileme yapmıyoruz — o ayrı bir atölye işidir.',
   },
 
-  // ===== TEKNİK =====
+  // ===== HALI CİNSLERİ VE PROGRAM =====
   {
-    kategori: 'teknik',
+    kategori: 'hali',
     oneCikan: true,
-    q: 'Karot ile kırıcı arasındaki fark nedir?',
-    a: 'Kırıcı betonu darbeyle parçalar; delik kenarı düzensiz çıkar, çevredeki betonda çatlak oluşabilir ve donatı zorlanır. Karotta ise elmas uçlu silindirik bir uç betonu keserek ilerler. Bu yüzden delik kenarı pürüzsüz olur, ek sıva veya tamir gerekmez ve çevre yapıya darbe yükü binmez.',
+    q: 'Her halı aynı programda mı yıkanıyor?',
+    a: 'Hayır. Makinemiz 16 fırçalı ve fırça sertliği ayarlanabiliyor; program halının cinsine göre kuruluyor. Makine halısı standart ayarla yıkanırken el dokuma ve yün halı düşük ısı ile yumuşak fırça istiyor, ipek ve Nepal halılarda ıslanma süresi sınırlı tutuluyor, shaggy ve uzun tüylülerde fırça ayarı tüy uzunluğuna göre değişiyor. Aynı makinede yıkanıyorlar ama aynı ayarla değil.',
   },
   {
-    kategori: 'teknik',
-    oneCikan: true,
-    q: 'Ne kadar toz ve gürültü oluşuyor?',
-    a: 'Karot ve elmas diskli kesimde su soğutması kullanıldığı için toz büyük ölçüde bastırılır; oluşan çamurumsu artık toplanır. Gürültü de kırıcıya göre belirgin şekilde düşüktür. Bu nedenle oturulan binalarda, iş yerlerinde ve hastane/okul gibi hassas ortamlarda tercih edilen yöntem karottur.',
+    kategori: 'hali',
+    q: 'El dokuma halımın rengi akar mı?',
+    a: 'El dokuma ve yün halılardaki boya makine halısındaki sentetik boya gibi sabit değil; sıcak suyla ve sert fırçayla yıkandığında komşu alana akabiliyor. Bu yüzden bu halılarda yıkamadan önce görünmeyen bir noktadan renk akma testi yapıyoruz. Test olumsuz çıkarsa programı değiştiriyor, gerekirse yıkamayı yapmayacağımızı söylüyoruz. Riski görmezden gelip yıkamak, sonradan telafisi olmayan bir hasar bırakıyor.',
   },
   {
-    kategori: 'teknik',
-    oneCikan: false,
-    q: 'En büyük kaç santimlik delik açabiliyorsunuz?',
-    a: '50 mm’den 1000 mm’ye kadar her çapta karot delme yapıyoruz. Çapın büyümesi makine ve uç seçimini, bazen de ek sabitleme gerektirir. İhtiyacınız olan çapı söylerseniz uygulanabilir olup olmadığını hemen değerlendirebiliriz.',
+    kategori: 'hali',
+    q: 'İpek halı yıkıyor musunuz?',
+    a: 'Yıkıyoruz, ancak önce değerlendiriyoruz. İpekte değerli olan şey desen kadar lifin parlaklığıdır ve o parlaklık zarar gördüğünde geri gelmiyor. Bu halılar bol suyla, yüksek devirde ve alkali şampuanla yıkanmaz; ıslanma süresi sınırlı tutulur, bir bölümü elle yapılır, kuruma kontrollü nemde yürütülür. Değerlendirme sonucunda yıkamanın riskli olduğunu düşünürsek bunu açıkça söylüyoruz.',
   },
   {
-    kategori: 'teknik',
-    oneCikan: false,
-    q: 'Delme sırasında donatıya (demire) denk gelirse ne oluyor?',
-    a: 'Elmas uç donatıyı da keserek ilerler, işlem durmaz. Ancak taşıyıcı bir elemanda donatı kesmek yapısal sonuç doğurur; bu yüzden taşıyıcı kolon, perde ve kirişlerde delik yeri statik projeye göre belirlenir. Gerekirse donatı tarama cihazıyla demir konumu tespit edilip delik kaydırılır.',
+    kategori: 'hali',
+    q: 'Shaggy halımın tüyleri yatar mı?',
+    a: 'Doğru fırça ayarıyla yatmaz. Uzun tüyde asıl sorun görünen kir değil, tüplerin dibine inen ve elektrikli süpürgenin ulaşamadığı toz; o tozu çıkarmak için tüyü dibinden hareket ettirmek gerekiyor. Fırça fazla sert olursa tüy yatar ve keçeleşir, fazla yumuşak olursa dibe inemez. Fırça sertliğini tüy uzunluğuna göre ayarlıyor, kuruma sonrasında da tüyü kabartıyoruz.',
   },
   {
-    kategori: 'teknik',
-    oneCikan: false,
-    q: 'Su kullanılıyor mu, zemine zarar verir mi?',
-    a: 'Karot ve duvar testeresinde soğutma için su kullanılır. Çalışma alanı önceden örtülür, oluşan su ve artık toplanarak alınır. İç mekânda su istenmeyen durumlarda kuru sistemle ve toz emiş üniteleriyle çalışılabilir; keşifte hangisinin uygun olduğuna birlikte karar veriyoruz.',
+    kategori: 'hali',
+    q: 'Evcil hayvan kokusu ve tüyü çıkar mı?',
+    a: 'Tüy, yıkama öncesi toz çırpma ve fırçalama ile büyük ölçüde çıkıyor. Koku ise nereden geldiğine bağlı: yüzeyde kalan bir koku yıkamayla gidiyor, halının tabanına işlemiş idrar gibi durumlarda sonuç halının cinsine ve olayın üzerinden geçen süreye göre değişiyor. Böyle bir durum varsa alım sırasında söylerseniz programı ona göre kuruyoruz. Kesin sonuç sözü vermiyoruz; ne beklemeniz gerektiğini baştan söylüyoruz.',
   },
   {
-    kategori: 'teknik',
-    oneCikan: false,
-    q: 'Filiz ekimi ile kimyasal dübel aynı şey mi?',
-    a: 'Aynı yöntemin iki farklı kullanımı. İkisinde de deliğe enjekte edilen reçine, çeliği betona kimyasal olarak kenetler. “Filiz ekimi” dendiğinde mevcut betonarmeye yeni donatı ekleyip yeni bir yapı elemanı bağlamak kastedilir. “Kimyasal dübel” ise genellikle saplama veya ankraj çubuğu ile bir ekipman, konstrüksiyon ya da korkuluk bağlamaktır.',
+    kategori: 'hali',
+    q: 'Solmuş halı yıkanınca rengi geri gelir mi?',
+    a: 'Gelmez. Yıkama halıdaki kiri alır, rengi geri getirmez. Güneşte solmuş ya da yıllar içinde matlaşmış bir halı yıkandığında daha temiz ve daha canlı görünür — çünkü üstündeki gri toz tabakası kalkar — ama solmuş olan kısım solmuş kalır. Halı boyama ve renk yenileme yapmıyoruz. Yıkamadan renk beklentiniz varsa bunu baştan konuşalım.',
   },
 
+  // ===== YERİNDE HİZMET =====
   {
-    kategori: 'teknik',
+    kategori: 'yerinde',
     oneCikan: true,
-    q: 'Beton ne ile kesilir?',
-    a: 'Kalınlığa göre değişir. Spirale takılan elmas diskle ancak 3-7 santim derinliğe inilir; sığ işler dışında yetmez. Beton için üretilmiş sulu elmas testerelerle tek yüzden 12-15 santim, ray sistemli duvar testeresiyle iki yüzden çalışarak 600 mm kalınlığa kadar iniyoruz. Elektriğin yetmediği ya da kesitin daha kalın olduğu yerlerde hidrolik sistem, çok kalın kesitlerde tel testere kullanılır.',
+    q: 'Koltuğu alıp götürüyor musunuz?',
+    a: 'Hayır, koltuk evden çıkmıyor. Ekip yüksek basınçlı vakumlu makineyle adresinize geliyor ve iş baştan sona orada yapılıyor. Koltuğu taşımak hem gereksiz bir risk — kapı ve merdiven geçişlerinde kumaş zarar görebiliyor — hem de gereksiz bir bekleme olurdu. Yatak ve baza için de aynı şey geçerli. Halı, perde ve yorgan ise tesise geliyor.',
   },
   {
-    kategori: 'teknik',
-    oneCikan: false,
-    q: 'Karot makinesi kaç metre deler?',
-    a: 'Delme derinliğini makine değil, uca eklenen uzatmalar ve sahadaki erişim belirler. Standart uçlarla 40-50 santim tek seferde geçilir; uzatma eklenerek bir metrenin üzerine çıkılabilir. Sınır genelde derinlik değil, makinenin sabitlenebileceği düzgün bir yüzeyin ve ucun geri çekilebileceği boşluğun bulunup bulunmamasıdır. Çap tarafında ise 50 mm ile 1000 mm arasında çalışıyoruz.',
+    kategori: 'yerinde',
+    q: 'Koltuk temizlendikten sonra ne zaman oturabilirim?',
+    a: 'Kumaşa ve odanın havalandırmasına göre değişiyor, çoğu koltuk aynı gün kullanılabilir hâle geliyor. Vakumlama adımında kirli suyun büyük bölümü geri çekildiği için koltuk ıslak değil nemli kalıyor. Odayı birkaç saat havalandırmanızı öneriyoruz. Kolçak ya da arka panelde deri bölge varsa onun ne zaman kullanılabileceğini ayrıca söylüyoruz.',
   },
   {
-    kategori: 'teknik',
-    oneCikan: true,
-    q: 'Karot testi nasıl yapılıyor?',
-    a: 'Üç ayrı taraf var. Numunenin hangi elemandan, nereden ve kaç adet alınacağına yapının mühendisi karar verir. Numuneyi biz alırız: elmas uçlu makineyle, su soğutmalı ve yüzeye dik biçimde silindir çıkarılır, etiketlenip teslim edilir. Deneyi yapmak, kırmak ve raporlamak ise yetkili laboratuvarın işidir. Biz rapor düzenlemiyor, sonuç yorumlamıyoruz.',
+    kategori: 'yerinde',
+    q: 'Perdeyi kim söküyor?',
+    a: 'Sökme ve tekrar takma bize ait, bunun için ayrıca ücret almıyoruz. Stor ve zebra perdeler mekanizmalı olduğu için evde yıkanmaya uygun değil: katlanarak yıkanan kumaşta kalıcı kırık oluşuyor, makinede döndürülen mekanizma bozuluyor. Perdeleri ultrasonik makinede, katlamadan ve düz hâlde yıkıyoruz. Sökme-takma ekip işi olduğu için bu hizmet randevu ile planlanıyor.',
   },
   {
-    kategori: 'teknik',
-    oneCikan: false,
-    q: 'Karot örneği nereden ve kaç adet alınır?',
-    a: 'Yeri ve sayıyı yapının mühendisi belirler; bu karar için projeyi ve taşıyıcı sistemi bilmek gerekir. Teknik kısıtlar şunlar: numune yüzeye dik alınır, içinde donatı bulunmamalıdır, kolon-kiriş birleşimi gibi kritik bölgelerden alınmaz, alındığı yer ve yön etiketlenir. Donatının konumu delme öncesinde tarama cihazıyla belirlenir.',
+    kategori: 'yerinde',
+    q: 'Yatak temizliği gerçekten gerekli mi?',
+    a: 'Yatakta gözle görülen leke çoğu zaman asıl konu değil. Yüzeyde biriken ölü deri hücreleri toz akarının beslendiği şey ve çarşaf yıkamak bu tabakaya ulaşmıyor. Yatak yerinde, vakumlu üniteyle temizleniyor. Buradaki sınır ıslatma miktarı: iç dolguya su geçerse dolgu tam kurumuyor ve içeride nem kalıyor, bu yüzden yüzeyle sınırlı çalışıyoruz. Sağlıkla ilgili bir sonuç vaat etmiyoruz.',
   },
   {
-    kategori: 'teknik',
-    oneCikan: false,
-    q: 'Karot alınan yere ne yapılır?',
-    a: 'Numune için açılan delik, rötresi telafi edilmiş (kürlenirken büzülmeyen) tamir harcıyla doldurulur. Öncesinde delik içi kesim çamurundan tamamen temizlenir, yoksa harç betona tutunmaz. Su geçirmesi istenmeyen yerlerde üstüne ayrıca su yalıtımı gelir. Normal çimento harcı, alçı ve poliüretan köpük bu iş için uygun değildir.',
+    kategori: 'yerinde',
+    q: 'Yerinde hizmet için evde ne hazırlamam gerekiyor?',
+    a: 'Özel bir hazırlık gerekmiyor. Koltuğun çevresinde ekibin rahat dolaşabileceği kadar boşluk olması ve su ile elektriğe erişim yeterli. Minderlerin üstündeki eşyaları toplarsanız iş hızlanıyor. Çalışma alanını biz koruma altına alıyoruz. Apartmanda asansör yoksa ya da araç kapıya yanaşamıyorsa bunu randevu sırasında söylerseniz ekip ona göre çıkıyor.',
   },
 
-  // ===== GÜVENLİK =====
-  {
-    kategori: 'guvenlik',
-    oneCikan: true,
-    q: 'Taşıyıcı kolona veya perdeye müdahale edilebilir mi?',
-    a: 'Taşıyıcı elemanlara müdahale ancak statik proje ve yetkili mühendis onayıyla yapılır. Onay olmadan taşıyıcı kolon, perde veya kiriş üzerinde kesim/delim işine başlamıyoruz. Keşifte hangi elemanın taşıyıcı olduğunu birlikte değerlendirip, gerekiyorsa proje müellifine yönlendiriyoruz.',
-  },
-  {
-    kategori: 'guvenlik',
-    oneCikan: false,
-    q: 'Oturulan binada çalışma yapılabilir mi?',
-    a: 'Yapılabilir; karot ve elmas diskli kesim zaten bu tür durumlar için uygun yöntemlerdir. Çalışma alanı örtülür, su ve artık kontrol altında tutulur, iş bitiminde alan temiz teslim edilir. Apartmanlarda komşuların rahatsız olmaması için çalışma saatini önceden planlıyoruz.',
-  },
-  {
-    kategori: 'guvenlik',
-    oneCikan: false,
-    q: 'Duvarın içinde tesisat varsa ne oluyor?',
-    a: 'Kesim ve delim öncesi duvar içindeki elektrik, su ve doğalgaz hatlarının konumu değerlendirilir; şüpheli durumda tarama yapılır veya ilgili hat geçici olarak kapattırılır. Bu kontrol yapılmadan başlanan işler hem tehlikeli hem de maliyetlidir; biz bu adımı atlamıyoruz.',
-  },
-
-  {
-    kategori: 'guvenlik',
-    oneCikan: false,
-    q: 'Karot alınan binada oturulur mu, tehlikeli mi?',
-    a: 'Doğru yerden ve doğru sayıda alınmış numune taşıyıcı sistemi zayıflatacak boyutta değildir; çıkan silindir elemanın kesitinin yanında çok küçük kalır ve yer seçimi zaten donatıya ve kritik bölgelere denk gelmeyecek şekilde yapılır. Bu yüzden numune alınmış binada oturulmasında sakınca doğmaz. Buradaki hassasiyet sayı ve yerdedir; o karar da mühendise aittir.',
-  },
-  {
-    kategori: 'guvenlik',
-    oneCikan: false,
-    q: 'Karot testi zorunlu mu, kim karar verir?',
-    a: 'Bu bizim karar verdiğimiz bir konu değil. Numune alınması gerekip gerekmediğine yapının mühendisi ya da süreci yürüten yetkili kurum karar verir; hangi durumlarda zorunlu olduğu da mevzuatla belirlenmiştir. Biz numune alma hizmeti veriyoruz, sürecin tarafı değiliz. Zorunluluk ve başvuru konularını ilgili kuruma veya yapının mühendisine sormak gerekir.',
-  },
-
-  // ===== SÜREÇ =====
+  // ===== SÜREÇ & TESLİMAT =====
   {
     kategori: 'sure',
     oneCikan: true,
-    q: 'Ne kadar sürede başlıyorsunuz?',
-    a: 'Denizli merkezde programımız uygunsa aynı gün, değilse ertesi gün ulaşıyoruz. Yakın ilçelerde günübirlik gidiyoruz. Uzak ilçelerde işi tek gidişte bitirecek şekilde planladığımız için tarih önceden netleşiyor. 7/24 açığız; acil durumlarda telefonla değerlendirme yapıyoruz.',
+    q: 'Halım kaç günde teslim ediliyor?',
+    a: 'Ortalama 3-4 iş günü. Süreyi belirleyen şey yıkamanın kendisi değil kuruma: yün, shaggy ve ipek halılar makine halısından daha uzun sürede kuruyor. Kuruma bizde süre değil şart — tam kurumadan paketlemiyoruz, çünkü nemli katlanan halıda küf kokusu birkaç gün içinde başlıyor ve bir daha çıkmıyor. Halınız hazır olduğunda arayıp teslim randevusu veriyoruz.',
   },
   {
     kategori: 'sure',
-    oneCikan: false,
-    q: 'Moloz kaldırılıyor mu?',
-    a: 'Evet. Beton kırma ve yıkım işlerinde moloz toplama ve nakliye hizmete dahildir. Karot işlerinde çıkan karot göbekleri ve kesim artığı da tarafımızdan alınır — sahayı süpürülmüş hâlde teslim ediyoruz.',
+    oneCikan: true,
+    q: 'Halılar birbirine karışır mı?',
+    a: 'Karışmaması için etiketleme yıkamada değil kapıda yapılıyor. Aynı gün birden çok haneden halı toplandığı için her halı alındığı anda etiketleniyor ve hangi adresten geldiği kaydediliyor. Etiket süreç boyunca halının üstünde kalıyor, paketlemede çıkarılıyor. Aynı desende iki halının farklı hanelerden gelmesi düşündüğünüzden sık oluyor; sistem bunun için var.',
   },
   {
     kategori: 'sure',
-    oneCikan: false,
-    q: 'Elektrik ve su siz mi sağlıyorsunuz?',
-    a: 'Genellikle sahadaki mevcut elektrik ve su tesisatı yeterli oluyor; ihtiyaç duyulan bağlantıyı keşifte konuşuyoruz. Elektriğin olmadığı veya yetersiz olduğu sahalarda hidrolik güç üniteli sistemlerle çalışabiliyoruz, bu durumda ek bir altyapı gerekmiyor.',
+    q: 'Halı nerede kurutuluyor?',
+    a: 'Kapalı kurutma odalarında. Açık havada ya da balkonda kurutulan bir halı kururken toz ve rutubet alıyor; yeni yıkanmış bir halının üstüne inen toz, yıkamanın bir bölümünü geri alıyor. Kapalı oda dış etkenlerden izole olduğu için halı yıkandığı temizlikte kuruyor. Bu, kış aylarında evde halı yıkamanın neden pratikte mümkün olmadığının da cevabı.',
   },
   {
     kategori: 'sure',
-    oneCikan: false,
-    q: 'Fatura kesiyor musunuz?',
-    a: 'Evet, yapılan tüm işler için fatura düzenliyoruz. Kurumsal işlerde teklif, sözleşme ve hakediş sürecine uygun şekilde ilerliyoruz.',
+    q: 'Halı nasıl teslim ediliyor?',
+    a: 'Son kontrolden geçen halı parfümleniyor, ambalajlanıyor ve adresinize getiriliyor. Ambalaj taşıma sırasında halının tekrar toz almasını önlüyor; halıyı serene kadar paketinde bırakabilirsiniz. Teslimde varsa yıkama öncesinde tespit ettiğimiz hasarları da birlikte gözden geçiriyoruz. Ödeme teslimde nakit veya kredi kartıyla alınıyor.',
   },
   {
     kategori: 'sure',
-    oneCikan: false,
-    q: 'Karot sonucu kaç günde çıkar?',
-    a: 'Numunenin alınması genelde aynı gün tamamlanır. Sonrasındaki süre laboratuvarın iş programına ve deney planına bağlıdır; bu konuda söz veremiyoruz çünkü o aşama bizim elimizde değil. Süreyi numuneyi teslim ettiğimiz laboratuvardan ya da işi yürüten mühendisten öğrenmek gerekir.',
+    q: 'Yıkama sırasında halım küçülür mü?',
+    a: 'Makine halısında böyle bir risk yok. Doğal elyaflı halılarda — yün ve el dokumalarda — ıslakken çekme ihtimali var ve bunun sebebi yıkamanın kendisi değil, yanlış sıcaklık ile kontrolsüz kuruma. Bu yüzden bu halıları düşük ısıda yıkıyor, kurumayı kontrollü yürütüyoruz. Teslimden önce ölçüyü yıkama öncesiyle karşılaştırıyoruz.',
   },
   {
     kategori: 'sure',
-    oneCikan: false,
-    q: 'Karot alındıktan sonra ne oluyor?',
-    a: 'Çıkan silindir, hangi elemandan ve hangi yönde alındığı yazılı bir etiketle laboratuvara teslim edilir. Laboratuvar numuneyi hazırlar, kırar ve dayanımı raporlar. Raporun yapı için ne anlama geldiğini ise yapının mühendisi değerlendirir. Bizim tarafımızda kalan iş, geriye kalan deliğin uygun tamir harcıyla kapatılmasıdır — bunun teklife dahil olup olmadığını başlamadan konuşuyoruz.',
+    q: 'Yorganı ev makinemde yıkasam olmaz mı?',
+    a: 'Yorganın temizlenebilmesi için makine içinde serbestçe dönebilmesi gerekiyor. Ev tipi makinede sıkışan yorgan dönmüyor; su ve deterjan içeri işlemiyor, işlese de dışarı çıkmıyor — yorgan yıkanmıyor, sadece ıslanıyor. Endüstriyel makinede yorgan rahat dönüyor ve iç dolgusuna kadar durulanıyor. Asıl kritik adım kurutma: dolgu tam kurumadan katlanan yorgan içeriden küfleniyor.',
   },
 ]
 
-/** llms.txt ve ana FAQ şeması için öne çıkan sorular. */
-export const oneCikanFaq = faq.filter((f) => f.oneCikan)
-
 export default faq
+
+/**
+ * llms.txt ve ana FAQPage şemasına giren kısa liste.
+ *
+ * Neden tamamı değil: FAQPage şeması sayfada GÖRÜNEN soruları işaretlemek
+ * içindir ve 22 sorunun tamamını ana sayfa şemasına basmak hem gereksiz hem
+ * de Google'ın "sayfada olmayan içeriği işaretleme" kuralına yaklaşır.
+ * `oneCikan: true` işaretli sorular en sık sorulanlar.
+ */
+export const oneCikanFaq = faq.filter((s) => s.oneCikan)

@@ -1,5 +1,5 @@
 /**
- * Ana sayfa hero slider içerikleri.
+ * Ana sayfa hero slider içerikleri — Denizli Tomay Halı Yıkama.
  *
  * Her slayt bir hizmete bağlıdır: arka plan fotoğrafı o hizmetin sahadaki hâlini
  * gösterir, ikinci buton doğrudan o hizmetin detay sayfasına gider. Böylece hero
@@ -7,116 +7,93 @@
  *
  * image     : public/images/hero/*.webp (1600x900). Görsel yoksa otomatik tasarım
  *             zemini gösterilir — kırık görsel çıkmaz.
+ *             DİKKAT: kod srcset'i dosya adından türetiyor (hero-N -> hero-N-800),
+ *             yani her görselin -800 varyantı da üretilmeli, yoksa 404'e gider.
  * icon      : src/components/Icon.jsx ikon adı
- * serviceTo : ikinci butonun gideceği hizmet sayfası (boş bırakılırsa buton
- *             "Hizmetlerimiz" olarak /hizmetler'e gider)
+ * serviceTo : ikinci butonun gideceği hizmet sayfası
  *
- * Slayt eklemek/çıkarmak için sadece bu diziyi düzenle.
+ * ┌──────────────────────────────────────────────────────────────────────────┐
+ * │ İLK SLAYTIN BAŞLIĞI SAYFANIN <h1>'İDİR — sitedeki en ağırlıklı başlık.   │
+ * │ vite.config.js > tokens > SITE_H1 bu diziden OKUNUYOR, ayrıca yazılmıyor.│
+ * │ Sebep: noscript H1'i ile ekranda görünen H1 ayrışırsa cloaking olur.     │
+ * │ Üç satır (title / titleAccent / titleAfter) TEK CÜMLE olarak okunur;     │
+ * │ sırayı bozarsanız cümle bozulur.                                         │
+ * │                                                                          │
+ * │ Hedef sorgu "halı yıkama denizli" — başlık o kelimelerle BAŞLIYOR.       │
+ * │ Gerekçe ve tam sorgu haritası: siteConfig.js > seo.hedefSorgular         │
+ * └──────────────────────────────────────────────────────────────────────────┘
  */
 
 const heroSlides = [
   {
-    id: 'karot',
+    id: 'hali-yikama',
     image: '/images/hero/hero-1.webp',
-    imageAlt: 'Betonarme duvarda elmas uçlu karot makinesiyle delme işlemi',
-    icon: 'drill',
+    imageAlt: 'Fabrikada 16 fırçalı tam otomatik makinede halı yıkama',
+    icon: 'carpetRoll',
     badge: 'Denizli & Tüm İlçeler',
-    // DİKKAT: İlk slaytın başlığı sayfanın <h1>'idir — sitedeki en ağırlıklı
-    // tek başlık. Önceden "Profesyonel / Beton Delme & Kesme / Hizmetleri"
-    // yazıyordu; içinde ne "Denizli" ne de "Karot" geçiyordu, yani hedef
-    // sorguların hiçbirini karşılamıyordu. Bu üç satır tek bir cümle olarak
-    // okunur, sırayı bozarsanız cümle bozulur.
-    title: "Denizli'de Karot,",
-    titleAccent: 'Beton Delme & Kesme',
-    titleAfter: 'Hizmetleri',
+    title: 'Halı Yıkama Denizli:',
+    titleAccent: 'Alıyoruz, Yıkıyoruz,',
+    titleAfter: 'Kapınıza Teslim Ediyoruz',
     description:
-      'Karot ve elmas diskli ekipmanlarımızla <strong>kırıcıya göre çok daha az toz, gürültü ve titreşim</strong>. Taşıyıcı sisteme yük bindirmeden, pürüzsüz kesim yüzeyiyle teslim.',
-    serviceTo: '/hizmetler/karot/',
-    serviceLabel: 'Karot Hizmeti',
+      'Halınızı adresinizden alıyoruz. 16 fırçalı tam otomatik makinelerde, <strong>halının cinsine göre ayarlanan fırça sertliğiyle</strong> yıkıyor, kapalı kurutma odalarında kurutup ambalajlı teslim ediyoruz. Alım ve teslim ücretsiz.',
+    serviceTo: '/hizmetler/hali-yikama/',
+    serviceLabel: 'Halı Yıkama',
   },
   {
-    id: 'beton-kesme',
+    id: 'koltuk-yikama',
     image: '/images/hero/hero-2.webp',
-    imageAlt: 'Elmas diskli duvar testeresiyle betonarme perde duvar kesimi',
-    icon: 'saw',
-    badge: 'Kapı, Pencere, Asansör Boşluğu',
-    title: 'Duvara ve Döşemeye',
-    titleAccent: 'Hassas Kesim',
-    titleAfter: '',
+    imageAlt: 'Evde yüksek basınçlı vakumlu makineyle koltuk yıkama',
+    icon: 'sofa',
+    badge: 'Yerinde Hizmet',
+    title: 'Koltuğunuz',
+    titleAccent: 'Evden Çıkmadan',
+    titleAfter: 'Temizlenir',
     description:
-      'Ray sistemli duvar testeresiyle <strong>düz ve temiz kesim hattı</strong>. Kapı-pencere açıklığı, asansör ve merdiven boşluğu, döşeme ve temel kesimi.',
-    serviceTo: '/hizmetler/beton-kesme/',
-    serviceLabel: 'Beton Kesme',
+      'Koltuk taşınmaz — ekip adresinize gelir. Yüksek basınçlı vakumlu ünitede kirli su geri çekilir; <strong>kumaşta deterjan kalıntısı bırakmıyoruz</strong>, çünkü kalıntı koltuğu daha hızlı kirletir.',
+    serviceTo: '/hizmetler/koltuk-yikama/',
+    serviceLabel: 'Koltuk Yıkama',
   },
   {
-    id: 'beton-kirma',
+    id: 'stor-perde-yikama',
     image: '/images/hero/hero-3.webp',
-    imageAlt: 'Şantiyede kırıcıyla kontrollü beton kırma çalışması',
-    icon: 'hammer',
-    badge: 'Tadilat & Renovasyon',
-    title: 'Kontrollü',
-    titleAccent: 'Beton Kırma',
-    titleAfter: 've Söküm',
+    imageAlt: 'Ultrasonik makinede stor perde yıkama',
+    icon: 'curtain',
+    badge: 'Sökme & Takma Dâhil',
+    title: 'Stor ve Zebra Perde',
+    titleAccent: 'Kırışmadan',
+    titleAfter: 'Yıkanır',
     description:
-      'Taşıyıcı sisteme zarar vermeden, toz kontrolü altında kırım. <strong>Moloz toplama ve nakliye dâhil</strong> — sahayı temiz teslim ediyoruz.',
-    serviceTo: '/hizmetler/beton-kirma/',
-    serviceLabel: 'Beton Kırma',
+      'Mekanizmalı perde evde yıkanınca kumaş kırılır ya da mekanizma bozulur. Ultrasonik makinede, <strong>katlanmadan ve düz hâlde</strong> yıkıyoruz. Sökme ve tekrar takma bize ait, ayrıca ücret almıyoruz.',
+    serviceTo: '/hizmetler/stor-perde-yikama/',
+    serviceLabel: 'Perde Yıkama',
   },
   {
-    id: 'asfalt-derz',
+    id: 'el-dokuma-hali-yikama',
     image: '/images/hero/hero-4.webp',
-    imageAlt: 'Zemin kesme makinesiyle asfalt üzerinde derz kesimi',
-    icon: 'road',
-    badge: 'Yol & Altyapı',
-    title: 'Asfalt ve Zeminde',
-    titleAccent: 'Düzgün Derz Kesimi',
-    titleAfter: '',
+    imageAlt: 'El dokuma yün halının düşük ısıda yıkanması',
+    icon: 'wool',
+    badge: 'Ayrı Program',
+    title: 'Yün ve El Dokuma Halı',
+    titleAccent: 'Makine Halısıyla',
+    titleAfter: 'Aynı Programa Girmez',
     description:
-      'Altyapı hendek kesimleri, derz açma ve yenileme çalışmaları. Elmas diskli yol kesme makineleriyle <strong>trafiğe en az etkiyle</strong>, temiz kesim hattı.',
-    serviceTo: '/hizmetler/asfalt-derz-kesim/',
-    serviceLabel: 'Asfalt Derz Kesim',
+      'El dokuma halıdaki boya makine halısındaki gibi sabit değildir. Yıkamadan önce <strong>renk akma testi</strong> yapıyor, düşük ısı ve yumuşak fırçayla çalışıyoruz. Saçak ayrı ele alınır.',
+    serviceTo: '/hizmetler/el-dokuma-hali-yikama/',
+    serviceLabel: 'El Dokuma & Yün',
   },
   {
-    id: 'filiz-ankraj',
+    id: 'yorgan-battaniye-yikama',
     image: '/images/hero/hero-5.webp',
-    imageAlt: 'Betonarme perdeye ekilmiş donatı filizlerinin kontrolü',
-    icon: 'rebar',
-    badge: 'Güçlendirme & Ek Yapı',
-    title: 'Filiz Ekimi ve',
-    titleAccent: 'Kimyasal Ankraj',
-    titleAfter: '',
+    imageAlt: 'Endüstriyel makinede yorgan ve battaniye yıkama',
+    icon: 'blanket',
+    badge: 'Endüstriyel Makine',
+    title: 'Yorgan ve Battaniye',
+    titleAccent: 'Ev Makinesinde',
+    titleAfter: 'Dönmez, Yıkanmaz',
     description:
-      'Mevcut betonarmeye yeni bağlantı noktaları. Delik temizliği ve <strong>kürleme süresine uyulmadan yük verilmez</strong>; talep halinde çekme testi yapılır.',
-    serviceTo: '/hizmetler/filiz-ekimi/',
-    serviceLabel: 'Filiz Ekimi',
-  },
-  {
-    id: 'yikim',
-    image: '/images/hero/hero-6.webp',
-    imageAlt: 'Toz bastırma sistemi eşliğinde kontrollü bina yıkımı',
-    icon: 'demolition',
-    badge: 'Kentsel Dönüşüm',
-    title: 'Planlı ve',
-    titleAccent: 'Kontrollü Yıkım',
-    titleAfter: '',
-    description:
-      'Çevre güvenliği, toz bastırma ve moloz yönetimiyle planlı yıkım. <strong>Kısmi yıkım ve kat indirme</strong> işlerinde komşu yapıya zarar vermeden çalışıyoruz.',
-    serviceTo: '/hizmetler/kontrollu-bina-yikimi/',
-    serviceLabel: 'Kontrollü Yıkım',
-  },
-  {
-    id: 'acil',
-    image: '/images/hero/hero-7.webp',
-    imageAlt: 'Gece çalışma ışıkları altında beton kesme operasyonu',
-    icon: 'siren',
-    badge: '7/24 Açığız',
-    title: 'Gece de',
-    titleAccent: 'Acil Servis',
-    titleAfter: 'Veriyoruz',
-    description:
-      'İşletmenizin kapalı olduğu saatlerde, trafiğin durduğu gece vakitlerinde çalışabiliyoruz. <strong>Google profilimizde 24 saat açık görünüyoruz</strong> — acil durumda arayın, durumu birlikte değerlendirelim.',
-    serviceTo: '/iletisim/',
-    serviceLabel: 'Bize Ulaşın',
+      'Sıkışan yorgan makinede dönemez; su ve deterjan içeri işlemez. Endüstriyel makinede iç dolgusuna kadar durulanır. <strong>Tam kuruma teslim şartımızdır</strong> — nemli katlanan yorgan içeriden küflenir.',
+    serviceTo: '/hizmetler/yorgan-battaniye-yikama/',
+    serviceLabel: 'Yorgan & Battaniye',
   },
 ]
 

@@ -1,913 +1,538 @@
 /**
  * Blog yazılarının TAM METNİ.
  *
- * Yalnızca /blog/<slug>/ sayfası açıldığında iniyor (BlogPost.jsx ayrı bir
- * lazy parça). Blog listesi ve diğer sayfalar bu dosyayı çekmez.
+ * NEDEN AYRI DOSYA: blog.js'i Header/Footer ve liste sayfası da import ediyor.
+ * Aşağıdaki metinler yalnızca /blog/<slug>/ açıldığında gerekiyor; blog.js
+ * içinde kalsalardı blog listesini açan herkes 11 yazının tamamını indirirdi.
  *
- * DÜZELTME (2026-08-13): "BU DOSYA ÜRETİLİR" yazıyordu; öyle bir üretici ya da
- * kaynak JSON yok, hiç de olmamış. Bu dosya ASIL KAYNAKTIR, elle düzenlenir.
- * Gerekçesi blog.js'in başında.
+ * ┌──────────────────────────────────────────────────────────────────────────┐
+ * │ İÇERİK KURALI                                                            │
+ * │ • FİYAT RAKAMI YAZILMAZ — fiyat yazısında bile. Site teklif usulü;       │
+ * │   fiyatı NEYİN belirlediği anlatılır, rakam verilmez.                    │
+ * │ • Üstünlük iddiası ve garanti taahhüdü yok. "en iyi halı yıkama" sorgusu │
+ * │   HEDEFLENİR ama İDDİA EDİLMEZ: sorunun kendisi cevaplanır.              │
+ * │ • Tıbbi iddia yok (yatak/akar yazısı dâhil).                             │
+ * │ • Blog, hizmet sayfasını TEKRARLAMAZ: hizmet sayfası "biz nasıl          │
+ * │   yapıyoruz" der, blog "bu iş nasıl işler / siz ne yapmalısınız" der.    │
+ * └──────────────────────────────────────────────────────────────────────────┘
  */
 
 const blogContent = {
-  "beton-kesme-nasil-yapilir": {
-    "seoTitle": "Beton Kesme Nasıl Yapılır? Duvara Kapı Boşluğu Açma",
-    "giris": [
-      "Bir duvara kapı ya da pencere boşluğu açtırmak dışarıdan tek bir işlem gibi görünür. Ekip gelir, keser, gider. Oysa sahada işin en kısa aşaması diskin duvara dokunduğu andır. Ondan önce duvarın ne olduğunun, içinden hangi tesisatın geçtiğinin ve serbest kalacak parçanın nereye ineceğinin çözülmüş olması gerekir. Bu sırayı atlayan işler kesim bittikten sonra sorun çıkarır.",
-      "Beton kesme, betonarme bir elemanı parçalamadan, elmas segmentli bir diskle önceden çizilen hat boyunca ikiye ayırma işidir. Kırıcı betonu darbeyle dağıtır, kenarı düzensiz bırakır, titreşimi çevredeki betona taşır. Disk ise malzemeyi aşındırarak ilerler, geriye düz ve tanımlı bir kenar kalır. Kapı ile pencere boşlukları tam bu farkın işe yaradığı yerdir: açıklık açıldıktan sonra geriye kalan duvarın sağlam bir kenarı olmak zorunda.",
-      "Aşağıda açıklık açma işinin sahadaki sırasını anlatıyorum. Ray sistemli testere nasıl çalışır, hat nasıl işaretlenir, su ve çamur ne olur, kesilen parça nasıl iner. Denizli merkezde ve ilçelerde en sık karşılaştığımız durum ise kesime hazır sanılan bir duvarın taşıyıcı çıkması. O yüzden en uzun bölümü buna ayırdım; geri kalanı teknik iş, o kısım doğrudan binanın güvenliğiyle ilgili."
+  "cay-lekesi-nasil-cikar": {
+    giris: [
+      "Devrilen bardağın halıya değdiği an değil, ondan sonraki beş dakika belirleyici. Halıda çay lekesi çoğu evde aynı sırayla ilerliyor: önce bir bez aranıyor, bulunan bez lekenin üzerinde ileri geri gezdiriliyor, iş görmeyince sıcak su ve mutfakta ne varsa o deneniyor. Bu sıranın her adımı lekeyi biraz daha yerleştiriyor. Oysa yeni dökülmüş çay halının içine henüz oturmamıştır, hâlâ suda çözünür durumdadır ve o aşamada yapılması gereken iş kimyasal değil mekaniktir: sıvıyı halının dışına almak. Beklenen her dakika bu işi zorlaştırıyor, çünkü çay yalnızca ıslatmıyor, dokumaya kendini bağlıyor. Bu yazı da işi o zaman ekseninde ele alıyor: ilk beş dakika, ilk saat ve kuruduktan sonrası.",
+      "Çayı diğer sıvılardan ayıran şey tanen. Tanen, çay yaprağındaki polifenollerin ortak adı; suyla birlikte geliyor, kuruduğunda halının ipliğine tutunuyor ve havayla temas ettikçe koyulaşıyor. Yani halıdaki çay izi bir kir tabakası değil, zayıf bir boyama. Bunun iki pratik sonucu var. Birincisi, silmekle kalkan şey yüzeydeki sıvıdır; asıl iş ipliğe bağlanmış taneni çözmektir. İkincisi, tanen ısıyla daha sıkı bağlanıyor — sıcak su vermek, çıkarmaya çalıştığınız şeyi sabitliyor. Süt ve şeker girdiğinde tabloya bir de protein ile yapışkan bir kalıntı ekleniyor; bunlar taneni değil, sonrasını değiştiriyor. Yani tek bir çay lekesi aslında üst üste binmiş iki üç ayrı işin toplamı.",
+      "Aşağıdaki bölümler üç soruyu ayrı ayrı ele alıyor: ilk dakikalarda ne yapılmalı, evde neyin yapılmaması gerekiyor ve hangi çay lekesi gerçekten çıkmıyor. Sonuncusunu atlamıyoruz, çünkü bu işte en çok duyulan cümlelerden biri her lekenin çıkacağı vaadi ve bu doğru değil. Yıllanmış, ısıyla sabitlenmiş ya da üzerine ev yapımı bir karışım uygulanmış bir izin bir bölümü halının üzerinde kalıyor. Bunu halıyı teslim alırken söylemek, yıkandıktan sonra söylemekten iyi; biz de tesise gelen her halıda lekeyi ışık altında işaretleyip ne bekleyeceğinizi baştan konuşuyoruz. Halının cinsi, lekenin yaşı ve daha önce üzerine ne uygulandığı bu konuşmanın üç sorusu."
     ],
-    "bolumler": [
+    bolumler: [
       {
-        "baslik": "Ray Sistemli Duvar Testeresi ve Elmas Disk Nasıl Çalışır",
-        "paragraflar": [
-          "Elmas disk, çelik bir gövdenin çevresine dizilmiş segmentlerden oluşur. Segmentlerin içinde metal bir bağlayıcının tuttuğu sentetik elmas taneleri vardır. Disk betonu keskin bir ağızla kesmez, aşındırarak ilerler: elmas taneleri hem çimento harcını hem agregayı hem de karşısına çıkan donatıyı öğütür, bağlayıcı aşındıkça alttaki taneler açığa çıkar. Bu yüzden disk zamanla körelmez, tükenir. Betonun sertliğine ve donatı yoğunluğuna göre farklı segment yapıları kullanılır.",
-          "Duvar kesme işinde sonucu belirleyen makinenin gücü değil, üzerinde yürüdüğü ray. Testere, duvara dübellenen bir kızak üzerine oturur ve hat boyunca motorla ilerler. Serbest elle yapılan kesimlerde disk donatıya girdiği anda hattan kaçar, yüzeyde dalgalanma bırakır; rayda böyle bir sapma olmaz, kesim baştan sona aynı çizgide kalır. Tek yüzden inilebilen derinlik disk çapının yarısından biraz azdır, çünkü diskin göbeği ve flanşı duvarın içine girmez. Kalın kesitlerde aynı hat karşı yüzden ikinci kez kesilir; iki yüzden çalışarak 600 mm kalınlığa kadar iniyoruz.",
-          "Disk tek hamlede tam derinliğe dalmaz. Her geçişte birkaç santim daha inerek hat boyunca gider gelir. Böylece motorun yükü dengede kalır, donatıya girildiğinde disk hattan sapmaz. Kesim boyunca hatta su verilir: su segmenti soğutur, artığı dışarı taşır, tozu daha havaya kalkmadan bastırır."
-        ]
-      },
-      {
-        "baslik": "En Kritik Soru: Kesilecek Duvar Taşıyıcı mı?",
-        "paragraflar": [
-          "Bir binada her duvar aynı işi yapmaz. Kolon, perde, kiriş ve döşeme yapının kendi ağırlığını, üstündeki katları ve deprem sırasında gelen yatay kuvvetleri taşır. Dolgu duvar ise sadece mekânı böler ve kendi ağırlığını taşır. Taşıyıcı bir perdeye açılan boşluk, o perdenin yatay yük taşıyan kesitini küçültür ve kesilen donatı bir daha eski işini görmez. Kaybolan taşıma gücü yok olmaz, komşu elemanların üzerine biner. En kötü tarafı da şu: bu değişikliğin sonucu kesim günü görünmez, deprem günü görünür.",
-          "Peki nasıl anlaşılır? Tek gerçek cevap yapının statik projesidir. Sahadaki ipuçları fikir verir ama hiçbiri tek başına karar vermeye yetmez: duvarın üst ve alt katlarda aynı hizada devam edip etmediği, merdiven ve asansör kovasının çevresi, bodrum katta toprağa dayanan duvarlar, duvarın üstünde bir kiriş olup olmadığı. Şüpheli noktada matkap ya da küçük çaplı karotla pilot delik açılır; çıkan artığın tuğla ve gazbeton tozu mu yoksa agrega ile çimento mu olduğu, donatıya rastlanıp rastlanmadığı görülür. Ancak betonarme çıkması işi bitirmez, çünkü betonarme bir duvarın taşıyıcı perde mi yoksa yalnızca kendi yükünü taşıyan bir eleman mı olduğu yine projeden okunur. Kalınlığa bakarak, komşunun dairesinde aynı duvar kesilmiş diye ya da ustanın gözüne öyle geldiği için karar verilmez.",
-          "Duvar taşıyıcı çıktıysa işin teknik kısmı durur, karar mühendise geçer. Açıklığın mümkün olup olmadığını, mümkünse yerini, boyutunu ve gerekiyorsa güçlendirmesini yapının statik projesine bakan yetkili bir inşaat mühendisi belirler. Çelik çerçeve ile kuşatma gibi çözümler bu değerlendirmenin sonucunda çıkar, sahada doğaçlama kurulmaz. Ayrıca taşıyıcı sistemi etkileyen tadilatlar ruhsata tabidir ve apartmanda kat malikleri tarafı da vardır; bunlar teknik konu değil ama işin ayrılmaz parçası. Biz onaylı proje gelmeden bu duvarlarda hat bile çizmiyoruz."
+        baslik: "Çay Halıda Ne Bırakıyor: Tanen, Şeker ve Süt",
+        paragraflar: [
+          "Sade çayın halıda bıraktığı iz neredeyse tamamen tanendir. Tanen suda çözünür, dolayısıyla henüz ıslakken suyla birlikte halının dışına alınabilir. Kuruduğunda ise iplik yüzeyine oturuyor ve zamanla oksitlenerek sarımsı kahverengiden kızıl kahverengiye dönüyor. Aylar önce dökülmüş bir çayın ilk günkünden daha koyu görünmesinin sebebi bu; leke büyümüyor, rengi değişiyor. Demli çay açık çaydan daha zor, çünkü aynı alana daha çok tanen düşüyor. Halının elyafı da farkı büyütüyor: yün protein yapılı bir lif ve tanene daha istekli, polipropilen gibi sentetik ipliklerde ise sıvı yüzeyde daha az tutunup dokumanın dibine iniyor. Bu ayrımı bilmek, evde hangi adımın işe yarayıp hangisinin boşa gittiğini de açıklıyor.",
+          "Şekerli çay ikinci bir sorun ekliyor. Şeker kuruduğunda halının ipliğinde yapışkan, gözle görünmeyen ince bir tabaka bırakıyor ve o tabaka üzerine düşen tozu tutuyor. Çay lekesi çıkmış görünse bile birkaç hafta sonra aynı yerde gri bir daire belirmesi genelde budur; kirlenen halı değil, kalıntının topladığı toz. Sütlü çayda ise protein devreye giriyor ve protein ısıyla pıhtılaşıyor. Lekenin üzerine sıcak su veya fön tutulduğunda süt proteini iplikte sabitleniyor, bazı halılarda kuruduktan sonra hafif bir koku da bırakıyor. Bu yüzden ilk müdahalede soğuk su kuralı sade çaydan çok sütlü çay için önemli."
         ],
-        "liste": [
-          "Kolon, perde ve kirişe statik proje ve yetkili mühendis onayı olmadan hiçbir kesim yapılmaz.",
-          "Onay yokken köşesini biraz tıraşlayalım, sadece ince bir kanal açalım türü ara çözüm de yoktur; küçük müdahale diye bir şey yok.",
-          "Taşıyıcı elemandaki donatı, yerine ne konacağı projede tanımlanmadan kesilmez.",
-          "Perdedeki mevcut bir açıklık, ilk boşluk projeliydi diye kendiliğinden genişletilemez; genişletme yeni bir hesap ister.",
-          "Onay çıkmadıysa işi almıyoruz; kesime başlamamak, sonradan geri alınamayacak bir hatadan iyidir."
-        ]
       },
       {
-        "baslik": "Kesimden Önce: Duvarın İçinden Ne Geçiyor",
-        "paragraflar": [
-          "Bitmiş bir yapıda tesisatın önemli bölümü duvarın içindedir. Elektrik hattı, temiz su borusu, ısıtma tesisatı, bazı yerlerde doğalgaz. Bunların güzergâhı tesisat projesinde olmalıdır, ama sahada çoğu dairede ya proje yoktur ya da uygulama projeden farklı yapılmıştır. Bu yüzden hat çizilmeden önce duvarın iki yüzü de okunur: priz, anahtar, buat, radyatör ve kombi bağlantısı hepsi ipucudur. Prizden yukarı ya da aşağı inen düşey bir güzergâh, tavandan gelen yatay bir hat çoğu binada standarttır.",
-          "İşaretlemeyi tarama takip eder. Şüphe kalan noktalarda kesim hattı üzerinde pilot delik açılır. Kesime başlamadan ilgili sigorta kapatılır, su vanası kapattırılır. Bunun sebebi sadece hattı korumak değil: sulu kesimde yüzey ıslaktır ve kesim çamuru iletkendir, duvar içindeki canlı bir kabloya diskin dokunması ciddi bir tehlikedir. Doğalgaz hattı ihtimali varsa gaz kesilmeden kesime başlamıyoruz, kapatma işlemi de yetkili firmasına aittir.",
-          "Kesim hattı bir tesisat güzergâhıyla çakışıyorsa çözüm hattı deplase etmektir ve bu kesim ekibinin değil tesisatçının işidir. Döşeme kesimlerinde aynı konu yerden ısıtma boruları için geçerli. Keşifte bunları yerinde soruyoruz, çünkü işin sırası burada bozulursa gerisi de aksıyor."
-        ]
+        baslik: "İlk Beş Dakika: Ovmak Değil, Bastırarak Emdirmek",
+        paragraflar: [
+          "İlk iş, halının üstünde duran sıvıyı almak. Bir kaşığın ya da kartın sırtıyla fazla çay dıştan içeri doğru toplanır; içten dışa çalışmak lekeyi büyütür. Ardından beyaz ya da çok açık renkli, pamuklu bir bezle veya kâğıt havluyla bastırılır. Bastırıp kaldırın, bastırıp kaldırın; bezi her seferinde temiz bir yüzüne çevirin. Bezin beyaz olmasının sebebi hem kendi boyasını halıya bırakmaması hem de çayın ne kadarının çıktığını size göstermesi. Yine dıştan içeri ilerleyin. Bu aşama sıkıcı görünür ama lekenin yarısından fazlası burada halıdan ayrılıyor ve hiçbir ürün bu adımın yerini tutmuyor. Kâğıt havlu kullanacaksanız baskısız ve desensiz olanı seçin.",
+          "Bez artık renk almamaya başladığında az miktarda soğuk su devreye girer. Halıya su dökmek yerine bezi ıslatın ya da ince bir sprey kullanın; amaç kalan taneni yeniden çözünür hale getirmek, halıyı ıslatmak değil. Islatın, bekletmeden bastırarak emdirin, tekrarlayın. Bez temiz kalkmaya başladığında durun. Bitirirken nemi yukarı çekmek için kuru bezi katlayıp lekenin üstüne koyun ve üzerine bir ağırlık bırakın, halının altına da bir havlu serin. Sonra oda havalandırılır. Isıtıcı, fön ve doğrudan güneş kullanmayın: hem taneni hem süt proteinini sabitler, ayrıca halının o bölgesini çevresinden farklı kurutur. Halının altı da ıslandıysa aynı emdirme işlemini arka yüzden bir kez daha tekrarlayın."
+        ],
       },
       {
-        "baslik": "Kesim Hattının İşaretlenmesi ve Rayın Kurulması",
-        "paragraflar": [
-          "Hat duvarın iki yüzüne birden çizilir ve iki çizginin birebir çakıştığı kontrol edilir. Bir yüzü ölçüp diğerinde göz kararı devam etmek, iki taraftan kesilen kalın duvarlarda kesitin ortada kaymasına yol açar. Kapı boşluğunda ölçü net açıklıktan ibaret değildir, kasa ve doğrama payı da hesaba katılır. Bu payı doğramacıyla konuşup kesimden önce netleştirmek, sonradan boşluğu birkaç santim büyütmeye çalışmaktan kolaydır.",
-          "Köşeler ayrı bir konu. Disk dairesel olduğu için hattın sonuna geldiğinde yüzeydeki çizgiyi bitirir, ama derinlikte köşe tam kesilmemiş kalır. İki çözüm var: ya köşede bir miktar aşırı kesime izin verilir, ya da köşeye karotla delik açılarak kesim tamamlanır. Görünen bir yüzeyde iz istenmiyorsa ikincisi tercih edilir. Bunun kararı kesim başladıktan sonra değil, hat çizilirken verilir.",
-          "Ray kurulumu göründüğünden hassas bir iştir. Kızak yüzeye dübellenir, terazisi alınır, testere üzerine oturtulur. Kızak gevşek kalırsa disk ilk donatıda hattan kaçar ve o hatayı sonradan düzeltmek mümkün olmaz. Dübel delikleri kesim bittiğinde duvarda kalır; fayanslı ya da boyalı bir yüzeyde tamiratı doğrudan etkilediği için yerini önceden konuşuyoruz."
-        ]
+        baslik: "Lekeyi Kalıcı Hale Getiren Ev Müdahaleleri",
+        paragraflar: [
+          "Ovmak bu listenin başında. Sürtünme lekeyi çözmüyor, iki ayrı hasar bırakıyor. Birincisi elyafın uçları kırılıyor: ovulan bölge kuruduğunda mat, tüylenmiş ve çevresinden farklı görünüyor, üstelik leke tamamen çıksa bile o iz duruyor. Yün halıda aynı hareket lif pullarını kilitleyip yüzeyi sertleştiriyor. İkincisi, ovmak sıvıyı yüzeyden dokumanın tabanına itiyor; taban ıslandığında leke kuruma sırasında yeniden yukarı taşınıyor ve halı kuruduğunda hem daha geniş hem daha belirgin çıkıyor. Aynı gerekçeyle sıcak su ve fön de bu listede: ikisi de bağı gevşetmek yerine sıkılaştırıyor. Kısacası ovmak lekeyi küçültmüyor, lekenin üstüne iki yeni sorun ekliyor ve ikisi de kalıcı oluyor.",
+          "Ev yapımı karışımların çoğu ise faydasız ya da zararlı. Tuz emici gibi görünüyor ama tanen için çözücü değil; taneleri dokumanın dibine iniyor, nemi orada tutuyor ve kurumayı geciktiriyor, ayrıca aşındırıcı bir madde. Karbonat alkali; yünde lif pullarını açıyor, renkli halıda halının kendi boyasını oynatabiliyor ve kuruyunca ipliğin arasında beyaz bir kalıntı bırakıyor. O kalıntı sonradan toz tutuyor. Sirke ile karbonatı birleştirmek de bir şey çözmüyor, ikisi nötrleşiyor ve geriye tuzlu su kalıyor. Çamaşır suyu ve oksijenli suysa en riskli olanı: lekeyi değil, halının rengini birlikte alıyor ve o renk geri gelmiyor. Hazır bir sprey deneyecekseniz önce halının görünmeyen bir köşesinde deneyin."
+        ],
       },
       {
-        "baslik": "Su Soğutması ve Kesim Çamurunun Toplanması",
-        "paragraflar": [
-          "Su kesimin yardımcı unsuru değil, parçasıdır. Segment kesim sırasında hızla ısınır; aşırı ısınan bir segmentte bağlayıcı bozulur, disk gövdesi salgı yapmaya başlar ve kesim hattı bozulur. Su bu ısıyı alır, hatta biriken artığı dışarı taşır ve en önemlisi tozu daha havaya kalkmadan bastırır. Kuru kesimde açığa çıkan ince toz kristal yapıda silis içerir ve kapalı bir mekânda solunması sağlık açısından risklidir. Biz sulu çalışıyoruz, sebebi de bu.",
-          "Bu suyun bir bedeli var: kesim çamuru. Su ile beton unu karışınca akıcı ve yapışkan bir artık çıkar, kuruduğunda sertleşir. Parke ile laminatın altına girerse zemin şişer, mermer ve derz lekelenir, gidere verilirse tesisat tıkanır. Bu yüzden alan örtülür, hattın altına toplama seti çekilir, biriken su ıslak vakumla beklemeden alınır. Kat aralarındaki kesimlerde suyun aşağı geçebileceği her boşluk önceden kapatılır. Çamur ve beton parçaları iş bitiminde sahadan çıkarılır."
-        ]
-      },
-      {
-        "baslik": "Lento, Parçanın Ağırlığı ve İndirilmesi",
-        "paragraflar": [
-          "Açıklığın üstünde kalan duvarın ağırlığı bir yere aktarılmak zorunda; mevcut kapı boşluklarında bu işi lento yapar. Yeni açılan bir boşlukta üstte taşıyıcı bir kiriş yoksa lento yapılması gerekir. Genişletilen boşluklarda mevcut lentonun yeni açıklığa yetmemesi sık görülür, çünkü lento iki yandaki oturma payıyla hesaplanır. Dolgu duvarda bile lentonun boyutu keyfî seçilmez; çözüm taşıyıcı sisteme bağlanacaksa iş yine mühendis onayına döner.",
-          "Serbest kalacak parçanın ağırlığı çoğu zaman hafife alınıyor. Betonarmenin birim hacim ağırlığı yaklaşık 2,4 ton/m3 kabul edilir. Hesap basit: en çarpı yükseklik çarpı kalınlık çarpı 2,4. Bir metre genişliğinde, 2,1 metre yüksekliğinde ve 20 santim kalınlığında bir kapı boşluğu parçası 0,42 m3 eder, yani yaklaşık bir ton. Bu iki kişinin tutup kenara koyacağı bir yük değil. Bu yüzden büyük açıklıklarda parça tek bırakılmaz, taşınabilir boyutta panellere bölünerek kesilir.",
-          "İndirme sırası da kesim planının parçasıdır. Panel son geçişe girmeden önce askıya alınır ya da tabandan takozlanır, parçayı asılı tutan kenar en sona bırakılır. Sahada en sık görülen hata, son geçiş bittikten sonra parçanın kendi kendine yerinde duracağını varsaymak. Yalnızca sürtünmeyle duran bir panel en küçük titreşimde devrilir. Aynı hesap desteğin kendisi için de geçerli: kapasitesi parçanın ağırlığını karşılamayan bir destek yalnızca güven duygusu verir."
-        ]
-      },
-      {
-        "baslik": "Kırıcıyla Açmak Yerine Kesim: Fark Nerede",
-        "paragraflar": [
-          "Kırıcı darbeyle çalışır ve her darbe betonun içine bir basınç dalgası gönderir. Bu dalga kırılan yerde durmaz, çevreye yayılır. Açıklığın kenarında kalması gereken betonda gözle görülmeyen çatlaklar, donatı çevresinde aderans kaybı bırakır. Kesimde ise kuvvet darbe değil aşındırmadır, komşu betona iletilen titreşim çok daha düşüktür. Bitmiş bir yapıda bu fark kendini gösterir: alt katın tavan sıvası, duvardaki fayanslar ve cam, kırıcıyla açılan boşluklarda çok daha fazla zorlanır.",
-          "Toz ve gürültü tarafı da aynı yöne çıkıyor. Kırıcı kuru toz üretir ve o toz dairenin her yerine dağılır; sulu kesimde toz kaynağında tutulur, geriye çevresi kapatılmış bir alandaki çamur kalır. Kırıcının gürültüsü darbe kaynaklıdır ve saatlerce sürer, oturulan bir binada komşu tarafındaki karşılığı bu yüzden farklı olur.",
-          "Kesim sonrası yüzey işi burada tamamlıyor. Kırılarak açılan bir boşluğun kenarı tırtıklıdır, donatı uçları dışarı çıkar, kasa oturtmadan önce kenar düzeltme ve sıva gerekir. Kesim yüzeyi ise diskin bıraktığı düz bir yüzeydir, çoğu işte doğrudan kasa veya doğrama oturtulabilir. Yine de ray dübel deliklerinde ve köşe tamamlamalarında iz kalır, ince bir rötuş gerekir. Kırıcının da kendi yeri var: hafif bölme duvarlarda ve parçanın yerinde ufalanması gereken durumlarda kullanılıyor. Çoğu işte ikisi birlikte çalışıyor, hat testereyle kesilip iç kısım kırıcıyla alınıyor."
-        ]
+        baslik: "Hangi Çay Lekesi Çıkar, Hangisi Çıkmaz",
+        paragraflar: [
+          "Çıkan grup nettir: aynı gün müdahale edilmiş, ovulmamış, ısı görmemiş ve sentetik iplikli makine halısına dökülmüş çay büyük ölçüde çıkıyor. Kurumuş ama birkaç haftalık, sade çay lekelerinde de sonuç genelde iyi. Kısmi çıkan grup daha kalabalık: aylarca beklemiş tanen, açık krem zemine dökülmüş demli çay ve yün, el dokuma halılar. Sonuncusunda sebep lekenin inatçılığı değil, bizim sınırımız. Boyası oynayan bir dokumada leke çıkarıcının gücünü ve temas süresini kısmak zorundayız; aksi halde leke azalırken halının kendi rengi de hareket eder. Bu halılarda yıkamadan önce bunu konuşuyoruz. Kısmi çıkan grupta hedef izi tamamen görünmez kılmak değil, belirgin biçimde açmak oluyor.",
+          "Çıkmayan grubu da açıkça söyleyelim. Sıcak suyla ya da fönle sabitlenmiş tanen, üzerine ağartıcı uygulanıp rengi alınmış bölge, yıllanıp elyafın kendisini sarartmış izler ve halının kendi boyasının aktığı yerler geri gelmiyor. Bunların bir kısmı zaten leke değil, hasar; hasarın üstüne yıkama yapmak durumu değiştirmiyor. Nihai kararı halıyı görmeden veremiyoruz: tesise gelen her parça ışık altında gözden geçiriliyor, leke işaretleniyor ve çıkmayacağını düşündüğümüz izi halı makineye girmeden önce size söylüyoruz. Kaba tozdan kurutm[aya kadar izlenen sıranın tamamını halı yıkama sürecimizi anlattığımız sayfasında](/hizmetler/hali-yikama/) adım adım yazdık. Halı bize gelene kadar geçen sürede yapılabilecek en doğru hamle de lekenin üstünde yeni bir deneme yapmamak."
+        ],
       }
     ],
-    "sss": [
-      {
-        "q": "Kesim sırasında evde kalabilir miyiz, iş ne kadar sürer?",
-        "a": "Tek bir kapı boşluğu çoğu dairede aynı gün içinde biter, ama süreyi belirleyen kesimin kendisi değil hazırlıktır: koruma örtüsü, ray kurulumu, su toplama düzeni ve iş sonundaki temizlik. Kesim saatlerinde evde olmamanızı öneriyoruz, çünkü ilgili elektrik hattı ve su kapalı olur, ortamda nem ve gürültü vardır. Oturulan binalarda komşuları bir gün önceden haberdar etmek işi kolaylaştırıyor. Kesin süreyi keşifte duvarın kalınlığını ve erişim durumunu gördükten sonra söylüyoruz."
-      },
-      {
-        "q": "Duvar taşıyıcı çıktı, şimdi ne yapmam gerekiyor?",
-        "a": "İlk adım yapının statik projesine ulaşmak ve projeyi yetkili bir inşaat mühendisine değerlendirtmek; mümkünse projenin müellifine gitmek en sağlıklısı. Mühendis açıklığın mümkün olup olmadığına, mümkünse yerine, boyutuna ve gerekiyorsa güçlendirme detayına karar verir. Taşıyıcı sistemi etkileyen tadilatlar ruhsata tabidir, apartmanda ayrıca kat malikleri tarafı vardır, bu iki adım da kesimden önce tamamlanmalıdır. Onaylı detay elimize geçtiğinde kesim hattını ona göre çiziyoruz; onay yoksa o duvara dokunmuyoruz."
-      },
-      {
-        "q": "Oturduğumuz dairede parke ve seramik var, kesim çamuru zarar verir mi?",
-        "a": "Önlem alınırsa vermez, alınmazsa verir. Kritik olan parke ve laminat: suyun altına girmesi durumunda zemin şişer ve geri dönmez, o yüzden kesim hattının çevresi kapatılır ve biriken su beklemeden ıslak vakumla alınır. Seramikte risk daha çok derzin lekelenmesidir, çamur kurumadan alındığında sorun çıkmaz. Duvarın karşı yüzü de örtülür, çünkü kalın duvarlarda kesim iki yüzden yapılır ve o mekân da çalışma alanına dahil olur."
-      },
-      {
-        "q": "Duvar beklediğimizden kalın ya da donatısı yoğun çıkarsa ne değişir?",
-        "a": "Kalınlık kesimin hangi sistemle yapılacağını belirler; tek yüzden inilebilen derinlik disk çapının yarısından biraz azdır, kesit bunu aşıyorsa aynı hat karşı yüzden kesilir ya da daha büyük kapasiteli bir sistem gerekir. Donatı yoğunluğu ise süreyi ve segment tüketimini etkiler, ilerleme yavaşlar. Bu iki değişken de fiyatın ve sürenin içinde olduğu için keşifte yerinde ölçüyoruz, tahminle iş almıyoruz. Denizli merkez ve ilçelerde keşif ücretsiz, 0545 678 91 94 numarasından 7/24 ulaşabilirsiniz."
-      }
+    sss: [
+      { q: "Çay döküleli iki gün olmuş ve kurumuş, hâlâ şansım var mı?", a: "Var, ama beklenti taze lekedeki gibi olmamalı. Kuruyan tanen ipliğin yüzeyine oturuyor ve suyla çözülmesi zorlaşıyor; yine de tamamen bağlanmış sayılmaz. Bu aşamada evde yapılacak en doğru şey lekeyi soğuk suyla nemlendirip bastırarak emdirmeyi denemek ve sonuç alınmıyorsa durmak. Kurumuş bir lekede ısrar, çoğunlukla lekeyi değil halının yüzeyini yıpratıyor. Halı zaten yıkanacaksa lekeye hiç dokunmadan bize söylemeniz daha iyi; ne uygulandığını bilmediğimiz bir bölgede hangi çözücüyle çalışacağımıza karar vermek zorlaşıyor." },
+      { q: "Lekeyi sildim, kuruyunca aynı yerde daha büyük çıktı. Neden?", a: "Buna kılcal geri dönüş diyoruz. Silme sırasında sıvı yüzeyden dokumanın tabanına iniyor; halı kururken su yukarı doğru buharlaşıyor ve tabana inmiş taneni de yanında yukarı taşıyıp yüzeyde bırakıyor. Sonuç, ilk günkünden daha geniş ve daha belirgin bir halka. Önlemi ilk müdahalede gizli: halıyı ıslatmak yerine az suyla çalışmak ve her seferinde nemi bastırarak geri almak. Halka çoktan oluştuysa yüzeyi tekrar soğuk suyla nemlendirip ağırlık altında kuru bezle emdirmek çoğu zaman izi belirgin biçimde hafifletiyor." },
+      { q: "Sütlü çay ile sade çay arasında müdahale farkı var mı?", a: "İlk hamle ikisinde de aynı: bastırarak emdirmek ve soğuk su. Fark sıcaklık toleransında. Sade çayda ısı taneni sabitliyor; sütlü çayda buna bir de proteinin pıhtılaşması ekleniyor, yani sıcak su ya da fön iki ayrı şeyi birden kilitliyor. Sütlü çayda ikinci fark koku: iyi emdirilmemiş süt kalıntısı halı kuruduktan sonra hafif bir koku bırakabiliyor ve o koku lekeden sonra da devam ediyor. Bu yüzden sütlü çayda emdirme adımını leke görünmez olduktan sonra bir iki tur daha sürdürmek gerekiyor." }
     ],
-    "ilgiliHizmetler": [
-      "beton-kesme",
-      "beton-kirma",
-      "karot"
-    ]
   },
-  "beton-neyle-kesilir": {
-    "seoTitle": "Beton Neyle Kesilir? Kalınlığa Göre Makine Seçimi",
-    "giris": [
-      "Betonu neyle keseceğiniz, betonun ne kadar kalın olduğuna ve nerede durduğuna bağlı. Aynı malzeme için hem elde tutulan küçük bir makine hem de iki kişinin taşıyamadığı bir sistem var; ikisi de doğru, ama farklı işlerde. İnternette bu soru genelde tek bir makine adıyla cevaplanıyor. Sahada öyle olmuyor: 8 santimlik bir şap ile 60 santimlik bir perde arasında yöntem tamamen değişiyor.",
-      "Ortak nokta şu: beton kırılarak değil, aşındırılarak kesilir. Elmas segmentli bir disk ya da tel, çimento harcını, agregayı ve karşısına çıkan donatıyı öğüterek ilerler. Kırıcı ise darbeyle dağıtır. Bu yüzden kesimde kenar düz çıkar, titreşim çevre betona taşınmaz ve geriye tamir gerektiren bir yıkım kalmaz. Kesme yöntemleri arasındaki fark da tam olarak bu aşındırmayı ne kadar derine götürebildikleridir.",
-      "Aşağıda en küçüğünden en büyüğüne beş yöntemi, hangi kalınlıkta nerede durduklarıyla birlikte anlattım. Sonda iki soruya ayrı yer verdim: perde betonun neden diğerlerinden farklı olduğu ve \"betonu kolay kırmanın yolu\" diye aranan şeyin sahada karşılığının ne olduğu."
+  "denizli-hali-yikama-fiyatlari-2026": {
+    giris: [
+      "Telefonda en sık duyduğumuz cümle tek satır: metrekaresi kaç para. Cevabı vermek zor değil, ama cevabın doğru olması için karşı tarafa birkaç soru sormak gerekiyor. Kaç halı var, hangi cinsten, üzerinde çıkması beklenen bir iz bulunuyor mu, perde varsa sökülecek mi. Halı yıkama fiyatları Denizli diye arattığınızda karşınıza çıkan hazır listelerin çoğu bu soruları atlıyor; atladığı için de listedeki sayı sizin halınız için genellikle yanlış çıkıyor. Biz siteye fiyat listesi koymuyoruz. Sebebi gizlilik değil: liste, halıyı görmeden verilmiş bir tahmindir ve tahmin teslim gününde tartışmaya dönüşür. Fiyat sorusunun net bir cevabı var; sadece o cevabın önünde birkaç soru duruyor.",
+      "Telefonda net fiyat verilebilmesinin sebebi konuşmanın karşılıklı olması. Siz halının odanın tamamını kaplayıp kaplamadığını söylersiniz, biz ölçüyü tahmin ederiz; tüyün uzun mu kısa mı olduğunu, dokumanın el işi mi makine işi mi göründüğünü, üzerinde hayvan izi bulunup bulunmadığını sorarız. Cevaplar geldikçe aralık daralır ve ortaya tek bir sayı çıkar. Bir internet sayfası bunu yapamaz, çünkü tek yönlüdür ve karşısındaki halının ne olduğunu bilmez. Liste yayınlamak, gelen her halıyı o listeye uydurmak anlamına gelir; uymayan halı ya eksik yıkanır ya da teslimde konuşulmamış bir fark çıkar. İkisini de istemiyoruz. Bu yüzden fiyatı telefonda, halının ne olduğu anlaşıldıktan sonra konuşuyoruz.",
+      "Aşağıda fiyatın hangi kalemlerden oluştuğunu tek tek yazdık: ölçü ve adet, halının cinsi, tüy uzunluğu, leke ve koku durumu, koltuk ile perdede işin nasıl değiştiği. Sonda da telefonda pek konuşulmayan tarafı var, yani ucuz teklifin nerede pahalıya patladığı. Bu yazıda rakam görmeyeceksiniz; göreceğiniz şey, sizi arayan kişinin size hangi soruları sorması gerektiği. O soruların hiçbirini duymadan söylenen bir fiyat, sizin halınıza değil ortalama bir halıya bakıyor demektir. Ortalama halı ise kimsenin salonunda durmuyor; herkesin evinde belli bir ölçüsü, belli bir dokusu ve belli bir geçmişi olan gerçek bir halı var."
     ],
-    "bolumler": [
+    bolumler: [
       {
-        "baslik": "Spiral (Avuç Taşlama) ile Beton Kesilir mi?",
-        "paragraflar": [
-          "Kısmen. Spirale takılan elmas disk betonu gerçekten keser, ama ne kadar derine indiğini diskin çapı belirler. Yaygın 115 ve 125 mm'lik disklerde diskin yarısından azı dışarıda kalır; makinenin göbeği ve muhafazası yüzeye dayandığı için pratikte 3 santim civarında bir derinliğe inersiniz. 230 mm'lik büyük spiralde bu 6-7 santime çıkar. Yani spiral, şap üzerinde derz açmak, seramik altı bir kanal çizmek ya da ince bir bölme duvarı iki taraftan kesip ortasını kırmak için iş görür.",
-          "Sınırı derinlik değil, güvenlik tarafında daha sert. Spiral kuru çalışır; betonda kuru kesim silis tozu çıkarır ve o tozun solunması ciddi bir meslek hastalığı sebebidir. Toz emişli sistem ya da uygun maske olmadan kapalı hacimde beton kesilmez. İkincisi geri tepme: disk kesim hattında sıkışırsa makine operatörün elinde ters yönde fırlar. Donatıya denk gelen bir spiral diski bunu her an yapabilir, çünkü demir diski aniden yavaşlatır.",
-          "Özetle spiral, kalın ya da donatılı betonda doğru alet değil. Bir duvarı spiralle kesmeye çalışmak genelde iki taraftan çizip ortasını kırıcıyla dağıtmakla biter — ki o zaman elinizde kesim değil, düzensiz kenarlı bir kırım vardır ve arkasından tamir gelir."
-        ]
+        baslik: "Ölçü ve Adet: Fiyatın Değişmeyen İskeleti",
+        paragraflar: [
+          "Fiyatın tabanı metrekaredir ve metrekare beyanla değil ölçüyle belirlenir. Halı teslim alınırken eni ve boyu şeritmetreyle ölçülür, kayda geçirilir; yolluk, paspas ve salon halısı ayrı ayrı yazılır. Evde hatırlanan ölçü çoğu zaman gerçeğinden küçüktür, çünkü halının kenarı koltuğun ve dolabın altında kalır, göz orayı saymaz. Ölçünün alım anında alınmasının ikinci bir faydası var: teslimde tartışılacak bir konu kalmıyor, iki taraf da aynı sayıya bakıyor. Ölçüsü alınmamış bir halı için verilen fiyat, halının değil hafızanın fiyatıdır ve teslim günü hemen her zaman değişir. Ölçü alınırken halının yıprandığı, saçağının koptuğu ya da kenarının kıvrıldığı bölgeler de aynı kayda düşülüyor.",
+          "Adet ise toplam ölçüyü büyüten kalem, ama tek etkisi bu değil. Alma ve teslim ücretsiz olduğu için taşımanın ayrı bir kalemi yok. Buna karşılık aynı adresten çıkan birden fazla halı tesiste aynı partide işlenebiliyor, aynı kurutma turunu paylaşıyor; tek başına gelen küçük bir halı ise bütün süreci kendi başına işgal ediyor. Evin tamamını bir seferde yıkatmakla her ay bir halı göndermek arasındaki fark buradan doğuyor. Mevsim başında bütün halıları birlikte göndermenin pratik sebebi de bu: plan tutuyor, ev bir kez boşalıyor ve işlem tek seferde bitiyor. Halıların topluca gönderilmesinin bir faydası daha var: ev bir kez hazırlanıyor, mobilya bir kez kaldırılıyor."
+        ],
       },
       {
-        "baslik": "Daire Testere ve Elmas Halka Testere",
-        "paragraflar": [
-          "Beton kesme için üretilmiş elde taşınan makineler, spiralden farklı olarak sulu çalışır ve çok daha büyük disk taşır. 300-400 mm'lik disklerle tek yüzden 12-15 santim civarı derinliğe inilir. Su hem segmenti soğutur hem tozu daha havaya kalkmadan bastırır, bu yüzden kapalı hacimde çalışmaya spiralden kıyaslanmayacak kadar uygundur.",
-          "Bu sınıfın içinde bir de halka testere var. Normal bir dairesel testerede diskin göbeği merkezdedir ve kesim derinliğini yarıçap sınırlar. Halka testerede disk ortasından tahrik edilmez, dıştan çevrilir; göbek olmadığı için aynı çapta belirgin şekilde daha derine iner. Kapı boşluğunun köşelerini tamamlamak, kalın kesitin son santimlerini bitirmek gibi işlerde bu fark işe yarar.",
-          "Buradaki asıl kısıt derinlik değil, düzgünlük. Elde tutulan bir makinede disk donatıya girdiği anda hattan kaçmaya çalışır; uzun bir kesimde bu, yüzeyde dalgalanma olarak görünür. Kısa kesimlerde sorun değil, ama bir açıklığın kenarı olacak hatta gözle belli olur."
-        ]
+        baslik: "Halının Cinsi, Tüy Uzunluğu ve Üzerindeki İz",
+        paragraflar: [
+          "Aynı ölçüdeki iki halı aynı işi istemiyor. Makine halısı standart bir programı kaldırır: fırça sertliği ayarlanır, bol suyla yıkanır, sıkılır. Yün ve el dokuma halıda ise iş yıkamadan önce başlıyor. Boyanın akıp akmadığı görünmeyen bir köşede deneniyor, su ısısı düşük tutuluyor, saçak gövdeden ayrı ve elde çalışılıyor. Bunların hepsi insan eli ve zaman demek; ikisi de fiyatın içinde duruyor.[Yün ve el dokuma halıların neden ayrı programa girdiğini sayfasında](/hizmetler/el-dokuma-hali-yikama/) ayrıntısıyla yazdık. İpekli ve Nepal halılarda karar daha da öne çekiliyor: önce yıkanabilirliğine bakılıyor, ıslatma sınırlı tutuluyor, bazı bölgeler tamamen elden geçiyor.",
+          "Tüy uzunluğu ayrı bir kalem, çünkü doğrudan suyla ilgili. Uzun tüylü ve shaggy halılar ıslandığında kendi kuru ağırlığının katbekat üstünde su tutuyor; sıkma sonrasında bile dipte kalan nem yüzeydekinden fazla oluyor ve halı kurutmada kısa tüylü bir halıdan belirgin biçimde uzun duruyor. O süre boyunca yer kaplıyor, sıradaki işi geciktiriyor; kapasite de fiyatın görünmeyen tarafı.[Havın nasıl çalışıldığını sayfasında](/hizmetler/shaggy-hali-yikama/) anlattık. Bambu ve peluş gibi yüzeyi yüksek parçalar da aynı gruba giriyor: ölçüsü küçük olsa bile toplam işlem süresi kısa tüylü bir halıyla aynı değil. Halınızın hangi gruba girdiğini bilmiyorsanız telefonda tarif etmeniz yeterli; parmağınızın tüyün içine batıp batmadığı bile ayrım için yol gösteriyor.",
+          "Leke ve koku fiyatın en değişken kalemi. Yıkamayla birlikte giden gündelik kirle, ayrı ürün ve bekleme süresi isteyen izler farklı işler. Çay, kahve ve meyve suyu doğru ürünle çoğu zaman çözülüyor; kalıcı boya, küf, yanık ve hayvan idrarı ise dokunun içine işlediği için ayrı müdahale gerektiriyor, bir kısmı da tamamen çıkmıyor. Bunu halı hâlâ sizdeyken söylemeyi tercih ediyoruz, teslimde sürpriz olmasını değil. Kokuda ise kaynağın yeri belirleyici: sigara ve rutubet kokusu yıkamayla gidiyor, tabana işlemiş idrar kokusu yüzey yıkamayla geçmiyor, kaynağın bulunduğu bölge ayrıca çalışılıyor. Lekenin ne zaman oluştuğu da belirleyici: taze leke henüz dokuya yerleşmeden çözülüyor, yıllanmış leke lifin içine oturduğu için daha uzun çalışma istiyor."
+        ],
       },
       {
-        "baslik": "Ray Sistemli Duvar Testeresi: Kalın Betonun Asıl Aleti",
-        "paragraflar": [
-          "Duvar testeresinde sonucu belirleyen şey makinenin gücü değil, üzerinde yürüdüğü ray. Testere, duvara dübellenen bir kızağa oturur ve hat boyunca motorla ilerler. Elle tutulmadığı için disk donatıya girdiğinde sapmaz; kesim baştan sona aynı çizgide kalır. Açıklık açma işlerinde tercih edilmesinin sebebi budur — geriye kalan duvarın sağlam ve düz bir kenarı olmak zorunda.",
-          "Tek yüzden inilebilen derinlik disk çapının yarısından biraz azdır, çünkü diskin göbeği ve flanşı duvarın içine girmez. Kalın kesitlerde aynı hat karşı yüzden ikinci kez kesilir. İki yüzden çalışarak 600 mm kalınlığa kadar iniyoruz. Bunun için iki yüzün de erişilebilir olması ve hatların birbirini milimetrik tutturması gerekir; hat kayarsa kesit tam ayrılmaz.",
-          "Disk tek hamlede tam derinliğe dalmaz. Her geçişte birkaç santim daha inerek hat boyunca gider gelir. Motorun yükü böyle dengede kalır. Kesim boyunca hatta su verilir; çıkan çamurun nereye akacağı işin başında çözülmesi gereken bir konudur, sonradan çözülmeye kalkılırsa daire içindeyseniz iş büyür."
-        ]
+        baslik: "Koltuk ve Perdede Fiyatı Ne Belirliyor",
+        paragraflar: [
+          "Koltukta metrekare yerine oturum sayısı ve kumaş konuşuluyor. Üçlü, ikili, tekli ve puf ayrı ayrı sayılıyor; şezlong ile köşe takımı oturum hesabına tam oturmadığı için yerinde görülmesi gereken parçalar. Kumaş tipi ikinci belirleyici: keten, kadife, nubuk ve deri aynı solüsyonu ve aynı su miktarını kaldırmıyor, bir kısmında su lekesi bırakmamak için çalışma yöntemi baştan değişiyor. Koltuk yıkama yerinde yapıldığı için evdeki koşullar da işin içinde; havalandırma, koltuğun duvardan çekilebilmesi, minderlerin sökülüp sökülemediği süreyi doğrudan etkiliyor.[Yerinde koltuk yıkamanın nasıl işlediğini sayfasında](/hizmetler/koltuk-yikama/) anlattık. Minderleri sökülebilen bir takımla tek parça dikilmiş bir takım da aynı sürede bitmiyor.",
+          "Perdede belirleyici olan kanat sayısı, kumaşın cinsi ve perdenin ne kadar kirlendiği. Stor, zebra, tül ve fon perde farklı işlem görüyor; mutfak perdesine oturmuş yağ ve is, salon perdesindeki tozdan bambaşka bir çalışma istiyor. Sökme ve takma bizde ücretsiz, yani perdeyi indirmek ya da yeniden asmak için ayrı bir kalem çıkmıyor. Buna karşılık söküm ekip ve randevu gerektiriyor, o yüzden perde işi telefonda gün konuşulmadan planlanmıyor. Perdenin ultrasonik[makinede nasıl yıkandığını ve mekanizmanın neden yıkamaya gitmediğini sayfasında](/hizmetler/stor-perde-yikama/) yazdık. Perdenin kaç yıldır yıkanmadığı da işi değiştiriyor; uzun süre yıkanmamış bir stor perdede kir kumaşın dokusuna oturuyor ve tek geçişte çözülmüyor."
+        ],
       },
       {
-        "baslik": "Hidrolik Sistemler: Elektriğin ve Kalınlığın Yetmediği Yer",
-        "paragraflar": [
-          "Hidrolik kesme sisteminde makinenin ucundaki testereyi elektrik motoru değil, ayrı duran bir güç ünitesinin bastığı yağ döndürür. İki pratik faydası var. Birincisi güç: aynı boyuttaki elektrikli makineye göre daha büyük disk çevirebilir, kalın ve yoğun donatılı kesitte zorlanmaz. İkincisi kurulum esnekliği: güç ünitesi dışarıda kalır, kesim yapılan yere yalnızca hortum girer.",
-          "Bu ikincisi sahada sanılandan daha belirleyici. Şantiye elektriği yoksa, mevcut tesisat böyle bir yükü kaldırmıyorsa ya da ortamda su ve elektriğin bir arada bulunması istenmiyorsa hidrolik sistem tek makul seçenek olur. Su basmış bodrum katları, çalışan tesisler ve trafiğe açık yol kenarları bu tarife giriyor.",
-          "Karşılığı kurulum süresi. Güç ünitesi konumlandırılır, hortumlar çekilir, sistem basınçlanır. Küçük bir iş için bu hazırlık işin kendisinden uzun sürebilir; o yüzden her işe hidrolikle gidilmez. Keşifte karar verilmesi gereken şeylerden biri de budur."
-        ]
-      },
-      {
-        "baslik": "Tel Testere: Kalınlık Sınırının Kalktığı Yöntem",
-        "paragraflar": [
-          "Elmas boncuklu bir çelik tel, kesilecek kesitin etrafından dolandırılıp bir makara sistemiyle döndürülür ve halka gitgide daralarak betonu keser. Diskli yöntemlerde derinliği disk çapı sınırlar; telde böyle bir sınır yoktur. Kesit ne kadar kalın olursa olsun, telin etrafından dolanabildiği her şey kesilebilir.",
-          "Karşılığında kurulum ağırlaşır: telin geçeceği yolu açmak için genelde kesitin köşelerinden karot delikleri alınır, tel oradan geçirilir. Yani tel testere işi çoğu zaman bir karot işiyle başlar. Büyük temel blokları, köprü ve viyadük elemanları, kalın istinat duvarları bu yöntemin alanıdır.",
-          "Bir binadaki normal tadilat işi için tel testere gerekmez. Gereken yerde de zaten alternatifi yoktur; o yüzden \"hangisi daha iyi\" diye bir karşılaştırma değil, kesitin kalınlığına bakıp verilen bir karardır."
-        ]
-      },
-      {
-        "baslik": "Perde Beton Neyle Kesilir? Önce Makine Değil, Onay",
-        "paragraflar": [
-          "Bu sorunun teknik cevabı kolay: perde beton, kalınlığına göre ray sistemli duvar testeresiyle ya da hidrolik sistemle kesilir, çok kalınsa tel testereye gidilir. Ama bu cevap tek başına yanıltıcı, çünkü perdede belirleyici olan makine değil izindir.",
-          "Perde, kolon ve kiriş yapının taşıyıcı sistemidir. Perde binanın deprem sırasında gelen yatay kuvvetleri karşılayan elemanıdır; işlevi zaten kesitiyle ve içindeki donatıyla doğru orantılıdır. Oraya açılan bir boşluk kesiti küçültür, kesilen donatı bir daha eski işini görmez ve kaybolan taşıma gücü komşu elemanların üzerine biner. En kötü tarafı da şu: bu değişikliğin sonucu kesim günü görünmez, deprem günü görünür.",
-          "Bu yüzden taşıyıcı elemana müdahaleyi statik proje ve mühendis onayı olmadan yapmıyoruz. Onaylı proje varsa uygulamayı projede yazan yere, ölçüye ve çapa birebir yaparız; projede olmayan bir boşluğu kendi kararımızla açmayız. Onay yoksa işi almaz, sebebini anlatır, izlenmesi gereken sırayı söyleriz. Bu maddede pazarlık yapmıyoruz — kesim tekniği tartışılır, bu tartışılmaz.",
-          "Taşıyıcı olmayan bölme duvarlarda durum tamamen farklıdır; orada hem kesim hem delme çok daha rahat yapılır. Yine de duvarın gerçekten bölme olduğundan emin olmadan başlamayız. Gözle bakarak karar verilmez; projesine bakılır, kalınlığı ve konumu değerlendirilir."
-        ]
-      },
-      {
-        "baslik": "\"Beton Nasıl Kolay Kırılır?\" Sorusunun Sahadaki Cevabı",
-        "paragraflar": [
-          "Dürüst cevap: kolay bir yolu yok, ama doğru yolu var. Bu soruyu arayanların çoğu aslında \"en az uğraşla, çevreye zarar vermeden nasıl olur\" diye soruyor. Onun cevabı da genelde kırmak değil kesmek oluyor.",
-          "İnternette dolaşan kestirmelere girmeyelim: tuz ruhu ya da benzeri asitler betonu \"çözmez\". Çimento harcının yüzeyini aşındırır, donatıyı paslandırır, kanalizasyona ve zemine zarar verir; taşıyıcı bir kesitte hiçbir işe yaramaz, üstelik tehlikelidir. Beton, mekanik olarak ayrılır.",
-          "Küçük hacimlerde elektrikli kırıcı yeterlidir. Daha büyük ve donatılı kesitlerde hidrolik kırıcı ya da beton kırma pensesi kullanılır; pense kesiti darbe yerine basınçla ezerek ayırdığı için gürültü ve titreşim belirgin şekilde azalır — oturulan binalarda bu fark önemlidir. Bir bölümün tamamen alınması gerekiyorsa kontrollü yıkım devreye girer: parçalar önce kesilerek tanımlı hale getirilir, sonra planlanmış sırayla indirilir.",
-          "Karar verirken ölçümüz en hızlı biten yöntem değil, çevre yapıya en az yük bindiren yöntemdir. Zorlanan bir makine hem betona hem işe zarar verir; kırıcıyla dağıtılan bir kesitin arkasından gelen sıva, tesisat ve tamir masrafı çoğu zaman baştan doğru yöntemi seçmenin farkından büyük çıkar."
-        ]
-      },
-      {
-        "baslik": "Denizli'de Hangi Yöntemin Gerektiğine Nasıl Karar Veriyoruz",
-        "paragraflar": [
-          "Telefonda yöntem söylemiyoruz, çünkü kesilecek yeri görmeden verilecek cevap tahmin olur. Duvarın kalınlığı, taşıyıcı olup olmadığı, içinden geçen tesisat, iki yüzüne de erişilip erişilemediği, makinenin nereye sabitleneceği, su ve elektriğin nereden alınacağı ancak yerinde anlaşılır. Keşif ücretsizdir.",
-          "Gördükten sonra yöntemi ve fiyatı net söyleriz. Bazen keşifte o işin hiç gerekmediği ya da çok daha küçük bir müdahaleyle çözüldüğü ortaya çıkar; onu da söyleriz. Denizli merkez ve 20 ilçenin tamamına gidiyoruz, uzak ilçelere işi tek seferde bitirecek ekipmanla çıkıyoruz."
-        ]
+        baslik: "Ucuz Teklif Nerede Pahalıya Patlıyor",
+        paragraflar: [
+          "Bir teklif ötekilerden belirgin biçimde düşükse, aradaki fark genelde işin bir adımından kısılmıştır ve o adım hemen her zaman kurutma olur. Yarım kurumuş halı ambalajlandığında nem içeride kalıyor; birkaç gün sonra açtığınızda halının kendine ait olmayan bir kokusu oluyor, dip kısmı rutubet tutuyor, açık renklerde kenarlardan sarımsı bir iz geliyor. Bunun geri dönüşü halıyı yeniden yıkatmak, yani ikinci kez ödeme. Kısılan zamanın bedeli kısıldığı gün görünmüyor; teslimden sonraki hafta, halı yerine serildikten sonra ortaya çıkıyor. Halı teslim edildiğinde yüzeyine değil dibine bakmak bu farkı ilk gün görmenizi sağlıyor: tüyleri iki yana açıp elinizi tabana sokmanız yeterli.",
+          "İkinci kısma noktası durulama. Şampuan dokunun içinde kalırsa halı ilk gün parlak ve temiz görünür, sonra kalıntı tozu tutmaya başlar ve halı beklenenden çok daha erken kirlenir. Yıkattım ama bir ay dayanmadı cümlesinin arkasında çoğu zaman bu duruyor. Üçüncüsü program seçimi: yün bir halıyı makine halısı ayarında, sıcak suyla ve sert fırçayla yıkamak keçeleşme ve renk akması bırakıyor, ikisi de geri alınamıyor. Bu üç kalemin ortak yanı şu; hiçbiri teslim günü görünmüyor. Fiyat karşılaştırırken bakılacak yer teklifin kendisi değil, teklifin neyi kapsadığı. Aynı şey koltukta da geçerli; kalıntı bırakan bir çalışma kumaşı ilk hafta parlak, ikinci ay beklenenden koyu bırakıyor."
+        ],
       }
     ],
-    "sss": [
-      {
-        "q": "Spiral ile beton kesilir mi?",
-        "a": "Sığ kesimlerde evet. 115-125 mm diskle yaklaşık 3 santim, 230 mm diskle 6-7 santim derinliğe inersiniz. Şapta derz açmak ya da ince bir bölme duvarı iki taraftan çizmek için iş görür. Kalın veya donatılı betonda doğru alet değildir; ayrıca kuru çalıştığı için silis tozu çıkarır, toz emişi ya da uygun maske olmadan kapalı hacimde kullanılmamalıdır."
-      },
-      {
-        "q": "Daire testere ile beton kesilir mi?",
-        "a": "Beton için üretilmiş, sulu çalışan elmas diskli testerelerle evet. 300-400 mm disklerle tek yüzden 12-15 santim civarı derinliğe inilir. Ahşap veya metal için yapılmış bir daire testereye beton diski takmak doğru değildir: su beslemesi ve devir uyumu olmadığı için hem disk hem makine zarar görür."
-      },
-      {
-        "q": "Perde beton neyle kesilir?",
-        "a": "Kalınlığa göre ray sistemli duvar testeresi, hidrolik kesme sistemi ya da tel testereyle. Ama perdede asıl mesele makine değil: perde taşıyıcı sistemin parçasıdır ve müdahale, statik proje ile mühendis onayı olmadan yapılmaz. Onay yoksa işe başlamıyoruz."
-      },
-      {
-        "q": "En kalın kaç santimlik betonu kesebiliyorsunuz?",
-        "a": "Ray sistemli duvar testeresiyle, iki yüzden çalışarak 600 mm kalınlığa kadar iniyoruz. Bunun için kesitin iki yüzüne de erişilebilmesi gerekir. Daha kalın kesitlerde ya da tek yüzden çalışılması gereken durumlarda tel testere yöntemi gündeme gelir."
-      }
+    sss: [
+      { q: "Telefonda neden hemen net bir fiyat söylenmiyor?", a: "Söyleniyor, ama birkaç sorudan sonra. Halının kaç tane olduğu, kabaca ölçüsü, cinsi, tüy uzunluğu ve üzerinde çıkması beklenen bir iz bulunup bulunmadığı öğrenildiğinde aralık daralıyor ve tek bir fiyat çıkıyor. Bu soruları sormadan söylenen bir sayı sizin halınıza değil, ortalama bir halıya ait olur; teslim gününde de değişir. Perde ve koltukta ise iş çoğu zaman yerinde görmeyi gerektiriyor, çünkü kanat sayısı, kumaş cinsi ve odanın koşulları telefonda tam anlaşılmıyor. Ölçü, halı teslim alınırken şeritmetreyle alınıyor ve fiyat o ölçü üzerinden kesinleşiyor." },
+      { q: "Leke çıkarma işlemi fiyata ayrıca yansıyor mu?", a: "Gündelik kirin ve sıradan lekelerin çoğu yıkamanın kendi akışı içinde çıkıyor, ayrı bir işlem gerektirmiyor. Fark, ayrı ürün ve bekleme süresi isteyen izlerde ortaya çıkıyor: kalıcı boya, küf, yanık, hayvan idrarı ve tabana işlemiş yağ bunlara giriyor. Bu tür bir iz varsa halıyı alırken görüp size söylüyoruz, çıkma ihtimalini de olduğu gibi anlatıyoruz. Çıkmayacağını düşündüğümüz bir lekeyi çıkaracakmış gibi anlatıp teslimde açıklama yapmak yerine, baştan konuşmayı tercih ediyoruz. Yıkamayla açılıp hafifleyecek ama tamamen gitmeyecek bir izi de olduğu gibi söylüyoruz." },
+      { q: "Koltuk ve perde fiyatı halıdan neden farklı hesaplanıyor?", a: "Üçünün ölçü birimi farklı. Halıda metrekare geçerli, koltukta oturum sayısı ve kumaş tipi, perdede ise kanat sayısı ile kumaşın cinsi konuşuluyor. Koltuk yerinde yıkandığı için evin koşulları da hesaba giriyor; perdede söküm ve takma ücretsiz olsa bile randevu ve ekip planlaması gerekiyor. Bu yüzden üç hizmet için tek bir birim fiyat kurmak mümkün değil. Aynı adreste üçü birden yapılacaksa iş tek ziyarette planlanıyor ve toplam üzerinden konuşuluyor. Halının yanında koltuk ya da perde de yıkanacaksa bunu ilk aramada söylemeniz planlamayı kolaylaştırıyor." }
     ],
-    "ilgiliHizmetler": [
-      "beton-kesme",
-      "hidrolik-beton-kesme",
-      "beton-kirma",
-      "karot"
-    ]
   },
-  "denizli-karot-fiyatlari": {
-    "seoTitle": "Denizli Karot Fiyatları Neye Göre Belirlenir? | 20 Karot",
-    "giris": [
-      "Telefon çaldığında ilk cümle çoğu zaman aynı oluyor: karotun metresi ne kadar. Soru mantıklı duruyor ama tek başına cevabı yok. Aynı çapta, aynı kalınlıkta iki delik birbirinin iki katı sürebilir; biri yarım saatte biter, diğeri öğleni bulur. Aradaki farkı deliğin kendisi değil, deliğin etrafındaki şartlar yaratıyor.",
-      "Karot fiyatları ya da beton delme fiyatı diye sorulan şeyin arkasında bir liste değil, bir hesap var. O hesabın içinde çap var, betonun kalınlığı var, kaç delik açılacağı var, içeride ne kadar demir olduğu var, o noktaya nasıl çıkılacağı var. Sahada su ve elektrik bulunup bulunmadığı bile rakamı oynatıyor. Bunların hiçbiri gizli kalem değil; keşifte bakılan şeyler zaten tam olarak bunlar.",
-      "On bir yıldır bu işi yapıyorum ve şunu rahatlıkla söyleyebilirim: fiyatın nasıl oluştuğunu bilmeyen müşteri karşılaştırma yapamaz, sadece kulağa ucuz gelene gider. Sonra da işin ortasında konuşulmamış kalemler çıkar. Aşağıda hangi şeyin fiyatı neden yukarı ya da aşağı çektiğini yazdım. Okuduktan sonra kendi işiniz için gelen rakamın neden o rakam olduğunu anlarsınız, doğru soruları da sorarsınız."
+  "elde-yikama-vs-makine": {
+    giris: [
+      "Halım elde yıkansın cümlesini kuran kişi çoğu zaman bir yöntem değil, bir teminat arıyor: halının hor kullanılmayacağına, kimsenin acele etmeyeceğine dair. Bu beklenti yerinde ve haklı, ama halı elde yıkama ile makinede halı yıkama birbirinin daha iyisi ya da daha kötüsü değil; ikisi farklı işleri çözen iki ayrı araç. Bir halıda ikisine birden ihtiyaç duyulması olağan. Yanlış olan, ikisinden birini baştan doğru ilan edip halının ne istediğine bakmamak. Aşağıda ikisinin neyi iyi yaptığını, hangi noktada devreyi diğerine bıraktığını ve evde denendiğinde işin nerede tıkandığını anlatıyoruz. Cevap tek kelimeyle verilmiyor; halının hangi bölgesinden söz ettiğimize bağlı olarak değişiyor.",
+      "Karşılaştırmayı somut tutmak için tek bir ölçüye bakalım: yıkamanın halının her santimetrekaresine aynı biçimde uygulanıp uygulanmadığı. Elde çalışan bir insan kirli gördüğü yere daha çok, temiz gördüğü yere daha az yüklenir; bu iyi niyetlidir ama halının üstünde eşitsiz bir aşınma haritası bırakır. Yıllar içinde aynı bölgeye tekrar tekrar yüklenildiğinde o bölge çevresinden önce yorulur. Makinenin sağladığı asıl şey temizlik gücü değil, tekrarlanabilirlik: aynı basınç, aynı geçiş sayısı, halının tamamında. Elin sağladığı şey ise tam tersi — makinenin ölçemediği yerde karar verebilmek. Bir halıda hangisinin ağır basacağını dokumanın sıklığı, yüzey yüksekliği ve saçağın durumu söylüyor.",
+      "İkinci ölçü daha az konuşuluyor ama sonucu daha çok belirliyor: yıkamadan sonra halının içinde ne kadar su kalıyor. Bu tek başına halının ne kadar sürede kuruyacağını, dolayısıyla küf ve koku riskini belirliyor. Sıkma bir güç işi ve elle yapılabilecek bir iş değil. Aşağıdaki bölümlerin sonuncusunu bu yüzden evde yıkamaya ayırdık; evde bir halıyı elde yıkamanın asıl riski yıkamanın kendisi değil, ondan sonrası. İçi günlerce nemli kalan bir dokumada mikroorganizma üremesi başlıyor ve bunun bıraktığı ağır koku, halı tamamen kuruduktan sonra bile geçmiyor. Bu yüzden evde yıkama kararı verirken sorulacak ilk soru şampuanı nasıl çıkaracağınız, ikincisi suyu nasıl atacağınız."
     ],
-    "bolumler": [
+    bolumler: [
       {
-        "baslik": "\"Metresi kaç para?\" sorusunun tek başına neden bir karşılığı yok",
-        "paragraflar": [
-          "Karotta asıl zaman deliği delerken geçmiyor. Hazırlığın bir kısmı sahaya bir kez girildiği için bir kez yapılıyor: yola çıkmak, ekipmanı indirip yukarı taşımak, su hattını çekmek, elektriği almak, iş bitince toparlanmak. Bir kısmı ise her delikte baştan tekrarlanıyor: ekseni işaretlemek, sehpayı dübelli taban plakasıyla ya da vakum plakasıyla sabitlemek, donatının nereden geçtiğine bakmak, delik bitince göbeği çıkarmak. Uç betona girdikten sonrası, çoğu işte toplam sürenin küçük bir dilimi.",
-          "Bu yüzden metre tek başına ölçü değil. 200 mm çapında, 20 cm kalınlığında on delik iki metre eder. Aynı çapta, 50 cm kalınlığında dört delik de iki metre eder. Kâğıt üzerinde metraj eşit ama sahada aynı iş değil: birincisinde on kez sabitleme, on kez işaretleme, on göbek var; ikincisinde dört. Delinen toplam derinlik aynı olduğu hâlde harcanan zaman ayrışıyor, çünkü hazırlığın büyük bölümünü metre değil delik adedi belirliyor.",
-          "İkinci ayrım da deliklerin nerede olduğu. On delik tek duvarda yan yanaysa sehpa bir metre kayar, su ve elektrik kurulu durur; onuncu delik birinciden düşük maliyete gelir ama sıfıra inmez, sabitleme ve göbek her seferinde yeniden yapılır. Aynı on delik binanın beş ayrı katına dağılmışsa her nokta neredeyse yeni bir iş gibi başlar: ekipman taşınır, hat yeniden çekilir, moloz ayrı ayrı toplanır. Karot metre fiyatı diye sabit bir rakam duyduğunuzda, o rakamın kaç delik ve nasıl bir dağılım varsayılarak söylendiğini sorun."
-        ]
-      },
-      {
-        "baslik": "Çap ve kalınlık: işin fiziksel büyüklüğü",
-        "paragraflar": [
-          "Çap büyüdükçe kesilen halka genişler, yani makine daha fazla malzeme öğütür. 50 mm bir tesisat deliğiyle 300 mm bir baca deliği aynı iş değil. Büyük çapta uç daha pahalı, sehpanın sabitlemesi daha sağlam olmak zorunda, su ihtiyacı artıyor, ilerleme yavaşlıyor. Çap belli bir noktadan sonra göbeğin ağırlığı da hesaba giriyor: delik tamamlandığında içeriden çıkan silindir tek elle taşınacak bir parça olmaktan çıkıyor, karşı tarafa düşmemesi için ayrıca önlem alınması gerekiyor.",
-          "İkinci belirleyici betonun kalınlığı, yani deliğin derinliği. 15 cm bir döşemeyi geçmekle 50 cm bir kesiti geçmek arasında sadece süre farkı yok. Ucun boyu yetmediğinde uzatma parçası devreye giriyor; çok kalın kesitlerde iki yüzden karşılıklı çalışmak gerekiyor. Bu da iki tarafta da yer açmak, iki kez sabitlemek ve iki eksenin ortada buluşmasını tutturmak demek. Ölçü verirken duvarı deleceğiz demek yetmiyor, o duvarın kaç santim olduğu doğrudan rakamı değiştiriyor.",
-          "Delinen yüzeyin cinsi de süreye yansıyor. Yeni dökülmüş, düzgün yüzeyli bir perdede sabitleme ilk denemede tutar. Eski, sıvası dökülen, yüzeyi bozuk bir duvarda taban plakasının oturması için önce zemin hazırlanır. Küçük bir ayrıntı gibi duruyor ama her delikte tekrarlandığında toplam süreyi belirgin biçimde uzatıyor."
-        ]
-      },
-      {
-        "baslik": "İçeride ne var: donatı yoğunluğu ve elemanın kimliği",
-        "paragraflar": [
-          "Elmas uç demire girdiğinde iş durmaz, donatı da kesilerek geçilir. Ama ilerleme belirgin şekilde yavaşlar ve segmentler daha hızlı tükenir. Seyrek donatılı bir döşemede rahat giden bir delik, demirin sıklaştığı bir bölgede iki katına çıkabilir. Keşifte donatı taraması bu yüzden yapılıyor: hem ne kadar demirle karşılaşacağımızı görmek için, hem de kesilmemesi gereken bir şeye denk gelip gelmediğimizi anlamak için.",
-          "Burada teknik olmayan bir sınır da var. Kolon, perde, kiriş gibi taşıyıcı elemanlarda deliğin nereden geçeceğine biz karar vermeyiz. O noktayı statik proje belirler ve yetkili mühendisin onayı olmadan taşıyıcı elemana dokunmuyoruz. Onay gerekiyorsa bu hem takvimi hem teklifi etkiler. Bölme duvarda beş dakikada karar verilen bir delik, perdede projeye bakılmasını gerektirebilir.",
-          "Bir de görünmeyen kalemler var: projesi bulunamayan eski döşemeler, içinden tesisat ya da elektrik hattı geçen duvarlar. Tarama yapılmadan delinen bir delikte kesilen bir boru, karot işinin kendisinden pahalıya patlar. Keşifte harcanan yarım saat çoğu zaman en ucuz kalemdir."
-        ]
-      },
-      {
-        "baslik": "Delik nerede: çalışma yüksekliği ve erişim",
-        "paragraflar": [
-          "Aynı delik zemin katta kısa sürede biter, altıncı katın dış cephesinde yarım günü götürebilir. Çalışma yüksekliği arttıkça makinenin, sehpanın, su bidonunun ve kablonun yukarı çıkması gerekir. Asansör varsa ve ekipman asansöre sığıyorsa mesele büyük ölçüde çözülmüştür. Asansör yoksa ya da yük asansöre girmiyorsa her şey merdivenden elle taşınır; bu tek başına saatler ekler.",
-          "Tavanda çalışmak da yerde çalışmakla aynı değil. Yukarı doğru delerken su geri akar, toplanması ayrı bir düzen ister, ekip sürekli baş üstünde çalıştığı için daha sık mola verir. Dış cephede iskele ya da sepetli platform gerekiyorsa o da hesabın içine girer. İskele sizde zaten kuruluysa maliyet ciddi biçimde düşer; kurulumu bize kalıyorsa kurma, sökme ve güvenlik önlemleri de rakama yansır.",
-          "Dar alan ayrı bir kalem. Sehpanın açılamadığı bir kazan dairesinde, tesisatın arasına sıkışmış bir noktada ya da tavan yüksekliğinin makineye yetmediği bir bodrumda aynı delik, boş bir odadakinin çok üstünde sürer. Delinecek noktanın önünün boş olması küçük bir ayrıntı gibi görünür, süre üzerindeki etkisi küçük değildir."
-        ]
-      },
-      {
-        "baslik": "Sahanın hali: su, elektrik, moloz ve mesafe",
-        "paragraflar": [
-          "Karotta su hem ucu soğutur hem tozu bastırır. Sahada su bağlantısı varsa hortum takılır, iş başlar. Yoksa su bidonla taşınır, basınçlı sistem kurulur; bu hem hazırlığı hem toparlanmayı uzatır. Elektrik için de aynısı geçerli: sağlam bir priz varsa sorun yok, yoksa jeneratör ya da uzun kablo çekimi devreye girer. Suyu ve elektriği iş başlamadan hazır etmek, müşterinin fiyatı kendi eliyle düşürebileceği en kolay kalem.",
-          "İş bittiğinde ortada göbek, çamurlu su ve toz kalır. Küçük işlerde toparlamayı biz yapıyoruz ve bu zaten hesabın içinde. Ama aynı sahada kesim ya da kırım da varsa çıkan molozun hacmi büyür; binadan çıkarılması, indirilmesi, araca yüklenmesi ayrı bir emek demektir. Molozun sahada kalıp kalmayacağını ve dökümün kime ait olduğunu teklif aşamasında netleştirin. Konuşulmadığında en çok tartışma çıkan yer burasıdır.",
-          "Mesafe de rakama giriyor. Merkezefendi ve Pamukkale içinde ekip kısa sürede sahada olur, Honaz ve Sarayköy gibi yakın ilçelerde de gidiş dönüş günü bozmaz. Çivril, Acıpayam, Çameli tarafında ise yol süresi tek başına yarım günü alabilir ve o gün başka iş programlanamaz. Çalışma saati de benzer şekilde belirleyici: hastane, okul, iş merkezi ya da üretim yapan bir tesiste iş çoğu zaman gece veya hafta sonuna kalıyor. Gece çalışması aydınlatma, güvenlik ve ekip düzeni açısından ek yük getiriyor."
-        ]
-      },
-      {
-        "baslik": "Teklif alırken sorulması gereken 6 soru",
-        "paragraflar": [
-          "İki firmadan gelen rakamı karşılaştırabilmeniz için ikisine de aynı şeyi sormuş olmanız gerekir. Aksi halde elinizde iki rakam olur ama bu rakamlar aynı işi tarif etmiyordur. Aşağıdaki altı soru, ucuz görünen teklifin gerçekten ucuz olup olmadığını ortaya çıkarır.",
-          "Soruların cevabı net gelmiyorsa gelen rakam da net değildir. Özellikle birincisi belirleyici: telefonda metresini söyleyip kapatan bir teklif, sahaya gelindiğinde büyümeye açık bir tekliftir. Karşınızdaki kişi keşfe gelmeden bu soruların hepsine kesin cevap veremiyorsa bu normaldir; anormal olan, hiç bakmadan kesin rakam söylemesidir."
+        baslik: "Makinenin İyi Yaptığı İş: Eşit Basınç ve Ölçülebilir Sıkma",
+        paragraflar: [
+          "Tam otomatik yıkama makinesinde halı fırça grubunun altına seriliyor ve bol su ile şampuan eşliğinde baştan sona aynı sayıda geçişle çalışılıyor. Fırça burada bir kazıyıcı değil, taşıyıcı: görevi şampuanlı suyu ipliğin dibine indirmek ve çözünen kiri yüzeye çıkarmak. Bunun elle yapılamayan tarafı süreklilik: bir insan yarım saat sonra ilk yarım saatteki basıncı koruyamaz, makine korur. Fırça sertliği ve baskısı da sabit değil, her parti için ayrı ayarlanıyor. Yani makine tek bir programı herkese uygulayan bir kutu değil; ayarı halının dokuma sıklığına, yüzey yüksekliğine ve taban sertliğine göre değişen bir alet. Ayar oturmadıysa parti bekletiliyor ve fırça grubu baştan düzenleniyor.",
+          "İkinci üstünlük sıkmada. Yıkanmış bir halı kendi ağırlığının katı kadar su tutabiliyor ve bu suyun buharlaşmayla gitmesi günler sürüyor. Rulo sıkma makinesinde halı iki silindirin arasından geçiyor ve içindeki suyun yaklaşık yüzde 95'i basınçla dışarı atılıyor; makineden çıkan parça damla bırakmıyor, ele serin ve nemli geliyor. Elde sıkma, çırpma ya da asıp bekletme bu orana yaklaşamıyor. Üstelik su yüklü bir halı asıldığında kendi ağırlığı dokumayı geriyor, kenarlar dalgalanıyor ve bu bozulma kuruduktan sonra yerinde kalıyor. Büyük ve standart bir makine halısında elin makineye üstün geldiği bir başlık yok; makinenin üstün geldiği iki başlık var. Yani sıkma, kurumayı kısaltmak için sona eklenmiş bir kolaylık değil, kurumanın gerçekleşme koşulu."
         ],
-        "liste": [
-          "Bu rakam her şey dahil mi? Moloz, temizlik, iskele, ulaşım gibi kalemler içeride mi, ayrı mı faturalanıyor?",
-          "Fiyat delik başına mı, metre üzerinden mi hesaplandı? Delik adedi artarsa ya da azalırsa rakam nasıl değişiyor?",
-          "Donatıya denk gelinirse fiyat değişiyor mu, yoksa bu ihtimal teklifin içinde mi?",
-          "Suyu ve elektriği kim sağlıyor? Sahada yoksa ne yapılıyor ve bunun bir karşılığı var mı?",
-          "İş kaç saat sürer, hangi gün ve hangi saatte başlanacak? Gece veya hafta sonu çalışması gerekiyorsa bu rakama yansımış mı?",
-          "Taşıyıcı bir elemana müdahale varsa statik proje ve mühendis onayı süreci nasıl işleyecek, bu süre kimin üzerinde?"
-        ]
       },
       {
-        "baslik": "Fiyatı gerçekten düşüren şeyler",
-        "paragraflar": [
-          "Maliyetin büyük kısmı hazırlıkta oluştuğuna göre, düşürmenin yolu da hazırlıktan geçiyor. Burada müşterinin elinde olan birkaç şey var ve bunlar kulağa geldiğinden çok daha fazla iş görüyor.",
-          "Bizde keşif ücretsiz. Denizli merkez ve yakın ilçelerde yerinde geliyoruz; uzak ilçelerde ilk değerlendirmeyi göndereceğiniz fotoğraf ve ölçülerle yapıp bir aralık söylüyoruz, kesin rakam yerinde keşiften sonra çıkıyor. Keşiften sonra verdiğimiz rakam tektir ve yukarıda saydığım bütün kalemleri içerir.",
-          "İş bittiğinde şu da çıktı diye kalem eklemiyoruz. Tek istisna, keşifte görülmesi mümkün olmayan bir durumla karşılaşmak: duvarın içinden projede olmayan bir hattın geçmesi ya da beklenenden farklı bir kesit çıkması gibi. O durumda da makineyi durdurur, önce sizi ararız. Siz onaylamadan devam etmiyoruz. 0545 678 91 94 numarası 7/24 açık, ölçüyü ve fotoğrafı gönderdiğinizde aynı gün dönüş yapıyoruz."
+        baslik: "Elin Gerekli Olduğu Yerler: Makinenin Karar Veremediği Noktalar",
+        paragraflar: [
+          "Saçak bunların başında geliyor. Saçak halıya sonradan dikilmiş bir süs değil, dokumanın bir ucundan öbür ucuna uzanan çözgü ipliklerinin dokumadan taşmış kısmı; makinede dolaşıyor, birbirine sarılıyor ve gerildiği yerden kopuyor. Bu yüzden saçak gövdeden ayrı, elde, tel tel ve dipten uca doğru çalışılıyor. Aynı şey nokta lekeler için geçerli: bir lekeye hangi çözücünün ne kadar süreyle uygulanacağı makinenin okuyabileceği bir bilgi değil, ışık altında bakıp karar verilen bir şey. Halının kenar bölgeleri, sökülmeye başlamış dikişler ve aşınıp incelmiş alanlar da elle işaretlenip elle geçiliyor. Bu işlerin ortak yanı, hepsinin ölçüyle değil bakışla karar verilmesi ve kararın her halıda yeniden verilmesi.",
+          "İkinci grup, makineye tam olarak hiç girmeyen halılar. İpekli ve Nepal dokumalarda mesele kir değil parlaklık: lifin dış yüzeyi bir kez zedelendiğinde ışığı komşu alanlardan başka biçimde yansıtıyor ve bu fark kalıcı oluyor, dolayısıyla ıslanma süresi ve mekanik hareket baştan kısılıyor. El dokuma yün halılarda ise karar boyaya bağlı; renk akma testi, ölçü kontrolü ve ıslak bekletmeme gibi işler tamamen insan kararı. Bu grubun ay[rıntısını yün ve el dokuma halıların nasıl ele alındığını anlattığımız sayfasında](/hizmetler/el-dokuma-hali-yikama/) yazdık. Yani el yıkama burada bir tercih değil, zorunluluk. Bu halılarda hangi bölgenin hiç ıslanmayacağına da halı suya girmeden önce karar veriliyor."
         ],
-        "liste": [
-          "İşleri tek seferde toplayın. Klima deliği bugün, tesisat deliği üç hafta sonra dendiğinde iki ayrı kurulum ve iki ayrı yol ödüyorsunuz.",
-          "Erişimi hazırlayın. Delinecek noktanın önü boş olsun, eşya çekilsin, iskele gerekiyorsa önceden konuşulsun.",
-          "Su ve elektriği hazır edin. En yakın musluğun ve prizin nerede olduğunu keşifte söyleyin.",
-          "Ölçüyü net verin. Çap kaç mm, beton kaç cm, kaç adet, hangi katta. Bu dört bilgi telefonda bile gerçekçi bir aralık çıkarmaya yeter.",
-          "Fotoğraf gönderin. Duvarın, tavanın ve erişim yolunun fotoğrafı, tarif edilen on cümleden daha çok şey anlatır.",
-          "Aynı binadaki başka işlerle birleştirin. Ekip zaten sahadaysa ikinci ve üçüncü iş çok daha düşük maliyetle çıkar."
-        ]
+      },
+      {
+        baslik: "Çoğu Halıda İkisi Aynı İş Emrinde Buluşuyor",
+        paragraflar: [
+          "Pratikte bir halı ne saf makine işi ne saf el işi. Sıra genellikle şöyle ilerliyor: halı kuru haldeyken elle gözden geçirilip lekeler ve zayıf bölgeler işaretleniyor, işaretlenen noktalara elle ön işlem yapılıyor, gövde makinede yıkanıyor, saçak ayrıca elde çalışılıyor, kuruma sonrası yüzeyin yönü yine elle toparlanıyor ve son kontrol gözle yapılıyor. Bu akışta makine hacmi ve tekrarlanabilirliği, el ise kararı ve ayrıntıyı üstleniyor. Sürecin tamamını, kaba t[oz alımından paketlemeye kadar, tesisteki yıkama sırasını anlattığımız sayfasında](/hizmetler/hali-yikama/) adım adım bulabilirsiniz. Bu akışta atlanan her el adımı sonradan telafi edilemiyor: makineye kaptırılmış bir saçak geri örülmüyor, işaretlenmemiş bir leke yıkamayla birlikte sabitlenebiliyor.",
+          "Bu yüzden elde yıkanacak mı, makinede mi sorusunun cevabı halının tamamı için tek kelime olmuyor. Doğru soru şu: bu halının hangi bölgesi ölçülü ve eşit bir işlem istiyor, hangi bölgesi karar istiyor. Sık dokunmuş, sentetik iplikli, üç metreye dört metre bir salon halısında cevabın büyük kısmı makinedir. Elli yıllık, saçaklı, kökboyalı bir yün dokumada cevabın büyük kısmı eldir. İkisinin arasında kalan çok geniş bir orta bölge var ve o bölgede karar halının adına değil, tesise girdiğinde elle ve gözle ölçülen davranışına göre veriliyor. Aynı evden gelen iki dokumanın farklı davranması da olağan; karar cinse göre toptan değil, parça bazında veriliyor."
+        ],
+      },
+      {
+        baslik: "Evde Elde Yıkamanın Sınırı: Durulama ve Kuruma",
+        paragraflar: [
+          "Evde küçük bir halıyı elde yıkamak mümkün, ama iki adımda tıkanıyor. Birincisi durulama. Şampuanı dokumadan çıkarmak, onu içeri sokmaktan çok daha fazla su istiyor; küvette ya da balkonda dönen suyla çalışıldığında halının içinde kalan sabun kalıntısı kuruduğunda ipliğin üzerinde yapışkan bir film bırakıyor. O film tozu tutuyor ve halı birkaç hafta içinde yıkanmadan önceki halinden daha çabuk kirleniyor. İnsanların yıkadıktan sonra halının çabuk kirlendiğini söylemesinin en yaygın sebebi bu; kirlenen halı değil, kalan kalıntı. Evde durulamayı iyileştirmenin tek yolu suyu sürekli yenilemek, yani duran suda değil akan suda çalışmak; bu da küçük ve ince parçalar dışında pratikte mümkün olmuyor.",
+          "İkincisi ve asıl olanı kuruma. Elde sıkılmış bir halının içinde makineyle sıkılmışa göre kat kat fazla su kalıyor ve o su ancak buharlaşarak gidiyor. Halı balkonda korkuluğa atıldığında hem katlandığı yerde iz kalıyor hem de iki yüzeyi eşit kurumuyor; içi nemliyken toplandığında ise küf ve o bir daha çıkmayan ağır koku başlıyor. Kokunun kaynağı suyun kendisi değil, o sudan beslenen canlılar. Kurutmanın neden ayrı bir iş olduğunu ve evde hangi durumda hâlâ makul olduğunu ayrı bir yazıda ele alıyoruz. Kısa cevap şu: elde yıkamayı sınırlayan şey yıkama becerisi değil, suyu çıkaramamak."
+        ],
       }
     ],
-    "sss": [
-      {
-        "q": "Karotta metre başına sabit bir fiyat var mı?",
-        "a": "Sabit bir metre fiyatı, ancak işin diğer bütün bilgileri sabitlenirse anlamlı olur. Aynı iki metre, on adet sığ delik olarak da çıkabilir dört adet kalın delik olarak da; birincisinde on kez sabitleme yapılır, ikincisinde dört. Buna bir de deliklerin tek noktada mı toplandığı yoksa ayrı katlara mı dağıldığı eklenir, çünkü hazırlık her yeni noktada baştan tekrarlanır. Bu yüzden rakamı metre üzerinden değil işin bütünü üzerinden çıkarıyoruz: çap, kalınlık, adet, donatı durumu, erişim ve saha koşulları birlikte değerlendiriliyor."
-      },
-      {
-        "q": "Telefonda ya da fotoğrafla fiyat alabilir miyim?",
-        "a": "Alabilirsiniz, ama söylenen şey bir aralık olur, kesin rakam olmaz. Çapı, beton kalınlığını, delik adedini ve hangi katta olduğunu söylerseniz gerçekçi bir aralık verebiliriz; delinecek yerin ve erişim yolunun fotoğrafını da gönderirseniz aralık daha da daralır. Uzak ilçelerde çoğu iş zaten böyle başlıyor, sonra yerinde keşifle net rakama bağlanıyor. Denizli merkez ve yakın ilçelerde keşfe gelmek daha pratik olduğu için doğrudan yerinde bakmayı tercih ediyoruz."
-      },
-      {
-        "q": "Tek bir delik için de geliyor musunuz? Küçük iş neden nispeten pahalı görünüyor?",
-        "a": "Geliyoruz, tek delik için de sahaya çıkıyoruz. Küçük işin nispeten pahalı görünmesinin sebebi şu: yola çıkmak, ekipmanı taşımak, sehpayı kurmak ve iş bitince toparlamak, delik bir tane de olsa on tane de olsa yapılması gereken şeyler. O sabit emek tek deliğe bindiğinde birim maliyet doğal olarak yüksek çıkar. Bu yüzden yapılacak başka delikler varsa hepsini aynı ziyarette toplamak, en somut tasarruf yöntemidir."
-      },
-      {
-        "q": "Kolona veya perdeye delik açılacaksa fiyat ve süreç nasıl etkilenir?",
-        "a": "Taşıyıcı elemanlarda önce yapısal karar verilir, sonra makine çalışır. Kolon, perde ve kirişte deliğin nereden geçeceğini statik proje belirler; yetkili mühendisin onayı olmadan o elemana müdahale etmiyoruz. Bu, sürece bir hazırlık ve bekleme aşaması ekler, ayrıca donatının sık olduğu bölgelerde kesim süresi de uzar. Yani hem takvim hem işçilik açısından bölme duvardaki bir delikten farklı bir iştir ve teklifte ayrı değerlendirilir."
-      }
+    sss: [
+      { q: "Halımı elde yıkatmak istiyorum, siz elde yıkıyor musunuz?", a: "Halının neye ihtiyacı olduğuna göre. Saçak, nokta lekeler, kenar bölgeleri ve zayıflamış alanlar zaten elde çalışılıyor; bunlar hiçbir halıda makineye bırakılmıyor. Gövdenin tamamının elde yıkanması ise ipekli, Nepal ve boyası oynayan el dokuma halılarda gündeme geliyor. Sık dokunmuş bir makine halısında gövdeyi elde yıkamak sonucu iyileştirmiyor, aksine basıncın eşitsiz dağılmasına ve suyun tam çıkarılamamasına yol açıyor. Halınızı gördüğümüzde hangi bölümün nasıl ele alınacağını söylüyoruz; kararı halının adına bakarak değil, dokumasına bakarak veriyoruz." },
+      { q: "Makine halıyı yıpratır mı, tüyünü döker mi?", a: "Yıpratan makine değil, yanlış ayar. Fırça sertliği ve baskısı halının dokuma sıklığına, ipliğin geri toparlanmasına, yüzey yüksekliğine ve taban sertliğine göre ayarlanıyor; ayar doğru olduğunda fırça kiri koparmıyor, şampuanlı suyu dibe indiriyor. Ayar sert kaldığında ise yüzey kırılıyor ve bu bir daha düzelmiyor. Bu yüzden halılar partilere ayrılıyor ve parti değiştiğinde makine baştan ayarlanıyor. Yeni halılarda ilk yıkamada bir miktar hav dökülmesi ayrı bir konu: dokuma sırasında kesilmiş kısa lif uçlarının çıkmasıdır, kendiliğinden duruyor." },
+      { q: "Yıkanan halının içinde ne kadar su kaldığını nasıl anlarım?", a: "Elle bakarak. Sıkması düzgün yapılmış bir halı damlamaz, elinizle bastırdığınızda avucunuz ıslanmaz, yalnızca serin ve nemli hissedilir. Damlıyorsa ya da bastırınca su geliyorsa o halı henüz askıya alınacak durumda değil. Evde yıkanan halıda asıl kontrol edilecek yer yüzeyi değil tabanı: yüzey elde kuru hissedilirken dokumanın altı hâlâ nemli olabiliyor ve halı o haldeyken toplanırsa koku birkaç gün içinde başlıyor. Halının kenarını kaldırıp arka yüzüne elinizin tersiyle dokunmak en basit ölçüm." }
     ],
-    "ilgiliHizmetler": [
-      "karot",
-      "beton-delme"
-    ]
   },
-  "filiz-ekimi-nedir": {
-    "seoTitle": "Filiz Ekimi Nedir, Nasıl Yapılır? Uygulama Rehberi",
-    "giris": [
-      "Betonarmede demir, beton dökülmeden önce yerine bağlanır. Yapı bittikten sonra o elemana yeni bir şey eklemek gerektiğinde, mesela mevcut binaya kat çıkılacaksa ya da yeni bir perde duvar eklenecekse, ortada bağlanacak demir kalmamıştır. Filiz ekimi bu boşluğu kapatan işlem: sertleşmiş betona delik açılır, deliğe kimyasal reçine enjekte edilir, donatı çubuğu döndürülerek içeri sürülür. Kür tamamlandığında o çubuk, döküm sırasında bırakılmış gibi betona kenetlenir ve dışarıda kalan boyuyla yeni donatıya bindirme yapar.",
-      "İşin mantığını anlamak sahadaki hataların çoğunu baştan siler. Yük önce çelikten reçineye, reçineden delik cidarına, oradan da betona geçer. Bu zincirin herhangi bir halkası zayıfsa filiz koparak değil, delikten sıyrılarak gelir. Zincirin en sık kırıldığı yer ise malzeme değil, deliğin içinde unutulan kesme tozudur.",
-      "Aşağıda işi ekiplerimizin sahada uyguladığı sırayla anlattım: delik, temizlik, enjeksiyon, yerleştirme, kür. Baştan bir şeyi söyleyeyim, kolon, perde, kiriş gibi taşıyıcı bir elemana filiz ekmek statik proje ve yetkili mühendis onayı isteyen bir müdahaledir. Yazının geri kalanı, onayı alınmış bir detayın sahada nasıl doğru uygulanacağını anlatıyor. Filizin çapını, aralığını ve gömme boyunu sahada gözle kararlaştıran bir uygulama zaten baştan yanlıştır."
+  "evde-hali-bakimi-icin-ipuclari": {
+    giris: [
+      "Bir halıyı asıl yıpratan şey üstünde yürüyen ayak değil, o ayakla içeri giren kum. Dışarıdan gelen toprak ve kum taneleri mikroskopta keskin kenarlı taşlardır; halının dibine çöktüklerinde her adımda ipliğin kökünü kesici bir yüzeye sürterler. Halı zamanla matlaşıyorsa, deseni belirsizleşiyorsa ve elle bastırıldığında eski diriliğini vermiyorsa sebep çoğunlukla görünen kir değil, dipte biriken bu aşındırıcı tabaka. Evde halı bakımının tek cümlelik özeti de bu: halıyı temiz göstermek değil, dibindeki kumu almak. Aşağıdaki başlıkların hepsi bu tek amaca hizmet ediyor. Görünen kir yüzeydedir ve kolay kalkar; halının ömrünü belirleyen tabaka ise onun altında, ipliğin dibinde duruyor.",
+      "İkinci mesele halının yerinde geçirdiği zaman. Aynı halı beş yıl boyunca aynı yönde, aynı ışık altında ve aynı mobilyanın altında durursa yıpranması da solması da tek taraflı oluyor; ortaya yıkamayla düzelmeyen bir fark çıkıyor. Bunun önüne geçmek ürünle değil düzenle mümkün. Aşağıda süpürme sıklığından başlayıp süpürgenin hangi başlıkla ve hangi yönde kullanılacağına, altlığın ne işe yaradığına, mobilya izine, güneşe ve evcil hayvan tüyüne kadar gidiyoruz. Sonunda da ev bakımının nerede bittiğini söylüyoruz, çünkü hiçbiri yıkamanın yerini tutmuyor. Bu düzenin bir maliyeti yok, yalnızca sırasını bilmek gerekiyor: ne zaman, hangi başlıkla, hangi yönde."
     ],
-    "bolumler": [
+    bolumler: [
       {
-        "baslik": "Filiz Ekimi Ne İşe Yarar, Hangi İşlerde Gerekir",
-        "paragraflar": [
-          "Beton basınca çalışır, çekmeyi demir taşır. İki farklı yaşta dökülmüş betonu birbirine sadece dayadığınızda o birleşimde çekme aktarılmaz, ilk zorlanmada iki parça ayrılır. Filiz ekimi, eski betonun içinde kenetlenen ve dışarıda yeni donatıyla bindirme yapan bir çubuk koyarak sürekliliği kurar. Amaç, farklı zamanlarda dökülmüş iki elemanı tek parça gibi çalıştırmak.",
-          "Bu işlem her zaman bir güçlendirme ya da ekleme detayının parçası olarak çıkar. Deprem güçlendirmesi kapsamında perde eklerken, kolon mantolarken ya da mevcut bir elemana donatı ekleme gerektiğinde filizin çapı, aralığı ve gömme boyu statik projeden okunur, sahada gözle belirlenmez. Bağlantı kimyasal ankraj esasına dayandığı için reçine seçimi de o detaya bağlıdır. Onaylı bir detay yoksa taşıyıcı elemanda delik açmıyoruz; yanlış yere açılmış bir delik de kesilmiş bir donatı da geri alınmıyor.",
-          "Güçlendirme ve ekleme işlerinin neredeyse tamamında bir yerde filiz çıkar. En sık karşılaştıklarımız şunlar:"
+        baslik: "Süpürmenin Asıl İşi: Dipteki Kumu Almak",
+        paragraflar: [
+          "Süpürme sıklığını belirleyen şey halının kirli görünmesi değil, üzerinden geçilen adım sayısı. Giriş holü, koridor ve oturma grubunun önü evin geri kalanından kat kat daha fazla yük alıyor; bu bölgelerin haftada iki üç kez, az kullanılan odalarınsa haftada bir geçilmesi çoğu ev için makul bir düzen. Evde ayakkabıyla dolaşılıyorsa ya da küçük çocuk varsa bu sıklık artıyor. Kapı önüne konan bir paspas, halıya ulaşan kumun önemli bir bölümünü daha koridorda tutuyor ve pratikte süpürme yükünü doğrudan azaltıyor. Ayakkabıların kapıda çıkarılması ise bu listedeki tek başına en etkili madde; halıya ulaşan kum miktarını doğrudan düşürüyor.",
+          "Sıklık kadar önemli olan şey hızdır. Süpürgeyi halının üstünde hızlı gezdirmek yalnızca yüzeydeki tüyü ve kırıntıyı alıyor; dipteki kumun yukarı çıkması için hava akışının dokumanın içinden geçmesi, bunun için de başlığın aynı yerde yavaş ilerlemesi gerekiyor. Aynı şeridin üzerinden birkaç kez, farklı yönlerde geçmek tek hızlı turdan çok daha etkili. Kenarlar ve duvar dibi de atlanıyor: kum oralarda birikiyor ve halı ortadan temiz görünürken kenardan yoruluyor. Dar aparat bu iş için var. Halının altına ara ara bakmak da işe yarıyor: dokumanın altından zemine dökülen toz, dipteki tabakanın hâlâ orada durduğunun en açık işareti."
         ],
-        "liste": [
-          "Mevcut binaya kat çıkılması, yeni kolon ya da kiriş eklenmesi",
-          "Balkon, teras veya konsol döşeme ilavesi",
-          "Betonarme perde ekleyerek yapılan deprem güçlendirmesi",
-          "Kolon mantolamada gömlek donatısının döşemeye ve kolona bağlanması",
-          "Sonradan açılan merdiven ya da asansör boşluğunun çevresinin toplanması",
-          "Temel genişletme, istinat duvarı yükseltme, yeni betonun mevcut betona bağlanması"
-        ]
       },
       {
-        "baslik": "Delik Çapı ve Derinliği Neye Göre Belirlenir",
-        "paragraflar": [
-          "Delik çapı, ekilecek donatının çapına ve kullanılan reçinenin kendi tablosuna göre seçilir; genelde donatı çapından birkaç milimetre büyüktür. Bu boşluk keyfi değil, reçinenin çubuğu çepeçevre sarabilmesi için gerekli. Fazla dar delikte reçine cidara kadar yayılamaz, fazla geniş delikte reçine kalınlığı artar ve bağlantı beklendiği gibi davranmaz. Yani Ø12 ile Ø20 filiz için aynı uç takılmaz.",
-          "Derinlik ise gömme boyudur ve projeden gelir. Donatı çapı büyüdükçe gereken gömme boyu da uzar, çünkü çubuğun betona yük aktardığı yüzey bu boyla belirlenir. Deliği açarken derinliği tek tek ölçüyle doğruluyoruz; matkabın üzerine konan bant ya da derinlik mesnedi işi kolaylaştırır ama son söz metrenindir. Elemanın karşı yüzüne çıkmamak da ayrı bir kontrol.",
-          "Delmeden önce mevcut donatının yerini tarama cihazıyla çıkarıp yüzeye çiziyoruz. Filiz noktası bir demire denk geliyorsa projenin izin verdiği kadar kaydırıyoruz. Kaydırma mümkün değilse detayı çizen mühendise soruyoruz. Taşıyıcı bir elemanın mevcut donatısını keserek delik açmak sahada verilecek bir karar değil, kesilen demir geri gelmiyor."
-        ]
+        baslik: "Havın Yönü ve Döner Fırçalı Başlık",
+        paragraflar: [
+          "Halının yüzeyindeki ipliklerin hepsi aynı yöne yatıktır; buna havın yönü deniyor. Elinizi halının üzerinde iki yönde gezdirdiğinizde biri pürüzsüz, diğeri direnç veriyorsa yönü bulmuşsunuz demektir. Temizlik için önce yatış yönünün tersine geçmek gerekiyor, çünkü iplikler o zaman kalkıyor ve dipteki toz açığa çıkıyor. Son turu ise mutlaka yatış yönünde yapın; halı böyle bırakıldığında renk her yerde aynı tonda görünüyor ve yüzeyde alacalı, izli bir görüntü kalmıyor. Halının rengi bakış açısına göre koyulaşıp açılıyorsa sorun kirde değil, havın karışık bırakılmasında. Havın yönü dokumanın kendi özelliği, kusuru değil; ortadan kaldırılmaz, yalnızca düzgün bırakılır.",
+          "Döner fırçalı başlıklar dönen bir çubukla halıyı hafifçe döverek dipteki tozu gevşetiyor. Sık dokunmuş, kısa havlı makine halılarında bu iş görüyor. Ama hav uzadıkça zarara dönüşüyor: shaggy ve uzun tüylü halılarda iplik fırçaya sarılıp kopuyor, ilmekli yüzeylerde çubuk ilmeği çekip kaçırıyor, saçaklı halılarda saçak fırçaya doluyor. İpekli ve el dokuma yün halılarda ise hiç kullanılmıyor. Bu halılarda yalnızca emiş yapan düz başlık ya da fırçasız ağız kullanılıyor, saçak süpürülmüyor, elle toparlanıyor.[Uzun tüylü halıların nasıl ele alındığını sayfasında](/hizmetler/shaggy-hali-yikama/) ayrıca yazdık. Başlık seçiminden emin değilseniz halının görünmeyen bir köşesinde kısa bir tur atıp iplikte kopma olup olmadığına bakın."
+        ],
       },
       {
-        "baslik": "Delik Temizliği: İşin Tuttuğu ya da Tutmadığı Yer",
-        "paragraflar": [
-          "Buraya kadar her şeyi doğru yapıp bu adımı geçiştirdiyseniz filiz tutmaz. Delme sırasında oluşan ince toz delik cidarına yapışır ve kendiliğinden çıkmaz. Reçine enjekte edildiğinde betona değil o toz tabakasına yapışır, ara yüzey kayabilen bir katman hâline gelir. Sonuç, dışarıdan hiç belli olmayan ama çekme dayanımı düşmüş bir filizdir.",
-          "Temizliğin sırası bellidir: önce üfle, sonra fırçala, sonra tekrar üfle. Üfleme yağsız basınçlı havayla ve hortumun ucu deliğin dibine kadar sokularak yapılır, ağızdan yapılan üfleme dipteki tozu yerinden oynatmaz. Fırça delik çapına uygun olmalı; ince kalan bir tel fırça cidara değmeden döner ve hiçbir işe yaramaz. Fırçalama ile üflemeyi birer kez yapıp geçmiyoruz, cidar temiz kalana kadar tekrarlıyoruz.",
-          "Delik sulu açıldıysa iş kolaylaşmaz, aksine ağırlaşır. Su kesme tozunu çamura çevirir, çamur cidarda kuruyup ince bir tabaka bırakır ve fırçalanmadan çıkmaz. Böyle deliklerde önce yıkama, sonra fırçalama, sonra da ürünün istediği kuruluğa gelene kadar bekleme var. Islak delikte kullanılabilen reçineler ayrıdır, eldeki ürün buna uygun değilse delik kurumadan enjeksiyon yapılmaz. Temizliği biten deliği enjeksiyona kadar tıpayla kapatıyoruz, açık bırakılan delik saatler içinde yeniden tozlanıyor."
-        ]
+        baslik: "Halı Altlığı ve Halının Yerini Değiştirmek",
+        paragraflar: [
+          "Altlık kaymayı önlemek için satılıyor ama asıl işi başka. Halı doğrudan sert zemine serildiğinde her adımda dokumanın tabanı zemine sürtüyor ve aşınma alttan başlıyor; halının yüzeyi hâlâ iyiyken tabanı incelmiş oluyor. Altlık bu darbeyi araya girip alıyor, aynı zamanda halının altında ince bir hava boşluğu bırakıyor. O boşluk nem açısından da önemli: hava almayan bir halının altında, özellikle serin zeminlerde, yoğuşma birikiyor ve zamanla koku yapıyor. Kayan halının kenarında oluşan kıvrımlar da ayrı bir yıpranma noktası. Altlık seçerken halının kalınlığına da bakmak gerekiyor; ince bir kilimin altına kalın bir altlık konduğunda kenarlar havada kalıyor ve ayak takılıyor.",
+          "İkinci düzen halının döndürülmesi. Altı ayda bir halıyı yüz seksen derece çevirmek, hem yürüme yükünün hem de gelen ışığın halının farklı bölgelerine dağılmasını sağlıyor. Bunu yapmayan evlerde beş yıl sonra halının bir ucu diğerinden gözle görülür biçimde yorgun oluyor ve bu yıkamayla geri gelmiyor, çünkü kayıp kirlilik değil aşınma. Çevirirken halıyı katlamak yerine ruloya sarmak gerekiyor; kalın bir dokuma katlandığında kat yerinde iz kalıyor. Mobilyaların birkaç santim kaydırılması da aynı işi görüyor, sürekli aynı noktaya binen ağırlığı dağıtıyor. Döndürmeyi mevsim değişimine bağlamak akılda tutmayı kolaylaştırıyor; bahar ve güz zaten halının kaldırıldığı iki dönem."
+        ],
       },
       {
-        "baslik": "Reçine Enjeksiyonu ve Donatının Yerleştirilmesi",
-        "paragraflar": [
-          "Kartuş tabancaya takılıp karıştırıcı ucu geçirildikten sonra ilk gelen kısım atılır, o bölüm henüz düzgün karışmamıştır ve delikte kullanılmaz. Ardından reçine deliğin en dibinden doldurulmaya başlanır, delik doldukça ucu yavaşça geri çekilir. Amaç dipte hava boşluğu bırakmamak. Gereken miktar delik hacmine göre değişir ama sahadaki asıl ölçüt, donatı sürüldüğünde ağızdan hafif bir taşma görmektir.",
-          "Donatının gireceği derinliği çubuğun üzerine önceden işaretliyoruz; hem gömme boyu şaşmıyor hem de dışarıda kalacak bindirme boyu tutuyor. Çubuk düz itilmez, döndürülerek sürülür. Bu dönme hareketi reçineyi nervürlerin arasına yediriyor, içeride kalan hava kabarcıklarını yukarı çıkarıyor. Sürme tek seferde ve reçinenin yerleştirme payı dolmadan bitmeli; jelleşmeye başlamış reçinenin içinde çubuğu oynatmak bağlantıyı bozar.",
-          "Bu yüzden aynı anda çok sayıda deliği doldurup sonra donatı takmaya kalkmıyoruz, delikleri sırayla ilerletiyoruz. Tavana doğru, yani yukarı yönlü uygulamada çubuk kendi ağırlığıyla aşağı kayabilir; kür alana kadar kama ya da destekle sabitleniyor. Ağızdan taşan fazla reçineyi kürlenmeden alırsak yüzey de düzgün kalıyor."
-        ]
+        baslik: "Mobilya İzi ve Güneşin Bıraktığı Fark",
+        paragraflar: [
+          "Ağır bir mobilyanın bıraktığı çukur, ipliğin kalıcı olarak ezilmesi değil, çoğu zaman yalnızca yatıp kalması. Bu izi kaldırmanın basit bir yolu var: izin üzerine nemli bir bez koyup elle bastırın, birkaç dakika bekletin, bez kalktıktan sonra iplikleri yatış yönünün tersine bir fırçayla ya da kaşık sırtıyla kaldırın, sonra kurumaya bırakın. Nem lifin şişip eski halini hatırlamasını sağlıyor. Buz küpünü izin üstüne bırakıp erimesini beklemek de aynı işi görüyor. Yıllardır aynı yerde duran ağır bir eşyanın izinde ise iplik kırılmış olabiliyor ve o iz kısmen kalıyor. İzin tamamen kalkıp kalkmayacağını da ancak o bölge kuruduktan sonra görebiliyorsunuz.",
+          "Güneş ayrı bir konu, çünkü geri dönüşü yok. Doğrudan güneş alan bölgede boya molekülü ışıkla parçalanıyor; ortaya bir leke değil, çevresinden açık kalmış bir alan çıkıyor. Yıkamak bunu kapatmıyor. Yapılabilecek tek şey önlem: yoğun ışık alan saatlerde perdeyi kapatmak ve halıyı düzenli olarak çevirerek aynı bölgenin sürekli ışık altında kalmasını engellemek. Halınızın gerçekten solup solmadığını anlamak isterseniz kenarını kıvırıp alt yüzüyle üst yüzü yan yana getirin; fark ışıktan geliyorsa alt yüz belirgin biçimde canlı kalmıştır. Solmanın hızını belirleyen şey ışığın parlaklığı değil, aynı bölgenin ışık altında geçirdiği toplam süre; çözüm de o süreyi bölmekten geçiyor."
+        ],
       },
       {
-        "baslik": "Kürlenme Süresi: En Çok Atlanan Kısım",
-        "paragraflar": [
-          "Kimyasal filizde iki ayrı süre var ve bunlar sık karıştırılıyor. Birincisi yerleştirme payı, yani reçine karıştıktan sonra donatının delik içinde hareket ettirilebileceği süre. İkincisi tam kür süresi, yani filizin öngörülen yükü taşıyabilir hâle gelmesi için beklenmesi gereken süre. Birincisi kısa, ikincisi uzun ve ikisi de ortam sıcaklığına bağlı.",
-          "Belirleyici olan hava sıcaklığından çok betonun sıcaklığı. Soğukta kür süresi belirgin şekilde uzar. Sıcak günlerde ise reçine delikte daha çabuk jelleştiği için yerleştirme payı kısalır, o zaman da acele etmek gerekir. Kışın gölgede kalan bir perdenin yüzey sıcaklığı ile öğle güneşi gören bir kolonunki aynı olmaz. Süreyi tahminle değil, ürünün kendi tablosundan okuyoruz.",
-          "Süre dolmadan o filize yük verilmez. Üzerine kalıp bağlanmaz, iskele mesnetlenmez, beton dökülmez, çubuğa asılıp deneme yapılmaz. Çevrede kırım ya da karot gibi darbeli bir iş varsa titreşim de kürlenmeyi bozar, o bölgeyi programa göre ayırıyoruz. Sahada en çok atlanan yer burasıdır; delikler açılmış, filizler ekilmiş, ekip beklemek istemez. Erken zorlanan filiz kendini toparlamaz, o delik sökülüp yeniden yapılmadan güvenilir olmaz."
-        ]
-      },
-      {
-        "baslik": "Mekanik Dübel ile Kimyasal Dübel Arasındaki Fark",
-        "paragraflar": [
-          "Mekanik dübel betonu içeriden iterek tutar. Sıkma anında gövde genleşir, delik cidarına kilitlenir ve yük sürtünmeyle aktarılır. Avantajı hız: sıkıldığı anda yük alır, kür beklemez, gerektiğinde sökülebilir. Sağlam beton ve rahat kenar mesafesi varsa iyi çalışır.",
-          "Sorun, o genleşme basıncının betonda gerilme yaratması. Kenara yakın bir noktada ya da zaten çatlaklı bir betonda bu itme, kilitlenme tamamlanmadan betonu çatlatabilir. Aynı şey birbirine çok yakın dübellerde de olur, her biri kendi çevresindeki betonu zorlar ve gerilme bölgeleri çakışır. Kimyasal dübelde genleşme yükü yoktur, yük reçinenin cidara tutunmasıyla gömme boyu boyunca dağılır.",
-          "Kenar mesafesi kısıtlıysa, dübeller birbirine yakınsa, beton çatlaklıysa ya da gereken derinlik hazır bir mekanik dübelin boyuna uymuyorsa kimyasala geçiyoruz. Filiz ekiminde pratikte zaten hep kimyasal ankraj kullanılır: ekilen şey nervürlü donatı çubuğudur, ortada genleşecek bir gövde yoktur ve gömme boyu mekanik dübellerin çalıştığı derinliklerin ötesindedir. Karşılığında kür beklemek ve delik temizliğine titizlenmek gerekiyor."
-        ]
-      },
-      {
-        "baslik": "Çekme Testi Ne Zaman İstenir, Neyi Gösterir",
-        "paragraflar": [
-          "Çekme testi, ekilen filizin öngörülen yükü gerçekten taşıdığını yerinde gösteren tek yöntem. Hidrolik bir düzenek donatıyı belirlenen test yüküne kadar çeker, filiz kaymadan yükü tutuyorsa uygundur. Test genelde göçme yüküne kadar değil, projede yazan değere kadar yapılır; amaç filizi koparmak değil sınırı doğrulamaktır. Düzeneğin oturacağı alanın boş kalması gerektiği için testi baştan programa yazmakta fayda var.",
-          "Test genelde şu durumlarda isteniyor: kontrol teşkilatı ya da statik projeyi hazırlayan mühendis talep ettiğinde, mevcut betonun dayanımı konusunda şüphe olduğunda, çok sayıda filiz ekilen işlerde partiyi temsilen ve uygulamanın zor koşullarda yapıldığı yerlerde. Kaç filizin test edileceğine ve hangi yükte tutulacağına biz karar vermiyoruz, bu değerler projeden gelir. Her filize test yapılmaz, gerek de yoktur.",
-          "Testin asıl değeri sadece reçineyi ölçmemesi. Kayma yükünü ölçtüğü için deliğin temizliğini, gömme boyunun yeterliliğini ve enjeksiyonun tam yapılıp yapılmadığını dolaylı olarak sınar. Temizliği geçiştirilmiş bir uygulama en çok burada ortaya çıkar. Taşıyıcı sistemi ilgilendiren her işte olduğu gibi sonucun yazılı kayda geçmesi gerekiyor. Denizli merkez ve ilçelerdeki güçlendirme işlerinde keşfe ücretsiz geliyoruz, onaylı detayınızı görüp delik adedi ve uygulama programı üzerinden net konuşuyoruz."
-        ]
+        baslik: "Evcil Hayvan Tüyü ve Ev Bakımının Bittiği Yer",
+        paragraflar: [
+          "Kedi ve köpek tüyü halıya düşmüyor, halıya dolanıyor. Tüyün yüzeyi pürüzlüdür ve statik elektrikle birlikte iplik aralarına giriyor; süpürge emişi çoğu zaman onu yerinden koparamıyor. İşe yarayan yöntem mekanik: kauçuk uçlu bir çekpas, lastik eldiven takıp halıyı tek yönde sıvazlamak ya da kenarı kauçuk bir kazıyıcıyla havın tersine çekmek. Tüy yumaklar hâlinde yüzeye çıktıktan sonra süpürgeyle almak kolaylaşıyor. Yani sıra önemli: önce kazıyın, sonra süpürün. Kuru ve statik yüklü ortamlarda tüy daha inatçı oluyor, hafif nemli bir bez de aynı işi görebiliyor. Halının kenarları, saçak dibi ve mobilya altları bu işte en çok atlanan yerler.",
+          "Bütün bunlar halının ömrünü uzatıyor ama hiçbiri yıkama değil. Süpürge dokumanın içindeki kumu ve tüyü alıyor; ipliğe yapışmış yağı, terden gelen tuzu, gıda kalıntısını ve dipte tutunmuş ince toprağı almıyor. Bunlar ancak bol su, uygun şampuan ve ardından mekanik sıkma ile çıkıyor. Evde halının kokusu bastırılmışsa, elle bastırıldığında toz veriyorsa, rengi süpürmeye rağmen grileşmişse ya da alerji şikâyeti artmışsa ev bakımı sınırına gelmiş demektir. Tesiste halının hangi sırayla ele alındığını, k[aba toz alımından paketlemeye kadar, halı yıkama sürecini anlattığımız sayfasında](/hizmetler/hali-yikama/) bulabilirsiniz. O sayfa tesiste ne yapıldığını anlatıyor; bu yazı ise iki yıkama arasında size düşen kısmı."
+        ],
       }
     ],
-    "sss": [
-      {
-        "q": "Filiz ektikten ne kadar sonra beton dökebiliriz?",
-        "a": "Kür süresi dolmadan dökülmez. Bu süre kullanılan reçineye ve betonun sıcaklığına göre değişir, ürünün kendi tablosundan okunur. Soğuk havada belirgin şekilde uzar. Kür süresi ile yerleştirme payı farklı şeylerdir; ikincisi donatıyı delikte sürmek için elinizde kalan kısa süredir. Kürünü almamış filize kalıp bağlamak ya da yük vermek o filizin kapasitesini kalıcı olarak düşürür, döküm programını kür süresine göre kurmak gerekiyor."
-      },
-      {
-        "q": "Filiz ekimi ile kimyasal dübel aynı şey mi?",
-        "a": "Uygulama mantığı benzer, amacı farklı. İkisinde de delik açılır, temizlenir, reçine enjekte edilir. Filiz ekiminde betona nervürlü donatı çubuğu ekilir ve amaç yeni dökülecek betonun demiriyle süreklilik kurmaktır, çubuğun dışarıda kalan boyu bindirme yapar. Kimyasal dübelde ise genelde dişli bir saplama ekilir, üzerine somunla plaka, korkuluk ya da makine bağlanır. Gömme boyları ve hesap yaklaşımları da bu yüzden birbirinden ayrılır."
-      },
-      {
-        "q": "Delik temizliği yapılmazsa ne olur, gözle anlaşılır mı?",
-        "a": "Gözle anlaşılmaz, işin can sıkıcı tarafı da bu. Delik dolu görünür, donatı yerindedir, dışarıdan bakan biri hiçbir eksik göremez. Ama reçine beton cidarına değil cidarda kalan toz tabakasına tutunduğu için filizin çekme dayanımı beklenenin altında kalır. Bu fark ancak yük geldiğinde ya da çekme testinde ortaya çıkar. Temizlik adımlarını atlanabilir bir ayrıntı değil, işin kendisi olarak görmemizin sebebi bu."
-      },
-      {
-        "q": "Filiz noktası mevcut kolonun demirine denk geldi, ne yapmalıyız?",
-        "a": "Önce demirin yerini tarama cihazıyla kesin olarak çıkarmak gerekiyor, tahminle delinmez. Nokta bir donatıya denk geliyorsa projenin izin verdiği ölçüde ve kenar mesafesini bozmadan kaydırılır. Kaydırma mümkün değilse karar sahada verilmez, detayı hazırlayan mühendise sorulur ve gerekirse detay revize edilir. Taşıyıcı bir elemanın mevcut donatısını keserek yer açmak statik proje ve mühendis onayı olmadan yapılacak bir iş değildir. Kesilen donatı geri gelmediği için bunu delik açılmadan netleştiriyoruz."
-      }
+    sss: [
+      { q: "Yeni aldığım halı süpürdükçe tüy döküyor, bir sorun mu var?", a: "Çoğu yeni halıda olağan bir durum. Dokuma sırasında kesilen kısa lif uçları ipliğin arasında kalıyor ve ilk haftalarda yüzeye çıkıyor; bu halının dağıldığı anlamına gelmiyor, fazlalığın atılması anlamına geliyor. Süpürmeye ara vermek işi uzatıyor, düzenli süpürmek ise birkaç hafta içinde bitiriyor. Uzun tüylü halılarda bu süre daha uzun olabiliyor. Dikkat edilecek tek şey başlık seçimi: bu dönemde döner fırçalı başlık kullanmak gereğinden fazla iplik koparabiliyor, düz emiş başlığıyla çalışmak daha güvenli." },
+      { q: "Halıyı balkonda korkuluğa asıp çırpmak işe yarar mı?", a: "Kısmen yarıyor ama bedeli var. Çırpmak dipteki tozun bir bölümünü gerçekten döküyor; buna karşılık halı kendi ağırlığıyla korkuluğa bindiği için o hatta kalıcı bir kıvrım izi kalıyor, sopayla sert vurulduğunda ise dokumanın çözgüsü zorlanıyor. Doğrudan güneş altında uzun süre asılı bırakmak ayrıca solmayı hızlandırıyor. Küçük ve ince halılarda kısa süreli çırpma makul; kalın, yün ve el dokuma parçalarda önerilmiyor. Aynı sonucu daha güvenli almanın yolu, halıyı ters çevirip arka yüzünden süpürmek ve sonra ön yüzünü yavaş turlarla geçmek." },
+      { q: "Düzenli bakım yaparsam halıyı daha seyrek mi yıkatırım?", a: "Aralığı uzatır, ortadan kaldırmaz. Düzenli süpürülen, altlıklı ve döndürülen bir halı hem daha az aşınıyor hem de tesise geldiğinde daha az yüklü geliyor; bu da daha az şampuan ve daha az mekanik işlemle temizlenmesi demek, yani halının ömrüne doğrudan katkı. Buna karşılık ipliğe bağlanmış yağ ve ince toprak süpürgeyle çıkmıyor, zamanla birikiyor. Evin kullanım yoğunluğuna, evde hayvan olup olmadığına ve alerji durumuna göre değişmekle birlikte, yılda bir profesyonel yıkama çoğu ev için makul bir çizgi." }
     ],
-    "ilgiliHizmetler": [
-      "filiz-ekimi",
-      "kimyasal-dubel",
-      "ankraj",
-      "beton-delme"
-    ]
   },
-  "karot-alinan-yere-ne-yapilir": {
-    "seoTitle": "Karot Alınan Yere Ne Yapılır? Delik Kapatma ve Tamir",
-    "giris": [
-      "Karot işinin konuşulan kısmı deliğin açılmasıdır. Geriye kalan silindirik boşluğun ne olacağı ise çoğu zaman hiç gündeme gelmez — ekip gider, delik olduğu gibi kalır. Oysa o deliğin kapatılıp kapatılmayacağı, kapatılacaksa neyle kapatılacağı işin parçasıdır ve yanlış yapıldığında sonucu deliğin kendisinden büyük olur.",
-      "Delik iki farklı sebeple açılmış olabilir ve ikisinin devamı aynı değil. Tesisat, havalandırma ya da asansör için açılan bir delik kalıcıdır; içinden bir şey geçecektir, kapatılması değil doğru sızdırmazlıkla tamamlanması gerekir. Beton numunesi almak için açılan delikte ise geriye bir işlev kalmaz, boşluğun kapatılması istenir.",
-      "Aşağıda ikisini ayrı ayrı anlattım: numune deliğinin nasıl kapatıldığı, hangi harcın neden kullanıldığı, donatı kesilmişse ne olduğu, su ve yangın yalıtımının nerede devreye girdiği. Bir de sahada sık gördüğümüz yanlışlara ayrı bir bölüm ayırdım, çünkü bu deliklerin çoğu iyi niyetle ama yanlış malzemeyle kapatılıyor."
+  "evde-profesyonel-hali-temizligi": {
+    giris: [
+      "Evde halı yıkama sorusunun cevabı, yıkamaya başlamadan önce halının kendisinde yazılıdır. Belirleyici olan kullandığınız şampuan ya da fırça değil, halının ıslandıktan sonra kaç kilo geleceği ve içine giren suyu nereye bırakacağıdır. Küçük ebatlı, ince, makine dokuma ve üzerinde yıkanabilir etiketi taşıyan bir paspas ya da banyo halısı evde rahatlıkla yıkanır. Salonun ortasındaki dört beş metrekarelik bir halı ise aynı işin büyütülmüş hâli değildir. Suyu emdiği anda tek başına taşınamaz hâle gelir, elle sıkılamaz ve balkonda kuruması güne değil günlere yayılır. Aradaki fark bir çaba meselesi değil, doğrudan halının ne kadar su tuttuğu meselesidir.",
+      "Evde yapılan yıkamalarda işin zor kısmı kiri çözmek değil, verilen suyu geri almaktır. Tesiste bu işi rulo sıkma makinesi yapıyor: halı silindirler arasından geçiriliyor ve içindeki suyun yaklaşık yüzde 95'i mekanik olarak alınıyor, geriye yalnızca buharlaşacak bir nem kalıyor. Evde böyle bir adım yok. İçeride kalan suyun tamamının kendi kendine buharlaşması gerekiyor ve buharlaşma yavaş ilerleyen bir iş. Halının yıkandıktan sonra günlerce ağır kalması, dibinin bir türlü kurumaması ve zaman zaman koku yapması hep bu tek eksik adımdan çıkıyor. Aşağıda hangi halının evde yıkanabileceğini, hangisinin neden yıkanamayacağını ve kurutma tarafında tam olarak neyin ters gittiğini anlatıyoruz."
     ],
-    "bolumler": [
+    bolumler: [
       {
-        "baslik": "Karot Deliği Kapatılmak Zorunda mı?",
-        "paragraflar": [
-          "Duruma göre değişir. Tesisat geçişi için açılan delik zaten kapatılmaz; içinden boru ya da kablo geçer, çevresi uygun malzemeyle sızdırmaz hale getirilir. Numune için açılan delikte ise geriye boş bir silindir kalır ve orası doldurulur.",
-          "Doldurmanın sebebi görüntü değil. Açık kalan bir boşluk suyu ve nemi betonun içine, oradan da donatıya taşır. Donatı paslandıkça hacmi büyür, büyüyen demir çevresindeki betonu iter ve zamanla yüzey çatlayıp dökülür. Delik ne kadar küçük olursa olsun süreç aynı işler; sadece daha yavaş.",
-          "Kararı kim verir sorusunun cevabı da net: numune alma işi yapının mühendisinin talimatıyla yürüdüğü için, deliğin nasıl kapatılacağını da o belirler. Biz uygulama tarafındayız. Onaylanmış bir tamir detayı varsa ona uyarız; yoksa mühendise sorulmasını isteriz. Taşıyıcı bir elemandaki boşluğun dolgusu tercih meselesi değildir."
-        ]
+        baslik: "Evde Yıkanabilecek Halının Sınırı Nerede Biter",
+        paragraflar: [
+          "Sınırı çizen dört şey var: ebat, kalınlık, tabanın cinsi ve üzerindeki etiket. Ebat ile kalınlık birlikte halının ıslak ağırlığını belirler; küvete ya da geniş bir leğene sığan, ıslakken tek kişinin kaldırıp asabildiği bir parça evde yıkanabilir. Taban en az yüzey kadar belirleyicidir. Lateks ve kauçuk tabanlı paspaslarda sıcak su tabanı çatlatır, çatlayan taban da kuruduktan sonra dökülmeye başlar. Jüt ve pamuk tabanlı parçalar ise suyu içine çeker ve kurutmadaki asıl sorun onlarda çıkar. Etiketinde yıkanabilir işareti olan bir parça, o etiketin söylediği sıcaklık ve programla sınırlıdır; yıkanabilir ifadesi her koşulda yıkanır anlamına gelmez.",
+          "Evde yıkanmaması gereken grup ise nettir. Yün ve el dokuma parçalar ıslakken keçeleşmeye ve boya akmasına açıktır; ipek ile viskon esaslı halılarda su ve sürtünme tüyün parlaklığını doğrudan bozar, bozulan parlaklık geri gelmez. Shaggy ve uzun tüylü halılarda sorun yıkamanın kendisi değil, havın dibindeki nemin evde hiç kurumamasıdır. Renk akıp akmayacağını anlamanın basit bir yolu var: halının görünmeyen bir köşesini ıslatın, üzerine beyaz bir bez bastırın, bezde renk kalıyorsa o halı evde yıkanmaz. Bu grupların her biri tesiste ayrı fırça ayarı ve ayrı partiyle çalışılıyor; sürecin tamamını [halı yıkamanın tesiste nasıl yürüdüğünü anlattığımız sayfada](/hizmetler/hali-yikama/) bulabilirsiniz."
+        ],
       },
       {
-        "baslik": "Hangi Harçla Kapatılır?",
-        "paragraflar": [
-          "Numune deliği normal çimento harcıyla kapatılmaz. Sıradan harç kürlenirken hacmi küçülür; delik boyunca çeperle dolgu arasında ince bir boşluk kalır ve dolgu yükü aktarmaz, sadece deliği görsel olarak kapatır. Bu iş için rötresi telafi edilmiş, yani kürlenirken büzülmeyen özel tamir harçları üretiliyor. Ürün ambalajında \"rötresiz\" ya da \"büzülme telafili\" ibaresi aranır.",
-          "Uygulamanın sonucu belirleyen kısmı harç değil hazırlık. Delik içi kesim çamurundan tamamen temizlenir, basınçlı hava ya da su ile yıkanır. Çeperde kalan ince çamur tabakası, yeni harcın betona yapışmasını engelleyen bir ayırıcı gibi davranır; harç ne kadar iyi olursa olsun tutunamaz. Temizlikten sonra yüzey doygun ama yüzeyde su birikintisi kalmayacak şekilde nemlendirilir, harç boşluk kalmayacak biçimde basılır.",
-          "Su geçirmesi istenmeyen yerlerde — bodrum perdesi, temel, teras, ıslak hacim döşemesi — tamir harcının üstüne ayrıca su yalıtımı gelir. Mevcut yalıtım tabakası delinmişse o tabakanın kendi detayıyla onarılması gerekir; deliği doldurmak yalıtımı geri getirmez. Bu ayrım atlandığında sorun aylar sonra alt kattaki tavanda leke olarak ortaya çıkar."
-        ]
+        baslik: "Islanan Halı Ne Kadar Ağırlaşır, Neden Sıkılamaz",
+        paragraflar: [
+          "Halı suyu yüzeyinde tutmaz, dokusunun içine alır. İplik arası boşluklar ve tabandaki dokuma katmanı dolduğunda halı kendi kuru ağırlığının katları kadar su taşır hâle gelir. Bunun pratik karşılığı şu: kuruyken iki kişinin rahat kaldırdığı bir salon halısı ıslakken yerinden bile oynamaz. Ağırlığın kendisi de zarar verir. Su yüklü bir halı bir yerden asıldığında bütün yük dokumanın asıldığı hattan geçer; dokuma gerilir, kenarlar dalga yapar ve bu bozulma halı kuruduktan sonra da yerinde kalır. Evde en sık yapılan hata, halıyı ıslakken sürükleyerek taşımaktır; taban dokuması gerilen yüke dayanamaz ve kenardan ayrılmaya başlar.",
+          "Suyu almak için ev tipi ıslak vakum kullanıldığında ise başka bir sınıra çarpılır. Islak vakum yüzeye yakın suyu çeker, dokumanın dibindeki suyu çekmez; birkaç geçişten sonra hazne dolmayı keser ama halı hâlâ ağırdır. Elle sıkmak da işe yaramaz, çünkü sıkma kuvveti halının yalnızca bastırdığınız noktasına iner ve bıraktığınız anda su geri yayılır. Tesiste rulo sıkma makinesinin yaptığı şey bu ikisinden farklı: halının tamamı silindirler arasından geçiriliyor, basınç bütün yüzeye aynı anda ve aynı ölçüde biniyor. Evde bunun karşılığı olan bir hareket yok; olmadığı için de kurutma süresi baştan uzun başlıyor."
+        ],
       },
       {
-        "baslik": "Delikte Donatı Kesilmişse Ne Olur?",
-        "paragraflar": [
-          "Numune alırken kural, kesitin içinde donatı bulunmayacak şekilde yer seçmektir. Donatı taraması bu yüzden yapılır. Yine de her zaman mümkün olmayabilir ve bazen numunenin içinden demir çıkar.",
-          "Bu durumda mesele artık delik kapatmak değildir. Kesilen donatının o bölgedeki işlevini kaybettiği kabul edilir ve ne yapılacağına yapının mühendisi karar verir. Uygulanacak çözüm elemanın türüne, kesilen donatının konumuna ve yapının durumuna göre değişir; standart bir cevabı yoktur. Bizim yapmadığımız şey, kendi kararımızla \"nasılsa doldurulur\" deyip üstünü kapatmaktır.",
-          "Aynı sebeple, numune alınacak yeri biz seçmiyoruz. Hangi elemandan, kaç adet ve nereden alınacağını yapının mühendisi belirler. Bu bir sorumluluktan kaçma değil, işin gerçekten öyle yürümesi: o kararı vermek için yapının projesini ve taşıyıcı sistemini bilmek gerekir."
-        ]
+        baslik: "Balkonda Kurutma: Toz, Korkuluk ve Gece Nemi",
+        paragraflar: [
+          "Nemli bir yüzey havadaki her şeyi tutar. Yıkanmış halı balkona serildiğinde toz, kum, polen ve is doğrudan yüzeye yapışır; halı kuruduğunda bunlar dokunun içinde kalır. Yıkanmış bir halının ilk süpürmede toz vermesinin en yaygın sebebi budur ve bu toz yıkamadan artan kir değil, kururken üstüne konan yeni kirdir. Denizli merkezde yaz sıcak ve tozlu geçiyor, bahar aylarında ise polen yükü yüksek. Yani balkon kurutma için havanın en açık olduğu günlerde bile temiz bir ortam değil. Kapalı kurutma odasının varlık sebebi tam olarak bu: halı dış havayla hiç temas etmeden, tozun ve polenin ulaşamadığı bir ortamda kuruyor.",
+          "İkinci sorun korkuluk. Bir salon halısı korkuluğa asıldığında ortadan ikiye katlanır ve katlanan iki yüzey birbirine yapışır. Aralarından hava geçmediği için kat yerinin iç kısmı, halının geri kalanı kurusa bile nemli kalır; korkuluk demirinin bastığı hatta ise çizgi hâlinde bir iz oluşur ve bu iz bir süre çıkmaz. Gece tarafı ayrı bir konu: gün batımından sonra havanın nemi yükselir ve dışarıda bırakılan halı gündüz verdiği nemin bir kısmını geri alır. Akşam içeri alınmayan bir halı ertesi sabah, önceki akşamdan daha kuru olmayabilir. Kurutma bu yüzden ilerlemez; gündüz kazanılan her şey gece geri verildiği için halı günlerce aynı noktada döner durur."
+        ],
       },
       {
-        "baslik": "Kat Geçişlerinde: Yangın ve Ses Yalıtımı",
-        "paragraflar": [
-          "Döşemeden geçen tesisat delikleri kapatılmaz ama boş da bırakılmaz. İki kat arasındaki bir boşluk yangında dumanın ve alevin üst kata taşınmasının en kolay yoludur. Bu yüzden boru veya kablo geçirildikten sonra delik çevresi yangına dayanıklı dolgu malzemeleriyle sızdırmaz hale getirilir.",
-          "Aynı boşluk ses için de bir köprü. Konutlarda alt kattan gelen sesin kaynağı sık sık tesisat şaftlarındaki kapatılmamış geçişlerdir. Doğru dolgu her iki sorunu birden çözer.",
-          "Bu iş genelde bizim işimizin devamında başka bir ekibe geçer, ama deliği açarken çevresinde dolgu için yer bırakıp bırakmadığımız o ekibin işini doğrudan etkiler. Keşifte deliğin ne için açıldığını sormamızın bir sebebi de bu."
-        ]
+        baslik: "Kışın Evde Kurutma Neden Bitmez",
+        paragraflar: [
+          "Kurumak, suyun halıdan havaya geçmesidir; havanın alabileceği nem miktarı doluysa geçiş durur. Soğuk hava sıcak havaya göre çok daha az nem taşır. Kışın dışarısı zaten neme yakın doygundur, içerisi ise pencereler kapalı olduğu için hızla doyar. Odaya alınan ıslak bir halı bütün odanın nemini yükseltir; camlarda yoğuşma başlar, duvar köşelerinde rutubet belirir ve halı hâlâ kurumaz. Bu, ısıtmayı artırarak çözülen bir şey değil. Isıtılan havanın nem alma kapasitesi artar ama o hava dışarı atılmazsa nemi taşıyacak yeri kalmaz. Kışın evde kurutmanın önündeki asıl engel sıcaklığın düşük olması değil, nemi dışarı taşıyacak bir hava değişiminin bulunmamasıdır.",
+          "Kalorifer üstüne ya da sobanın yanına serilen halıda ise farklı bir sorun çıkar. Isı halının yalnızca kaynağa dönük yüzünü kurutur; o yüz erken kuruduğu için halı dışarıdan bitmiş görünür, oysa dokumanın dibi ve alt yüzü nemli durur. Kuru yüz ile nemli dip arasındaki bu fark halının elle bastırıldığında sert ve kâğıt gibi hissedilmesine yol açar. Halı ısı kaynağının üzerinde katlı hâlde bekletildiğinde ise kat aralarında nem birikir; koku çoğu zaman burada başlar. Ölçüt tek: halının kuruyup kurumadığına yüzeyine bakarak değil, tabanın orta bölgesine avuç içiyle bastırarak karar verilir; kenarlar hava aldığı için zaten her zaman önce kurur."
+        ],
       },
       {
-        "baslik": "Sahada Sık Gördüğümüz Yanlışlar",
-        "paragraflar": [
-          "En yaygını deliğin alçı ya da sıva ile kapatılması. Yüzeyde düzgün görünür, birkaç ay içinde etrafından çatlar. Alçı nem alır, hacmi oynar ve betona yapışmaz; taşıyıcı bir elemanda hiçbir karşılığı yoktur.",
-          "İkincisi poliüretan köpük. Boşluğu doldurur, kolaydır ve tamamen yanlıştır: köpük yük taşımaz, zamanla ultraviyole ve nemle bozulur, üstelik yangında yanar. Tesisat çevresinde ses için kullanıldığında bile yangın dolgusu yerine geçmez.",
-          "Üçüncüsü çıkan karot silindirinin geri yerine sokulması. Mantıklı gibi durur ama silindir çeperle arasında birkaç milimetrelik boşluk bırakır, harçsız oturur ve hiçbir şeyi bağlamaz. Numune zaten laboratuvara gider; geri getirilse bile kesilmiş ve kırılmış haldedir.",
-          "Dördüncüsü deliğin unutulması. Özellikle görünmeyen yerlerde — asma tavan üstünde, şaft içinde, bodrum perdesinde — açılan delikler kapatılmadan iş kapanıyor. Numune alma işi bittiğinde deliklerin ne olacağı baştan konuşulmadıysa genelde kimse üstlenmiyor."
-        ]
-      },
-      {
-        "baslik": "Karot Alınan Binada Oturulur mu, Tehlikeli mi?",
-        "paragraflar": [
-          "Doğru yerden ve doğru sayıda alınmış bir numune binanın taşıyıcı sistemini zayıflatacak boyutta değildir. Alınan silindir, elemanın kesitinin yanında çok küçük kalır; yer seçimi zaten donatıya ve kritik bölgelere denk gelmeyecek şekilde yapılır. Bu yüzden numune alınmış bir binada oturulmasında bir sakınca doğmaz.",
-          "Buradaki asıl hassasiyet sayı ve yer. Aynı elemandan üst üste numune almak, kritik bölgelerden almak ya da yer seçimini rastgele yapmak farklı bir konudur — bunun için karar mühendise ait olmalı, sahada \"buradan alalım\" denerek ilerlenmemelidir.",
-          "İşlem sırasında ise gürültü ve su vardır. Su soğutmalı çalışıldığı için toz havaya kalkmaz, ama kesim suyunun ve çamurun nereye akacağı önceden planlanmazsa daire içinde iş büyür. Zemin ve mobilya başlamadan örtülür, su kontrol altına alınır, iş bitiminde saha toplanır. Numunenin çıkması dakikalar sürer; zamanın çoğu hazırlık ve toplanmaya gider."
-        ]
-      },
-      {
-        "baslik": "Deliği Kim Kapatır? Teklife Dahil mi?",
-        "paragraflar": [
-          "Bu sorunun sahada sık sık cevapsız kaldığını görüyoruz. Numune alma işi verilirken konuşulan şey numunenin alınmasıdır; deliklerin kapatılması ayrı bir iş kalemi olarak hiç gündeme gelmez. İş bitince delikler ortada kalır ve kimin yapacağı belli değildir.",
-          "Biz teklif verirken deliklerin ne olacağını baştan soruyoruz. Kapatma bizden isteniyorsa fiyata dahil edilir ve hangi malzemeyle yapılacağı yazılır; mühendisin onaylanmış bir tamir detayı varsa ona göre. İstenmiyorsa da bunu teklifte açıkça belirtiriz ki sonradan \"bu ayrıydı\" gibi bir durum çıkmasın. Verdiğimiz rakam işin tamamını kapsar; iş sırasında kalem eklenmez.",
-          "Kapatmayı başka bir ekip yapacaksa deliği ona göre bırakırız: çeper temizlenir, çevresi tamir malzemesinin tutunabileceği halde teslim edilir. Kesim çamuru kurumuş bir delik, sonradan gelen ekip için ekstra iştir ve genelde atlanır — atlandığında da harç tutunmaz.",
-          "Kısacası, numune alma işi konuşulurken şu soruyu sormakta fayda var: delikler kapatılacak mı, kim kapatacak, hangi malzemeyle? Üçünün de cevabı işe başlamadan belli olmalı."
-        ]
+        baslik: "Küf Kokusu Başladıysa Geri Dönüşü Var mı",
+        paragraflar: [
+          "Önce kokuyu yapan şeyi ayırmak gerekiyor. Nemin kendisi kokmaz; koku, nemli kalan dokumada üreyen mikroorganizmanın bıraktığı şeydir. Bu yüzden halı kuruduğunda koku kendiliğinden gitmez, kaynağı halının içinde kalır. Havalandırmak, parfüm sıkmak ya da güneşe sermek kokuyu bir süre bastırır; halı yeniden nem aldığında koku aynı şiddetle döner. Sorunun ne kadar ilerlediğini anlamanın yolu var: halı tamamen kuruyken tabanının orta bölgesine avuç içiyle bastırıp elinizi koklayın. Kuru hâlde koku geliyorsa iş yüzeyde değildir. Tersini yaparak, yani yalnızca üst yüzeyi koklayarak verilen kararlar çoğu zaman yanıltıcı çıkıyor; üst tüyler kurudukları için koku tutmaz.",
+          "Geri dönüş çoğu durumda var. Koku yeni başlamışsa, halı yalnızca bir iki kez tam kurumadan toplanmışsa ve tabanın dokuması sağlamsa halı yeniden yıkanıp kontrollü ortamda tam kurutulduğunda açılıyor; burada belirleyici olan yıkamanın kendisi değil, arkasından gelen kurutmanın eksiksiz olması. Geri dönüşün olmadığı durum ise şudur: jüt taban uzun süre ıslak kalıp çürümüşse taban elle ovulduğunda toz gibi dökülür, halı katlandığında kat yerinde çıtırtı duyulur ve renk arka yüzde kahverengi halkalar hâlinde değişir. Böyle bir halıda koku artık kirden değil, dokumanın kendi bozulmasından gelir ve yıkamayla açılmaz. Bunu halıyı teslim alırken söylüyoruz; yıkadıktan sonra sürpriz olmasını istemiyoruz."
+        ],
       }
     ],
-    "sss": [
-      {
-        "q": "Karot alınan yere ne yapılır?",
-        "a": "Numune için açılmış delik, rötresi telafi edilmiş (büzülmeyen) tamir harcıyla doldurulur. Öncesinde delik içi kesim çamurundan tamamen temizlenir, yoksa harç betona tutunmaz. Su geçirmesi istenmeyen yerlerde üstüne ayrıca su yalıtımı gelir. Nasıl kapatılacağına yapının mühendisi karar verir."
-      },
-      {
-        "q": "Karot deliği normal çimento harcıyla kapatılabilir mi?",
-        "a": "Kapatılmamalı. Sıradan harç kürlenirken büzülür ve çeperle dolgu arasında ince bir boşluk kalır; delik görsel olarak kapanır ama dolgu yük aktarmaz. Aynı sebeple alçı, sıva ve poliüretan köpük de bu iş için uygun değildir."
-      },
-      {
-        "q": "Karot alınan binada oturulur mu, tehlikeli mi?",
-        "a": "Doğru yerden ve doğru sayıda alınmış numune taşıyıcı sistemi zayıflatacak boyutta değildir; alınan silindir elemanın kesitinin yanında çok küçük kalır. Yer seçimi donatıya ve kritik bölgelere denk gelmeyecek şekilde yapılır. Bu yüzden numune alınmış binada oturulmasında sakınca doğmaz."
-      },
-      {
-        "q": "Delikten donatı çıkarsa ne olur?",
-        "a": "Numune alırken kural, kesitin içinde donatı bulunmayacak şekilde yer seçmektir; donatı taraması bunun için yapılır. Yine de demir kesilmişse mesele delik kapatmanın ötesine geçer ve ne yapılacağına yapının mühendisi karar verir. Standart bir çözüm yoktur, elemana ve konuma göre değişir."
-      }
+    sss: [
+      { q: "Banyo paspasını ve küçük kilimi çamaşır makinesinde yıkayabilir miyim?", a: "Etiketi yıkanabilir diyorsa ve makinenin kapasitesini zorlamıyorsa yıkanır. İki noktaya dikkat edin: sıcaklığı etiketin verdiği değerin üstüne çıkarmayın ve lateks ya da kauçuk tabanlı paspasları sıcak suya sokmayın, taban çatlar. Sıkma devrini yüksek tutmak burada işinize yarar, çünkü evde suyu mekanik olarak alabildiğiniz tek yer makinenin sıkma programıdır. Kurutmayı da kaloriferin üstünde katlı hâlde değil, iki yüzü de hava alacak biçimde asarak yapın. Yün ve el dokuma kilimleri makineye vermeyin." },
+      { q: "Evde yıkadığım halı kuruduktan sonra sertleşti ve toz atıyor, sebebi ne?", a: "Genellikle iki şey birden olmuştur. Birincisi şampuan kalıntısı: halıdan geri alınamayan deterjan kuruduğunda ipliğin üzerinde ince bir film bırakır, film hem yüzeyi sertleştirir hem tozu kendine çeker. Evde durulama neredeyse hiçbir zaman yeterli olmuyor, çünkü durulama suyunu geri çekecek bir adım yok. İkincisi kururken üstüne konan toz. Nemli yüzey balkondaki tozu ve poleni doğrudan tutar, halı kuruduğunda o toz dokumanın içinde kalır. İkisi bir arada olduğunda halı yıkanmadan öncekinden daha çabuk kirlenir hâle gelir." },
+      { q: "Halının dibinin kuruyup kurumadığını nasıl anlarım?", a: "Yüzeye bakarak anlaşılmıyor, çünkü üst tüyler her zaman önce kurur. Halıyı düz zemine serin, orta bölgesinden bir köşeyi kaldırıp alt yüzüne avuç içinizin tersini bastırın. Serinlik hissediyorsanız buharlaşma sürüyor demektir; nem gitmişse el sıcaklık farkı duymaz. İkinci kontrol kokudur: aynı noktaya bastırıp elinizi koklayın, kuru bir halı koku vermez. Üçüncüsü ağırlıktır; halı kuru ağırlığına dönmemişse içinde hâlâ su vardır. Kontrolü kenarlardan değil ortadan yapın, çünkü kenarlar iki yönden hava aldığı için her zaman daha erken kurur." }
     ],
-    "ilgiliHizmetler": [
-      "karot",
-      "kimyasal-dubel",
-      "beton-delme"
-    ]
   },
-  "karot-firmasi-secerken": {
-    // Başlığa "Denizli" eklendi, "Kontrol Listesi" çıkarıldı (2026-08-15).
-    // Search Console: "denizli karot firmaları" 3 ayda 157 gösterim / 2 tık —
-    // sitenin en çok görünüp en az tıklanan sorgusu. Sorgu ÇOĞUL: "hangi
-    // firmalar, hangisini seçeyim". Bu yazı tam o soruyu cevaplıyordu ama
-    // başlığında şehir yoktu, açıklamasında vardı. Ana sayfayla yamyamlık
-    // riski var (o da "Denizli Karot Firması" ile başlıyor) ama niyet ayrı:
-    // ana sayfa "firma arıyorum", bu sayfa "nasıl seçerim" sorgusunu alıyor.
-    // Ana sayfanın "denizli karot" sorgusundaki %27 TO'suna dokunulmadı.
-    "seoTitle": "Denizli Karot Firması Seçerken Nelere Dikkat Edilir?",
-    "giris": [
-      "Karot firması seçerken çoğu kişi aynı yolu izler. Üç numara bulunur, üçüne de aynı soru sorulur, en düşük rakamı söyleyen iş alır. Sıkıntı şu ki o üç rakam çoğu zaman aynı işin karşılığı değildir. Biri kesilen parçayı indirmeyi ve molozu götürmeyi de hesaba katarak konuşmuştur, diğeri sadece makinenin duvarda geçireceği süreyi saymıştır. Aynı cümleyi duyup birbirinden çok farklı iki iş satın alırsınız.",
-      "Firmalar arasındaki fark, uç betona daldığı anda görünmez. Fark ondan önce ve ondan sonra ortaya çıkar. İşe nasıl bakıldığında, hangi yöntemin neden seçildiğinde, çıkan molozun kimin sırtında kaldığında, duvarda bırakılan kenarın ne halde olduğunda. Delme ve kesme kısmı zaten makinenin işidir; geri kalanı firmanın işidir. Güvenilir karotçu arayan biri için asıl ayrım da tam burada başlar.",
-      "Aşağıdakiler, iş vermeden önce sorulması gereken sorular ve dikkat edilmesi gereken işaretler. Tanıdıktan karotçu tavsiyesi almak iyi bir başlangıçtır, ama tavsiye edilen firmaya da aynı soruların sorulması gerekir. Denizli karot firması ararken de başka bir ilde ararken de bu liste değişmiyor, çünkü sahada çıkan sorunlar değişmiyor. İçlerinde bir madde diğerlerinden ayrı duruyor: taşıyıcı elemana onaysız müdahale teklifi. O maddede pazarlık yok, oradan geri dönülmez."
+  "hali-yikama-sureci-kac-gun": {
+    giris: [
+      "Salı günü alınan bir halı hangi gün geri gelir? Bu soruyu telefonda soran hemen herkesin aklında somut bir plan var: misafir geliyor, bayram yaklaşıyor, ev boyanacak, taşınma tarihi belli. Halı yıkama kaç gün sürer sorusunun tek bir cevabı olmamasının sebebi de tam olarak bu somutluk. Süreyi belirleyen şey halının makinede geçirdiği zaman değil, makineden çıktıktan sonra kuruması. Yıkamanın kendisi saatlerle ölçülür ve her halıda hemen hemen aynıdır; kuruma günlerle ölçülür ve halıdan halıya, mevsimden mevsime değişir. Bu yüzden telefonda süre sorulduğunda karşı taraftan halının cinsini ve tüy uzunluğunu duymak, verilen günün ölçüye dayandığını gösteriyor.",
+      "Ortalama bir cevap vermek gerekirse teslim süremiz ortalama 3-4 iş günü. Ama ortalama sözcüğünü boşuna kullanmıyoruz: kısa tüylü bir makine halısı bu aralığın alt ucuna, uzun tüylü bir shaggy ya da yün bir halı üst ucuna yakın duruyor. Kışın ve yağmurlu günlerde halı zaten daha nemli geliyor, kuruma da uzuyor. Alma ve teslim servisimiz her gün çalışıyor, yani halının alınması hafta sonuna denk gelse bile süre orada durmuyor; ama tesis pazar günü kapalı olduğu için işlem sırası hafta içinde ilerliyor. Aynı adresten çıkan halılar da genellikle birlikte teslim ediliyor, yani süreyi en yavaş kuruyan parça belirliyor.",
+      "Aşağıda süreyi oluşturan aşamaları sırasıyla yazdık: neden kuruma belirleyici, halı cinsine göre kuruma nasıl değişiyor, mevsim ve yoğunluk ne ekliyor, çok kısa vaat edilen bir sürede neyin eksik kaldığı ve teslim randevusunun nasıl kurulduğu. Amaç size tek bir gün söylemek değil, halınızı verirken hangi aralığı beklemeniz gerektiğini kendi başınıza kestirebilmeniz. Ölçüsünü, cinsini ve tüy uzunluğunu bildiğiniz bir halının kaç gün süreceğini bu yazının sonunda kabaca kendiniz söyleyebilirsiniz. Bir de sonda, halı elinize geçtiğinde kurumuş olup olmadığını kendi başınıza nasıl anlayacağınızı yazdık; bu kontrol bir dakika sürüyor ve yılların en sık şikâyetini baştan engelliyor."
     ],
-    "bolumler": [
+    bolumler: [
       {
-        "baslik": "Keşfe Gelmeden Telefonda Rakam Veren Firma",
-        "paragraflar": [
-          "Telefonda \"duvarda bir kapı boşluğu açtıracağım\" dendiğinde hemen fiyat söyleyen firma, aslında neyi keseceğini bilmiyordur. O duvar 15 santim tuğla da olabilir, 30 santim betonarme perde de. İkisi arasında yöntem değişir, makine değişir, süre değişir. Aynı ölçüdeki iki boşluk için harcanan zaman rahatlıkla ikiye katlanabilir. Telefonda söylenen rakam bu yüzden sahada tutmaz, iş başladıktan sonra \"burası beklediğimizden zormuş\" cümlesi gelir.",
-          "Keşfe gelen kişi neye bakar? Elemanın kalınlığına ve cinsine, içinde donatı olup olmadığına, boşluğun ölçüsüne ve adedine, çalışma yüksekliğine, makinenin sabitleneceği yüzeyin durumuna, suyun ve elektriğin nereden alınacağına, kesilen parçanın hangi yoldan dışarı çıkacağına. Üçüncü kattaki bir kesimde parçanın merdivenden inip inemeyeceği, kesimin kendisi kadar belirleyicidir. Bunlar yerinde görülmeden ortaya sağlıklı bir fiyat çıkmaz.",
-          "Keşfe gelmek çoğu firmada ücretsizdir ve yarım saati geçmez. Gelmeyi gereksiz bulup \"sen ölçüyü söyle yeter\" diyen bir karotçu, işi görmeden fiyat vermeyi tercih ediyordur. O fiyat genelde iki şekilde biter. Ya sahada yukarı çekilir ya da firma zararına girmemek için işin bir kısmını kısar. Kısılan kısım da çoğu zaman güvenlik önlemi, temizlik veya moloz nakliyesi olur."
-        ]
-      },
-      {
-        "baslik": "\"Metrekaresi Şu Kadar\" Diyen Teklifte Neyin Dahil Olduğunu Sorun",
-        "paragraflar": [
-          "Birim fiyat cümlesi tek başına bir bilgi taşımaz. Kesimde metretül veya metrekare üzerinden, karotta delik başına ya da derinlik santimi üzerinden konuşulması normaldir. Asıl soru şudur: bu birimin içinde ne var? İki firma neredeyse aynı birim fiyatı söyleyip birbirinden tamamen farklı iki teklif vermiş olabilir, çünkü biri işin yarısını kapsam dışında tutuyordur.",
-          "Şunlar tek tek sorulmalı. Su ve elektrik nereden sağlanacak, sayaçtan çekilecekse kimin sayacından? Yüksekte çalışılacaksa platform veya iskele kime ait? Zeminin ve eşyaların örtülmesi teklifin içinde mi? Kesilen parça yerinden alınıp indirilecek mi, yoksa iş \"kestik, gerisi sizin\" noktasında mı bitiyor? Mesai bitiminden sonra ya da hafta sonu çalışmak gerekirse fiyat aynı mı kalıyor? Bunların hiçbiri zor soru değil, ama sorulmadığında hepsi işin sonunda ek kalem olarak geri döner.",
-          "Moloz ve temizlik başlı başına bir kalemdir, çünkü ağırlığını kimse doğru tahmin etmez. Betonarmenin metreküpü kabaca iki buçuk ton gelir; 20 santim kalınlığında bir metrekarelik parça yarım tonu bulur. O parça elle taşınmaz, merdivenden indirilmez, poşete konmaz. Kesim su soğutmalı yapıldıysa ortada bir de çamur olur ve kuruduktan sonra temizlemesi kat kat zorlaşır. Molozun kime ait olduğu, nereye götürüleceği ve nakliyenin fiyata dahil olup olmadığı konuşulmadıysa o yığın sahada kalır."
-        ]
-      },
-      {
-        "baslik": "Taşıyıcı Elemana Onaysız Müdahale Teklifi: Buradan Dönülmez",
-        "paragraflar": [
-          "Kolon, perde ve kiriş binanın yükünü taşıyan elemanlardır. Bunlara delik açmak, bir köşesini kesmek, içinden tesisat geçirmek serbest bir iş değildir. Statik proje üzerinden değerlendirilmesi ve yetkili bir inşaat mühendisinin onayı gerekir. Onay da \"olur\" demekten ibaret değildir; deliğin elemanın neresinden geçeceği, hangi çapta olacağı, kaç adet açılacağı ve gerekiyorsa nasıl güçlendirileceği yazılıdır.",
-          "Sahada \"ben bunu yaparım, bir şey olmaz, yıllardır yapıyorum\" cümlesini duyduğunuz anda konuşma bitmeli. Bu cümleyi kuran kişi işin makine tarafını gerçekten biliyor olabilir. Bilmediği şey o kolonun hangi yükü taşıdığıdır, çünkü onu ancak proje söyler. Kesilen donatı geri gelmez. Bir delik doldurulabilir, ama dolgu kesilen demirin yaptığı işi yapmaz ve o nokta yapının zayıf noktası olarak orada kalır.",
-          "Emin olmadığınız durumda basit bir kural işe yarar: elemanın taşıyıcı olup olmadığını bilmiyorsanız taşıyıcı kabul edin ve projeye bakılmasını isteyin. Bölme duvar sanılıp kesilen perdeler görülmüş şeydir. Onay süreci işi birkaç gün uzatır, o kadar. Onaysız açılan bir delik ise hem yapıda kalır hem de sorumluluğu yapı sahibinin üstünde bırakır. Bu maddeyi tek başına bir eleme kriteri olarak kullanabilirsiniz."
-        ]
-      },
-      {
-        "baslik": "İş Güvenliği ve Sigortalı Çalışan",
-        "paragraflar": [
-          "Bu işte üç şey çoğu zaman aynı anda bir arada bulunur: yükseklik, su ve elektrik. Kazalar da genelde bu üçünün kesiştiği yerde olur. Yükseklikte çalışılacaksa uygun bir platform kurulması gerekir; el merdiveni üstünde duvar testeresiyle çalışmak diye bir şey yoktur ve böyle bir manzara gördüğünüzde işi durdurmanız gerekir. Emniyet kemerinin takılı olması, kemerin bağlandığı noktanın sağlam olması, platformun korkuluğunun bulunması kadar temel şeylerden bahsediliyor.",
-          "Su soğutmalı çalışmada zemin ıslaktır ve makineler elektrikle döner. Kaçak akım rölesi, sağlam bir uzatma kablosu ve ek yerlerinin sudan uzak tutulması tartışma konusu değildir. Kabloyu su birikintisinin içinden geçiren, prizin üstüne naylon atıp geçen bir ekip o gün kaza yaşamasa bile nasıl çalıştığını göstermiş olur. İçeride başka esnaf ya da ev halkı varsa çalışma alanının ayrılması da aynı başlığın altındadır.",
-          "Kesilen parçanın nasıl indirileceği baştan planlanmış olmalı. Duvardan alınan blok, karottan çıkan göbek veya döşemede kesilen kapak kontrolsüz düştüğünde altındaki her şeyi ve herkesi ilgilendirir. Karşı tarafın boşaltılması, parçanın askıya alınması, düşeceği yerin hazırlanması işin parçasıdır ve fiyatın içinde olmalıdır. Bir de sigorta var. Sahaya gelecek kişilerin sigortalı olup olmadığını sormak ayıp değil, gerekli. Sigortasız bir işçi evinizde veya işyerinizde kaza geçirdiğinde ortaya çıkan tablo, kesim bedelinin çok ötesindedir."
-        ]
-      },
-      {
-        "baslik": "Her İş Her Makineyle Olmaz, Yüzey de Bunu Gösterir",
-        "paragraflar": [
-          "Ekipmanın işe uygunluğu, işi verenin de kabaca bilmesi gereken bir konu. Elmas diskli duvar testeresi, disk çapının kabaca yarısı kadar derinlik keser. Yani 400 milimetrelik bir diskle 30 santimlik bir duvar tek taraftan kesilmez, iki yüzden karşılıklı çalışmak gerekir. İki kesim ortada tam buluşmazsa köşelerde kalan bağlantılar zorla koparılır ve düzgün kenar diye bir şey kalmaz. Daha kalın kesitlerde ya daha büyük disk ya da elmas tel devreye girer.",
-          "Karotta da çap ve derinlik makineyi belirler. Elde tutulan bir makineyle 200 milimetre çapında delik açmaya kalkışmak, ucun salınmasına ve deliğin ekseninden kaçmasına yol açar; o iş sehpaya bağlı bir sistemin işidir. Firmanın hangi yöntemi neden seçtiğini sorun. \"Kırıcıyla kırar geçeriz\" cevabı bazı işlerde gerçekten doğrudur, bazı işlerde ise elinde uygun makine olmadığı anlamına gelir. İkisini ayırmanın yolu, cevabın gerekçesini dinlemekten geçer.",
-          "Yöntem seçiminin faturası teslim sonrası yüzeyde görünür. Elmas diskle kesilmiş bir boşluğun kenarı düzgün ve keskin çıkar, kasa doğrudan oturur. Kırıcıyla açılan boşluğun kenarı dağınıktır; sıva, tamir harcı, bazen ilave işçilik ister. Teklif alırken \"iş bittiğinde yüzey ne halde olacak\" sorusunu sormak, sonradan kimin ne yapacağını baştan belirler. Aynı soru zemin, komşu duvar ve tesisat için de geçerlidir."
-        ]
-      },
-      {
-        "baslik": "Teklifte Yazılı Olması Gereken 7 Şey",
-        "paragraflar": [
-          "Sözlü anlaşma, iş bitene kadar herkesin kafasındaki farklı işi korur. Yazılı teklif bunu bitirir. Kaşeli kağıt, resmi sözleşme formatı şart değil; tek bir mesaj olarak yazılması bile tartışmanın büyük kısmını ortadan kaldırır. Aşağıdaki yedi başlık yazılı değilse elinizdeki teklif eksiktir.",
-          "Bu yedi başlığın yanına ödeme koşulunu da eklemek gerekir: ne kadarı başlangıçta, ne kadarı teslimde. Bir de şu soru var. Keşiften sonra verilen fiyat işin sonunda değişebilir mi, değişecekse hangi durumda? Bu sorunun cevabını yazılı almak, sahada en sık tartışılan konuyu baştan kapatır."
+        baslik: "Süreyi Yıkama Değil Kuruma Belirliyor",
+        paragraflar: [
+          "Bir halının tesise girip yıkanmış olarak çıkması aynı gün içinde tamamlanan bir iş. Toz çırpma, ön yıkama ve leke kontrolü, otomatik yıkama, durulama ve sıkma birbirini takip ediyor; bu aşamaların hiçbiri günlerce sürmüyor. Rulo sıkma makinesinden geçen halı suyunun yaklaşık %95'ini bırakıyor, yani kurutmaya sırılsıklam değil nemli giriyor.[Bütün akışı adım adım sayfasında](/hizmetler/hali-yikama/) yazdık. Buraya kadar geçen süre, teslim tarihinin küçük bir parçası. Yani halınızı sabah verdiğinizde akşam yıkanmış oluyor; teslim tarihini uzatan şey o günden sonrası. Bu aşamalarda gecikme yaşanan tek durum, halının ön yıkamada bekletilmesi gereken bir lekesi olması.",
+          "Geriye kalan nem ise dokunun içinde duruyor ve dışarı çıkmasının tek yolu buharlaşma. Buharlaşmanın hızını üç şey belirliyor: ortamdaki nem oranı, hava hareketi ve nemin yüzeye çıkmak için kat etmesi gereken mesafe. İlk ikisi kontrol edilebilir; üçüncüsü halının kendi yapısıyla ilgili ve değiştirilemiyor. Bu yüzden süre sorusunun cevabı halıya bakılmadan verilemiyor. Aynı gün yıkanan iki halının biri ertesi gün teslime hazır olurken diğeri iki gün daha bekleyebiliyor; ikisi de aynı işlemden geçmiş olmasına rağmen. Kapalı ve kontrollü bir ortamda kurutmanın sebebi de bu: ilk iki değişkeni sabitleyip halının kendi yapısına göre süre tanımak."
         ],
-        "liste": [
-          "İşin tanımı: hangi katta, hangi elemanda, hangi ölçüde, kaç adet. \"Duvar kesimi\" değil, \"3. katta 20 cm betonarme duvarda 90x210 cm kapı boşluğu, 1 adet\" gibi.",
-          "Seçilecek yöntem: karot, elmas diskli duvar testeresi, elmas tel, hidrolik ünite ya da kırıcı. Yöntem değişirse fiyatın da değişeceği not düşülsün.",
-          "Fiyata dahil olanlar ve olmayanlar: su ve elektrik temini, çalışma platformu veya iskele, örtü ve koruma, kesilen parçanın yerinden alınıp indirilmesi.",
-          "Moloz, karot göbeği ve kesim artığının kime ait olduğu, sahadan kimin taşıyacağı ve nereye götürüleceği.",
-          "Süre ve çalışma saatleri: iş kaç günde bitecek, hangi saatler arasında çalışılacak, mesai dışına ya da hafta sonuna taşarsa fiyat değişiyor mu.",
-          "Sahaya gelecek kişilerin sigortalı olduğu ve iş sırasında üçüncü kişilere veya komşu mala verilecek zararın kime ait olduğu.",
-          "Taşıyıcı eleman söz konusuysa, yetkili mühendis onayı gelmeden hiçbir kesimin veya delmenin başlamayacağı."
-        ]
       },
       {
-        "baslik": "Fiyat Tek Kriter Olduğunda Neden Pahalıya Patlar",
-        "paragraflar": [
-          "En düşük teklifi seçmek, işin doğru yöntemle yapılacağını varsaymaktır. Varsayım tutmazsa fark kesim faturasında değil tamir faturasında çıkar. Kırıcıyla açılan bir geçiş, testereyle kesilen aynı geçişten ucuza mal olur. Ardından kenar düzeltmesi gelir, sıva gelir, kasanın oturması için ilave işçilik gelir. Titreşim yan duvarın sıvasını veya fayansını çatlattıysa o da listeye eklenir. Toplandığında ucuz görünen teklif, pahalı olanın üstüne çıkar.",
-          "Delikte durum daha nettir. Ekseninden kaçmış bir delik düzeltilemez, doldurulup yeniden açılır. Dolgu malzemesi çevresindeki betonla aynı davranmaz ve o nokta yapıda bir zayıflık olarak kalır. Yani ödenen bedel iki delik artı bir tamirdir, üstüne de kalıcı bir kusurdur. Aynı mantık yanlış yerden kesilmiş bir döşeme boşluğu için de geçerli.",
-          "Bir de zamanın maliyeti var. Kesim ve delme işi genelde başka imalatların önünde durur; elektrikçi, tesisatçı, kalıpçı o boşluğun açılmasını bekler. İş bir gün yerine üç güne yayıldığında sahadaki herkesin programı kayar. Bu gecikmenin bedeli hiçbir teklifte yazmaz ama işi yaptıranın cebinden çıkar. Fiyat elbette kriterdir, tek kriter olduğunda pahalıya patlar."
-        ]
+        baslik: "Halı Cinsine Göre Kuruma Ne Kadar Değişiyor",
+        paragraflar: [
+          "Kısa tüylü makine halısı en hızlı kuruyan grup. Yüzeyi alçak olduğu için nemin çıkacağı mesafe kısa, dokusu sık olsa bile hava tabanla temas ediyor. Yün ve el dokuma halılarda süre uzuyor, çünkü yün lifi diğer elyaflara göre içine belirgin biçimde daha fazla nem alıyor ve bu nemi yavaş bırakıyor; ayrıca yün halı ıslakken zorlanmaz, hızlandırmak için sıcaklık artırılmaz, bu da süreyi kendiliğinden uzatıyor. İpekli ve Nepal halılar ise zaten sınırlı ıslatmayla çalışıldığı için farklı bir yol izliyor. Bu yüzden aynı evden çıkan bir yolluk ile bir salon halısı çoğu zaman aynı gün hazır olmuyor, ama birlikte teslim ediliyor.",
+          "Uzun tüylü ve shaggy halılar bu sıralamanın en sonunda. Tüy tabakası, altındaki dokumanın üzerinde nemi içeride tutan bir örtü gibi davranıyor: tüyün ucu havayla temas ettiği için erken kuruyor, dip ise saatlerce nemli kalıyor. Elinizi yüzeyde gezdirdiğinizde halı kurumuş görünür, tüyleri açtığınızda dip hâlâ ıslaktır. Bu yüzden shaggy halıda kuruma yüzeyden değil dipten takip ediliyor ve halı dip nem kontrolü yapılmadan ambalajlanmıyor.[Havın nasıl çalışıldığını sayfasında](/hizmetler/shaggy-hali-yikama/) ayrıntısıyla anlattık. Bambu ve peluş gibi yüzeyi yüksek parçalar da aynı gruba giriyor; ölçüsü küçük olsa bile kurutmada kısa tüylü bir halıdan uzun duruyorlar."
+        ],
+      },
+      {
+        baslik: "Mevsim ve Yoğunluk Ne Ekliyor",
+        paragraflar: [
+          "Kuruma, havanın taşıyabileceği nem miktarıyla doğrudan ilgili. Denizli'de yaz ayları sıcak ve kuru geçiyor; bu dönemde halılar aralığın alt ucunda teslim ediliyor. Kış ise farklı: dışarıdaki nem yüksek, gün kısa, evlerden gelen halılar kapıdan çıkarken bile daha nemli oluyor. Yağmurlu bir günde alınan halı tesise ıslak gelmiş olabiliyor. Bu koşullarda kuruma birkaç saat değil, gerçekten bir gün uzayabiliyor. Süreyi soruyorsanız mevsimi de hesaba katan bir cevap almanız normal. Yazın süre kısalırken başka bir konu öne çıkıyor: halı kuruduktan sonra sıcak araçta uzun süre beklememeli, bu yüzden teslim saatleri de plana giriyor.",
+          "İkinci değişken yoğunluk. Bahar temizliği dönemi, bayram öncesi ve mevsim geçişleri halı yıkamada belirgin biçimde yoğun geçiyor; bu dönemlerde iş sırası uzuyor. Kurutmanın kapasitesi sınırlı olduğu için sıradaki halı, önündeki halı çıkmadan yerine giremiyor. Dürüst planlama burada devreye giriyor: yoğun bir haftaya denk geldiyseniz bunu baştan söylemek, sonra teslim gününü ertelemekten iyidir. Halınızın belirli bir tarihte evde olması gerekiyorsa, bunu halıyı verirken söyleyin; plan buna göre kurulabiliyorsa kurulur, kurulamıyorsa da bunu baştan öğrenmiş olursunuz. Yoğunluğun bir avantajı da var: sezon dışında verilen halılar hem daha rahat planlanıyor hem aralığın alt ucunda teslim ediliyor."
+        ],
+      },
+      {
+        baslik: "Neden Yarın Hazır Şüpheli Bir Süre",
+        paragraflar: [
+          "Çok kısa bir teslim vaadi, kuruma süresini ortadan kaldırmıyor; yalnızca o sürenin nerede geçirileceğini değiştiriyor. Yüzeyi kurumuş ama dibi hâlâ nemli bir halı elle yoklandığında kuru hissedilir, tartıldığında ise kendi kuru ağırlığından ağırdır. O halı ambalajlanıp size teslim edildiğinde nem paketin içinde kalıyor ve dışarı çıkacak yer bulamıyor. Birkaç gün sonra ambalaj açıldığında ortaya çıkan şey rutubet kokusu oluyor; açık renkli halılarda kenarlardan sarımsı bir iz gelebiliyor. Nemin kendisi de tek başına kalmıyor; kapalı ambalajda bekleyen nem, halının tabanında küf kokusunun oluşması için gereken ortamı hazırlıyor. Kokunun kaynağı halının kendisi değil, içinde kalan sudur.",
+          "Bunun tek çözümü halıyı yeniden yıkamak, yani baştan aldığınız zamanı fazlasıyla geri vermek. Bu yüzden süreyi kısaltmanın gerçek yolu kurutmayı kesmek değil, işi doğru sıraya koymak: iyi bir toz alma daha az sürtünme ve daha az şampuan gerektiriyor, iyi bir sıkma kurutmaya giren nemi azaltıyor. Halı size teslim edildiğinde kendi kontrolünüzü yapmanız da mümkün: tüyleri iki yana açıp dibine elinizi sokun, halının tabanı serin ve nemli geliyorsa yerine sermeden önce birkaç saat açık bırakın. Halıyı yerine sererken altına serilen bir taban keçesi varsa onu da kontrol edin; keçe nem tuttuğunda halı kurusa bile zemin nemli kalıyor."
+        ],
+      },
+      {
+        baslik: "Ambalaj, Teslim Randevusu ve Ödeme",
+        paragraflar: [
+          "Kuruma tamamlandığında halı son kontrolden geçiriliyor, katlanıp ambalajlanıyor. Ambalajın işlevi görüntü değil koruma: halı araçta ve merdivende toz almasın, yağmurlu bir günde ıslanmasın diye kapatılıyor. Bu yüzden ambalaj ancak halı gerçekten kuruduktan sonra kapanıyor; sıralamayı ters çevirmek, yukarıda anlatılan rutubet sorununu doğrudan üretiyor. Halıyı yerine serdikten sonra ambalajı hemen açmanız, halının odanın havasıyla temas etmesi açısından iyi olur. Katlama biçimi de rastgele değil: halı hep aynı yerden katlanırsa o hat zamanla iz bırakıyor, bu yüzden büyük parçalar mümkün olduğunca rulo yapılıyor. Ambalaj açıldıktan sonra naylonu halının altına sermeyin; altta kalan naylon zeminden gelen nemi hapsediyor.",
+          "Teslim günü ve saati sizinle konuşularak belirleniyor. Alma ve teslim servisi her gün çalışıyor, tesis ise pazartesi ile cumartesi arası 07:00-18:00 açık. Alım ve teslim ücretsiz, ödeme kapıda nakit ya da kredi kartıyla yapılıyor; yani halıyı teslim alıp kontrol etmeden ödeme yapmanız gerekmiyor. Evde bulunacağınız saat aralığını baştan söylemeniz planlamayı kolaylaştırıyor, özellikle asansörsüz binalarda ve dar sokaklarda aracın yanaşacağı saat işin bir parçası hâline geliyor. Merdivenden çıkarılacak büyük bir halı varsa bunu baştan söylemeniz de işi hızlandırıyor. Aynı adreste koltuk ya da perde de yıkanacaksa iş tek ziyarette planlanıyor. Teslim öncesinde kısa bir telefon geliyor, yani kapıda beklenmedik bir saatle karşılaşmıyorsunuz."
+        ],
       }
     ],
-    "sss": [
-      {
-        "q": "Telefonda fiyat veren karot firmasıyla çalışmak yanlış mı?",
-        "a": "Telefonda söylenen rakam bir fikir verir, bağlayıcı bir teklif değildir. Elemanın kalınlığı, malzemesi, içindeki donatı, çalışma yüksekliği ve kesilen parçanın nasıl çıkarılacağı görülmeden fiyat oturmaz. Firma telefonda bir aralık söyleyip \"yerinde görüp netleştirelim\" diyorsa bu normal bir yaklaşımdır. Keşfe hiç gelmeden kesin rakam veren bir firma ise ya işi olduğundan basit görmüştür ya da aradaki farkı sahada kapatmayı planlamıştır."
-      },
-      {
-        "q": "Kolona veya perdeye delik açtırmak için ne gerekiyor?",
-        "a": "Taşıyıcı elemana yapılacak her müdahale statik proje üzerinden değerlendirilmeli ve yetkili bir inşaat mühendisinin onayıyla yapılmalıdır. Onayda deliğin yeri, çapı, adedi ve gerekiyorsa alınacak güçlendirme önlemleri belirtilir. Bu onay olmadan işe başlamayı teklif eden bir firmayla çalışmayın, çünkü kesilen donatı geri gelmez ve sorumluluk yapı sahibinde kalır. Elemanın taşıyıcı olup olmadığından emin değilseniz taşıyıcı kabul edip projeye baktırmak en güvenli yoldur."
-      },
-      {
-        "q": "Moloz ve temizlik normalde kime ait olur?",
-        "a": "Bunun tek bir doğrusu yok, firmadan firmaya değişir; önemli olan hangisinin geçerli olduğunun baştan yazılı olmasıdır. Bazı firmalar molozu ve kesim artığını kendi aracıyla götürür ve bunu fiyata dahil eder, bazıları sadece keser ve yığını sahada bırakır. Su soğutmalı kesimde ortaya çıkan çamurun temizliği de ayrı bir iştir, kuruduktan sonra kazımak gerekir. Teklifi alırken \"iş bittiğinde ortada ne kalacak\" sorusunu sorun ve cevabı yazılı isteyin."
-      },
-      {
-        "q": "İki teklif arasında ciddi fark varsa ne yapmalıyım?",
-        "a": "Önce iki teklifin gerçekten aynı işi tarif edip etmediğine bakın, çünkü fark çoğu zaman yöntemin veya kapsamın farklı olmasından gelir. Biri elmas testereyle kesip parçayı indirmeyi ve molozu götürmeyi sayıyor, diğeri kırıcıyla açıp yığını yerinde bırakıyor olabilir. Kapsamı eşitleyip aynı soruyu tekrar sorduğunuzda aradaki fark genelde küçülür. Fark yine de büyük kalıyorsa düşük teklifin neyi atladığını açıkça sorun; iş güvenliği önlemleri, sigorta ve temizlik en sık atlanan kalemlerdir."
-      }
+    sss: [
+      { q: "Acil ihtiyacım var, halı daha erken teslim edilebilir mi?", a: "Bazı durumlarda mümkün, ama bu kurutmayı kısaltarak değil sırayı düzenleyerek oluyor. Kısa tüylü bir makine halısı, yoğun olmayan bir haftada ve sıcak mevsimde aralığın alt ucunda teslim edilebiliyor. Uzun tüylü, yün ya da el dokuma bir halıda aynı esneklik yok; o halının kuruması gereken süre var ve o süre kısaltıldığında halı nemli teslim edilmiş oluyor. Acil bir tarihiniz varsa halıyı verirken söyleyin, mümkün olup olmadığını baştan konuşalım. Süreyi kısaltmanın gerçekçi yolu halıyı erken vermek; bir hafta önceden planlanan iş, acil hâle gelmiyor." },
+      { q: "Kışın yıkatmak teslim süresini uzatır mı?", a: "Genellikle bir miktar uzatıyor. Kışın havadaki nem yüksek olduğu için buharlaşma yavaşlıyor; ayrıca evden çıkan halı zaten daha nemli oluyor, yağmurlu bir günde alınan halı tesise ıslak gelebiliyor. Buna bahar ve bayram öncesi yoğunluğu eklendiğinde iş sırası da uzayabiliyor. Bunun karşılığında kışın halı yıkatmanın bir avantajı var: evde kurutma imkânı olmadığı için zaten dışarıda yıkanması gereken dönem kış, yani süre uzasa da işin doğru yerde yapılması bu mevsimde daha belirleyici. Kışın halıyı verirken teslim tarihinizi söylemeniz, planın buna göre kurulup kurulamayacağını baştan netleştiriyor." },
+      { q: "Halının nemli teslim edildiğini nasıl anlarım?", a: "Yüzeye bakarak anlaşılmıyor, çünkü yüzey her hâlükârda kuru geliyor. Tüyleri iki yana ayırıp elinizi dibe, dokumanın olduğu yere sokun; taban serin ve nemli hissediliyorsa halı tam kurumamış demektir. İkinci işaret koku: kurumuş bir halının kendine ait ağır bir kokusu olmaz, rutubetli bir koku varsa nem içeride kalmıştır. Üçüncüsü ağırlık; halı serilirken beklenenden ağır geliyorsa yine aynı sebep söz konusu. Böyle bir durumda halıyı hemen serip üzerine mobilya koymayın, önce açık bırakın ve arayın. Nemli geldiğini düşündüğünüz halıyı katlı bırakmak durumu kötüleştiriyor, açık sermek düzeltiyor." }
     ],
-    "ilgiliHizmetler": [
-      "karot",
-      "beton-kesme",
-      "beton-delme"
-    ]
   },
-  "karot-mu-kirici-mi": {
-    "seoTitle": "Karot mu Kırıcı mı? Beton Delmede Doğru Yöntem Seçimi",
-    "giris": [
-      "Telefonda en sık konuştuğumuz konulardan biri bu. Adam arıyor, duvarda ya da döşemede bir boşluk lazım, \"karotla mı yapalım kırıcıyla mı\" diye soruyor. Doğru cevap işin ne olduğuna bağlı ve çoğu zaman deliğin kendisine değil, delik açıldıktan sonra ne olacağına bakarak veriliyor. Boruyu geçirip üstünü kapatacaksanız başka, o betonu tamamen ortadan kaldıracaksanız bambaşka.",
-      "Şunu baştan söyleyeyim: kırıcı kötü bir alet değil. Biz beton kırma ve kontrollü bina yıkımı da yapıyoruz, yani \"burada kırıcı daha doğru\" demek bize bir şey kaybettirmiyor. Yanlış olan aleti kötülemek değil, her işe aynı aleti sokmak. Karotla yapılması gereken işi kırıcıyla yapmak da, kırıcıyla üç saatte biteceği işi karotla iki güne yaymak da aynı hatanın iki yüzü.",
-      "Karar aslında birkaç sorunun cevabında saklı. Deliğin ölçüsü tutmak zorunda mı, çevredeki beton darbe kaldırır mı, binada oturan ya da çalışan var mı, donatının nerede geçtiğini biliyor muyuz, iş bitince sıva ve tamir masrafı çıkacak mı. Aşağıda bunları tek tek açıyorum. 2015'ten beri Denizli merkez ve ilçelerde yaptığımız işlerde bu sorular hemen her keşifte aynı sırayla önümüze geliyor."
+  "hali-yikamaci-secerken-nelere-bakmali": {
+    giris: [
+      "Aynı halı, aynı kir, iki farklı yerde yıkandığında geri dönen şey aynı olmuyor. Biri tozunu bırakmış, dibi kurumuş, rengi yerinde bir halı; diğeri ilk gün temiz görünen ama bir ay sonra yeniden kirlenmiş, kenarından hafif bir koku gelen bir halı. Aradaki farkı yaratan şey çoğu zaman makinenin markası değil, kimsenin sormadığı birkaç ayrıntı oluyor. Denizli'de halı yıkamacı ararken en yakın olanı ya da en ucuz teklifi veren yeri seçmek doğal bir refleks; ama ikisi de halının teslimde nasıl geleceğini söylemiyor. Fiyat ve mesafe kolay karşılaştırılıyor, çünkü ikisi de sayıyla ifade ediliyor; işin nasıl yapıldığı ise ancak sorulduğunda ortaya çıkıyor.",
+      "Arama kutusuna en iyi halı yıkama yazmanın sorunu şu: bu sorunun cevabı bir listede yazmıyor, çünkü listeyi yapanların hiçbiri sizin halınızı görmedi. Cevaplanabilir olan soru başka: bir halı yıkamacıyı ararken neyi sorarsanız işin nasıl yapıldığını anlarsınız. Bu yazı o soruların listesi. Beş tane var, hepsi telefonda tek tek sorulabilir ve hiçbiri teknik bilgi gerektirmiyor. Önemli olan verilen cevabın kendisi kadar, cevabın net olup olmaması; bir işi gerçekten yapan yerin bu beş konuda tereddüt etmesi için sebep yok. Cevapları not almanız yeterli; aynı soruları iki üç yere sorduğunuzda fark kendiliğinden görünüyor.",
+      "Her maddede önce soruyu, sonra o sorunun neden önemli olduğunu yazdık. Amacımız kimseyi işaret etmek değil; zaten cevaplar firmadan firmaya değil, çalışma biçiminden çalışma biçimine değişiyor. Siz sorup not alın, aldığınız cevapları kendi halınızla birlikte düşünün. Evinde tek bir makine halısı olan biriyle, salonunda yıllardır duran yün bir halı olan birinin aynı cevaba ihtiyacı yok. Bu beş sorunun sonunda kararı verecek olan biz değiliz; elinde ölçülebilir bilgi olan sizsiniz. Beş sorunun hepsini sormak zorunda da değilsiniz; halınız değerliyse ikincisi, teslim tarihiniz sıkışıksa üçüncüsü öne çıkıyor. Geri kalanı zaten birer dakikanızı alıyor."
     ],
-    "bolumler": [
+    bolumler: [
       {
-        "baslik": "Önce şunu sorun: delik gerçekten ölçülü olmak zorunda mı?",
-        "paragraflar": [
-          "Karot dediğimiz şey elmas uçlu silindirik bir uç. Beton içinde dönerek kendi çapında bir silindir çıkarıyor. İhtiyaca göre 50 mm'den 1000 mm'ye kadar çap seçeneği var. Çıkan delik nominal çapında olur, kenarı düzdür, içi pürüzsüzdür. Yani Ø102 dediyseniz Ø102 alırsınız, iki santim oynamaz.",
-          "Kırıcıda böyle bir şey yok. Kırıcı betonu darbeyle parçalar, parçalanma da betonun kendi zayıf noktalarından ilerler. On santimlik bir delik isteyip on sekiz santimlik düzensiz bir yırtık elde etmek gayet normaldir. Boru geçecekse, manşon oturacaksa, flanş sızdırmazlık isteyecekse o kenar işinize yaramaz. Sonradan harçla toparlamak zorunda kalırsınız, o da hem zaman hem para.",
-          "Dikdörtgen açıklıklarda mantık aynı. Kapı ya da pencere boşluğu ölçülü olacaksa dört köşesine karotla delik atılır, aralar elmas diskli duvar testeresiyle kesilir, parça bütün halinde alınır. Kenar keskin çıkar, sıva doğrudan üstüne gider. Aynı boşluğu kırıcıyla açtığınızda kenar tırtıklı olur, ölçü büyür, kasa düzgün oturmaz."
-        ]
-      },
-      {
-        "baslik": "Çevredeki beton darbe kaldırır mı, donatı ne olacak?",
-        "paragraflar": [
-          "Kırıcının çalışma prensibi darbe. O darbe sadece kırdığınız yere gitmiyor, çevre betona ve elemanın tamamına yayılıyor. Eski, düşük dayanımlı ya da zaten çatlak almış betonda bu iyice belli oluyor: kırdığınız yerin çevresinde sıva dökülüyor, alt kattaki tavanda çatlak çıkıyor, bazen komşu dairede duvardaki tabloya kadar hissediliyor. Karotta darbe yok. Elmas uç aşındırarak keser, çevreye titreşim binmez.",
-          "Donatı konusunda dürüst olalım, çünkü sahada en çok yanlış bilinen şey bu. Karot donatıyı korumaz. Elmas uç demire geldiğinde onu da keser, kesip geçer. Aradaki fark koruma değil, kontrol. Karotta deliğin yerini önceden belirlersiniz, donatı tarama cihazıyla demirin nereden geçtiğini görürsünüz, gerekirse deliği birkaç santim kaydırırsınız. Kırıcıda demire nerede rastlayacağınızı bilmezsiniz; demiri eğersiniz, koparırsınız, üstelik nereyi kestiğinizi de göremezsiniz.",
-          "Bu yüzden kolon, perde ve kiriş gibi taşıyıcı elemanlara yapılacak her müdahale, ister küçük bir delik olsun ister koca bir açıklık, statik proje ve yetkili mühendis onayı ister. Onay yoksa yöntem tartışmasının bir anlamı kalmıyor. Onay varsa da genelde deliğin yeri, çapı ve donatıya olan mesafesi projede yazılı olur; o ölçüyü tutturabilen tek yöntem karottur."
-        ]
-      },
-      {
-        "baslik": "Toz, gürültü ve titreşim kısıtı var mı?",
-        "paragraflar": [
-          "Karot su soğutmalı çalışır. Su hem ucu soğutur hem kesme tozunu bastırır. Ortaya toz bulutu yerine çamurlu su çıkar, onu da vakumla veya hortumla toplarsınız. Mobilyalı bir dairede, mesai içindeki bir ofiste, hastane gibi gürültünün ve tozun sorun olduğu yerlerde bu fark her şeyi belirler. Kırıcı ise kuru çalışır; toz kaçınılmazdır, ses ve titreşim de cabası.",
-          "Ses tarafında durum daha da net. Karotun sesi motor sesidir, süreklidir ve nispeten alçaktır. Kırıcının sesi darbe sesidir, binanın betonundan yayılır, üç kat yukarıda duyulur. Apartman yönetiminin çalışma saati koyduğu, işletmenin müşteri saatlerinde çekiç sesi istemediği işlerde bu tek başına yöntemi seçtiriyor.",
-          "Suyun da yönetilmesi gerekiyor, bunu atlamayalım. Elektrik panosunun altında, asma tavanda ya da parke döşeli bir mekânda çalışıyorsanız suyu toplamadan delik atamazsınız. Biz genelde deliğin altına toplama düzeni kurup vakumla çekiyoruz, çevreyi de örtüyoruz. Suyun hiç kullanılamayacağı yerler de oluyor; orada işin tarifi baştan değişiyor."
-        ]
-      },
-      {
-        "baslik": "Süre, maliyet ve işten sonra geriye kalan tamir",
-        "paragraflar": [
-          "Saatlik bakarsanız kırıcı ucuz görünür. Ama bir işin bedeli sadece deliği açmak değil; sonrasında ne kaldığına da bakmak lazım. Karotla açılan delikte kenar zaten düzgündür, boru geçtikten sonra üstü kapanır, çevrede sıva tamiri neredeyse çıkmaz. Kırıcıyla açılan delikte kenar kırıktır; harç, sıva, bazen kalıp ve boya arkasından gelir. O işçilik ilk gün görünmez, ikinci hafta faturaya girer.",
-          "Moloz tarafı da öyle. Yirmi santimlik bir döşemede Ø150 karot tek bir silindir çıkarır, elinizde taşınabilir tek parça olur. Aynı deliği kırıcıyla açtığınızda avuç avuç moloz çıkar; toplama, taşıma ve döküm ayrı bir kalemdir. Üç beş delikte fark etmez, ama delik sayısı arttıkça bu kalem büyür.",
-          "Süreye gelince, tek bir Ø100 ya da Ø150 delik yirmi yirmi beş santimlik bir döşemede birkaç dakikada iner. Asıl zaman hazırlıkta geçer: makineyi dübelle sabitlemek, su ve elektriği çekmek, çevreyi kapatmak. Beş on delik varsa karot açık ara hızlıdır, tek delik varsa fark kapanır. Buna karşılık üç dört metrekarelik bir beton döşemeyi tamamen sökeceksek kırıcı çok daha hızlıdır ve orada karot ısrarı sadece günü uzatır. Fiyatı belirleyen şeyler de bunlardır: çap, kesit kalınlığı, delik adedi, donatı yoğunluğu, kata çıkış ve erişim zorluğu, su ve elektrik durumu, bir de çalışma saati."
-        ]
-      },
-      {
-        "baslik": "Şu 5 durumda kesinlikle karot",
-        "paragraflar": [
-          "Keşifte tereddüt bırakmayan durumlar var. Aşağıdakilerden biri masadaysa fazla tartışmıyoruz, karot diyoruz.",
-          "Bir de şunu ekleyeyim: elmas tel ya da duvar testeresiyle yapılacak kesimlerin köşe delikleri de karotla açılır. Yani bazı işlerde karot tek başına yöntem değil, diğer yöntemin ön hazırlığıdır."
+        baslik: "Kurutma Nerede Yapılıyor?",
+        paragraflar: [
+          "İlk soru bu olsun, çünkü halı yıkamada en çok hata verilen aşama kurutma. Sorulacak şey basit: halılar nerede kurutuluyor, açık havada mı, kapalı bir ortamda mı. Açıkta kurutulan halı kuruma sırasında havadaki tozu yeniden topluyor; güneş altında bekleyen halının renkleri, özellikle kırmızı ve lacivert tonlarda soluyor; rüzgârlı ve nemli bir günde ise halının dibi hiç kurumadan içeri alınabiliyor. Kapalı ve kontrollü bir ortamda kurutmanın sebebi konfor değil, bu üç riskin de ortadan kalkması. Bu soru aynı zamanda işin hacmini de anlatıyor: halıyı kurutacak ayrı bir yeri olmayan bir düzende halı ya sırada bekliyor ya da erken kaldırılıyor.",
+          "Cevap belirsiz kalıyorsa ikinci bir soru daha var: kışın ne yapılıyor. Denizli'de kışın nem yüksek, gün kısa; açık alanda kuruma günlerce sürüyor ve bu süre bir yerden kısılıyor demektir. Doğru cevap kurutmanın halının cinsine göre süre alabileceğini söyleyen cevaptır. Halınız teslim edildiğinde bunu kendiniz de denetleyebilirsiniz: yüzeyine değil, tüyleri iki yana açıp dibine elinizi sokun. Yüzey her hâlükârda kurudur, mesele dipteki nem. Cevabın uzun olması gerekmiyor, net olması yetiyor. Halıların nerede kurutulduğunu söyleyen ve sürenin halıya göre değiştiğini kabul eden bir cevap size bilgi veriyor; kesin gün söyleyip yeri söylemeyen bir cevap vermiyor."
         ],
-        "liste": [
-          "Delikten ölçülü bir şey geçecekse. Tesisat borusu, manşon, yangın hattı, havalandırma kanalı, flanşlı bağlantı; çap tutmak zorundaysa kırıcının burada şansı yok.",
-          "Delik taşıyıcı bir elemanda ya da ona çok yakınsa. Statik projede yeri ve çapı belirlenmiş bir deliği ancak karotla o ölçüde açabilirsiniz.",
-          "Bina kullanımdaysa. Oturulan daire, açık bir işyeri, toz ve gürültünün kısıtlı olduğu her yer; su soğutmalı karot burada tek makul yol.",
-          "Beton darbe kaldıracak durumda değilse. Henüz yaşını almamış yeni beton da, eskimiş ve çatlaklı beton da bu gruba girer.",
-          "Beton numunesi alınacaksa. Dayanım tespiti için silindir numune ancak karotla çıkarılır, kırıcıyla koparılmış bir parçanın deney değeri olmaz."
-        ]
       },
       {
-        "baslik": "Şu durumlarda kırıcı daha mantıklı",
-        "paragraflar": [
-          "Tersi de bir o kadar net. Karotu her işe sokmak ustalık değil inattır. Aşağıdaki işlerde kırıcı hem daha hızlı hem daha ucuz, üstelik sonuç aynı yere çıkıyor.",
-          "Zaten çoğu işte ikisi birlikte kullanılıyor. Ölçülü kısmı karot ve elmas diskle alıyorsunuz, gerisini kırıcıyla topluyorsunuz. Keşifte konuştuğumuz şey genelde \"hangisi\" değil, \"hangisi nerede bitecek\" oluyor."
+        baslik: "Halının Cinsine Göre Program Değişiyor mu?",
+        paragraflar: [
+          "İkinci soru, halının cinsinin işi değiştirip değiştirmediği. Somut sorun: benim halım yün, sizde ayrı bir programa mı giriyor. Cevap hepsi aynı makineden geçiyor ise, o cevabın pratikte anlamı şudur: makine halısına uygulanan fırça sertliği ve su ısısı yün halıya da uygulanıyor. Yün lifi ıslakken pullarını dikleştirir ve hareket altında komşu lifle kenetlenir; keçeleşme buradan doğar ve geri alınamaz. El dokuma halıda ikinci risk boyanın akması, çünkü doğal boya ısı ve sürtünmeye karşı sabit değildir. Bu soruyu sormanın en kolay yolu halınızı tarif etmek: dokusu elle sık mı geliyor, arkası düğümlü mü, saçağı var mı.",
+          "İyi bir cevabın içinde şu ifadeler geçer: görünmeyen bir köşede renk denemesi, halıya göre ayarlanan fırça sertliği, düşük su ısısı, saçağın gövdeden ayrı çalışılması. İpekli ve Nepal halılarda ayrıca yıkanabilirlik kararı vardır; bu gruptaki halıların bir kısmı sınırlı ıslatmayla, bir kısmı da kısmen elden geçerek temizlenir.[İpek ve Nepal halıların neden ayrı ele alındığını sayfasında](/hizmetler/ipek-nepal-hali-yikama/) yazdık. Değerli bir halınız varsa, telefonda alacağınız cevap zaten bu ayrımı içermelidir; içermiyorsa halıyı teslim etmeden önce bir kez daha sorun. Halınızın cinsinden emin değilseniz fotoğrafını göndermek çoğu zaman yeterli oluyor: arka yüzü ve saçağı gösteren bir kare çoğu ayrımı ele veriyor."
         ],
-        "liste": [
-          "Büyük hacimli söküm. Eski saha betonu, kalın şap, işlevini yitirmiş bir beton dolgu; burada geometri diye bir dert yok, hacim var.",
-          "Geometrinin hiç önemi olmadığı yıkım işleri. Kontrollü yıkımda taşıyıcı olmayan iç bölmelerin ve kaba betonun sökümü çoğu zaman kırıcı işidir.",
-          "Karotun ekonomik olmadığı işler. 60x80 bir boşluk için yan yana onlarca delik atmak yerine kenarlarını kesip ortasını kırıcıyla almak hem hızlı hem ucuz.",
-          "Suyun kullanılamadığı yerler. Alt katta su hassasiyeti varsa ya da yanınızda korunması gereken ekipman varsa kuru çalışmak zorunda kalabilirsiniz.",
-          "Düşük dayanımlı, gevşek ya da grobeton türü dolgular. Elmas uç böyle bir malzemede zaten kayda değer bir avantaj üretmez."
-        ]
       },
       {
-        "baslik": "Elmas tel ve elmas zincir ne zaman devreye girer",
-        "paragraflar": [
-          "Karotla kırıcı arasında kalan bir alan var: kalın kesitler ve tek yüzden erişilen yerler. Elmas diskli duvar testeresinin kesme derinliği disk çapıyla sınırlıdır; iki yüzden çalışsanız bile bir yerden sonra kesit yetmez. Kalın perde, kalın temel kesiti, kolon dibi gibi altmış yetmiş santimin üstüne çıkan işlerde elmas tel devreye girer. Tel, kesitin köşelerine karotla açılan deliklerden geçirilir, hidrolik ünite teli döndürür, kesit istediğiniz hat boyunca ayrılır. Kalınlık tel için pratikte sınır değildir.",
-          "Elmas zincir başka bir soruna çözüm. Zincirin işi tek yüzden erişilen ve köşesinin tam çıkması gereken kesimler. Büyük çaplı bir diskle dikdörtgen boşluk kestiğinizde köşelerde disk kesimi tamamlayamaz, arka yüzde gizli bir aşım bırakır; onaylı bir açıklıkta bu istenmez. Zincir köşeyi tam noktasında bitirir, fazladan kesim yapmaz.",
-          "İkisi de su soğutmalı ve darbesiz çalışır. Yani kırıcının veremeyeceği hassasiyeti, karotun ve diskin yetişemediği kesitte sağlıyorlar. Ekipmanı ve hazırlığı daha ağır olduğu için normal kalınlıkta bir döşemede tek delik ya da küçük bir açıklık için buraya gelmeye gerek yok."
-        ]
+        baslik: "Teslim Süresini Neye Göre Söylüyorlar?",
+        paragraflar: [
+          "Üçüncü soru süreyle ilgili ama asıl bakılacak şey söylenen gün değil, o günün neye göre söylendiği. Halının cinsini sormadan, mevsimi hesaba katmadan herkese aynı günü veren bir cevap ölçüye değil alışkanlığa dayanıyor. Süreyi belirleyen şey yıkama değil kuruma; yıkama saatlerle, kuruma günlerle ölçülüyor. Uzun tüylü bir halı kısa tüylü bir halıyla aynı sürede kurumaz, kışın kuruyan halı yazın kuruyan halıdan geç teslim edilir. Cevabın içinde bu ayrım geçiyorsa, karşınızdaki kişi süreyi tahmin etmiyor, hesaplıyor demektir. Sürenin tek bir gün yerine aralık olarak verilmesi de iyi bir işaret; aralık verip yoğunluğa göre daraltmak, kesin gün söyleyip sonra değiştirmekten gerçekçi.",
+          "İkinci bir kontrol noktası: verilen sürenin çok kısa olması da en az belirsizlik kadar dikkat çekicidir. Yarın hazır cevabı, halının yıkandıktan sonra kurumaya ihtiyaç duyduğu süreyi ortadan kaldırmıyor, yalnızca o sürenin nerede geçirileceğini belirsiz bırakıyor. Bir de sözün nasıl kurulduğuna bakın; ortalama bir süre söyleyip yoğunluk durumunda haber vereceğini belirten bir cevap, kesin gün verip teslim günü aramayan bir cevaptan daha güvenilirdir. Halı teslim tarihi sizin için kritikse, bunu baştan söyleyin ve planın buna göre yapılıp yapılamayacağını sorun. Teslimi evde başka birinin alacağı bir güne ayarlıyorsanız, o kişinin adını ve numarasını baştan bırakmak planı bozulmaktan kurtarıyor."
+        ],
+      },
+      {
+        baslik: "Halı Alınırken Etiketleniyor mu?",
+        paragraflar: [
+          "Dördüncü soru operasyonel ama sonucu doğrudan sizi ilgilendiriyor: halı alınırken etiketleniyor ve kayda geçiyor mu. Bir tesiste aynı anda onlarca halı bulunur; benzer desenli iki makine halısını birbirinden ayıran şey hafıza değil, üzerindeki numaradır. Etiketsiz çalışan bir yerde halıların karışması ya da bir parçanın geride kalması ihtimal dahilindedir, üstelik bunu genellikle siz teslim gününde fark edersiniz. Kaydın içinde adres, halı adedi, ölçü ve halının cinsi bulunmalı. Kaydın nasıl tutulduğunu sormak, karşınızdaki yerin günde kaç halıyla çalıştığını da dolaylı olarak gösteriyor: küçük hacimde hafıza yetebilir, halı sayısı arttıkça yetmiyor. Etiketin halının kendisine değil, katlanan yüzüne iliştirilmesi de ayrıca önemli.",
+          "Yazılı kaydın ikinci faydası fiyat tarafında. Ölçü alım anında yazıldıysa teslimde tartışılacak bir konu kalmıyor; iki taraf da aynı sayıya bakıyor. Yolluk, paspas ve küçük parçalar ayrı sayıldığında, teslimde eksik bir parçanın fark edilmesi de kolaylaşıyor. Bu yüzden halıyı verirken sizde de bir kayıt kalmasını isteyin. Fotoğraf çekmek de işe yarıyor: özellikle saçaklı, eski ya da üzerinde belirgin bir izi olan halılarda alım anındaki durumun görüntüsü herkesin işini kolaylaştırıyor. Alma ve teslim hizmetiyle çalışıyorsanız bu kayıt daha da önemli, çünkü halıyı tesise siz götürmüyorsunuz; halının evden çıktığı andaki durumu yalnızca o kayıtta duruyor."
+        ],
+      },
+      {
+        baslik: "Hasar ve Leke Tespiti Alımda mı, Teslimde mi Yapılıyor?",
+        paragraflar: [
+          "Beşinci ve en çok atlanan soru bu. Halının söküğü, aşınmış bölgesi, kenar kıvrımı, eski bir yanık izi ya da çıkmayacağı belli olan bir lekesi varsa bunun ne zaman konuşulduğu önemli. Alım anında bakılıp size söyleniyorsa, halının hangi durumda teslim edildiği en baştan ortak bilgi oluyor. Teslimde konuşuluyorsa, o izin yıkamadan önce mi sonra mı oluştuğu artık kimse için net değil. Bu bir güven meselesi değil, kayıt meselesi. Halının kenar kıvrımı, güve izi ve zayıflamış bölgeleri de aynı şekilde alım anında konuşulacak konular; bunlar yıkama sırasında en çok zorlanan yerler oluyor.",
+          "Aynı soru lekenin kendisi için de geçerli. Her lekenin çıkacağını söyleyen bir cevap gerçekçi değil; kalıcı boya, küf, yanık ve dokuya işlemiş hayvan idrarı gibi izlerin bir kısmı tam olarak çıkmıyor. Dürüst cevap hangisinin çıkacağını, hangisinin açılıp hafifleyeceğini, hangisinin kalacağını halı hâlâ sizdeyken söyleyen cevaptır. Aynı dürüstlük süre için de geçerli: çıkmayan bir lekenin peşinde halıyı fazladan yıpratmak, lekenin kendisinden kalıcı bir iz bırakıyor.[Halı yıkamanın adım adım nasıl işlediğini merak ediyorsanız sayfasında](/hizmetler/hali-yikama/) bütün akışı yazdık. Bu beş sorunun cevaplarını yan yana koyun; karar verirken elinizde kulaktan dolma bir izlenim değil, karşılaştırılabilir bilgi olsun."
+        ],
       }
     ],
-    "sss": [
-      {
-        "q": "Kolonda veya perdede delik açtırabilir miyim?",
-        "a": "Yöntemden önce izin konuşulur. Kolon, perde ve kiriş taşıyıcı elemandır; bunlara açılacak her delik ve açıklık statik proje ve yetkili mühendis onayı ister. Onay çıktıysa projede genelde deliğin yeri, çapı ve donatıya olan mesafesi de yazar. O ölçüyü tutturabilen tek yöntem karottur; taşıyıcı bir elemanda kırıcıyla delik açmak doğru değildir."
-      },
-      {
-        "q": "Karot donatıyı kesiyor mu, sorun olur mu?",
-        "a": "Evet, elmas uç demire geldiğinde onu da keser. Karotun avantajı demiri korumak değil, nereden geçtiğinizi bilmektir. Delik yerini önceden donatı tarama cihazıyla kontrol edip gerekirse birkaç santim kaydırabilir, kritik donatıyı es geçebilirsiniz. Kırıcıda böyle bir kontrol yok; demire rastgele gelirsiniz, eğersiniz, koparırsınız ve nereyi kestiğinizi göremezsiniz."
-      },
-      {
-        "q": "Oturulan bir dairede karot alınırken toz olur mu?",
-        "a": "Karot su soğutmalı çalıştığı için ortaya toz yerine çamurlu su çıkar. O suyu deliğin altında toplayıp vakumla çekiyoruz, çevreyi de örtüyoruz; iş bitince ortada süpürülecek beton tozu kalmıyor. Gürültü tarafında da karotun sesi darbe sesi değil motor sesidir, kırıcıya göre çok daha az rahatsız eder. Yine de suyun alt kata sızmaması için hazırlık şart, onu keşifte konuşuyoruz."
-      },
-      {
-        "q": "Karot mu pahalı, kırıcı mı?",
-        "a": "Sadece delme aşamasına bakarsanız kırıcı ucuz görünür, ama iş bittikten sonra kalan tamiri de hesaba katmak gerekir. Kırıcıyla açılan deliğin kenarı bozuk olur; harç, sıva, bazen boya ve moloz taşıma masrafı arkasından gelir. Karotta kenar düzgün çıktığı için o kalemlerin çoğu hiç oluşmaz. Fiyatı belirleyen esas şeyler çap, kesit kalınlığı, delik adedi, donatı yoğunluğu, erişim zorluğu ve çalışma saatidir; keşif ücretsiz olduğu için yerinde bakıp net konuşuyoruz."
-      }
+    sss: [
+      { q: "En yakın halı yıkamacıyı seçmek yeterli mi?", a: "Yakınlık pratik bir avantaj ama tek başına bir şey söylemiyor, çünkü alma ve teslim hizmeti veren yerlerde halıyı siz taşımıyorsunuz. Mesafenin gerçekten fark yarattığı tek nokta planlama: uzak bir adres için alma ve teslim aynı güne denk getirilemeyebilir, bu da toplam süreyi biraz uzatır. Onun dışında yakınlık, kurutmanın nasıl yapıldığını, halınızın hangi programa gireceğini ya da hasar tespitinin ne zaman yapıldığını değiştirmiyor. Yakınlığı bir kolaylık olarak sayın, ölçüt olarak değil. Halınızı verirken sorulacak soruların cevabı, aradaki birkaç kilometreden çok daha belirleyici." },
+      { q: "Aramadan önce hangi bilgileri hazırlamalıyım?", a: "Kaç halınız olduğunu, kabaca ölçülerini ve cinslerini bilmek konuşmayı kısaltıyor. Halının makine halısı mı, yün ya da el dokuma mı olduğunu, tüyünün uzun mu kısa mı olduğunu söyleyebilmek yeterli. Üzerinde çıkmasını istediğiniz belirgin bir iz varsa onu da baştan söyleyin, hatta fotoğrafını çekin. Perde de yıkanacaksa kanat sayısını ve perdenin tipini bilmek gerekiyor. Bu bilgilerle telefonda alacağınız cevap tahmin olmaktan çıkıyor, işin nasıl planlanacağı somut biçimde konuşulabiliyor. Halının kaç yıldır yıkanmadığını ve evde hayvan bulunup bulunmadığını söylemeniz de işe yarıyor." },
+      { q: "Halı teslim edildiğinde ilk neye bakmalıyım?", a: "Önce sayın: alım kaydındaki parça sayısı ile gelen parça sayısı aynı mı. Sonra ambalajı açın ve tüyleri iki yana ayırıp dibine elinizle bakın; yüzey her durumda kuru gelir, asıl bilgi dipte. Kokuyu kontrol edin, halının kendine ait olmayan rutubetli bir koku taşımaması gerekir. Saçaklı bir halıysa saçağın düzgün taranıp taranmadığına, kenar kıvrımlarına ve ölçüsünün yerinde durup durmadığına bakın. Bir sorun varsa teslim anında söylemek, günler sonra söylemekten hem sizin hem karşı tarafın işini kolaylaştırır. Kayıtta yazan ölçü ile gelen halının ölçüsünü karşılaştırmak da bir dakikanızı alıyor." }
     ],
-    "ilgiliHizmetler": [
-      "karot",
-      "beton-delme",
-      "beton-kirma",
-      "beton-kesme"
-    ]
   },
-  "karot-nedir": {
-    "seoTitle": "Karot Nedir? Karot Makinesi ve Karotçu Rehberi",
-    "giris": [
-      "Karot, sahada iki ayrı şeyin adı. Biri yöntem, yani elmas uçlu silindirik bir uçla betonda dairesel ve düzgün bir delik açmak; diğeri o işlemden çıkan parça, yani elemanın içinden bütün hâlde alınan beton silindiri. Telefonda karot lazım diyen kişi çoğunlukla birincisini kastediyor, duvardan ya da döşemeden bir geçiş deliği istiyor. Bazen de ikincisini kastediyor ve binanın betonunun gerçekte ne dayanım verdiğini öğrenmek istiyor. İki iş aynı makineyle yapılır ama hazırlığı, seçilen çap ve sonrasında yapılacaklar farklıdır.",
-      "Kelime Fransızcadan geliyor, havuç anlamındaki carotte'tan. Sondajda yerin altından çıkarılan uzun ve ince silindire benzetme yoluyla verilmiş bir ad; oradan beton işlerine geçmiş. Karotçu dendiğinde ise bu işi yapan kişi anlaşılıyor: makineyi kuran, sabitleyen, deliği ekseninde tutan, gerektiğinde numuneyi sağlam çıkaran usta. Karotçu laboratuvar değildir. Numuneyi alır, dayanım değerini veren taraf deneyi yapan laboratuvardır.",
-      "Yöntemin ayırt edici yanı, betonu kırmadan içinden geçmesi. Kırıcı ya da darbeli matkap malzemeyi ezerek ve çatlatarak ilerler, çatlağın nereye kadar gideceğine bir ölçüde malzeme karar verir. Karot ucu ise dönerek aşındırır, arkasında pürüzsüz bir kenar bırakır ve çevresindeki betonu olduğu yerde tutar. Bu fark taşıyıcı bir elemanın yakınında ya da kaplaması bitmiş bir dairede doğrudan işe yarıyor. Yine de her delik karotla açılmaz; bazı işlerde bu makineyi kurmak boşuna emek olur."
+  "koltuk-yikama-sikligi": {
+    giris: [
+      "Koltuk yıkama sıklığını takvimden değil, koltuğun taşıdığı yükten hesaplamak gerekiyor. Aynı fabrikadan çıkmış iki koltuk beş yıl sonra birbirinden tamamen farklı durumda olabildiği için sorunun tek bir sayıyla cevabı yok. Kumaşın üzerinde biriken şey zamanla değil kullanımla artıyor: hanede kaç kişi yaşıyor, koltukta günde kaç saat oturuluyor, üzerinde yemek yeniyor mu, evde çocuk ya da evcil hayvan var mı, o odada sigara içiliyor mu, güneş hangi saatlerde hangi yüzeye vuruyor. Günde on iki saat kullanılan bir oturma odası takımı ile misafir odasında duran aynı model, aynı takvimle yıkanmaz. Sorulacak doğru soru kaç ayda bir değil, bu koltuğun ne kadar yük taşıdığıdır.",
+      "Koltuğun kirlendiğini gözle takip etmek de güvenilir bir yöntem değil, çünkü kirin büyük bölümü yüzeyde durmuyor. Ten yağı, saç yağı ve ölü deri kumaşın liflerinin arasına iniyor; oraya yerleştikten sonra havadaki tozu ve giysiden dökülen tiftiği kendine tutuyor ve sınırı belli olmayan bir gölge hâlinde yayılıyor. Bu yüzden koltuğa bakıp kirlendi dediğiniz gün, aslında birikimin epeydir sürdüğü bir günün üstüne geliyor. Aşağıda sıklığı hangi değişkenlerin belirlediğini, kirin görünmeyen tarafında ne olduğunu, hangi işaretlerin artık geç kalındı anlamına geldiğini ve iki yıkama arasındaki süreyi evde neyin uzatabileceğini anlatıyoruz. Amacımız bir takvim dayatmak değil; koltuğa bakıp kendi durumunuza göre karar verebilmenizi sağlayacak ölçütleri vermek."
     ],
-    "bolumler": [
+    bolumler: [
       {
-        "baslik": "İki Anlamı Ayırmak: Karot Delme ve Karot Numunesi",
-        "paragraflar": [
-          "Karot delmede amaç deliktir. İçinden bir pis su borusu, doğal gaz hattı, kablo demeti, havalandırma kanalı ya da bir ankraj saplaması geçecektir. Çıkan silindir, sahadaki adıyla göbek, işin atığıdır ve molozla birlikte götürülür. Bu işte başarı ölçütü üç şeydir: delik istenen çapta mı, doğrultusu kaçmış mı, çıkış kenarı düzgün mü.",
-          "Karot numunesi almada durum tersine döner. Değerli olan çıkan silindirdir, delik yalnızca geriye kalan boşluktur ve işin sonunda tamir harcıyla kapatılır. Burada ölçüt numunenin sağlam gelmesi, içinden donatı geçmemesi ve alındığı betonu temsil etmesidir. Numunenin hangi elemandan ve hangi noktadan alınacağını yapının mühendisi belirler, karotçu o noktadan usulüne uygun çıkarır.",
-          "Sahada bu iki iş sık sık birbirine karıştığı için işe başlamadan üç soru soruyoruz. Delikten ne geçecek, yoksa bir rapor mu isteniyor? Delinecek eleman taşıyıcı mı, bölme duvar mı? Delik açıldıktan sonra kapatılacak mı, açık mı kalacak? Bu üç cevap hem çapı hem kurulumu baştan belirliyor."
-        ]
-      },
-      {
-        "baslik": "Elmas Uç Betonu Keserek İlerler, Kırarak Değil",
-        "paragraflar": [
-          "Karot ucu, silindirik bir boru gövdenin ucuna dizilmiş segmentlerden oluşur. Segmentlerin içinde metal bir bağ malzemesine gömülmüş sentetik elmas taneleri vardır. Uç dönerken bu taneler betonu ve içindeki agregayı aşındırarak öğütür. Bağ aşındıkça körelmiş tanenin altından yenisi açığa çıkar; uç çalışırken bir yandan kendini biler. Kesici, malzemenin yalnızca halka biçimindeki dar bir şeridini tüketir; ortada kalan silindire hiç dokunmaz ve o parça bütün hâlde dışarı çıkar.",
-          "Kırıcıyla ya da darbeli matkapla aradaki fark burada belirginleşir. Darbeli aletlerde ucun her vuruşu malzemeye şok yükü bindirir, kırılma çatlağın ilerlemesiyle olur ve çatlak her zaman istenen sınırda durmaz. Karotta böyle bir vuruş yoktur. Titreşim düşüktür, delik çevresinde yaygın bir mikro çatlak ağı gelişmez, karşı yüzdeki sıva ya da fayans patlamaz. Ses seviyesi de düşüktür; içinde oturulan bir binada bu ayrıntı çoğu zaman işin yapılabilir olup olmamasını belirliyor.",
-          "Makine serbest elde tutulmaz. Motor, bir sehpanın kolonu boyunca inen kızağa bağlıdır ve sehpa yüzeye sabitlenir. Sabitleme yöntemi çapa ve yüzeye göre değişir: dübelli taban plakası, vakum tabanı ya da tavana dayanan gergi direği. Küçük çaplar ve tuğla, gaz beton gibi yumuşak malzemeler için elde tutulan makineler de var ama betonarmede onlarla iş yürümez. Sehpa yüzeye tam oturmamışsa uç dönerken küçük bir titreşim yapar; bu titreşim girişte fark edilmez ama karşı yüze çıkıldığında delik işaretin dışına düşmüş olur."
-        ]
-      },
-      {
-        "baslik": "Hangi İşte Karot Gerekir, Hangisinde Gereksiz",
-        "paragraflar": [
-          "Karot, deliğin çapının belli olması, kenarının düzgün kalması ve çevresine zarar verilmemesi gereken işlerin yöntemidir. Bu üç şart aynı anda aranıyorsa pratikte başka bir yol kalmıyor.",
-          "Bunun dışında kalan işlerde makineyi kurmanın anlamı yok. Sekiz on milimetrelik bir dübel deliği için karot kurulmaz, o iş darbeli matkabındır. Tamamen yıkılacak bir bölme duvarda kaba bir açıklık isteniyorsa kırıcı daha hızlı ve ucuz kalır; kenarın düzgünlüğünün kimseye faydası olmayacaktır. Alçıpan ve ahşap gibi hafif malzemelerde de panç yeterlidir.",
-          "Karotun asıl maliyeti delme süresi değil, kurulum süresidir. Sehpayı sabitlemek, su düzenini kurmak, örtüleri sermek zaman ister. Tek bir küçük delik için bu hazırlık ağır gelebilir, ama aynı sahada beş on delik varsa hesap tersine döner ve delik başına düşen süre hızla azalır. Bu yüzden keşifte delik adedini, çapları ve katları birlikte çıkarıyoruz. Karotun tercih edildiği işler kabaca şunlar:"
+        baslik: "Takvim Değil Kullanım: Sıklığı Belirleyen Şeyler",
+        paragraflar: [
+          "İlk değişken basit: koltukta kaç kişi, günde kaç saat oturuyor. Kir kumaşa temasla geçtiği için hesap doğrudan temas süresiyle ilgilidir. Aynı salondaki üçlü koltuk ile tekli, çoğu evde aynı hızla kirlenmez; ailenin oturma alışkanlığı belli bir koltuğu ve o koltuğun belli bir bölgesini seçer. Kirlenme bu yüzden takım genelinde eşit dağılmaz, birkaç noktada toplanır: baş dayanan sırt bölgesi, kolçak üstü ve oturma yerinin ön kenarı. Sıklığa karar verirken koltuğa bütün olarak değil, en çok kullanılan bu üç bölgeye bakmak daha doğru sonuç verir; takımın geri kalanı çoğu zaman iyi durumdadır.",
+          "İkinci grup değişken haneyle ilgili. Küçük çocuk varsa koltuk sadece oturulan değil, üstüne çıkılan, üzerinde bir şeyler yenen ve dökülen bir yüzeydir; dikiş kanalına kaçan süt ya da meyve suyu yüzeyden görünmez ama koku yapar. Evcil hayvan varsa tüy ve deri yağı sürekli birikir, hayvanın yattığı köşe diğerlerinden ayrışır. Sigara içilen odalarda duman kumaşa yapışkan bir film bırakır ve o film tozu tutar. Güneş alan odalarda ise ısı, kumaşın üzerindeki yağı akışkan hâle getirir ve yağ life daha derine iner. Bu dördü varsa aralık kendiliğinden kısalır. Bu değişkenlerin ortak yanı, hepsinin kumaşa giren madde miktarını artırmasıdır; koltuğun kendisiyle ilgili değildirler."
         ],
-        "liste": [
-          "Tesisat geçişleri: pis su, temiz su, doğal gaz, klima bakır borusu, havalandırma kanalı",
-          "Betonarme döşeme, perde ve kirişte açılacak delikler (statik proje ve mühendis onayıyla)",
-          "Boyası ve kaplaması bitmiş mekânlarda çevreye dokunmadan açılacak delikler",
-          "Beton dayanımı için numune alınması",
-          "Kesim hattının köşelerinde, diskin bitiremediği yerlere başlangıç deliği",
-          "Tel kesimde telin geçirileceği karşılıklı giriş delikleri"
-        ]
       },
       {
-        "baslik": "Çap ve Derinlik Neye Göre Belirlenir",
-        "paragraflar": [
-          "Çapı, delikten geçecek borunun ya da kanalın dış ölçüsü belirler; buna yalıtım kalınlığı ve montaj için birkaç milimetre pay eklenir. Buradaki yaygın hata cömert davranmaktır. Fazladan açılan her milimetre elemandan boşuna kesit alır, sonradan yapılacak dolgu ve yangın durdurucu kapama işini de zorlaştırır. Karot uçları yaklaşık 20 mm ile 600 mm arasında üretiliyor, ama işlerin büyük kısmı bundan çok daha dar bir aralıkta dönüyor.",
-          "Derinliği sınırlayan şey ise ucun boyudur. Standart uçlar çoğunlukla 40-50 cm civarında iş görür; normal kalınlıktaki bir döşemeyi ya da perdeyi tek seferde geçerler. Daha kalın kesitlerde araya uzatma parçası girer ve delik kademe kademe derinleştirilir. Uzun kurulumda esneme payı büyüdüğü için sehpa daha sıkı bağlanır, ilerleme düşürülür ve su akışı hiç kesilmez.",
-          "Kalınlık bir metreyi geçtiğinde uzatma her zaman çare olmaz; böyle durumlarda elemana iki yüzünden ayrı ayrı girilir. Bunun tek şartı var: iki deliğin ekseni ortada buluşmalı. Birkaç derecelik açı hatası öbür yüzde epeyce sapma demektir ve hatlar kaçarsa geçiş tam açılmaz. Çapın büyümesi de sadece daha büyük bir delik demek değildir; gereken tork ve sehpaya binen yük birlikte artar, küçük çapta iş gören vakum tabanı büyük çapta yetmez. Sahada en sık karşımıza çıkan çaplar şu aralıklarda toplanıyor:"
+        baslik: "Kirin Görünmeyen Tarafı: Yağ ve Ölü Deri",
+        paragraflar: [
+          "Koltuk kirinin gözle görülen kısmı olayların izidir: dökülen kahve, düşen kalem, çamurlu bir el. Görünmeyen kısım ise sürekli çalışır. Deri ve saç doğal olarak yağ üretir; bu yağın bir bölümü her temasta kumaşa geçer, lifin yüzeyine yayılır ve orada ince bir film oluşturur. Film yapışkandır, havadaki tozu ve giysiden dökülen tiftiği kendine çeker. Sonuçta ortaya çıkan koyulaşma bir leke değildir, sınırı yoktur ve tek noktaya müdahaleyle geçmez. Kolçak üstünün zamanla parlaklaşması, oturma yerinin ön kenarının koyulaşması hep bu birikimin görünür hâle gelmiş noktalarıdır. Yağ birikimi yavaş ilerlediği için gün gün fark edilmez; genellikle koltuğun bir bölgesi diğerinden ayrışmaya başladığında görülür. Karşılaştırma yapmanın en kolay yolu, oturma yüzeyini hiç oturulmayan yan panelle yan yana getirmektir.",
+          "İkinci birikim ölü deridir ve o da yağla birlikte hareket eder. Vücut sürekli hücre döker; koltukta geçirilen her saat bu dökülmenin bir kısmını kumaşa bırakır. Ölü deri ile kırıntılar dikiş kanallarına, minder aralarına ve minderin altındaki tabana iner. Ev süpürgesi yüzeydeki gevşek partikülleri alır, ama lifin arasına inmiş yağı ve ona yapışmış tozu almaz; süpürgenin emiş gücü buna yetmez, çünkü sorun yapışkanlıktır. Odada kimse yokken bile hissedilen ağır bir koku varsa kaynağı çoğu zaman minder altındaki bu katmandır, yüzeyden bakıldığında hiçbir şey görünmez. Bu katman aynı zamanda evcil hayvan tüyünü ve giysiden dökülen lifleri de tutar, yani her hafta biraz daha kalınlaşır."
         ],
-        "liste": [
-          "Elektrik ve zayıf akım geçişleri: genelde 40-60 mm",
-          "Klima bakır borusu ve drenaj hattı: genelde 60-80 mm",
-          "Havalandırma ve aspiratör çıkışı: 100-160 mm",
-          "Pis su iniş hattı: boru çapına göre 100-200 mm",
-          "Beton dayanım numunesi: çoğunlukla 100 mm civarı",
-          "Şaft, baca ve toplu tesisat geçişleri: 200 mm ve üstü"
-        ]
       },
       {
-        "baslik": "Su Neden Kesilmez",
-        "paragraflar": [
-          "Su karotta üç iş birden yapar. Segmentlerin sıcaklığını düşürür, aşınan malzemeyi delik dışına taşır ve tozu daha oluşurken bastırır. Soğutma yetmediğinde bağ malzemesi yumuşar, elmas taneleri bağın içine gömülür ve segment yüzeyi ayna gibi parlayarak kesmeyi bırakır. O noktadan sonra ne kadar bastırılsa da uç ilerlemez, yalnızca ısınır. Suyun yeterli gidip gitmediği delikten dönen çamurdan anlaşılır: akış incelmişse ya da delik ağzından buhar geliyorsa su azdır.",
-          "İkincisi belki daha az bilinir. Kesilen malzeme, uçla delik cidarı arasındaki dar halka boşluğundan dışarı atılmak zorundadır. Su bunu yapamazsa talaş orada birikir, ucu yanlardan sıkıştırır ve motoru zorlar. Üçüncüsü doğrudan sağlıkla ilgili: kuru delmede çıkan ince toz solunabilir boyuttadır, ıslak çalışmada bu sorun daha oluşmadan ortadan kalkar.",
-          "İç mekânda ıslaklık istenmediğinde çözüm kuru sisteme geçmek değil, suyu kaynağında toplamaktır. Delik ağzına oturan halka ve ona bağlı emici ünite çamuru daha yayılmadan alır, zemin hiç ıslanmaz. Kuru uçların gerçekten iş gördüğü yer tuğla, bims ve gaz beton cinsinden yumuşak malzemelerdir. Betonarme bir perdede kuru gitmeye çalışmak ucu bitirir ve işi uzatır."
-        ]
+        baslik: "Hangi Evde Aralık Kısalır, Hangisinde Uzar",
+        paragraflar: [
+          "Kesin bir kural koymuyoruz, çünkü koşullar çok değişiyor. Yine de pratik bir başlangıç noktası var: iki kişilik, çocuksuz ve hayvansız, koltukta yemek yenmeyen bir hanede yılda bir tur çoğu zaman durumu koruyor. Bu, koltuk kirlendiği için değil, birikim gözle görülür hâle gelmeden alındığında işin çok daha kolay olduğu için yapılan bir tercih. Aralık kısalan haneler ise bellidir: küçük çocuk olan evler, evcil hayvan besleyenler, koltukta düzenli yemek yenen haneler, sigara içilen odalar ve kalabalık aileler. Bu evlerde yılda bir tur genellikle yetmiyor, ikinci bir tur gerekiyor. Aralığı belirlerken koltuğun görünüşünden çok bu koşulların üst üste binip binmediğine bakıyoruz; iki koşul bir aradaysa süre kısalıyor.",
+          "Aralığı uzatan durumlar da var. Az kullanılan misafir odası takımları, üzeri düzenli olarak kılıfla korunan koltuklar ve üzerinde yemek yenmeyen oturma grupları daha uzun dayanır. Burada tek uyarı şu: çıkarılabilir kılıfı yıkamak koltuğu yıkamak değildir. Kılıf üstteki katmandır; kolçak, sırt paneli, dikiş kanalları ve minderin altındaki taban kılıfın altında kalır ve orada biriken yağ kılıf yıkandığında yerinde durur. Kılıflı koltuklarda sık görülen durum, kılıf tertemizken koltuk gövdesinin epeyce yük toplamış olmasıdır. Kılıf aralığı uzatır, kaldırmaz. Karar verirken kılıfın varlığına değil, koltuğun gerçek kullanımına bakın; az kullanılan kılıfsız bir koltuk, her gün oturulan kılıflı bir koltuktan daha uzun süre temiz kalır."
+        ],
       },
       {
-        "baslik": "Donatıya Denk Gelince Ne Olur",
-        "paragraflar": [
-          "İşlem durmaz. Elmas uç betonu nasıl aşındırıyorsa demiri de keser, sadece ilerleme belirgin biçimde yavaşlar. Motorun sesi değişir, dönen çamurun içinde metal talaşı görünür. Bu anda yapılan en yaygın hata baskıyı artırmaktır; doğrusu beslemeyi dengede tutup suyu bol vermektir. Kabaca bir fikir vermek gerekirse, 20 cm kalınlığında donatısız bir döşemede 100 mm'lik delik birkaç dakikada iniyor; aynı çap sık donatılı bir perdede yarım saate yaklaşabiliyor. Demir kesmek ucu da yıpratır; çelik betona göre sünektir ve segment yüzeyini parlatır.",
-          "Asıl mesele teknik olan değil, yapısal olanıdır: kesilen o demir hangi elemana ait? Bölme duvarın içinden geçen bir hasır teli kimseyi ilgilendirmez. Kolon, perde, kiriş ya da döşemede kesilen donatı ise doğrudan kesit kaybıdır ve elemanın taşıma gücünü ilgilendirir. Bu yüzden taşıyıcı elemanlarda deliğin nereden geçeceğini statik proje söyler; onaylı proje ve yetkili mühendis onayı olmadan bu elemanlara dokunulmaz.",
-          "Onay geldikten sonra da hazırlık bitmiş sayılmaz. Delik yeri projedeki konuma göre işaretlenir, donatı taramasıyla teyit edilir ve imkân varsa birkaç santim kaydırılarak demirin arasından geçilmeye çalışılır. Çoğu zaman aynı geçiş bölme duvardan ya da döşemenin başka bir noktasından da çözülebiliyor; öyle bir alternatif varsa keşifte onu söylüyoruz."
-        ]
+        baslik: "Artık Geç Kalındı Diyebileceğimiz İşaretler",
+        paragraflar: [
+          "Birkaç işaret birikimin yüzeyi aştığını gösterir. Birincisi elle anlaşılır: oturma yüzeyine avuç içiyle bastırdığınızda kumaş kaygan, hafif yapışkan ya da sertleşmiş geliyorsa lifin üzerinde film oluşmuş demektir. İkincisi minderin altıdır; minderi kaldırıp alt yüzü ile üst yüzü yan yana getirdiğinizde belirgin bir ton farkı görüyorsanız, gördüğünüz fark kumaşın kendi rengi değil, üstüne oturmuş katmandır. Üçüncüsü kokudur: oda boşken ve havalandırılmışken hâlâ hissediliyorsa kaynak yüzeyde değildir. Dördüncüsü, koltuğa oturulduğunda ışığa doğru bakıldığında havaya toz kalkmasıdır. Beşincisi, minderler kaldırıldığında dikiş kanallarında gözle görülür bir birikim bulunmasıdır. Bu işaretlerden birinin tek başına çıkması yeterlidir, hepsinin bir arada olmasını beklemek gerekmez; genellikle önce el hissi, sonra ton farkı belirir.",
+          "Bu işaretler çıktığında koltuk yine belirgin biçimde açılır, ama dürüst cevap şu: yağ lifin içine yeterince işlemişse ve kumaş o bölgede aşınmışsa eski tonuna tam olarak dönmeyebilir. Aşınma tarafı özellikle önemli. Yağın tuttuğu toz içinde ince kum taneleri vardır ve bu taneler her oturuşta lifin yüzeyini aşındırır; aşınan lif ışığı farklı yansıttığı için o bölge temizlendikten sonra da mat kalır. Yani geç kalmanın bedeli kirin çıkmaması değil, kumaşın yorulmasıdır. Bu yüzden koltuğu görünür şekilde kirlenene kadar bekletmemek, sonradan çabalamaktan daha çok işe yarıyor. Erken yapılan bir yıkama hem daha az solüsyon hem daha kısa çalışma ister; bu da kumaşın üzerinde daha az işlem yapılması demektir."
+        ],
       },
       {
-        "baslik": "Karot Numunesi ve Beton Dayanım Testi",
-        "paragraflar": [
-          "Mevcut bir yapının betonunun gerçekte ne dayanım verdiğini öğrenmenin en doğrudan yolu, yapının kendisinden bir parça almaktır. Güçlendirme projelerinde, riskli yapı değerlendirmelerinde, dönüşüm sürecinde ya da dökülen betonla ilgili şüphe doğduğu durumlarda bu numune isteniyor. Yüzeyden yapılan çekiç ölçümleri fikir verir ama tek başına yeterli sayılmaz; değerlendirmenin dayandığı sayı silindirin laboratuvarda kırılmasıyla bulunur.",
-          "Numunenin nereden alınacağı karotçunun kararı değildir. Hangi kat, hangi eleman, elemanın hangi bölgesi sorusunu yapının mühendisi cevaplar; rastgele seçilen bir nokta hem raporu tartışmalı kılar hem elemana boşuna zarar verir. Alma işinde üç şeye dikkat edilir. Numune yüzeye dik alınır. İçinden donatı geçmemelidir, o yüzden delmeden önce tarama yapılır; demir içeren bir silindir betonu temsil etmez. Çapı seçerken beton içindeki en iri agrega tanesi gözetilir; yeterince kalın olmayan bir silindirde denk gelen tek bir iri tane bile sonucu kaydırabilir.",
-          "Boy ve çap oranı da serbest değildir, bu oran raporlanan dayanım değerini doğrudan etkiler. Kısa kalan bir numune sonradan telafi edilemez, o eleman ikinci kez delinir. Silindir kırılmadan, alındığı yer ve yön üzerine yazılarak teslim edilir. Arta kalan boşluk uygun bir tamir harcıyla kapatılır; bu adım atlanırsa bilgi almak uğruna açılmış bir zayıf nokta yapıda öylece kalır. Numune sayısı da mühendisin programına bağlıdır, tek bir silindirden bütün bina hakkında hüküm çıkmaz."
-        ]
+        baslik: "Aralığı Uzatan Ev İçi Alışkanlıklar ve Yerinde Yıkama",
+        paragraflar: [
+          "İki yıkama arasını uzatan şeyler küçük ama düzenli işlerdir. Süpürmeyi dar uçla ve dikiş kanallarını takip ederek yapmak, kanallara inen kırıntıyı koku kaynağına dönüşmeden alır. Minderleri belirli aralıklarla çevirmek ve yerlerini değiştirmek, yükü tek noktada toplamak yerine yayar. En çok temas alan kolçak üstüne örtü koymak, yağın doğrudan kumaşa geçmesini azaltır. Dökülen sıvıya ise hemen müdahale etmek gerekir; ovmadan, temiz ve kuru bir bezle bastırarak emdirmek en doğrusudur. Ovmak lekeyi büyütür ve sıvıyı dokunun derinine iter, sonrasında iş zorlaşır. Doğrudan güneş alan yüzey zamanla solduğu için yoğun saatlerde tülü kapalı tutmak da işe yarar. Bu işlerin hiçbiri yıkamanın yerine geçmez, aralığı uzatır.",
+          "Koltuğun bu bakımdan bir avantajı var: yıkanması için evden çıkması gerekmiyor. İşlem baştan sona adreste yürüyor, çünkü yöntem koltuğu suya sokmak değil; kumaşa kontrollü miktarda solüsyon verilip kirin çözülmesi ve verilen sıvının yüksek basınçlı ünite ile geri çekilmesi esasına dayanıyor. Bu yüzden koltuk taşınmıyor, kapı ve merdiven geçişlerinde kumaşın zarar görme riski doğmuyor, evde bekleme süresi de günlere yayılmıyor. Yöntemin kumaş tipine göre nasıl değiştiğini ve kalıntı bırakmamanın neden en kritik adım olduğunu [koltuk yıkamayı adım adım anlattığımız sayfada](/hizmetler/koltuk-yikama/) ayrıntılı yazdık. Randevuyu evde birinin bulunduğu saate göre kuruyoruz ve iş bittiğinde koltuğun kuruması için odada nasıl bir hava akımı gerektiğini yerinde söylüyoruz."
+        ],
       }
     ],
-    "sss": [
-      {
-        "q": "Karot ile darbeli matkap arasındaki fark nedir?",
-        "a": "Darbeli matkap ucu döndürürken bir yandan da vurur, malzemeyi ezerek ve çatlatarak ilerler. Karot ucu vurmaz, yalnızca döner ve elmas segmentlerle aşındırarak keser. Ortaya çıkan delikte fark bellidir: karot deliğinin kenarı düzgündür, çevresinde çatlama olmaz, karşı yüzdeki kaplama patlamaz. Buna karşılık küçük ve basit deliklerde darbeli matkap daha pratiktir; karot, çapın ve kenarın önemli olduğu işler için vardır."
-      },
-      {
-        "q": "Karot makinesi su vermeden çalışır mı?",
-        "a": "Kuru çalışan uçlar var; delinen malzeme tuğla ya da gaz beton cinsindense toz emişli üniteyle iş görüyorlar. Donatılı betonda ise su vermeden çalışmak doğru değildir; segment kısa sürede aşırı ısınır, yüzeyi parlar ve kesmeyi bırakır. Su aynı zamanda kesilen malzemeyi delikten dışarı taşır, bu olmadığında uç halka boşluğunda sıkışır. İç mekânda ıslaklık istenmiyorsa toplama halkası ve emici üniteyle ıslak çalışılır, su zeminle hiç buluşmaz."
-      },
-      {
-        "q": "Karot deliği açarken donatı kesilirse sorun olur mu?",
-        "a": "Bölme duvarda ya da taşıyıcı olmayan bir elemanda kesilen donatı pratikte sorun çıkarmaz. Kolon, perde, kiriş ve döşemede ise kesilen her demir kesit kaybı demektir ve elemanın taşıma gücünü ilgilendirir. Bu yüzden taşıyıcı elemanlarda delik yeri statik projeden okunur, yetkili mühendisin onayı alınır ve delmeden önce donatı taraması yapılır. Tarama sonrası deliği birkaç santim kaydırıp demirin arasından geçmek çoğu zaman mümkün oluyor."
-      },
-      {
-        "q": "Alınan karot numunesini kim değerlendirir?",
-        "a": "Numuneyi almak ile dayanım değerini vermek iki ayrı iştir. Karotçu numuneyi doğru noktadan, yüzeye dik, donatısız ve kırılmadan çıkarmakla sorumludur. Silindirin ölçülmesi, hazırlanması ve kırılarak dayanımının belirlenmesi laboratuvarın işidir. Numunenin hangi elemandan alınacağını ve çıkan sonucun yapı için ne anlama geldiğini ise yapının mühendisi değerlendirir."
-      }
+    sss: [
+      { q: "Koltuk kılıflarımız çıkıyor, kılıfı yıkamak yeterli olur mu?", a: "Kılıfı yıkamak işi kolaylaştırır ama koltuğu yıkamış olmaz. Kılıf en üstteki katmandır; kolçak, sırt paneli, dikiş kanalları ve minderin altındaki taban onun altında kalır. Ten yağı ve ölü deri kılıftan sızarak bu bölgelere de iner, kılıf yıkandığında oradaki birikim yerinde durur. Kılıfı yıkarken etiketine bakın, sıcaklığı aşmayın ve tam kurumadan geri geçirmeyin; nemli kılıf altındaki süngerin nemli kalmasına yol açar. Kılıf aralığı uzatan bir önlemdir, koltuk temizliğinin yerini tutmaz. Kılıfın çıkması ayrıca şunu gösterir: kumaşın altındaki sünger nemi tutar, bu yüzden kılıfı ıslak geçirmemek önemlidir." },
+      { q: "Evcil hayvan besliyoruz, bu sıklığı ne kadar değiştirir?", a: "Belirgin biçimde kısaltır. Hayvan tüyü kumaşın yüzeyinde durmaz, lifin arasına girer ve süpürgeyle tam alınmaz; ayrıca hayvanın derisinden gelen yağ da aynı yerde birikir. Kirlenme genellikle takıma eşit dağılmaz, hayvanın yattığı köşede toplanır. Pratik yaklaşım şu: bütün takımı aynı sıklıkta düşünmek yerine en çok kullanılan koltuğu takip etmek. Ara dönemde tüyü lastik uçlu bir fırçayla kumaşın dokusu yönünde toplamak, süpürgeye göre daha çok işe yarar. Hayvanın koltuğa çıktığı evlerde minder altlarını da düzenli kontrol etmekte fayda var; tüy en çok orada toplanıyor." },
+      { q: "Yeni aldığımız koltuğu ilk kez ne zaman yıkatmalıyız?", a: "İlk yıkama için ortada görünür bir kir olmasını beklemek gerekmiyor, ama yeni koltuğu hemen yıkatmanın da bir anlamı yok. Kullanımın ilk yılı boyunca kumaşın nasıl davrandığını izleyin: kolçak üstü parlaklaşmaya başladı mı, oturma yerinin ön kenarında ton farkı oluştu mu, elle bastırıldığında kayganlık hissediliyor mu. Bu işaretlerden biri belirdiğinde birikim yüzeye çıkmış demektir ve o an ilk yıkama için uygun zamandır. Ayrıca yeni koltuğun etiketini saklayın; kumaşın hangi temizlik yöntemini kaldırdığını yazan tek kaynak odur." }
     ],
-    "ilgiliHizmetler": [
-      "karot",
-      "beton-delme"
-    ]
   },
-  "karot-numunesi-nasil-alinir": {
-    "seoTitle": "Karot Numunesi Nasıl Alınır? Kim Alır, Kim Raporlar",
-    "giris": [
-      "\"Karot testi\" tek bir işmiş gibi konuşuluyor ama sahada üç ayrı taraf var ve üçünün işi birbirinden net biçimde ayrı. Numunenin hangi elemandan, nereden ve kaç adet alınacağına yapının mühendisi karar verir. Numuneyi betondan çıkarma işini bizim gibi karot ekipleri yapar. Silindirin ölçülmesi, hazırlanması, kırılarak dayanımının belirlenmesi ve raporlanması ise yetkili laboratuvarın işidir.",
-      "Bu ayrımı baştan söylüyorum, çünkü bize gelen soruların çoğu aslında bizim cevaplayamayacağımız sorular: \"sonucum kaç çıkar\", \"binam riskli mi\", \"rapor ne zaman gelir\". Biz alma işini yaparız; deneyi ve raporlamayı laboratuvar yürütür, sonucun yapı için ne anlama geldiğini ise mühendis yorumlar. Bu sınırı bulandıran bir firma size iyilik yapmıyor.",
-      "Aşağıda numune almanın hangi durumlarda gündeme geldiğini, yerin nasıl seçildiğini, işlemin sahada nasıl yürüdüğünü ve sonrasında ne olduğunu anlattım. Sık sorulan birkaç şeyin — \"her daireden alınır mı\", \"tek başıma aldırabilir miyim\" — cevabı da göründüğünden farklı."
+  "pamukkale-koltuk-yikama-rehberi": {
+    giris: [
+      "Randevu saatinden önce yapılan on dakikalık bir hazırlık, ekibin evinizde ne kadar kalacağını doğrudan belirliyor. Pamukkale ve Merkezefendi'de yerinde koltuk yıkama isteyen hanelerin bize sorduğu üç soru hep aynı: kaç kişi gelecek, iş kaç saat sürecek, biz o sırada ne yapacağız. Kumaşın hangi çözücüyle çalışılacağı ayrı bir konu; bu yazıda anlattığımız şey randevunun kendisi. Yerinde koltuk yıkama, tesise götürülen bir iş değil, salonda kurulan geçici bir düzen: ekipman içeri giriyor, zemin örtülüyor, bir priz ile bir musluk kullanılıyor, iş bitince oda birkaç saat havalandırılıyor. Hangi adımın kime düştüğünü baştan bilmek, aynı gün bitecek bir işin ertesi güne sarkmasını engelliyor.",
+      "Tesisimiz Eskihisar Mahallesi'nde, Merkezefendi sınırları içinde; Pamukkale bitişik ilçe. Merkezdeki bu iki ilçede evde koltuk yıkama için aynı gün randevu çoğu zaman mümkün oluyor, çünkü ekibin yola çıkması ile kapıyı çalması arasındaki mesafe kısa ve programda açılan bir boşluk aynı gün doldurulabiliyor. Aşağıda sırasıyla şunları anlatıyoruz: randevudan önce evde neyin hazırlanacağı, ekibin odayı nasıl kullandığı, apartmanda su ile elektriğin nereden çözüldüğü, asansörsüz katın ve dar sokağın neyi değiştirdiği, işlem bittikten sonra kurumanın nasıl yönetildiği. Kumaş ailesine göre [su miktarı, çözücü seçimi ve deterjan kalıntısı gibi teknik başlıkları sayfasında](/hizmetler/koltuk-yikama/) ayrı ayrı yazdık; burada tekrarlamıyoruz."
     ],
-    "bolumler": [
+    bolumler: [
       {
-        "baslik": "Karot Hangi Durumlarda Alınır?",
-        "paragraflar": [
-          "En bilinen sebep mevcut bir yapının beton dayanımının belirlenmesi. Proje aşamasında hesaplanan beton sınıfının sahada gerçekten tutup tutmadığı, ancak yapıdan alınan numunenin kırılmasıyla anlaşılır. Güçlendirme projesi hazırlanacaksa mevcut dayanımın bilinmesi zorunludur; hesap onun üzerine kurulur.",
-          "İkinci sebep yeni yapılarda uyuşmazlık ya da şüphe. Dökümden alınan taze beton numuneleri beklenen sonucu vermediyse, ya da dökümde bir aksaklık olduğu düşünülüyorsa, sertleşmiş yapıdan numune alınarak durum kontrol edilir.",
-          "Üçüncüsü yapı stoğunun değerlendirilmesi kapsamındaki incelemeler. Bu süreçlerin nasıl yürüdüğü, kimin başvurabileceği ve sonucun ne doğuracağı mevzuatla belirlenmiştir; kararı da yetkili kurum ve kuruluşlar verir. Biz bu sürecin tarafı değiliz, yalnızca numune alma işini yaparız. Sürecin kendisiyle ilgili soruları ilgili kuruma ya da yapının mühendisine yöneltmek gerekir."
-        ]
+        baslik: "Randevudan Önce Evde Ne Hazırlanır",
+        paragraflar: [
+          "Hazırlığın büyük kısmı, koltuğun çevresinde dönebilecek bir boşluk açmaktan ibaret. Sehpa, puf, saksı ve yerde duran ne varsa kenara alınıyor; koltuğun arkasında ve yanlarında yarım metrelik bir şerit boş kalıyor, çünkü ekip minderleri çıkarıp koltuğu kendi ekseninde çevirerek çalışıyor. Minderlerin üstündeki kırlent, örtü ve battaniyeler kaldırılıyor. Koltuğun altındaki halı çekiliyor ya da kenarı katlanıyor; halının üzerinde çalışmak zorunda kalırsak örtü seriyoruz ama halıyı baştan çekmek daha temiz bir çözüm oluyor. Duvara dayalı takımlarda arka panelin de çalışılacağını hesaba katın: koltuk duvardan açılmadan arka yüzeye ulaşılmıyor. Zemin işlem öncesi bir kez süpürülmüşse ekip daha rahat çalışıyor.",
+          "İkinci hazırlık bilgi tarafında. Koltuğa daha önce bir leke çıkarıcı, halı şampuanı ya da köpüklü sprey sıkıldıysa bunu ekibe söyleyin; kumaşta kalmış eski bir ürün, yeni uygulanan solüsyonun davranışını değiştiriyor. Minderin dikiş payında ya da tabanda duran kumaş etiketi koparılmışsa, koltuğun sonradan yeniden kaplanıp kaplanmadığını biliyorsanız o bilgi de işimize yarıyor. Evde kedi, köpek veya kuş varsa işlem boyunca başka bir odada kalması gerekiyor; hem vakum motorunun sesi hem de açık duran solüsyon kapları için. Evde alerjisi olan biri varsa randevu alırken söylemenizi istiyoruz; kullandığımız ürünler bitkisel esaslı ve antialerjik olsa da bunu bilerek çalışmayı tercih ediyoruz."
+        ],
       },
       {
-        "baslik": "Numune Nereden Alınır? Yeri Kim Seçer?",
-        "paragraflar": [
-          "Yeri biz seçmiyoruz. Hangi elemandan, kaç adet ve nereden alınacağını yapının mühendisi belirler. Bu karar için yapının projesini, taşıyıcı sistemini ve incelemenin amacını bilmek gerekir; sahada gözle bakarak verilecek bir karar değildir.",
-          "Belirlenen yerde bizim işimiz teknik kısıtları sağlamak. Numune yüzeye dik alınır, içinde donatı bulunmaması istenir, alındığı yer ve yön etiketlenir. Donatının nerede olduğu delik açılmadan önce donatı tarama cihazıyla belirlenir; bu adım atlandığında hem numune geçersiz olur hem de elemanın donatısı kesilir.",
-          "Kritik bölgelerden — kolon-kiriş birleşimleri, mesnet bölgeleri gibi — numune alınmaz. Numune elemanın taşıma gücünü etkilemeyecek bir konumdan seçilir. Silindirin çapı ve boyu da deneyin kendi kurallarına tabidir; laboratuvarın kabul edeceği ölçüler bellidir ve o ölçüde numune çıkarmak alma işinin sorumluluğudur."
-        ]
+        baslik: "Ekip Geldiğinde: Oda Düzeni ve Süre",
+        paragraflar: [
+          "Standart bir salon takımında, yani üçlü, ikili ve tekli koltukların bulunduğu bir odada, iş yarım günlük bir program olarak planlanıyor. Süreyi belirleyen şey koltuk sayısından çok minder sayısı ve kumaşın su davranışı: her minderin iki yüzü, kolçakların üstü, baş dayanan sırt bölgesi ve dikiş kanalları ayrı ayrı geçiliyor. Köşe takımı ile L koltuklar tek parça göründükleri hâlde daha uzun sürüyor, çünkü oturma yüzeyi kesintisiz ve dönüş noktasında birikim fazla. Tek bir koltuk ya da iki kişilik bir kanepe için süre doğal olarak kısalıyor. Randevuyu sabah saatlerine almanızı öneriyoruz; öğleden önce başlayan bir iş, koltuğun akşama kadar havalanacak vakti olması demek.",
+          "Ekip geldiğinde önce zemin örtülüyor, sonra ekipman kuruluyor. Yüksek basınçlı ünite koltuğun yanına alınıyor ve hortumları oradan uzuyor; bu yüzden oda kapısının açık kalması ve geçiş yolunun boş olması gerekiyor. Siz odada durabilirsiniz ama vakum motoru işlem boyunca kesintisiz çalışıyor, sesi de elektrikli süpürgeden yüksek. Çoğu hane işlem sırasında başka bir odada bekliyor, iş bitince birlikte kontrol ediyoruz. Koltuk evden çıkarılmıyor, kapıdan geçirilmiyor ve sökülmüyor; bütün iş bulunduğu odada yapılıyor. Kapı ölçüsü ve asansör genişliği bu yüzden koltuk için değil, yalnızca ekipmanın taşınması için gündeme geliyor. Ekip ayrılırken kullandığı alanı topluyor ve serilen örtüleri kaldırıyor."
+        ],
       },
       {
-        "baslik": "\"Karot Her Daireden Alınır mı?\" — Yanlış Kurulmuş Bir Soru",
-        "paragraflar": [
-          "Numune daireden alınmaz, yapı elemanından alınır. Kolondan, perdeden, döşemeden. Bir dairenin içinde bulunan bir kolondan numune alınması, o numunenin \"o daireye ait\" olduğu anlamına gelmez; o eleman binanın tamamının taşıyıcı sisteminin parçasıdır.",
-          "Bu yüzden \"her daireden alınacak mı\" sorusunun cevabı hayır, ama sebebi kapsamın dar tutulması değil. Numune sayısı ve dağılımı, incelenen yapının büyüklüğüne ve mühendisin kurduğu değerlendirme planına göre belirlenir. Bazı numunelerin farklı katlardan alınması istenebilir, çünkü döküm farklı zamanlarda yapılmış olabilir.",
-          "Pratikte şu olur: mühendis numune alınacak elemanları listeler, o elemanların hangi bağımsız bölümlerin içinde kaldığı ortaya çıkar ve o dairelere erişim gerekir. Yani hangi daireye girileceği bir tercih değil, seçilen elemanların nerede durduğunun sonucudur."
-        ]
+        baslik: "Apartmanda Su, Elektrik ve Kirli Su",
+        paragraflar: [
+          "Yerinde yıkama ünitesi evin elektriğinden besleniyor. Standart bir priz yetiyor; ama aynı hat üzerinde ısıtıcı, klima ya da çamaşır makinesi çalışıyorsa sigortanın atma ihtimali var, o yüzden işlem sırasında yüksek çeken cihazları kapatmanızı istiyoruz. Eski binalarda sigorta kutusunun yerini biliyor olmak da işe yarıyor. Temiz suyu evin musluğundan alıyoruz, genellikle banyo ya da mutfaktan; hortum salona kadar uzatılabiliyor. Su kesintisi olan bir güne randevu düşerse işlem yapılamıyor; mahallenizde planlı kesinti duyurusu varsa randevu alırken söyleyin, günü değiştiriyoruz. Depolu sistemi olan binalarda basınç düşüklüğü sorun çıkarmıyor. Uzatma kablosunu kendimiz getiriyoruz; sizden istediğimiz tek şey erişilebilir bir priz.",
+          "Kirli su koltuğun içinde bırakılmıyor; yüksek emişli vakum çözülen kiri, deterjanı ve suyu ünitenin tankına çekiyor. Tank dolduğunda banyo giderine boşaltılıyor. Balkondan aşağı dökmek, çiçek saksısına vermek ya da mutfak lavabosunda bırakmak diye bir uygulama yok; apartmanda alt komşuya damlayan bir su, işin geri kalanını konuşulmaz hâle getiriyor. Zemin tarafında da aynı titizlik geçerli: koltuğun çevresine serilen örtü yalnızca toz için değil, hortumdan ve minderden düşen damlalar için. Ahşap ve laminat zeminlerde bu damlaların beklemesi istenmiyor; iş bitiminde çalışma alanı kuru bezle geçiliyor ve örtüler toplanırken zemin bir kez daha kontrol ediliyor. Tankın içeriği boşaltılırken gidere kaba kir gitmemesi için süzülüyor."
+        ],
       },
       {
-        "baslik": "İşlem Sahada Nasıl Yürüyor?",
-        "paragraflar": [
-          "Numune alma işi, teknik olarak bildiğimiz karot delme işinin kendisidir. Elmas uçlu silindirik uç, su soğutmalı olarak betona dik biçimde ilerler ve içinden silindir bir parça çıkarır. Makine yüzeye dübelle ya da vakumla sabitlenir; sabitleme gevşek olursa uç eksenden kaçar ve numune eğri çıkar, o numune de kabul edilmez.",
-          "Su soğutmalı çalışıldığı için toz havaya kalkmaz. Buna karşılık kesim suyu ve çamur ortaya çıkar; daire içinde çalışılıyorsa zemin ve mobilya başlamadan örtülür, suyun nereye akacağı önceden çözülür. Delme işleminin kendisi genelde birkaç dakika sürer; zamanın çoğu donatı taraması, sabitleme, örtme ve toplanmaya gider.",
-          "Çıkan silindir etiketlenir ve laboratuvara teslim edilir. Etiketin üzerinde numunenin hangi elemandan, hangi yönde alındığı yazar; bu bilgi olmadan laboratuvar sonucu doğru şekilde raporlayamaz. Bizim iş, doğru ölçüde ve zarar görmemiş bir numuneyi doğru etiketle teslim etmekle biter — bir de geriye kalan deliğin ne olacağıyla."
-        ]
+        baslik: "Asansörsüz Kat, Dar Sokak ve Site Girişi",
+        paragraflar: [
+          "Koltuk yerinden kımıldamıyor ama ekipman kımıldıyor ve ağır. Asansörsüz bir binanın dördüncü katına ünite, hortumlar ve solüsyon bidonları elle çıkıyor; bu, işin süresine eklenen gerçek bir zaman. Kat bilgisini ve asansör durumunu randevu alırken söylemenizi bu yüzden istiyoruz, sürprizi kapıda öğrenmek o günün programını bozuyor. Araç yanaşamayan dar bir sokakta oturuyorsanız ekipman sokak başından taşınıyor, mesafe uzunsa ikinci bir kişiyle geliniyor. Merkezefendi ve Pamukkale'nin eski mahallelerinde dar sokak ile park sıkıntısı sık karşılaştığımız bir durum; bilinen bir şey olduğu için de baştan planlanabiliyor. Zemin kattaki bir daire ile beşinci kat arasındaki fark işin kendisinde değil, kurulum ve toplama süresinde ortaya çıkıyor.",
+          "Sitelerde ayrı bir başlık var: girişte kayıt, kimlik ve yönetimden izin isteyen yerler oluyor, bazılarında yükleme boşaltma için belirli saat aralıkları tanımlı. Böyle bir sitede oturuyorsanız randevu gününü yönetime önceden bildirmeniz, ekibin kapıda beklemesini önlüyor. Otopark tarafı da aynı: aracın binaya yakın durabileceği bir yer varsa ekipman taşıma süresi kısalıyor. Bunların hiçbiri işin kalitesini değiştirmiyor, yalnızca ne kadar süreceğini değiştiriyor. Ama randevu saatini planlarken hesaba kattığımız şeyler tam olarak bunlar; aynı gün ikinci bir adrese gidilip gidilemeyeceği çoğu zaman burada belli oluyor. Bu bilgileri telefonda birkaç cümlede toplamak, kapıda yarım saat kaybetmekten iyi."
+        ],
       },
       {
-        "baslik": "Sonuç Ne Zaman Çıkar, Kaç Olmalı?",
-        "paragraflar": [
-          "Numune laboratuvara gittikten sonraki süre laboratuvarın kendi iş programına ve deney planına bağlıdır; bu konuda söz veremeyiz, çünkü o aşama bizim elimizde değil. Süreyi laboratuvardan ya da işi yürüten mühendisten öğrenmek gerekir.",
-          "\"Sonuç kaç çıkmalı\" sorusunun tek bir sayısı yok. Beton sınıfları — C25, C30 gibi — belirli bir karakteristik dayanımı ifade eder, ama yapıdan alınan numunenin sonucu ile proje beton sınıfı doğrudan aynı ölçekte karşılaştırılmaz; değerlendirmenin kendi kuralları vardır ve tek bir numuneye bakılarak yapılmaz. Numune sayısı, dağılımı ve istatistiksel değerlendirme birlikte anlam kazanır.",
-          "Sonucun yapı için ne anlama geldiğini yorumlamak da mühendisin işi. Aynı sayı, farklı taşıyıcı sistemlerde farklı sonuç doğurur. Bu yüzden laboratuvar raporunu alıp internetten yorum aramak yerine, raporu değerlendirmesi için yapının mühendisine götürmek doğru olan."
-        ]
-      },
-      {
-        "baslik": "Bizim Yapmadığımız Şeyler",
-        "paragraflar": [
-          "Rapor düzenlemiyoruz. Beton dayanım deneyi ve raporlaması yetkili laboratuvarların işidir; biz numune alma hizmeti veriyoruz. Karot raporu veren bir karot firması arıyorsanız, aradığınız şey aslında bir laboratuvardır.",
-          "Sonuç yorumlamıyoruz. Çıkan değerin yapı için ne ifade ettiği, güçlendirme gerekip gerekmediği, hangi kararın alınacağı mühendislik değerlendirmesidir. Sahada \"bu beton iyi görünüyor\" gibi bir cümle kurmuyoruz; numuneye bakarak dayanım tahmin edilemez.",
-          "Yapının durumuyla ilgili resmî tespit süreçlerinin tarafı değiliz. O süreçler mevzuatla düzenlenmiş, yetkili kuruluşlar tarafından yürütülüyor. Bize düşen, o sürecin ihtiyaç duyduğu numuneyi tekniğine uygun şekilde almak.",
-          "Bunları saymamızın sebebi işten kaçmak değil. Sınırı belirsiz bırakan bir firma, size cevaplayamayacağı sorulara cevap veriyor demektir; o cevaplara dayanarak alacağınız kararın bedeli de size kalır."
-        ]
-      },
-      {
-        "baslik": "Denizli'de Numune Alma İşi",
-        "paragraflar": [
-          "Denizli merkez ve 20 ilçenin tamamında numune alma işi yapıyoruz. Mühendis ya da laboratuvar tarafından belirlenmiş bir numune planı varsa doğrudan ona göre çalışırız; plan yoksa önce onun oluşturulması gerektiğini söyleriz.",
-          "Keşif ücretsizdir. Yerinde bakar, elemanlara erişimi, sabitleme imkânını, su ve elektriğin nereden alınacağını değerlendirir, işin ne tutacağını başlamadan net söyleriz. Oturulan binalarda çalışıyorsak giriş çıkış düzeni, örtme ve temizlik de planın parçasıdır — iş, son numune çıktığında değil saha toplandığında biter."
-        ]
-      },
-      {
-        "baslik": "Numune Alınacak Gün İçin Hazırlık",
-        "paragraflar": [
-          "Numune alınacak elemanların yüzeyine erişilebilir olması gerekiyor. Kolonun önünde dolap varsa çekilmesi, duvarda kaplama varsa o bölgede kaldırılması gerekir; makine yüzeye dübelle ya da vakumla sabitleniyor ve araya giren her tabaka sabitlemeyi bozar. Bunu önceden söylüyoruz ki ekip geldiğinde saat mobilya taşımakla geçmesin.",
-          "Su ve elektrik gerekiyor. Karot makinesi su soğutmalı çalışır; suyun nereden alınacağı ve çamurun nereye gideceği önceden çözülmezse daire içinde iş büyür. Elektriğin mevcut tesisattan alınamadığı durumlarda jeneratörle ya da hidrolik sistemle gidiyoruz, ama bunun keşifte belli olması gerekir.",
-          "Bağımsız bölüm içinde çalışılacaksa o gün birinin evde bulunması gerekiyor. İşlem sırasında gürültü olur, kesim suyu çıkar; zemin ve mobilya biz başlamadan önce örtülür. Numunenin çıkması dakikalar sürer ama hazırlık, örtme ve toplanma birlikte düşünüldüğünde bir elemanda geçen süre çok daha uzundur.",
-          "Kaç elemandan numune alınacağı belliyse gün planını ona göre kuruyoruz. Birden fazla katta çalışılacaksa sırayı, hangi daireye ne zaman girileceğini önceden paylaşırız — oturulan binalarda bu, işin en çok şikâyet üreten kısmı ve önceden konuşulduğunda tamamen ortadan kalkıyor."
-        ]
+        baslik: "Kuruma, Havalandırma ve Aynı Gün Randevu",
+        paragraflar: [
+          "İşlem bittiğinde koltuk ıslak değil, nemli oluyor ve sonraki birkaç saat sizde. Yapılacak tek şey odada hava dolaşımını kurmak: karşılıklı iki pencereyi aralık bırakmak, tek pencereyi ardına kadar açmaktan daha hızlı sonuç veriyor, çünkü kurutan şey açıklığın büyüklüğü değil havanın hareketi. Minderleri bu süre boyunca yerlerine oturtmayın; kenarlarına dayayıp aralarında parmak kalınlığında boşluk bırakın. Koltuğu duvara yaslamak da bekleyebilir, arka panelin hava alması gerekiyor. Ekip ayrılırken bunları hatırlatıyor ama uygulaması odada kalan kişiye düşüyor. Odanın kapısını kapatıp havayı hapsetmek kurumayı doğrudan geciktiriyor. Perdeleri de o birkaç saat boyunca kapatmayın; koltuğun üstüne gelen doğrudan güneş yerine, odada dolaşan hava işi görüyor.",
+          "Kuruma süresi kumaşa, verilen neme ve o günkü havaya bağlı; kalın dokuma ve süngeri yoğun minderler daha uzun duruyor. Denizli'de yaz aylarında oda sıcak ve kuru olduğu için süre kısalıyor; kışın pencereyi uzun tutmak istemeyen haneler için vantilatörü odaya doğru çevirmek işe yarıyor. Kalorifer üstüne minder koymak, saç kurutma makinesiyle noktasal ısı vermek ya da koltuğu ısıtıcıya yaklaştırmak yapılmaması gerekenler arasında: nokta ısı kumaşı kurutmuyor, o bölgede iz bırakıyor. Nem gitmeden üstüne örtü sermek de aynı sonucu doğuruyor. Koltuğun altındaki halı da nem alabildiği için işlem sonrası birkaç saat geri serilmiyor.",
+          "Aynı gün randevunun merkezdeki iki ilçede mümkün olmasının sebebi basit: tesis Eskihisar Mahallesi'nde, yani Merkezefendi'nin içinde, Pamukkale ise bitişik. Bir adreste iş beklenenden erken bittiğinde ya da programda boşluk açıldığında aynı gün ikinci bir adrese gidilebiliyor. Bu her zaman önceden söz verebileceğimiz bir şey değil, o günün programına bağlı. Randevular tesisin çalışma düzenine göre Pazartesi ile Cumartesi arasında, 07:00-18:00 aralığında planlanıyor. Uzak ilçelerde ise gidiş tek seferde kuruluyor ve gün önceden belirleniyor. Ödeme iş bittiğinde kapıda, nakit veya kredi kartıyla alınıyor. Randevu saatini telefonda netleştirmek, ekibin o gün kaç adrese uğrayacağını da belirliyor."
+        ],
       }
     ],
-    "sss": [
+    sss: [
+      { q: "Koltuk yıkanırken evde birinin bulunması gerekiyor mu?", a: "Evet, bir yetişkinin evde olması gerekiyor. Birincisi pratik sebep: hangi koltukların çalışılacağını, bilinen lekeleri ve daha önce sıkılmış bir ürün olup olmadığını yerinde konuşuyoruz. İkincisi teslim: iş bittiğinde koltuğu birlikte kontrol ediyoruz, kurumanın nasıl yönetileceğini yerinde anlatıyoruz ve ödeme kapıda, nakit veya kredi kartıyla alınıyor. Üçüncüsü altyapı: priz, musluk ve gider kullanılıyor, bunlara erişim için evde birinin bulunması şart. Gün içinde evde olamayacaksanız randevuyu bulunabileceğiniz bir saate almak en sağlıklısı." },
+      { q: "İşlemden kaç saat sonra koltuğa oturabiliriz?", a: "Saat vermek yerine kontrol yöntemini söyleyelim: minderin dikiş kanalına parmağınızı sokup çıkarın, parmak ucunda nem hissediliyorsa kumaşın içi henüz kurumamıştır. Yüzey çoğu zaman içinden önce kuruduğu için kontrolü düz yüzeyden değil dikişten yapmak gerekiyor. Pratikte bu, hava akımı kurulmuş bir odada birkaç saatlik bir iş; kalın dokuma ve yoğun süngerli minderlerde daha uzun sürüyor. O süre boyunca minderleri üst üste koymayın ve üzerine örtü sermeyin. Nem tam gitmeden üstü kapatılan bir kumaşta koku oluşabiliyor ve o koku sonradan kolay gitmiyor." },
+      { q: "Yerinde koltuk yıkama için aynı gün randevu her zaman mümkün mü?", a: "Merkezefendi ve Pamukkale'de çoğu zaman mümkün, ama o günün programına bağlı. Tesis Eskihisar Mahallesi'nde olduğu için merkezdeki iki ilçeye ulaşım kısa; programda boşluk açıldığında aynı gün ikinci bir adrese gidilebiliyor. Kesin cevabı arayınca alıyorsunuz, çünkü o gün kaç adrese söz verildiğini ancak o anda görebiliyoruz. Randevular Pazartesi ile Cumartesi arasında 07:00-18:00 aralığında planlanıyor. Adresinizin katını, asansör durumunu ve kaç parça koltuk olduğunu 0537 372 67 04 numarasında söylerseniz size gerçekçi bir saat verebiliyoruz." }
+    ],
+  },
+  "stor-perde-yikama-rehberi": {
+    giris: [
+      "Bir stor perdenin ağırlığının önemli bir kısmı kumaşta değil. Alüminyum kaset, çelik yay mili, rulo mili, zincir, alt profil ve montaj braketleri; pencerede asılı duran şeyin yarısı aslında bir mekanizma. Stor perde yıkama sorusunun evde neden karşılığı olmadığı da buradan başlıyor: yıkanması gereken kumaş, yıkanmaması gereken ise onu çalıştıran metal aksam. Denizli'de bize gelen perdelerin bir bölümü zaten evde bir kez denenmiş oluyor ve o denemenin bıraktığı iz çoğu zaman kumaşta değil, sistemde kalıyor. Bu yazı o denemelerin nerede tıkandığını, pencerenizdeki sistemi nasıl ayırt edeceğinizi ve bizi aramadan önce neyi sayacağınızı anlatıyor.",
+      "Perde yıkatmak isteyen bir hanenin ilk zorluğu terim karmaşası. Stor, zebra, dikey, tül, fon ve blackout aynı cümlenin içinde kullanılıyor, oysa bunların bir kısmı kumaş adı, bir kısmı sistem adı. Hangisinin elinizde olduğunu bilmek sonucu değiştiriyor, çünkü kırılgan yer her birinde başka: birinde bant hizası, ötekinde ölçü, bir başkasında yüzeydeki sertleştirici kaplama. [Tesiste işin nasıl yürüdüğünü, ultrasonik makineyi ve gergin kurutmayı sayfasında](/hizmetler/stor-perde-yikama/) adım adım yazdık. Burada anlattığımız şey sizin tarafınızda kalan kısım: teşhis, hazırlık ve evde denenen yöntemlerin geri döndürülebilir olup olmadığı. Perdeyi indirmeden önce yapılacak birkaç dakikalık hazırlık da bu tarafta."
+    ],
+    bolumler: [
       {
-        "q": "Karot testi nasıl yapılıyor?",
-        "a": "Üç aşamalı bir iş. Yapının mühendisi numunenin hangi elemandan, nereden ve kaç adet alınacağını belirler. Karot ekibi elmas uçlu makineyle, su soğutmalı ve yüzeye dik biçimde silindir numuneyi çıkarır, etiketleyip teslim eder. Yetkili laboratuvar numuneyi hazırlar, kırar ve raporlar. Biz alma işini yapıyoruz; deney ve rapor laboratuvarın işi."
+        baslik: "Pencerenizde Hangi Sistem Var, Nasıl Ayırt Edilir",
+        paragraflar: [
+          "Ayrımı yapmanın en kolay yolu perdeye değil, üst kısmına bakmak. Sağdan ya da soldan tek bir zincir sarkıyor ve kumaş yukarıda bir boruya sarılıyorsa elinizdeki stor ailesinden bir sistem. Sonra kumaşa yakından bakın: tek renk düz bir panel görüyorsanız düz stor, açık ve kapalı şeritler sırayla geliyorsa zebra. Perde yukarıda bir kutunun içine giriyorsa kasetli, boru açıkta duruyorsa kasetsiz montaj var. Kutunun tavana mı duvara mı sabitlendiği, hatta asma tavanın içine gizlenip gizlenmediği de söküm gününü belirleyen bilgiler arasında; bunları telefonda söylemeniz ekibin ne getireceğini baştan belli ediyor. Kasetsiz montajlarda söküm biraz daha hızlı ilerliyor.",
+          "Kumaş uzun dikey şeritler hâlinde duruyor ve şeritler kendi ekseninde dönüyorsa dikey perdeniz var. Bu sistemde her şerit üstteki bir arabaya asılıdır, altında küçük bir ağırlık ve şeritleri birbirine bağlayan ince bir zincir bulunur. Şeritler askılarından tek tek çıkarılıyor; arabalar ile ray pencerede kalıyor. Buradaki kırılgan nokta plastik askı parçaları ve şeritlerin sırası. Sıra karıştığında perde kapatıldığında düzgün bir yüzey oluşturmuyor, hangi şeridin nereye ait olduğu da aralarında renk farkı bulunmadığı için gözle anlaşılmıyor. Bu yüzden şeritler indirilirken numaralandırılıyor ve o numaralar takma gününe kadar üzerlerinde kalıyor. Takma günü şeritler kendi numaralarıyla yerlerine dönüyor ve perde ilk günkü hizasını koruyor.",
+          "Tül ile fon perde mekanizmalı değil, kornişe asılan sistemler. Tül ince ve gözenekli; kir yüzeyde durmuyor, dokunun açıklıkları arasına yerleşiyor, bu yüzden gözle bakınca kirli görünmeden önce ışığı geçirme biçimi değişiyor. Fon perde kalın, ağır ve çoğu zaman astarlı; ıslandığında ağırlığı katlanıyor. İkisinin ortak riski ölçüde: ıslak hâlde kendi ağırlığıyla asılı kalan bir perdenin boyu uzuyor ve keten görünümlü dokumalarda bu daha çabuk oluyor. Blackout ise bir kumaş cinsi, ayrı bir sistem değil; hem stor hem fon olarak karşımıza çıkıyor ve astar katmanı yüzünden kuruması en uzun süren gruplardan biri. Astarlı bir fon perdenin kuruması bu yüzden düz bir tülden çok daha uzun sürüyor."
+        ],
       },
       {
-        "q": "Numunenin alınacağı yeri kim seçer?",
-        "a": "Yapının mühendisi. Bu karar için projeyi ve taşıyıcı sistemi bilmek gerekir. Bizim tarafımızdaki kısıtlar teknik: numune yüzeye dik alınır, içinde donatı bulunmamalıdır, kritik bölgelerden alınmaz ve alındığı yer ile yön etiketlenir. Donatının konumu delme öncesi tarama cihazıyla belirlenir."
+        baslik: "Mekanizma Su Görürse Ne Olur",
+        paragraflar: [
+          "Metal aksamın ıslanmasının sinsi tarafı, sonucun o gün görünmemesi. Zincirin çevirdiği dişli grubunun içinde fabrikada konmuş bir yağ bulunur; su bunu alıp götürdüğünde perde bir süre normal çalışmaya devam eder, sonra zincir sertleşir ve kumaş yukarı çıkarken takılmaya başlar. Yay düzeneği nemden pas alırsa perde ya bıraktığınız yerde durmaz ya da yarı yolda kilitlenir. Alt profilin içine giren su ise en geç fark edilenidir: profil kapalı bir boru olduğu için içeride kalan su haftalarca çıkmaz ve kendini kumaşın alt kenarında ince sarı bir çizgi olarak gösterir. Perdeyi yıkayan kişi de o güne kadar hiçbir uyarı işareti görmüyor.",
+          "Bu üç arızanın ortak özelliği tamir edilebilir olmaması. Kirlenmiş bir kumaş yıkanıp geri gelir, ama yayı paslanmış bir mekanizmada yapılabilecek şey parçayı yenilemektir ve bu bizim verdiğimiz bir hizmet değil. Kumaşı kurtarıp sistemi kaybetmek çoğu evde perdenin tamamen değiştirilmesiyle bitiyor. Biz bu yüzden kumaşı metal aksamdan ayırıyoruz: kaset, zincir, mil ve braketler pencerede kalıyor, tesise yalnızca kumaş gidiyor. Klasik perdede de korniş yerinde duruyor. Ayrımın hangi noktadan yapılacağı sisteme göre değiştiği için buna sökme günü, pencerenin başında bakarak karar veriyoruz. Kumaşın milden nasıl ayrıldığı sistem markasına göre de değişiyor; kimi modelde kanal, kimisinde cırt bant kullanılıyor."
+        ],
       },
       {
-        "q": "Karot her daireden alınır mı?",
-        "a": "Numune daireden değil, yapı elemanından alınır — kolondan, perdeden, döşemeden. Bir dairedeki kolondan alınan numune o daireye değil binanın taşıyıcı sistemine aittir. Hangi dairelere girileceği, mühendisin seçtiği elemanların nerede kaldığının sonucudur."
+        baslik: "Evde Denenen Yöntemler ve Geriye Bıraktıkları",
+        paragraflar: [
+          "Dört yöntem tekrar tekrar karşımıza çıkıyor. Nemli bezle silmek yüzeydeki tozu alıyor ama stor perdenin üzerindeki sertleştirici kaplamayı bölgesel olarak çözüyor; sildiğiniz yer bir süre sonra komşusundan farklı duruyor. Küvette ıslatmak perdeyi katlamayı gerektiriyor ve ıslak kumaşta oluşan kat izi kuruduktan sonra ütüyle bile tam açılmıyor. Çamaşır makinesinde asıl zarar tamburda dönerken değil, sıkma devrinde ortaya çıkıyor: geniş ve hafif bir kumaş yüksek devirde tamburun bir yanına toplanıyor, orada hem kırık hem gerilme izi kalıyor. Buharlı makine ise kaplamayı ve varsa dikişteki yapıştırıcıyı yumuşatıyor. Dördünün ortak yanı, sonucun genellikle ilk kullanımda değil birkaç hafta sonra belli olması.",
+          "Asıl soru şu: hangi iz geri alınabilir. Yüzeyde kalan toz ve hafif sararma yıkamayla düzeliyor, endişe edilecek tarafı yok. Buna karşılık zebra perdede bozulan bant hizası, storda kaybolan sertlik ve ıslak hâlde uzamış bir fon perdenin boyu geri gelmiyor; bunlar kumaşın kendi yapısında olan değişiklikler. Tesiste kullandığımız ultrasonik yöntem tam da bu yüzden ovmaya dayanmıyor: su içinde oluşturulan titreşim kiri dokunun içinden ayırıyor, kumaşa ne bastırılıyor ne de gerdiriliyor. Yani evdeki yöntemin yerine geçen şey daha kuvvetli bir fırça değil, fırçayı büsbütün devreden çıkaran bir düzen. Bu ayrımı bilmek, hangi perdenin yıkamayla düzeleceğine karar vermeyi de kolaylaştırıyor."
+        ],
       },
       {
-        "q": "Karot sonucu kaç günde çıkar?",
-        "a": "Numune laboratuvara teslim edildikten sonraki süre laboratuvarın iş programına bağlıdır ve bu konuda söz veremeyiz, çünkü o aşama bizim elimizde değil. Süreyi laboratuvardan veya işi yürüten mühendisten öğrenmek gerekir. Sahadaki numune alma işlemi ise genelde aynı gün tamamlanır."
+        baslik: "Aramadan Önce Neyi Sayacaksınız, Söküm Neden Ekip İşi",
+        paragraflar: [
+          "Telefonda dört bilgi işi kolaylaştırıyor: kaç pencere, her pencerede kaç kanat, sistem tipi ve pencerelerin yüksekliği. Yüksekliği metreyle ölçmenize gerek yok; salon penceresi mi, mutfak penceresi mi, üstünde asma tavan var mı demeniz yetiyor. Buna iki şey daha ekleyin. Perdenin arkasında petek, radyatör ya da yerinden oynamayan bir eşya duruyorsa söyleyin. Pencerede ayrıca sineklik varsa onu da belirtin; sineklik perde değil, file dokusu ve plastik çerçevesiyle kendi başına ele alınan ayrı bir parça. Bu bilgiler ekibin kaç kişi geleceğini ve hangi merdivenle çıkacağını belirliyor. Aynı gelişte kaç pencere sökülecekse hepsi birlikte alınıyor, bu yüzden sayımın eksiksiz olması işinize yarıyor.",
+          "Sökümün ekiple yapılmasının sebebi yalnızca yükseklik değil, işaretleme. İndirilen her kanadın hangi pencereye, hangi sıraya ve hangi montaj düzenine ait olduğu o anda kaydediliyor. Kayıt tutulmadığında takma günü perdeler birbirinin yerine asılmaya çalışılıyor ve kumaş her denemede biraz daha yıpranıyor; aynı evdeki iki perde çoğu zaman birkaç santim farklı ölçüde oluyor. Bir de tek kişinin zorlandığı fiziksel kısım var: merdivenin üstünde iki el doluyken kaset braketini yerinden çıkarmak, kırılan braketle biten ev denemelerinin başlıca sebebi. Sökme ve takma hizmetin içinde, ayrıca ücretlendirilmiyor. Takma günü perdenin çalışması birlikte deneniyor; zincir çekilip kumaşın mile düzgün sarıldığı görülüyor."
+        ],
       },
       {
-        "q": "Karot raporunu siz veriyor musunuz?",
-        "a": "Hayır. Beton dayanım deneyi ve raporlaması yetkili laboratuvarların işi. Biz numune alma hizmeti veriyoruz. Çıkan sonucun yapı için ne anlama geldiğini yorumlamak da yapının mühendisine ait; numuneye bakarak dayanım tahmin edilemez."
+        baslik: "Mutfak Perdesi, Küf ve Kirin Türünü Ayırt Etmek",
+        paragraflar: [
+          "Perdedeki kir tek cins değil ve türü çözüm yolunu değiştiriyor. Salon ile yatak odası perdelerinde kir çoğunlukla dışarıdan geliyor: açık pencereden içeri giren toz, trafikten gelen kurum ve mevsiminde polen. Mutfakta durum başka; pişirme sırasında havaya karışan yağ soğuduğunda kumaşın üzerinde yapışkan bir tabaka bırakıyor, o tabaka da tozu üstüne alıyor. Elinizle yokladığınızda kumaş hafif yapış yapış geliyorsa aradığınız cevabı bulmuşsunuz demektir. Yağ suyu ittiği için sıradan bir yıkama bu tabakayı kaldırmıyor; ayrı bir ön işlem gerekiyor ve mutfak perdesinin neden diğerlerinden uzun sürdüğünü de bu belirliyor. Aynı evde mutfak ile salon perdesinin ayrı partilere ayrılmasının sebebi de bu fark.",
+          "Üçüncü tür küf ve burada dürüst olmak gerekiyor. Nemli bir duvara ya da terleyen bir cama uzun süre yapışık kalan perdede küf sadece yüzeyde durmuyor, lifin içindeki boyayı da bozmuş olabiliyor. Leke soluklaşıyor ama her zaman tamamen gitmiyor; bunu perdeyi teslim alırken belirtiyoruz, sonucu baştan bilmenizi tercih ediyoruz. Kirin ne kadar ilerlediğini kendiniz de ölçebilirsiniz: perdenin sürekli katlı duran, ışık görmeyen bir kenarını açıp sürekli açıkta kalan orta bölümüyle yan yana getirin. İki bölge arasındaki fark gözle seçiliyorsa perde bir yıkamayı hak etmiş demektir. Kirin türünü baştan söylemeniz, ön işlemin hazırlanmasına ve sürenin doğru tahmin edilmesine yardımcı oluyor."
+        ],
       }
     ],
-    "ilgiliHizmetler": [
-      "karot",
-      "beton-delme"
-    ]
-  }
+    sss: [
+      { q: "Pencerede hangi sistem olduğunu bilmiyorum, telefonda nasıl tarif ederim?", a: "Üç şeye bakmanız yeterli. Birincisi zincir: sağdan ya da soldan tek bir zincir sarkıyorsa stor ailesindesiniz, zincir yoksa ve perde yana açılıyorsa klasik korniş var. İkincisi kumaş: tek parça düz bir panel mi, açık ve kapalı şeritler sırayla mı geliyor, yoksa kumaş uzun dikey şeritlere mi ayrılmış. Üçüncüsü üst kısım: boru açıkta mı duruyor, yoksa bir kutunun içine mi giriyor. Bu üç cevap sistemi belirlemeye yetiyor. Emin olamazsanız pencerenin fotoğrafını WhatsApp üzerinden göndermeniz de aynı işi görüyor." },
+      { q: "Perdeyi kendim indirip getirsem olur mu?", a: "Olur ama getirmenize gerek yok; sökme ve takma hizmetin içinde ve ayrıca ücretlendirilmiyor. Yine de kendiniz indirecekseniz iki şeye dikkat edin. Kumaşı metal aksamdan ayırın: kaset, zincir, mil ve braketler pencerede kalsın, çünkü suya giren mekanizma geri kazanılmıyor. İkincisi, hangi kanadın hangi pencereye ait olduğunu ve sırasını yazın. En sık çıkan sorun burada oluyor; aynı evdeki iki perde birkaç santim farklı ölçüde olabiliyor ve karıştığında ikisi de yerine tam oturmuyor. Emin değilseniz dokunmayın, randevu gününde birlikte indiririz." },
+      { q: "Perdeler ne sıklıkla yıkanmalı?", a: "Takvimle değil konumla karar vermek daha doğru sonuç veriyor. Cadde cephesine bakan, sık havalandırılan ve sigara içilen odalardaki perdeler en hızlı kirlenenler. Mutfak perdesi ayrı bir grup, çünkü oradaki kir tozdan değil yağdan geliyor ve birikimi daha çabuk oluyor. Salon perdesinde ilk belirti renk değil, ışık: perde eskisi kadar aydınlık vermiyorsa dokunun gözenekleri dolmuş demektir. Bir de evdeki kullanım var; pencereyi gün boyu açık tutan haneler ile klimayla yaşayan haneler aynı sürede aynı noktaya gelmiyor. Randevu ve planlama için 0537 372 67 04." }
+    ],
+  },
+  "yatak-hijyeni-ve-alerji": {
+    giris: [
+      "Her gece aynı iki şey oluyor: deriden ölü hücre dökülüyor ve vücut uyurken ısı ile nem veriyor. Yatak temizliği konusunun tamamı aslında bu iki cümlenin üzerine kuruluyor, çünkü toz akarı denilen canlının ihtiyaç duyduğu iki şey de tam olarak bunlar. Akar çıplak gözle görülmez, örümceğe uzaktan akrabadır ve lif tutan yüzeylerde yaşar. Işıktan kaçar, karanlık ve nemli yerleri seçer. Yatak bu tarife her açıdan uyar: besin her gece yenilenir, nem her gece tazelenir ve yüzey gün boyunca çarşafın altında karanlık kalır. Yani yatakta biriken şey kir değil, düzenli olarak beslenen bir ortamdır.",
+      "Bu yazıda ne yapılabileceğini olduğu kadar ne yapılamayacağını da yazıyoruz. Yatak, içine giren suyu geri vermeyen bir eşya olduğu için üzerinde yapılan her işlem yüzeyle sınırlı kalmak zorundadır; bunun ne anlama geldiğini ayrı bir bölümde açtık. Sağlıkla ilgili bir iddiada bulunmuyoruz: alerjik bir şikâyetin ne kadar değişeceğini söylemek bizim işimiz değil, onu hekim değerlendirir. Bizim anlatabileceğimiz şey mekanizma: yatakta ne birikiyor, hangi koşullar bu birikimi hızlandırıyor, çarşaf yıkamak nereye kadar yetiyor ve yüzeyde biriken organik yükü azaltmanın pratikte karşılığı ne oluyor. Aşağıdaki bölümler sırayla bunları anlatıyor. Yatak odasında halı ve perde de aynı tozu tuttuğu için yer yer onlara da değiniyoruz."
+    ],
+    bolumler: [
+      {
+        baslik: "Akarın Besin Kaynağı: Ölü Deri Nereye Gidiyor",
+        paragraflar: [
+          "İnsan derisi sürekli yenilenir ve eski hücreler dökülür. Bu dökülmenin bir bölümü giysiye, bir bölümü zemine, uykudayken de doğrudan yatağın üstüne gider. Ölü deri çarşafın dokusundan geçerek yatağın yüzey kumaşına iner; orada kapitone dikişlerinin oluşturduğu çukurlara, kenar fitillerinin dibine ve dikiş kanallarının içine yerleşir. Bu noktalar rastgele değildir; hepsi yüzeyden aşağı doğru bir cep oluşturan ve elin ya da süpürgenin kolay ulaşamadığı yerlerdir. Biriken madde ne kokar ne renk yapar, bu yüzden kimse fark etmez. Akar için ise bu, sürekli yenilenen ve hep aynı yerde duran bir besin kaynağı demektir.",
+          "Alerjik hassasiyeti olan kişileri rahatsız eden şey akarın kendisi değil, geride bıraktığı dışkı ve kabuk artıklarıdır. Bunlar toz zerresi büyüklüğündedir ve yatağın üst katmanında birikir. Yatağa oturulduğunda, çarşaf çekildiğinde ya da yorgan silkelendiğinde bu artıklar havaya kalkar, bir süre asılı kalır ve sonra yeniden aynı yüzeye ve odadaki diğer yüzeylere oturur. Yatak odasında halı, perde ve döşemelik kumaş varsa aynı zerreler oralarda da tutunur. Bu döngüyü tamamen durdurmak mümkün değildir; azaltılabilen tek şey ortamdaki toplam yüktür, yani birikmiş organik maddenin miktarıdır. Bu yüzden yatak odasında yapılan işin ölçüsü, akarın tamamen yok edilmesi değil, ortamda biriken maddenin azaltılmasıdır. Ölçülebilir olan da budur."
+        ],
+      },
+      {
+        baslik: "Nem ve Sıcaklık: Yatağı Elverişli Kılan Koşullar",
+        paragraflar: [
+          "Akar yalnızca besinle yaşamaz, neme de ihtiyacı vardır ve nemi sudan değil havadan alır. Uyuyan bir vücut hem ısı hem nem verir; bu nemin bir kısmı çarşaf ve yorgan tarafından tutulur, bir kısmı yatağın üst katmanına geçer. Sabah kalkıldığında yatak, gecenin başındaki hâline göre daha nemlidir. Yatağın hemen toplanması, üstünün örtüyle kapatılması ve odanın kapalı tutulması bu nemi yüzeyde hapseder. Aynı yatak açık bırakılıp oda havalandırıldığında nem birkaç saat içinde ortamdan çekilir. Fark küçük görünür ama her gün tekrarlandığı için yatağın hangi koşulda kaldığını belirleyen asıl şey budur. Yatağın hemen üzerine tül örtü ya da kalın bir yatak örtüsü serilmesi de aynı sonucu doğurur; katman arttıkça hava geçişi azalır.",
+          "Mevsim de bu dengeyi değiştirir. Kışın pencereler kapalı kaldığı, evde nem üreten faaliyet arttığı ve dışarısı zaten nemli olduğu için oda havası daha yavaş kurur. Denizli merkezde yaz sıcak ve kuru geçer, bu yüzden yaz aylarında yatak yüzeyi daha çabuk nem verir. Yatak odasının kuzeye bakması, duvarın dış cepheye komşu olması ve bazanın hava almayan kapalı bir gövdeye oturması nemin kalış süresini uzatan diğer etkenlerdir. Bunların hiçbiri tek başına belirleyici değildir, ama üst üste bindiklerinde yüzeyin gün içinde kuruma imkânı azalır. Pratik ölçüt basit: oda sabah havalandırıldıktan sonra yatak yüzeyine elin tersi bastırıldığında serinlik hissediliyorsa nem hâlâ oradadır. Serinlik yoksa yüzey kurumuş demektir."
+        ],
+      },
+      {
+        baslik: "Çarşaf Yıkamak Nereye Kadar Yetiyor",
+        paragraflar: [
+          "Çarşaf, alez ve yastık kılıfı yatakla vücut arasındaki ilk katmandır ve düzenli yıkandığında bu katmanda biriken yükü gerçekten alır. Yüksek sıcaklıkta yıkamak burada işe yarar, çünkü hem organik artıkları çözer hem de ortamı akar için elverişsiz hâle getirir. Sıcak yıkamayı kaldırmayan kumaşlarda ise etkiyi yaratan şey suyun kendisi ve durulamadır. Buraya kadar her şey yolunda. Sorun, bu katmanın yatağın tamamını temsil etmemesinden çıkıyor: çarşaf yatağı örter, mühürlemez. Dokusundan geçen ince partiküller alttaki yüzey kumaşına iner ve orada kalır; çarşaf yıkandığında o katman yerinde durmaya devam eder. Bu, çarşaf yıkamanın gereksiz olduğu anlamına gelmez; tersine, en sık tekrarlanan ve en kolay yapılan önlem odur.",
+          "Yatağın çarşafla hiç ilgisi olmayan bölgeleri de var. Yatağın yan yüzeyleri, hava delikleri, kenar fitilleri, alt yüzü ve bazanın kumaş kaplaması çarşafın altına girmez; buralarda biriken toz ve nem yıllarca hiç ele alınmadan durabilir. Alez kullanmak faydalıdır, çünkü sıvı ve partikül geçişini azaltarak yüzeye ulaşan yükü düşürür. Ancak alez de mutlak bir bariyer değildir ve en önemlisi, takıldığı günden önce yatakta birikmiş olanı geri almaz. Alezin altındaki yüzey, alez takılmadan önce hangi durumdaysa o durumda kalır; bunu ayrıca ele almak gerekir. Yastık kılıfı için de aynı ayrım geçerlidir: kılıf yıkanır, yastığın kendisi ayrı bir konudur ve dolgusuna göre değerlendirilir."
+        ],
+      },
+      {
+        baslik: "Yüzey ile İç Dolgu Ayrımı ve Neden Yüzeyle Sınırlı Çalışılır",
+        paragraflar: [
+          "Yatak, içine giren suyu geri vermeyen bir eşyadır ve bütün yöntemi belirleyen kısıt budur. Sünger ve visco gözenekli yapıdadır; nemi içine çeker, yavaş bırakır ve visco yoğun olduğu için havanın içinden geçmesi ayrıca zordur. Yaylı yataklarda su, üstteki keçe ve elyaf katmanlarını geçip tabana iner, orada birikir ve alttan hava almadığı için uzun süre kalır. İç dolguya inen suyun tek çıkış yolu kendi kendine buharlaşmasıdır, o da günler alır. Bu sürede iki şey birden olur: nemli kalan dolguda koku başlar ve katmanların yapısı bozulur. Bu yüzden yatak suya sokulup sıkılabilecek bir eşya değildir.",
+          "Buradan çıkan sonuç dürüstçe söylenmeli. Yatakta yapılan iş mekaniktir ve yüzeyle, yani kumaşın dokusuyla sınırlıdır: önce nem verilmeden kuru vakumla tarama, sonra dolgu tipine göre belirlenen sınırlı nemle çalışma ve verilen sıvının geri çekilmesi. Bu işlemin karşılığı yüzeyde ve kumaş dokusunda biriken ölü deri, toz ve artık miktarının belirgin biçimde azalmasıdır. Dolgunun içinde olup biten ise bu işin kapsamı dışındadır; oraya ulaşmak için verilecek su yatağın kendisine zarar verir. Yöntemin adım adım nasıl yürüdüğünü [yatak ve baza temizliğini anlattığımız sayfada](/hizmetler/yatak-baza-temizligi/) yazdık. Yatağın alt yüzü, yan yüzeyleri ve bazanın kumaş kaplaması da aynı sıra ile ele alınır; sandığın içi ve suntadan iskelet ise yalnızca kuru vakumla geçilir, oraya sıvı verilmez."
+        ],
+      },
+      {
+        baslik: "Alerji Şikâyetiyle İlişkisi: Ne Söylenebilir, Ne Söylenemez",
+        paragraflar: [
+          "Bu konuda iki uçtan da uzak duruyoruz. Bir uçta akarın önemsiz olduğunu söyleyen yaklaşım var, diğer uçta temizlikten sonra şikâyetlerin geçeceğini söyleyen yaklaşım. İkisi de doğru değil. Söylenebilecek olan şudur: yatak, ölü deri ile nemin bir arada bulunduğu bir yerdir ve akar bu iki şeyin bulunduğu yerde yaşar. Yapılan temizlik, biriken organik maddeyi ve artıkları mekanik olarak azaltır. Bunun bir kişinin şikâyetlerine ne kadar yansıyacağını söyleyemeyiz, çünkü bu tıbbi bir değerlendirmedir ve hekimin işidir. İlaçlama ya da biyosidal uygulama da yapmıyoruz; o ayrı bir ruhsat ve uzmanlık alanıdır. Evde bilinen bir hassasiyet varsa işe başlamadan önce söylenmesini istiyoruz; kullanılan ürünü ve yoğunluğunu buna göre seçiyoruz.",
+          "Evde yapılabilecekler ise net ve maliyetsiz. Yatağı sabah kalkar kalkmaz kapatmak yerine bir süre açık bırakmak, yatak odasını her gün havalandırmak, çarşaf ve kılıfları düzenli aralıklarla yıkamak, yatağı belirli aralıklarla döndürmek ve baza sandığını tıka basa dolu tutmamak yüzeyin kuruma imkânını artırır. Yatak odasında biriken tozun bir bölümü de halı ve perdede tutulur; onların da düzenli aralıklarla ele alınması odadaki toplam yükü düşürür. Bunlar akarı ortadan kaldıran işlemler değil, ortamı ona daha az elverişli hâle getiren alışkanlıklardır. Fark yaratan da zaten süreklilikleridir. Bir de şu var: bu alışkanlıkların hiçbiri masraflı değil, yalnızca düzen istiyor. Sabah beş dakika açık kalan bir yatak, yıl boyunca tekrarlandığında ölçülebilir bir fark yaratır."
+        ],
+      }
+    ],
+    sss: [
+      { q: "Yatağı güneşe çıkarmak ya da havalandırmak işe yarar mı?", a: "Mekanizma açısından mantıklı bir hamledir, çünkü akarın ihtiyaç duyduğu iki şeyden biri nemdir ve havalandırma yüzeydeki nemi düşürür. Yatağı taşıyabiliyorsanız kuru ve havadar bir ortamda birkaç saat bekletmek yüzeyin kurumasına yardım eder. Ancak bunun biriken ölü deriyi ve artıkları yatağın içinden almadığını bilmek gerekir; havalandırma birikimi azaltmaz, ortamı değiştirir. Ayrıca yatağı balkonda ya da açık pencere önünde uzun süre bırakmak dışarıdan toz ve polen almasına yol açar. Pratikte en işe yarayanı, her sabah yatağı bir süre açık bırakıp odayı havalandırmaktır." },
+      { q: "Alez kullanıyoruz, yatak temizliğine yine de gerek var mı?", a: "Alez yararlıdır ve yüzeye ulaşan sıvı ile partikül miktarını gerçekten azaltır. İki sınırı vardır. Birincisi, alez takıldığı günden önce yatakta birikmiş olanı geri almaz; altındaki yüzey hangi durumdaysa o durumda kalır. İkincisi, alez yatağın yalnızca üst yüzeyini örter; yan yüzeyler, kenar fitilleri, hava delikleri, yatağın alt yüzü ve bazanın kumaş kaplaması onun kapsamı dışında kalır. Alezi düzenli yıkamak, yatağın kendisini ele almanın yerine geçmez ama iki temizlik arasındaki süreyi uzatır." },
+      { q: "Yorgan ve yastıklar da aynı kapsamda mı değerlendirilmeli?", a: "Evet, çünkü onlar da her gece aynı nemi ve aynı dökülmeyi alır. Aradaki fark şu: yorgan ve battaniye yatağın aksine yıkanabilir, yani su geri alınabilir. Bunlar tesiste endüstriyel yorgan ve battaniye makinesinde yıkanıp kapalı odada kurutuluyor; ayrıntısı [yorgan ve battaniye yıkamayı anlattığımız sayfada](/hizmetler/yorgan-battaniye-yikama/) yazılı. Evde yıkanacaksa etiketteki sıcaklığa uyun ve en önemlisi dolgunun içi tam kurumadan katlayıp kaldırmayın; nemli kalan dolgu topaklanır ve koku yapar. Yastıklarda dolgu cinsi belirleyicidir; etiketine bakmadan hiçbir yastığı suya vermeyin." }
+    ],
+  },
 }
 
 export default blogContent
