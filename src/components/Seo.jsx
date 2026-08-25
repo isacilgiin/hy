@@ -109,7 +109,13 @@ export default function Seo({ title, description, path = '/', image, jsonLd, kan
      * hidrasyon geri alıyor. noindex yerinde kaldığı için felaket değil,
      * yine de iki taraf aynı şeyi söylemeli.
      */
-    if (!kanonikYok) upsertLink('canonical', url)
+    if (kanonikYok) {
+      // SADECE yazmamak yetmiyor: SPA gezinmesinde onceki sayfanin canonical
+      // etiketi DOM da kaliyor ve 404 ekraninda baska bir sayfayi isaret ediyor.
+      document.head.querySelector('link[rel="canonical"]')?.remove()
+    } else {
+      upsertLink('canonical', url)
+    }
 
     upsertMeta('property', 'og:title', title)
     upsertMeta('property', 'og:description', desc)
