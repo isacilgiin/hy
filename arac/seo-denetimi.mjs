@@ -125,5 +125,63 @@ lb.telephone === '+905373726704' ? OK('telefon doğru') : NO('telefon: ' + lb.te
 lb.aggregateRating ? NO('aggregateRating var — kaynaksız puan yayınlanıyor') : OK('aggregateRating yok (doğru: puan kaynağı yok)')
 JSON.stringify(lb).length < 4000 ? OK(`LocalBusiness ${JSON.stringify(lb).length} bayt (şişkin değil)`) : NO('LocalBusiness şişkin')
 
+console.log('\n=== HERO ÖN BOYAMA = REACT HERO ===')
+/*
+ * Sayfa yenilemede görülen sıçramanın kaynağı buydu ve İKİ DOSYADA aynı
+ * değerlerin elle tutulmasına dayanıyor:
+ *   vite.config.js > heroOnizleme   (build'in ürettiği statik HTML)
+ *   src/components/HeroSection.jsx  (React devraldığında çizilen)
+ * Biri değişip diğeri kalırsa React devraldığı anda ekran kararıyor/açılıyor.
+ * O ana kadar bunu yalnızca iki dosyadaki "birini değiştirirsen ötekini de
+ * değiştir" yorumu koruyordu; bu denetim onu ölçülebilir hale getiriyor.
+ *
+ * Karşılaştırma yayına giden HTML üzerinden yapılıyor, kaynak üzerinden değil:
+ * asıl önemli olan tarayıcıya ne gittiği.
+ */
+const onBoyama = ana.match(/<!--ho-->([\s\S]*?)<!--\/ho-->/)?.[1] ?? ''
+if (!onBoyama) {
+  NO('ana sayfada hero ön boyaması yok (<!--ho--> bulunamadı)')
+} else {
+  // 1) Örtü değerleri — ön boyamadaki rgba'lar Tailwind'in ürettiğiyle eşleşmeli
+  const onRgba = [...onBoyama.matchAll(/rgba\((\d+),(\d+),(\d+),([\d.]+)\)/g)]
+    .map((m) => `${m[1]},${m[2]},${m[3]} @${Number(m[4])}`)
+  const kaynak = fs.readFileSync('src/components/HeroSection.jsx', 'utf8')
+  const KOYU = '10,24,50'
+  const LACI = '16,56,140'
+  // Tailwind sınıflarını rgba karşılığına çevir: from-dark/95 -> 10,24,50 @0.95
+  const tw = [...kaynak.matchAll(/(?:from|via|to)-dark(?:\/(\d+))?\b/g)]
+    .map((m) => `${KOYU} @${m[1] ? Number(m[1]) / 100 : 1}`)
+  const satirIci = [...kaynak.matchAll(/rgba\(16,56,140,([\d.]+)\)/g)].map((m) => `${LACI} @${Number(m[1])}`)
+  const reactDegerler = new Set([...tw, ...satirIci])
+  const eksikOrtu = onRgba.filter((v) => !reactDegerler.has(v))
+  const fazlaOrtu = [...reactDegerler].filter((v) => !onRgba.includes(v))
+  eksikOrtu.length || fazlaOrtu.length
+    ? NO(`örtü değerleri ayrışmış — yalnız ön boyamada: [${eksikOrtu}]  yalnız React'te: [${fazlaOrtu}]`)
+    : OK(`${onRgba.length} örtü değerinin hepsi iki tarafta aynı`)
+
+  // 2) Kutu yüksekliği — ikisi de 100svh olmalı (100vh yedeğiyle birlikte)
+  const onSvh = /min-height:100vh;min-height:100svh/.test(onBoyama)
+  const css = fs.readFileSync('src/index.css', 'utf8')
+  const reactSvh = /\.hero-foto\s*\{[^}]*height:\s*100vh;[^}]*height:\s*100svh/s.test(css)
+  onSvh && reactSvh
+    ? OK('fotoğraf kutusu iki tarafta da 100svh (100vh yedekli)')
+    : NO(`kutu yüksekliği ayrışmış — ön boyama ${onSvh ? '✓' : '✗'}, .hero-foto ${reactSvh ? '✓' : '✗'}`)
+
+  // 3) .hero-foto yüksekliği İÇERİĞE bağlanmamalı: React'te inset-0 olursa
+  //    kutu slaytın boyu kadar uzuyor ve object-fit:cover başka kırpma veriyor.
+  // NOT: bu dosya noktalı virgül kullanmıyor; satıra regex ile BAŞLAMAYIN,
+  // ASI araya noktalı virgül koymuyor ve önceki satırla bölme işlemi sanılıyor.
+  const fotoKatmani = /className="hero-foto"/.test(kaynak)
+  const icerigeBagli = /className="hero-foto[^"]*inset-0/.test(kaynak)
+  fotoKatmani && !icerigeBagli
+    ? OK('fotoğraf katmanı içerik yüksekliğine bağlı değil')
+    : NO('.hero-foto kullanılmıyor ya da inset-0 ile içeriğe bağlanmış')
+
+  // 4) Ön boyamadaki görsel gerçekten ilk slaytın görseli mi
+  const onSrc = onBoyama.match(/<img[^>]*\ssrc="([^"]+)"/)?.[1]
+  const ilkSlayt = fs.readFileSync('src/data/heroSlides.js', 'utf8').match(/image:\s*'([^']+)'/)?.[1]
+  onSrc === ilkSlayt ? OK(`ön boyama görseli ilk slaytla aynı (${onSrc})`) : NO(`ön boyama ${onSrc} ama ilk slayt ${ilkSlayt}`)
+}
+
 console.log('\n' + (hata ? `${hata} SORUN` : 'HEPSİ TEMİZ ✓'))
 process.exit(hata ? 1 : 0)

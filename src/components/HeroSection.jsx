@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import siteConfig from '../data/siteConfig'
@@ -83,6 +83,10 @@ export default function HeroSection() {
    */
   const [duyuru, setDuyuru] = useState('')
 
+  const noktalarRef = useRef(null)
+  /** Ok tuşuyla gelen geçişte odağın yeni noktaya taşınması isteniyor mu. */
+  const odakIstegi = useRef(false)
+
   const git = useCallback((sonraki, elle = false) => {
     setDuyuru(
       elle ? `Slayt ${sonraki + 1} / ${heroSlides.length}: ${heroSlides[sonraki].badge}` : ''
@@ -123,10 +127,22 @@ export default function HeroSection() {
     const yon = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0
     if (!yon) return
     e.preventDefault()
-    const sonraki = (aktif + yon + heroSlides.length) % heroSlides.length
-    git(sonraki, true)
-    e.currentTarget.children[sonraki]?.focus()
+    odakIstegi.current = true
+    git((aktif + yon + heroSlides.length) % heroSlides.length, true)
   }
+
+  /**
+   * Odak taşıma NEDEN burada, git() içinde değil:
+   * git() setState çağırıyor, React henüz commit etmemiş oluyor ve o anda
+   * DOM eski hâlde. children[i] ile odaklamak bugün çalışıyor çünkü düğmeler
+   * yeniden sıralanmıyor — yani tesadüfen. data-slayt ile ARAMAK ve commit'ten
+   * SONRA yapmak ikisini de garantiye alıyor.
+   */
+  useEffect(() => {
+    if (!odakIstegi.current) return
+    odakIstegi.current = false
+    noktalarRef.current?.querySelector(`[data-slayt="${aktif}"]`)?.focus()
+  }, [aktif])
 
   const stats = heroStats
     .map((s) => ({ ...s, resolved: s.value(siteConfig.stats) }))
@@ -305,6 +321,7 @@ export default function HeroSection() {
           yoksa aktif slayt değişince odak kaybolur. */}
       {heroSlides.length > 1 && (
         <div
+          ref={noktalarRef}
           className="hero-noktalar"
           role="group"
           aria-label="Slayt seçimi"
@@ -315,6 +332,7 @@ export default function HeroSection() {
               key={slide.id}
               type="button"
               className="hero-nokta"
+              data-slayt={i}
               aria-current={i === aktif}
               aria-label={`${i + 1}. slayta git: ${slide.badge}`}
               onClick={() => git(i, true)}
