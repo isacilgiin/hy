@@ -100,7 +100,33 @@ og.title && og.description && og.url && og.image ? OK('og:title/description/url/
 og.image?.startsWith('https://') ? OK('og:image mutlak URL') : NO('og:image göreli — sosyal medya çözemez')
 const ogYol = og.image?.replace('https://denizlihaliyikama.net.tr', '')
 ogYol && fs.existsSync(path.join(K, ogYol)) ? OK('og:image dosyası diskte var') : NO('og:image DOSYASI YOK: ' + ogYol)
-og['image:width'] === '1200' && og['image:height'] === '630' ? OK('og:image ölçüsü 1200×630') : NO('og ölçüsü yanlış')
+/*
+ * ÖLÇÜ DOSYADAN OKUNUYOR, bildirilen değerden DEĞİL.
+ *
+ * Burada eskiden `og['image:width'] === '1200'` yazıyordu: yani şablonun
+ * kendi yazdığı sabiti kendisiyle karşılaştırıyordu ve dosyayı hiç açmıyordu.
+ * Sonuç: og-image.jpg gerçekte 1376×768 iken araç yıllarca "1200×630 ✓" dedi.
+ * Bir denetim, denetlediği şeyin KAYNAĞINA bakmıyorsa denetim değildir.
+ */
+const ogDosya = path.join(K, ogYol)
+const gercek = (() => {
+  if (!fs.existsSync(ogDosya)) return null
+  const b = fs.readFileSync(ogDosya)
+  if (b[0] === 0xff && b[1] === 0xd8) {
+    let i = 2
+    while (i < b.length - 9) {
+      if (b[i] !== 0xff) { i++; continue }
+      const m = b[i + 1]
+      if (m >= 0xc0 && m <= 0xcf && m !== 0xc4 && m !== 0xc8 && m !== 0xcc) return [b.readUInt16BE(i + 7), b.readUInt16BE(i + 5)]
+      i += 2 + b.readUInt16BE(i + 2)
+    }
+  }
+  return null
+})()
+if (!gercek) NO('og:image ölçüsü okunamadı: ' + ogYol)
+else if (String(gercek[0]) === og['image:width'] && String(gercek[1]) === og['image:height'])
+  OK(`og:image ölçüsü bildirimle aynı (${gercek[0]}×${gercek[1]})`)
+else NO(`og:image gerçekte ${gercek[0]}×${gercek[1]} ama ${og['image:width']}×${og['image:height']} bildiriliyor`)
 ana.includes('name="twitter:card" content="summary_large_image"') ? OK('twitter:card doğru') : NO('twitter:card eksik')
 // og:title her sayfada FARKLI mi
 const ogT = new Set(bul(K).map((f) => fs.readFileSync(f, 'utf8').match(/og:title" content="([^"]*)"/)?.[1]))

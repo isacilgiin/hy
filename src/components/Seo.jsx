@@ -78,7 +78,7 @@ function upsertJsonLd(id, data) {
   if (!existing) document.head.appendChild(el)
 }
 
-export default function Seo({ title, description, path = '/', image, jsonLd }) {
+export default function Seo({ title, description, path = '/', image, jsonLd, kanonikYok = false }) {
   useEffect(() => {
     const url = `${siteConfig.url}${path}`
     const desc = kisalt(description || siteConfig.seo.defaultDescription)
@@ -99,7 +99,17 @@ export default function Seo({ title, description, path = '/', image, jsonLd }) {
      */
     if (title) document.title = title
     upsertMeta('name', 'description', desc)
-    upsertLink('canonical', url)
+    /**
+     * kanonikYok — 404 için.
+     *
+     * Build 404.html'den canonical'ı BİLEREK siliyor (gerekçesi
+     * vite.config.js'te: 404 sayfasının kanonik bir karşılığı yoktur).
+     * Ama upsertLink etiket yoksa YARATIYOR, yani React yüklenince her
+     * olmayan adrese canonical=/404/ geri geliyordu — build'in kararını
+     * hidrasyon geri alıyor. noindex yerinde kaldığı için felaket değil,
+     * yine de iki taraf aynı şeyi söylemeli.
+     */
+    if (!kanonikYok) upsertLink('canonical', url)
 
     upsertMeta('property', 'og:title', title)
     upsertMeta('property', 'og:description', desc)
@@ -113,7 +123,7 @@ export default function Seo({ title, description, path = '/', image, jsonLd }) {
     upsertJsonLd('page', jsonLd)
 
     return () => upsertJsonLd('page', null)
-  }, [title, description, path, image, jsonLd])
+  }, [title, description, path, image, jsonLd, kanonikYok])
 
   return null
 }

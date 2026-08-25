@@ -30,6 +30,40 @@ import blogContent from './src/data/blogContent.js'
  * Yeni bir silme kuralı gerekirse BURAYA ekleyin, kopyalamayın.
  */
 /**
+ * GÖRSEL ÖLÇÜSÜ — dosyanın kendisinden, bildirilenden değil.
+ *
+ * og:image:width/height şablonda 1200×630 diye SABİT yazılıydı ama gerçek
+ * dosyalar öyle değil: og-image.jpg 1376×768, blog görselleri 1200×675.
+ * Bu iki alan kazıyıcıya "indirmeden önce şu oranda yer ayır" diyor; yanlış
+ * oran WhatsApp/Facebook önizlemesinde kırpma ve çerçeveleme hatası üretiyor.
+ *
+ * sharp'a bağlanmıyoruz (bilerek kalıcı bağımlılık değil): JPEG ve WebP
+ * başlıkları doğrudan okunuyor.
+ */
+const gorselOlcu = (yerelYol) => {
+  if (!fs.existsSync(yerelYol)) return null
+  const b = fs.readFileSync(yerelYol)
+  if (b.toString('ascii', 0, 4) === 'RIFF' && b.toString('ascii', 8, 12) === 'WEBP') {
+    const tip = b.toString('ascii', 12, 16)
+    if (tip === 'VP8X') return [(b.readUIntLE(24, 3) & 0xffffff) + 1, (b.readUIntLE(27, 3) & 0xffffff) + 1]
+    if (tip === 'VP8 ') return [b.readUInt16LE(26) & 0x3fff, b.readUInt16LE(28) & 0x3fff]
+    if (tip === 'VP8L') { const n = b.readUInt32LE(21); return [(n & 0x3fff) + 1, ((n >> 14) & 0x3fff) + 1] }
+    return null
+  }
+  if (b[0] === 0xff && b[1] === 0xd8) {
+    let i = 2
+    while (i < b.length - 9) {
+      if (b[i] !== 0xff) { i++; continue }
+      const m = b[i + 1]
+      if (m >= 0xc0 && m <= 0xcf && m !== 0xc4 && m !== 0xc8 && m !== 0xcc)
+        return [b.readUInt16BE(i + 7), b.readUInt16BE(i + 5)]
+      i += 2 + b.readUInt16BE(i + 2)
+    }
+  }
+  return null
+}
+
+/**
  * ROTA TABLOSU KAPISI — App.jsx ile routeMeta.js ayrışırsa build DURUR.
  *
  * İki liste var ve elle senkron tutuluyorlar:
@@ -110,6 +144,9 @@ function seoFromConfig() {
     siteConfig
 
   const ogImage = `${url}/images/logo/og-image.jpg`
+  /* Bildirilen 1200×630 gerçek dosyayla uyuşmuyordu (og-image.jpg 1376×768).
+     Ölçü artık dosyadan okunuyor; okunamazsa OG standardına düşülüyor. */
+  const ogVarsayilanOlcu = gorselOlcu('public/images/logo/og-image.jpg') ?? [1200, 630]
 
   /**
    * Ana sayfanın LCP'si hero slider'ın ilk görselidir. Bu görsel React +
@@ -322,6 +359,8 @@ ${gtagKimlikleri.map((id) => `    gtag('config','${id}');`).join('\n')}
     SITE_PHONE_RAW: phoneRaw,
     SITE_ADDRESS: address.full,
     SITE_OG_IMAGE: ogImage,
+    SITE_OG_WIDTH: String(ogVarsayilanOlcu[0]),
+    SITE_OG_HEIGHT: String(ogVarsayilanOlcu[1]),
     SITE_OPTIONAL_META: optionalMeta.join('\n  '),
     SITE_ANALYTICS: analyticsScript,
     SITE_ANALYTICS_PRECONNECT:
@@ -574,8 +613,8 @@ ${faq.map((f) => `**${f.q}**\n${f.a}`).join('\n\n')}
 - [Hizmetlerimiz](${url}/hizmetler/): Tüm hizmetlerin listesi
 - [Hizmet Bölgeleri](${url}/hizmet-bolgeleri/): ${address.city} genelinde çalıştığımız ilçeler
 - [Hakkımızda](${url}/hakkimizda/): Firma, ekip ve çalışma yöntemi
-- [Projeler](${url}/projeler/): Uygulama örnekleri
-- [Sıkça Sorulan Sorular](${url}/sikca-sorulan-sorular/): Fiyat, süre, toz ve taşıyıcı elemanlarla ilgili sorular
+- [Öncesi & Sonrası](${url}/projeler/): Yıkama öncesi ve sonrası kareler
+- [Sıkça Sorulan Sorular](${url}/sikca-sorulan-sorular/): Fiyat, teslim süresi, leke çıkarma ve halı cinsine göre program soruları
 - [İletişim](${url}/iletisim/): Telefon, WhatsApp, adres ve harita
 
 ## İletişim
@@ -1184,6 +1223,56 @@ ${paragraflar}
             /<meta name="twitter:image" content="[^"]*" \/>/,
             `<meta name="twitter:image" content="${rota.image}" />`
           )
+
+        /**
+         * OG GÖRSELİ — bildirilen değil, DİSKTE OLAN.
+         *
+         * routeMeta her hizmet için /images/og/<slug>.jpg üretiyordu ama o
+         * klasörde tek dosya yok; 8 hizmet + görseli üretilmemiş blog yazıları,
+         * yani 13 sayfa WhatsApp/Facebook önizlemesinde GÖRSELSİZ çıkıyordu.
+         * Kırık bir adres bildirmektense varsayılan OG görseline düşmek daha
+         * iyi. Görseller üretildiğinde bu kod kendiliğinden onları kullanır.
+         *
+         * Ölçü de dosyadan okunuyor: sabit 1200×630 çoğu dosyada yanlıştı.
+         */
+        const ogYerel = 'public' + rota.image.replace(url, '')
+        const ogVar = fs.existsSync(ogYerel)
+        const ogAdres = ogVar ? rota.image : ogImage
+        const ogOlcu = gorselOlcu(ogVar ? ogYerel : 'public/images/logo/og-image.jpg') ?? ogVarsayilanOlcu
+        html = html
+          .replace(
+            /<meta property="og:image" content="[^"]*" \/>/g,
+            `<meta property="og:image" content="${ogAdres}" />`
+          )
+          .replace(
+            /<meta name="twitter:image" content="[^"]*" \/>/,
+            `<meta name="twitter:image" content="${ogAdres}" />`
+          )
+          .replace(
+            /<meta property="og:image:width" content="[^"]*" \/>/,
+            `<meta property="og:image:width" content="${ogOlcu[0]}" />`
+          )
+          .replace(
+            /<meta property="og:image:height" content="[^"]*" \/>/,
+            `<meta property="og:image:height" content="${ogOlcu[1]}" />`
+          )
+
+        /**
+         * og:type — blog yazılarında 'article'.
+         *
+         * Şablonda sabit 'website' vardı ve hiç yeniden yazılmıyordu; blog
+         * yazıları JSON-LD'de Article, Open Graph'ta website diyordu. İki
+         * protokol aynı sayfa için çelişince kazıyıcının hangisine güveneceği
+         * belirsizleşiyor. Tip, sayfanın KENDİ şemasından türetiliyor —
+         * yol desenine bakılmıyor ki blog dışı bir makale eklenirse de tutsun.
+         */
+        const semalar = Array.isArray(rota.jsonLd) ? rota.jsonLd : rota.jsonLd ? [rota.jsonLd] : []
+        if (semalar.some((x) => x?.['@type'] === 'Article')) {
+          html = html.replace(
+            '<meta property="og:type" content="website" />',
+            '<meta property="og:type" content="article" />'
+          )
+        }
 
         // <noscript> gövdesi rotanın kendi metniyle değiştirilir
         html = html.replace(/<div class="noscript-seo">[\s\S]*?<\/div>/, noscriptGovdesi(rota))

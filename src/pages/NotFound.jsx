@@ -20,6 +20,8 @@ export default function NotFound() {
         title={`Sayfa Bulunamadı | ${siteConfig.companyName}`}
         description="Aradığınız sayfa bulunamadı. Hizmetlerimize göz atabilir veya bize doğrudan ulaşabilirsiniz."
         path="/404/"
+        /* Build 404.html'den canonical'ı siliyor; React de koymamalı. */
+        kanonikYok
       />
 
       <PageHeader
