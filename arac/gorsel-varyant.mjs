@@ -33,6 +33,7 @@ const YALNIZCA_DENETIM = process.argv.includes('--denetle')
 const KURALLAR = [
   { dizin: 'public/images/hero', ekler: [800] },
   { dizin: 'public/images/hizmetler', ekler: [600, 900] },
+  { dizin: 'public/images/blog', ekler: [600] },
   { dizin: 'public/images/bolgeler', ekler: [600] },
   { dizin: 'public/images/oncesi-sonrasi', ekler: [800] },
   { dizin: 'public/images/projeler', ekler: [800] },
@@ -96,7 +97,7 @@ for (const { dizin, ekler, yalnizca } of KURALLAR) {
     .readdirSync(dizin)
     .filter((f) => /\.webp$/i.test(f))
     // Varyantın kendisini tekrar işleme: "-600.webp" ile bitenler atlanır.
-    .filter((f) => !/-\d{3,4}\.webp$/i.test(f))
+    .filter((f) => !/-(?:600|800|900|1200)\.webp$/i.test(f))
     .filter((f) => (yalnizca ? yalnizca.test(f) : true))
 
   for (const dosya of dosyalar) {
