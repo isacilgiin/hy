@@ -709,9 +709,37 @@ Sitemap: ${url}/sitemap.xml
 #   ${url}/llms-full.txt  — rehber yazıların ve hizmet sayfalarının TAM metni
 `
 
+  /**
+   * manifest.json'daki %SITE_*% belirteclerini doldurur.
+   *
+   * IKI YERDEN cagriliyor: closeBundle (build ciktisi) ve dev ara katmani.
+   * Tek fonksiyon, cunku iki ayri kopya zamanla ayrisir — nitekim dev
+   * sunucusunda manifest HIC islenmiyordu ve tarayici konsolu
+   * "'%SITE_THEME_COLOR%' is not a valid color" diye uyariyordu.
+   */
+  const manifestDoldur = (ham) => {
+    let m = ham
+    for (const [k, deger] of Object.entries(tokens)) {
+      m = m.replaceAll(`%${k}%`, JSON.stringify(String(deger)).slice(1, -1))
+    }
+    const kalan = m.match(/%SITE_[A-Z0-9_]+%/g)
+    if (kalan) {
+      throw new Error(
+        `\n\nmanifest.json'da doldurulmamış belirteç kaldı: ${[...new Set(kalan)].join(', ')}\n` +
+          `Çözüm: vite.config.js > tokens nesnesine ilgili alanı ekleyin.\n`
+      )
+    }
+    JSON.parse(m) // bozuk JSON servis edilmesin
+    return m
+  }
+
   /** Dev ve preview sunucularinda sitemap/robots/llms.txt servis eden ara katman. */
   function devSeoMiddleware() {
     const rotalar = {
+      '/manifest.json': () => [
+        'application/manifest+json; charset=utf-8',
+        manifestDoldur(fs.readFileSync(path.resolve('public/manifest.json'), 'utf8')),
+      ],
       '/sitemap.xml': () => ['application/xml; charset=utf-8', buildSitemap()],
       '/robots.txt': () => ['text/plain; charset=utf-8', buildRobots()],
       '/llms.txt': () => ['text/plain; charset=utf-8', buildLlmsTxt()],
@@ -947,19 +975,7 @@ ErrorDocument 404 /404.html
     closeBundle() {
       const yol = path.join(yayinKlasoru, 'manifest.json')
       if (!fs.existsSync(yol)) return
-      let m = fs.readFileSync(yol, 'utf8')
-      for (const [k, deger] of Object.entries(tokens)) {
-        m = m.replaceAll(`%${k}%`, JSON.stringify(String(deger)).slice(1, -1))
-      }
-      const kalan = m.match(/%SITE_[A-Z0-9_]+%/g)
-      if (kalan) {
-        throw new Error(
-          `\n\nmanifest.json'da doldurulmamış belirteç kaldı: ${[...new Set(kalan)].join(', ')}\n` +
-            `Çözüm: vite.config.js > tokens nesnesine ilgili alanı ekleyin.\n`
-        )
-      }
-      JSON.parse(m) // bozuk JSON yayına çıkmasın
-      fs.writeFileSync(yol, m)
+      fs.writeFileSync(yol, manifestDoldur(fs.readFileSync(yol, 'utf8')))
     },
 
     writeBundle(secenekler) {

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import HeroSection from '../components/HeroSection'
 import ServiceCard from '../components/ServiceCard'
 import StatsSection from '../components/StatsSection'
-import ProjectGallery from '../components/ProjectGallery'
+import BeforeAfter from '../components/BeforeAfter'
 import CTASection from '../components/CTASection'
 import Icon from '../components/Icon'
 import SmartImage from '../components/SmartImage'
@@ -134,26 +134,40 @@ export default function Home() {
       <StatsSection />
 
       {/* ===== Projeler ===== */}
-      {/* Proje fotoğrafı yoksa (projects.js boş) bu bölüm hiç gösterilmez. */}
+      {/* Öncesi/sonrası çifti yoksa (projects.js boş) bu bölüm hiç gösterilmez. */}
       {projects.length > 0 && (
       <section className="section-padding bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-14">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 mb-4">
               <Icon name="camera" className="w-4 h-4 text-accent" strokeWidth={2} />
-              <span className="text-accent text-sm font-semibold">Sahada Nasıl Görünüyor?</span>
+              <span className="text-accent text-sm font-semibold">Aynı Kare, İki Hâl</span>
             </div>
-            <h2 className="section-title text-dark">Uygulama Alanları</h2>
+            <h2 className="section-title text-dark">Öncesi &amp; Sonrası</h2>
             <p className="section-subtitle">
-              Hangi işte hangi yöntemi kullandığımızı görselleriyle anlattık.
+              Sürgüyü kaydırın: aynı halı, yıkamadan önce ve sonra.
             </p>
           </div>
 
-          <ProjectGallery limit={6} />
+          {/* Ana sayfada YALNIZCA 3 karşılaştırma — tamamı /projeler/ sayfasında.
+              Her BeforeAfter iki görsel yüklüyor; altısını birden ana sayfaya
+              koymak LCP'yi kimsenin görmediği bir bölüm için riske atardı. */}
+          <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+            {projects.slice(0, 3).map((p) => (
+              <BeforeAfter
+                key={p.id}
+                oncesi={p.oncesi}
+                sonrasi={p.sonrasi}
+                oncesiAlt={`${p.title} — yıkama öncesi`}
+                sonrasiAlt={`${p.title} — yıkama sonrası`}
+                baslik={p.title}
+              />
+            ))}
+          </div>
 
           <div className="text-center mt-12">
             <Link to="/projeler/" className="btn-primary">
-              Tüm Uygulama Alanları
+              Tüm Öncesi &amp; Sonrası
               <Icon name="arrowRight" className="w-5 h-5" strokeWidth={2} />
             </Link>
           </div>

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import siteConfig from '../data/siteConfig'
 import Icon from './Icon'
 
-function AnimatedNumber({ target, suffix = '', duration = 2000 }) {
+function AnimatedNumber({ target, prefix = '', suffix = '', duration = 2000 }) {
   const [count, setCount] = useState(0)
   const ref = useRef(null)
   const [started, setStarted] = useState(false)
@@ -59,46 +59,54 @@ function AnimatedNumber({ target, suffix = '', duration = 2000 }) {
 
   return (
     <span ref={ref}>
-      {count.toLocaleString('tr-TR')}
-      {suffix}
+      {/* prefix/suffix ile sayi ARASINDA satir sonu olmamali: JSX ayri
+          satirdaki iki ifadenin arasina bosluk koyar ve "% 100" diye render
+          eder. Bitisik yaziliyor. */}
+      {prefix}{count.toLocaleString('tr-TR')}{suffix}
     </span>
   )
 }
 
 export default function StatsSection() {
   // Değeri girilmemiş (null) istatistik hiç gösterilmez — uydurma rakam çıkmaz.
+  /**
+   * Anahtarlar siteConfig.stats ile birebir eşleşmeli — eşleşmezse filtre o
+   * kaydı sessizce düşürüyor ve bölüm eksik görünüyor (hata vermiyor).
+   * Rakamların kaynağı canlı sitenin sayaçları: docs/olgu-sayfasi.md §2.
+   */
   const stats = [
     {
-      key: 'years',
-      value: siteConfig.stats.yearsExperience,
+      key: 'carpets',
+      value: siteConfig.stats.washedCarpets,
       suffix: '+',
-      label: 'Yıl Tecrübe',
-      description: 'Sektörde köklü deneyim',
-      icon: 'badgeCheck',
-    },
-    {
-      key: 'projects',
-      value: siteConfig.stats.completedProjects,
-      suffix: '+',
-      label: 'Tamamlanan Proje',
-      description: 'Başarıyla teslim edilen iş',
-      icon: 'building',
+      label: 'Yıkanan Halı',
+      description: 'Tesisimizden geçen halı sayısı',
+      icon: 'carpetRoll',
     },
     {
       key: 'clients',
       value: siteConfig.stats.happyClients,
       suffix: '+',
       label: 'Mutlu Müşteri',
-      description: 'Memnuniyet garantisi',
+      description: 'Hizmet verdiğimiz hane',
       icon: 'smile',
     },
     {
-      key: 'team',
-      value: siteConfig.stats.teamMembers,
+      key: 'years',
+      value: siteConfig.stats.yearsExperience,
       suffix: '+',
-      label: 'Uzman Kadro',
-      description: 'Profesyonel ekip',
-      icon: 'users',
+      label: 'Yıl Tecrübe',
+      description: `${siteConfig.foundedYear} yılından beri Denizli'de`,
+      icon: 'badgeCheck',
+    },
+    {
+      key: 'hygiene',
+      value: siteConfig.stats.hygieneGuarantee,
+      prefix: '%',
+      suffix: '',
+      label: 'Hijyen',
+      description: 'Antibakteriyel yıkama, kapalı kurutma',
+      icon: 'shield',
     },
   ].filter((s) => typeof s.value === 'number' && s.value > 0)
 
@@ -118,7 +126,7 @@ export default function StatsSection() {
                 <Icon name={stat.icon} className="w-8 h-8" />
               </div>
               <div className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-2">
-                <AnimatedNumber target={stat.value} suffix={stat.suffix} />
+                <AnimatedNumber target={stat.value} prefix={stat.prefix} suffix={stat.suffix} />
               </div>
               <div className="text-primary font-semibold mb-1">{stat.label}</div>
               <div className="text-white/60 text-sm hidden sm:block">{stat.description}</div>

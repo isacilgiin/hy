@@ -25,9 +25,8 @@ import siteConfig from '../data/siteConfig'
  * Yedek marka işareti — rulo halı kesiti.
  *
  * public/favicon.svg ile AYNI GEOMETRİ. İkisi ayrı ayrı çizilirse zamanla
- * ayrışıyor: devralınan iskelette aynı motif ÜÇ yerde (favicon, burası ve
- * ProjectGallery yer tutucusu) bağımsız çizilmişti ve biri güncellenip
- * diğerleri kalmıştı. Bu işareti değiştirirseniz favicon.svg'yi de değiştirin.
+ * ayrışıyor: devralınan iskelette aynı motif İKİ yerde (favicon ve burası)
+ * bağımsız çizilmişti ve biri güncellenip diğeri kalmıştı. Bu işareti değiştirirseniz favicon.svg'yi de değiştirin.
  */
 export function LogoMark({ className = 'w-10 h-10' }) {
   return (

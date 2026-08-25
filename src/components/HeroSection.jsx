@@ -16,11 +16,21 @@ const prefersReducedMotion =
   typeof window !== 'undefined' &&
   window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
 
+/**
+ * Hero'daki dört rakam.
+ *
+ * DİKKAT: anahtarlar siteConfig.stats ile birebir eşleşmeli. Değer bulunamazsa
+ * `value` null döner ve rozet SESSİZCE kaybolur — hata vermez. Devralınan
+ * iskelette `completedProjects` ve `teamMembers` okunuyordu; siteConfig
+ * değişince ikisi de null döndü ve hero yarı boş kaldı.
+ *
+ * Rakamların kaynağı canlı sitenin sayaçları (docs/olgu-sayfasi.md §2).
+ */
 const heroStats = [
-  { key: 'years', icon: 'award', label: 'Yıl Tecrübe', value: (s) => (s.yearsExperience ? `${s.yearsExperience}+` : null) },
-  { key: 'projects', icon: 'clipboard', label: 'Tamamlanan Proje', value: (s) => (s.completedProjects ? `${s.completedProjects.toLocaleString('tr-TR')}+` : null) },
+  { key: 'carpets', icon: 'carpetRoll', label: 'Yıkanan Halı', value: (s) => (s.washedCarpets ? `${s.washedCarpets.toLocaleString('tr-TR')}+` : null) },
   { key: 'clients', icon: 'smile', label: 'Mutlu Müşteri', value: (s) => (s.happyClients ? `${s.happyClients.toLocaleString('tr-TR')}+` : null) },
-  { key: 'emergency', icon: 'siren', label: 'Acil Servis', value: () => (siteConfig.workingHours.emergency ? '7/24' : null) },
+  { key: 'years', icon: 'award', label: 'Yıl Tecrübe', value: (s) => (s.yearsExperience ? `${s.yearsExperience}+` : null) },
+  { key: 'pickup', icon: 'truck', label: 'Alım & Teslim', value: () => (siteConfig.service.ucretsizServis ? 'Ücretsiz' : null) },
 ]
 
 export default function HeroSection() {
