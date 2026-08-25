@@ -20,11 +20,13 @@
  *     kendi çerezlerini kullanabilir.
  */
 
+import siteConfig from './siteConfig.js'
+
 export const gizlilik = {
   slug: 'gizlilik-politikasi',
   baslik: 'Gizlilik Politikası',
   ozet:
-    'Bu sayfada, 20 Karot web sitesinde hangi bilgilerin toplandığını, nasıl kullanıldığını ve haklarınızı açıkça anlatıyoruz.',
+    `Bu sayfada, ${siteConfig.companyShortName} web sitesinde hangi bilgilerin toplandığını, nasıl kullanıldığını ve haklarınızı açıkça anlatıyoruz.`,
   bolumler: [
     {
       baslik: 'Kısaca',
@@ -86,7 +88,7 @@ export const sartlar = {
     {
       baslik: 'Sitenin kullanımı',
       paragraflar: [
-        'Bu site 20 Karot’un tanıtım sitesidir. Sitedeki bilgiler genel bilgilendirme amaçlıdır ve mühendislik hizmeti, statik hesap veya proje danışmanlığı yerine geçmez.',
+        `Bu site ${siteConfig.companyShortName}'nın tanıtım sitesidir. Sitedeki bilgiler genel bilgilendirme amaçlıdır. Halının cinsine, kirlilik durumuna ve lekenin yaşına göre sonuç değişebilir; sitedeki anlatımlar her halı için birebir aynı sonucu taahhüt etmez.`,
         'Site içeriği (metinler, görseller, tasarım) izinsiz kopyalanamaz, çoğaltılamaz veya başka bir mecrada yayınlanamaz.',
       ],
     },

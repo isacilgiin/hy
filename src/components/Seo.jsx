@@ -5,12 +5,12 @@ import siteConfig from '../data/siteConfig'
  * Sayfa bazlı SEO etiketleri.
  *
  * NEDEN GEREKLİ: index.html tek bir statik dosya. İçindeki
- * `<link rel="canonical" href="https://20karot.com.tr/">` etiketi TÜM sayfalarda
- * aynı kalıyordu — yani /hizmetler/karot/ sayfası Google'a "asıl adresim ana
+ * `<link rel="canonical" href="https://denizlihaliyikama.net.tr/">` etiketi TÜM sayfalarda
+ * aynı kalıyordu — yani her alt sayfa Google'a "asıl adresim ana
  * sayfa" diyordu. Bu, alt sayfaların indekslenmesini doğrudan engelleyen bir hata.
  * Bu bileşen her sayfada canonical + başlık + açıklama + OG etiketlerini günceller.
  *
- * TRAILING SLASH: `path` sondaki eğik çizgiyle verilir (örn. '/hizmetler/karot/').
+ * TRAILING SLASH: `path` sondaki eğik çizgiyle verilir (örn. '/hizmetler/hali-yikama/').
  * Eski WordPress sitesinde indekslenmiş URL'ler bu formatta; canonical'ın onlarla
  * birebir eşleşmesi taşınma sırasında sıralama kaybını önler.
  */
