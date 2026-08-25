@@ -1,7 +1,7 @@
 /**
  * Türkçe ek yardımcıları.
  *
- * NEDEN VAR: İlçe sayfalarında başlık `{area.name}'de Karot Hizmeti` şeklinde
+ * NEDEN VAR: Bölge sayfalarında başlık `{area.name}'de Halı Yıkama` şeklinde
  * SABİT "'de" ile yazılıyordu. 20 ilçenin 11'inde ek yanlış çıkıyordu:
  * "Tavas'de", "Acıpayam'de", "Bozkurt'de", "Çardak'de"... Ek elle düzeltilirse
  * yeni ilçe eklendiğinde aynı hata tekrarlanır; bu yüzden kuraldan üretiliyor.

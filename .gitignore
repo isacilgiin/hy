@@ -27,3 +27,9 @@ Thumbs.db
 .env
 .env.local
 .env.production
+
+# İçerik üretiminin ara çıktıları (ajanların yazdığı JSON'lar ve ölçüm
+# raporları). Kaynak hâline src/data/ altında derlendikleri için depoda
+# durmalarına gerek yok; ölçüm raporları .staging/*.md içinde kalıyor.
+.staging/
+.mahalle-slug.txt

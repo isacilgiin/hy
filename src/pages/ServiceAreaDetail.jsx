@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useParams, Link, Navigate } from 'react-router-dom'
 import CTASection from '../components/CTASection'
 import PageHeader from '../components/PageHeader'
@@ -6,29 +6,101 @@ import Icon from '../components/Icon'
 import Seo from '../components/Seo'
 import siteConfig from '../data/siteConfig'
 import services from '../data/services'
-import serviceAreas, { zoneContent } from '../data/serviceAreas'
+import bolgelerIndex, { zoneContent, ilceler, mahalleler, mahalleleriBul } from '../data/bolgelerIndex'
+
+/**
+ * BÖLGE METİNLERİ SLUG BAŞINA DİNAMİK YÜKLENİR.
+ *
+ * 61 bölgenin metni tek pakette dursaydı her bölge sayfası hepsini indirirdi
+ * (ölçüldü: 208 kB ham / 63 kB gzip). Glob her bölgeyi ayrı parçaya çeviriyor,
+ * açılan sayfa yalnızca kendi ~3,4 kB'ını çekiyor.
+ *
+ * LCP ETKİLENMİYOR: sayfanın LCP elemanı PageHeader'daki h1 ve o, metinden
+ * değil HAFİF İNDEKSTEN geliyor — senkron. Asenkron inen şey yalnızca gövde.
+ *
+ * ARAMA MOTORU ETKİLENMİYOR: bölgenin metni build sırasında statik HTML'e
+ * zaten yazılıyor (vite.config.js > noscriptGovdesi, routeMeta.js'ten besleniyor
+ * ve orada tam veri Node tarafında import ediliyor).
+ */
+const bolgeMetinleri = import.meta.glob('../data/bolgeler/*.js')
 import { whatsappUrl } from '../utils/links'
 import { bulunmaEkiTam } from '../utils/turkce'
 
 export default function ServiceAreaDetail() {
   const { slug } = useParams()
-  const area = serviceAreas.find((a) => a.slug === slug)
-  const index = serviceAreas.findIndex((a) => a.slug === slug)
+  const kimlik = bolgelerIndex.find((a) => a.slug === slug)
+  const [metin, setMetin] = useState(null)
+
+  useEffect(() => {
+    let iptal = false
+    setMetin(null)
+    const yukle = bolgeMetinleri[`../data/bolgeler/${slug}.js`]
+    if (!yukle) return
+    yukle().then((m) => {
+      if (!iptal) setMetin(m.default)
+    })
+    return () => {
+      iptal = true
+    }
+  }, [slug])
+
+  // Kimlik senkron, metin asenkron. Metin inene kadar boş dizilerle çalışıyoruz
+  // ki başlık ve gezinme hemen görünsün, gövde sonra dolsun.
+  //
+  // useMemo ŞART: aşağıdaki üç useMemo (nearby, jsonLd, havuz) `area`ya bağlı.
+  // Her render'da yeni bir nesne üretilseydi üçü de her render'da yeniden
+  // hesaplanır, jsonLd her seferinde yeni referans döner ve <Seo> DOM'daki
+  // JSON-LD bloğunu boş yere silip yeniden yazardı.
+  const area = useMemo(
+    () =>
+      kimlik
+        ? { ...kimlik, intro: [], yerelBaglam: '', note: '', sss: [], ...(metin ?? {}) }
+        : undefined,
+    [kimlik, metin]
+  )
 
   /**
    * Yakın hizmet bölgeleri — iç link ağı.
    *
-   * Önce "aynı bölge tipindekiler + kalanlar" sıralanıp ilk 8'i alınıyordu.
-   * Sonuç: dizinin sonundaki ilçeler (Güney, Baklan) neredeyse hiç iç link
-   * almıyordu — Güney 12, Merkezefendi 20 link alıyordu. Şimdi liste
-   * DÖNGÜSEL olarak seçiliyor: her ilçe, kendinden sonraki 8 ilçeyi listeliyor.
-   * Böylece her ilçe tam olarak 8 sayfadan iç link alıyor.
+   * Liste DÖNGÜSEL seçiliyor: her kayıt kendinden sonraki 8 kaydı listeliyor.
+   * Sebebi ölçülmüştü: "aynı bölge tipindekiler + kalanlar" sıralamasında
+   * dizinin sonundaki ilçeler neredeyse hiç iç link almıyordu (Güney 12,
+   * Merkezefendi 20). Döngüsel seçimde her kayıt tam olarak 8 sayfadan link alır.
+   *
+   * AMA döngü ARTIK KENDİ HAVUZUNDA dönüyor, düz dizide değil. Dizi hem 19 ilçe
+   * hem 42 mahalle taşıyor; düz modulo kullanılsaydı Acıpayam sayfası bambaşka
+   * bir ilçenin mahallelerine link verirdi — coğrafi olarak anlamsız bir ağ.
+   *   • İlçe sayfası  -> kendi mahalleleri ÖNCE, sonra diğer ilçeler
+   *   • Mahalle sayfası -> aynı ilçenin kardeş mahalleleri
+   * Böylece iç link ağı gerçek coğrafyayı takip ediyor.
    */
   const nearby = useMemo(() => {
     if (!area) return []
-    const i = serviceAreas.findIndex((a) => a.slug === slug)
-    return Array.from({ length: 8 }, (_, k) => serviceAreas[(i + k + 1) % serviceAreas.length])
-  }, [area, slug])
+    const kardesler = area.tur === 'mahalle'
+      ? mahalleler.filter((m) => m.parentSlug === area.parentSlug)
+      : ilceler
+    const i = kardesler.findIndex((a) => a.slug === area.slug)
+    const dongu = Array.from({ length: 8 }, (_, k) => kardesler[(i + k + 1) % kardesler.length])
+      .filter((a) => a && a.slug !== area.slug)
+
+    // İlçe sayfasında kendi mahalleleri önce gelsin: en değerli iç link,
+    // hub'dan alt sayfaya inen linktir.
+    if (area.tur === 'ilce') {
+      const kendiMahalleleri = mahalleleriBul(area.slug)
+      return [...kendiMahalleleri, ...dongu].slice(0, 10)
+    }
+    return dongu.slice(0, 8)
+  }, [area])
+
+  /**
+   * Önceki/sonraki gezinme de kendi havuzunda: ilçe -> ilçe, mahalle -> aynı
+   * ilçenin mahalleleri. Düz dizide 19. ilçeden 1. mahalleye geçmek okuyucuya
+   * hiçbir şey anlatmıyordu.
+   */
+  const havuz = area?.tur === 'mahalle'
+    ? mahalleler.filter((m) => m.parentSlug === area.parentSlug)
+    : ilceler
+  const havuzIndex = area ? havuz.findIndex((a) => a.slug === area.slug) : -1
 
   const zone = area ? zoneContent[area.zone] : null
 
@@ -40,19 +112,27 @@ export default function ServiceAreaDetail() {
     const service = {
       '@context': 'https://schema.org',
       '@type': 'Service',
-      name: `${area.name} Karot — Beton Delme, Kesme ve Kırma`,
-      serviceType: 'Karot, beton delme, beton kesme, beton kırma',
+      name:
+        area.tur === 'mahalle'
+          ? `${area.name} Mahallesi Halı Yıkama`
+          : `${area.name} Halı Yıkama — Koltuk ve Perde Yıkama`,
+      serviceType: siteConfig.sector.tanim,
       provider: {
         '@type': 'LocalBusiness',
         '@id': `${siteConfig.url}/#localbusiness`,
         name: siteConfig.companyName,
         telephone: siteConfig.phoneRaw,
       },
-      areaServed: { '@type': 'City', name: `${area.name}, ${siteConfig.address.city}` },
+      // routeMeta.js > bolgeRotalari ile AYNI kalmalı: biri SPA gezinmesini,
+      // diğeri build'deki statik HTML'i besliyor. Mahalle City değil.
+      areaServed:
+        area.tur === 'mahalle'
+          ? { '@type': 'AdministrativeArea', name: `${area.name}, ${area.ilce}, ${siteConfig.address.city}` }
+          : { '@type': 'City', name: `${area.name}, ${siteConfig.address.city}` },
       url: `${siteConfig.url}/hizmet-bolgeleri/${area.slug}/`,
       hasOfferCatalog: {
         '@type': 'OfferCatalog',
-        name: `${area.name} Karot Hizmetleri`,
+        name: `${area.name} ${siteConfig.sector.hizmetKatalogAdi}`,
         itemListElement: services.map((s) => ({
           '@type': 'Offer',
           itemOffered: { '@type': 'Service', name: `${area.name} ${s.title}` },
@@ -75,12 +155,11 @@ export default function ServiceAreaDetail() {
 
   if (!area) return <Navigate to="/hizmet-bolgeleri/" replace />
 
-  // Başlıkta parantezli ek ("Denizli (Merkez)") kötü duruyor; ayrıca
-  // "Denizli Karot" hedeflenen en değerli anahtar kelime.
-  // "Denizli (Merkez)" sayfasi ana sayfayla AYNI anahtar kelimeyi hedeflemesin
-  // (keyword cannibalization). Ana sayfa "denizli karot" sorgusunu sahiplenir;
-  // bu sayfa "denizli merkez karot" acisiyla ayrisir.
-  const seoAd = area.slug === 'denizli-karot' ? 'Denizli Merkez' : area.name.replace(/\s*\(.*?\)/, '')
+  // routeMeta.js > bolgeRotalari ile AYNI mantık. Devralınan iskelette burada
+  // sentetik bir "Denizli (Merkez)" kaydı için özel durum vardı; o kayıt
+  // açılmadığı için (gerekçe bolgelerIndex.js başında) özel durum da kalktı.
+  const mahalleMi = area.tur === 'mahalle'
+  const seoAd = area.name.replace(/\s*\(.*?\)/, '')
   // Açıklamada ilçe adının önüne il adı gelir (Güney/Kale/Merkez gibi adlar
   // birden fazla ilde var). Gerekçesi routeMeta.js'te, `acikAd` yanında.
   const acikAd = seoAd.startsWith(siteConfig.address.city) ? seoAd : `${siteConfig.address.city} ${seoAd}`
@@ -89,19 +168,31 @@ export default function ServiceAreaDetail() {
     <div className="page-enter">
       <Seo
         // routeMeta.js'teki bölge rotasıyla AYNI kalmalı — gerekçesi orada yazıyor.
-        title={`${seoAd} Karot — Acil Beton Delme, Kesme | ${siteConfig.companyName}`}
-        description={`${acikAd} karot: beton delme, beton kesme, beton kırma, filiz ekimi ve ankraj. Ücretsiz keşif ve net fiyat teklifi için ${siteConfig.phone}.`}
+        title={`${seoAd} Halı Yıkama — Ücretsiz Servis | Tomay`}
+        description={
+          mahalleMi
+            ? `${area.name} Mahallesi (${area.ilce}) halı yıkama: adresinizden ücretsiz alıyor, ${siteConfig.service.teslimSuresi} içinde ambalajlı teslim ediyoruz. Koltuk ve perde de yıkıyoruz.`
+            : `${acikAd} halı yıkama: adresinizden ücretsiz alıyor, ${siteConfig.service.teslimSuresi} içinde ambalajlı teslim ediyoruz. Koltuk ve perde de yıkıyoruz. ${siteConfig.phone}.`
+        }
         path={`/hizmet-bolgeleri/${area.slug}/`}
         jsonLd={jsonLd}
       />
 
       <PageHeader
-        title={`${area.name} Karot`}
-        description={`${area.name} ve çevresinde beton delme, kesme, kırma, filiz ekimi ve ankraj hizmetleri.`}
-        breadcrumb={[
-          { label: 'Hizmet Bölgeleri', to: '/hizmet-bolgeleri/' },
-          { label: area.name },
-        ]}
+        title={`${area.name} Halı Yıkama`}
+        description={`${area.name} ve çevresinde halı, koltuk, yatak, perde ve yorgan yıkama. Alım ve teslim ücretsiz.`}
+        breadcrumb={
+          mahalleMi
+            ? [
+                { label: 'Hizmet Bölgeleri', to: '/hizmet-bolgeleri/' },
+                { label: area.ilce, to: `/hizmet-bolgeleri/${area.parentSlug}/` },
+                { label: area.name },
+              ]
+            : [
+                { label: 'Hizmet Bölgeleri', to: '/hizmet-bolgeleri/' },
+                { label: area.name },
+              ]
+        }
       />
 
       <section className="section-padding bg-white">
@@ -116,7 +207,7 @@ export default function ServiceAreaDetail() {
 
               <h2 className="section-title text-dark mb-6">
                 <span className="text-gradient-accent">{area.name}</span>
-                {bulunmaEkiTam(area.name)} Karot Hizmeti
+                {bulunmaEkiTam(area.name)} Halı Yıkama
               </h2>
 
               {area.intro.map((paragraf, i) => (
@@ -213,7 +304,7 @@ export default function ServiceAreaDetail() {
                     to={`/hizmet-bolgeleri/${a.slug}/`}
                     className="px-4 py-2 rounded-full bg-surface hover:bg-accent hover:text-white text-gray-600 text-sm transition-colors"
                   >
-                    {a.name} Karot
+                    {a.name}
                   </Link>
                 ))}
               </div>
@@ -226,7 +317,7 @@ export default function ServiceAreaDetail() {
                   {area.name} için Teklif Alın
                 </h3>
                 <p className="text-white/60 text-sm mb-6">
-                  Keşif ücretsiz. İşin yöntemini ve fiyatını önceden söylüyoruz.
+                  Alım ve teslim ücretsiz. Fiyatı ve teslim gününü önceden söylüyoruz.
                 </p>
 
                 <a href={`tel:${siteConfig.phoneRaw}`} className="btn-primary w-full mb-3">
@@ -235,7 +326,7 @@ export default function ServiceAreaDetail() {
                 </a>
                 <a
                   href={whatsappUrl(
-                    `Merhaba, ${area.name} bölgesinde karot/beton kesme işi için bilgi almak istiyorum.`
+                    `Merhaba, ${area.name} bölgesinde halı yıkama için bilgi almak istiyorum.`
                   )}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -265,31 +356,31 @@ export default function ServiceAreaDetail() {
 
           {/* Önceki / sonraki bölge */}
           <div className="mt-16 pt-8 border-t border-gray-100 grid grid-cols-2 gap-6">
-            {index > 0 ? (
+            {havuzIndex > 0 ? (
               <Link
-                to={`/hizmet-bolgeleri/${serviceAreas[index - 1].slug}/`}
+                to={`/hizmet-bolgeleri/${havuz[havuzIndex - 1].slug}/`}
                 className="group flex items-center gap-4 p-4 rounded-xl hover:bg-surface transition-colors"
               >
                 <Icon name="arrowLeft" className="w-6 h-6 text-gray-600 group-hover:text-accent transition-all group-hover:-translate-x-1" strokeWidth={2} />
                 <span>
                   <span className="block text-xs text-gray-600">Önceki Bölge</span>
                   <span className="block font-semibold text-dark group-hover:text-accent transition-colors">
-                    {serviceAreas[index - 1].name}
+                    {havuz[havuzIndex - 1].name}
                   </span>
                 </span>
               </Link>
             ) : (
               <div />
             )}
-            {index < serviceAreas.length - 1 && (
+            {havuzIndex >= 0 && havuzIndex < havuz.length - 1 && (
               <Link
-                to={`/hizmet-bolgeleri/${serviceAreas[index + 1].slug}/`}
+                to={`/hizmet-bolgeleri/${havuz[havuzIndex + 1].slug}/`}
                 className="group flex items-center gap-4 p-4 rounded-xl hover:bg-surface transition-colors justify-end text-right"
               >
                 <span>
                   <span className="block text-xs text-gray-600">Sonraki Bölge</span>
                   <span className="block font-semibold text-dark group-hover:text-accent transition-colors">
-                    {serviceAreas[index + 1].name}
+                    {havuz[havuzIndex + 1].name}
                   </span>
                 </span>
                 <Icon name="arrowRight" className="w-6 h-6 text-gray-600 group-hover:text-accent transition-all group-hover:translate-x-1" strokeWidth={2} />

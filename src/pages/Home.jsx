@@ -12,10 +12,10 @@ import Seo from '../components/Seo'
 import siteConfig from '../data/siteConfig'
 
 const reasons = [
-  { title: 'Profesyonel Ekipman', desc: 'Karot, elmas diskli kesme ve hidrolik sistemlerle çalışıyoruz' },
+  { title: 'Fabrikasyon Yıkama', desc: '16 fırçalı tam otomatik makine, kapalı kurutma odaları' },
   { title: 'Uzman Kadro', desc: `${siteConfig.stats.teamMembers}+ kişilik deneyimli saha ekibi` },
   { title: 'Hızlı Teslimat', desc: 'Projenizi zamanında ve eksiksiz teslim ediyoruz' },
-  { title: 'Net Fiyat', desc: 'Keşif sonrası net teklif — sürpriz maliyet çıkmaz' },
+  { title: 'Net Fiyat', desc: 'Alımda konuşulan rakam teslimde de aynı — sürpriz çıkmaz' },
 ]
 
 export default function Home() {
@@ -39,7 +39,7 @@ export default function Home() {
             </div>
             <h2 className="section-title text-dark">Hizmetlerimiz</h2>
             <p className="section-subtitle">
-              Her türlü beton delme, kesme ve kırma ihtiyacınıza profesyonel ekipman ve uzman
+              Halı, koltuk, yatak, perde ve yorgan. Adresinizden alıyor, ambalajlı teslim
               kadroyla çözüm sunuyoruz.
             </p>
           </div>
@@ -72,12 +72,12 @@ export default function Home() {
                 </span>
               </div>
               <h2 className="section-title text-dark mb-6">
-                Denizli&apos;de <span className="text-gradient-accent">Güvenilir</span> Karot
+                Denizli&apos;de <span className="text-gradient-accent">Fabrikasyon</span> Halı Yıkama
                 Hizmeti
               </h2>
               <p className="text-gray-600 text-lg leading-relaxed mb-8">
                 {siteConfig.stats.yearsExperience} yılı aşkın saha deneyimimiz, profesyonel makine
-                parkurumuz ve uzman kadromuzla Denizli ve çevresinde beton delme, kesme ve kırma
+                parkımız ve ekibimizle Denizli ve tüm ilçelerinde halı, koltuk ve perde yıkama
                 hizmetleri veriyoruz.
               </p>
 
@@ -101,7 +101,7 @@ export default function Home() {
               <div className="relative rounded-3xl overflow-hidden shadow-2xl aspect-square">
                 <SmartImage
                   src="/images/hero/hero-2.webp"
-                  alt="Şantiyede beton kesme çalışması"
+                  alt="Tesiste 16 fırçalı makinede halı yıkama"
                   icon="hydraulic"
                   label="Saha Çalışması"
                   className="absolute inset-0 w-full h-full"
@@ -121,7 +121,7 @@ export default function Home() {
                     <Icon name="check" className="w-5 h-5" strokeWidth={3} />
                   </div>
                   <div>
-                    <div className="text-white font-semibold text-sm">Ücretsiz Keşif</div>
+                    <div className="text-white font-semibold text-sm">Ücretsiz Servis</div>
                     <div className="text-white/50 text-xs">Yerinde değerlendirme</div>
                   </div>
                 </div>

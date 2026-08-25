@@ -4,29 +4,50 @@ import PageHeader from '../components/PageHeader'
 import Icon from '../components/Icon'
 import Seo from '../components/Seo'
 import siteConfig from '../data/siteConfig'
-import serviceAreas, { zoneContent } from '../data/serviceAreas'
+// HAFİF İNDEKS — bu sayfa yalnızca isim/slug/sayı kullanıyor, uzun metin
+// kullanmıyor. serviceAreas.js'i import etmek 63 kB gzip'lik bir karar olurdu;
+// gerekçe bolgelerIndex.js başında yazılı.
+import { zoneContent, ilceler, mahalleler } from '../data/bolgelerIndex'
 
 // Grup başlıkları burada AYRICA tanımlıydı ve 'uzak' için "Diğer İlçeler"
 // diyordu; serviceAreas.js ise aynı grubu "Merkeze uzak ilçe" olarak
 // adlandırıyordu. İki ad tek kaynağa indirildi: zoneContent[zone].grupAdi.
 export default function ServiceAreas() {
-  const grouped = ['merkez', 'yakin', 'uzak'].map((zone) => ({
+  /**
+   * Gruplar YALNIZCA İLÇELERDEN kuruluyor.
+   *
+   * Mahalle kaydı bağlı olduğu ilçenin `zone`'unu devralıyor (gerekçe
+   * serviceAreas.js'te). Burada ham diziden filtrelenseydi 42 mahalle
+   * "Denizli Merkez" grubuna düşer, iki ilçenin yanına 42 kart eklenir ve
+   * grup okunamaz hâle gelirdi. Mahalleler aşağıda kendi bölümünde,
+   * bağlı oldukları ilçeye göre listeleniyor.
+   *
+   * Grup listesi zoneContent'ten üretiliyor, elle yazılmıyor: yeni bir zone
+   * eklenip buraya yazılmazsa o kayıtlar hub'da HİÇ görünmezdi (hata da
+   * vermezdi — sessiz kayıp).
+   */
+  const grouped = Object.keys(zoneContent).map((zone) => ({
     zone,
     title: zoneContent[zone].grupAdi,
-    areas: serviceAreas.filter((a) => a.zone === zone),
+    areas: ilceler.filter((a) => a.zone === zone),
   }))
+
+  /** Mahalleler bağlı oldukları ilçeye göre. */
+  const mahalleGruplari = ilceler
+    .map((i) => ({ ilce: i, liste: mahalleler.filter((m) => m.parentSlug === i.slug) }))
+    .filter((g) => g.liste.length > 0)
 
   return (
     <div className="page-enter">
       <Seo
         title={`Hizmet Bölgeleri | Denizli ve Tüm İlçeler — ${siteConfig.companyName}`}
-        description={`Denizli il genelinde ${serviceAreas.length} ilçede karot, beton delme, kesme ve kırma hizmeti. Merkezefendi, Pamukkale, Honaz, Sarayköy, Çivril, Acıpayam ve tüm ilçeler.`}
+        description={`Denizli il genelinde ${ilceler.length} ilçe ve ${mahalleler.length} mahallede halı, koltuk ve perde yıkama. Adresinizden ücretsiz alım ve teslim.`}
         path="/hizmet-bolgeleri/"
       />
 
       <PageHeader
         title="Hizmet Bölgeleri"
-        description={`Denizli il genelinde ${serviceAreas.length} ilçeye karot, beton delme, kesme ve kırma hizmeti veriyoruz.`}
+        description={`Denizli il genelinde ${ilceler.length} ilçe ve ${mahalleler.length} mahalleye gidiyoruz.`}
         breadcrumb={[{ label: 'Hizmet Bölgeleri' }]}
       />
 
@@ -63,7 +84,7 @@ export default function ServiceAreas() {
                           {area.name}
                         </span>
                         <span className="text-gray-600 group-hover:text-white/75 text-xs mt-1 transition-colors">
-                          Karot Hizmetleri
+                          Halı Yıkama
                         </span>
                       </Link>
                     </li>
@@ -72,6 +93,48 @@ export default function ServiceAreas() {
               </div>
             ))}
           </div>
+
+          {/* Mahalleler — ilçeye göre gruplu.
+              Kart yerine kompakt etiket listesi: 42 kayıt kart olarak
+              basılsaydı sayfa gereksiz uzardı ve ilçe ızgarasının görsel
+              ağırlığını ezerdi. Hiyerarşi korunuyor: ilçe kart, mahalle etiket. */}
+          {mahalleGruplari.length > 0 && (
+            <div className="mt-16 pt-12 border-t border-gray-100">
+              <h3 className="text-xl font-bold text-dark mb-2">Mahalleler</h3>
+              <p className="text-gray-600 leading-relaxed mb-8 max-w-2xl">
+                Merkezefendi ve Pamukkale&apos;nin {mahalleler.length} mahallesinin her biri için
+                ayrı sayfa var. Kendi mahallenizde alma-teslimin nasıl planlandığını orada
+                yazdık.
+              </p>
+
+              <div className="space-y-8">
+                {mahalleGruplari.map((g) => (
+                  <div key={g.ilce.slug}>
+                    <h4 className="text-sm font-semibold uppercase tracking-wide text-accent mb-3">
+                      <Link to={`/hizmet-bolgeleri/${g.ilce.slug}/`} className="hover:underline">
+                        {g.ilce.name}
+                      </Link>
+                      <span className="ml-2 font-normal normal-case tracking-normal text-gray-600">
+                        {g.liste.length} mahalle
+                      </span>
+                    </h4>
+                    <ul className="flex flex-wrap gap-2">
+                      {g.liste.map((m) => (
+                        <li key={m.slug}>
+                          <Link
+                            to={`/hizmet-bolgeleri/${m.slug}/`}
+                            className="inline-block rounded-lg border border-gray-100 bg-surface px-3 py-1.5 text-sm text-dark transition-colors hover:border-accent hover:bg-accent hover:text-white"
+                          >
+                            {m.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/*
             Bölgeye göre çalışma biçimi.
@@ -91,7 +154,7 @@ export default function ServiceAreas() {
               Bölgeye Göre Nasıl Çalışıyoruz?
             </h3>
             <p className="text-gray-600 leading-relaxed text-center max-w-3xl mx-auto mb-10">
-              Denizli&apos;nin {serviceAreas.length} ilçesinin tamamına gidiyoruz. Değişen şey
+              Denizli&apos;nin {ilceler.length} ilçesinin tamamına gidiyoruz. Değişen şey
               hizmetin kendisi değil, planlaması: mesafe arttıkça işi tek gidişte bitirecek
               şekilde hazırlanıyoruz.
             </p>

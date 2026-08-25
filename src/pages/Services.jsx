@@ -21,52 +21,64 @@ import siteConfig from '../data/siteConfig'
  */
 const rehber = [
   {
-    baslik: 'Delik açmak',
+    baslik: 'Tesise gelenler, yerinde temizlenenler',
     metin: (
       <>
-        Tesisat, klima, baca ve havalandırma geçişleri için betonarmede ölçülü delik
-        gerekiyorsa <Link to="/hizmetler/karot/">karot</Link> yöntemi kullanılır. Elmas uçlu
-        silindirik uç betonu keserek ilerlediği için delik kenarı pürüzsüz çıkar ve kırıcının
-        yarattığı türden çatlak oluşmaz. Çap ihtiyacı büyüdükçe iş{' '}
-        <Link to="/hizmetler/beton-delme/">beton delme</Link> başlığına geçer; 50 mm ile
-        1000 mm arasında çalışılabiliyor.
+        Yıkadığımız tekstil iki gruba ayrılıyor. Halı, yorgan ve perde araçla alınıp
+        fabrikada yıkanıyor; <Link to="/hizmetler/koltuk-yikama/">koltuk</Link> ve{' '}
+        <Link to="/hizmetler/yatak-baza-temizligi/">yatak</Link> taşınmadığı için ekip
+        adrese geliyor. Hangi grupta olduğu işin kendisinden değil, eşyanın
+        taşınabilirliğinden belli oluyor. Alım ve teslim için ayrıca ücret almıyoruz.
       </>
     ),
   },
   {
-    baslik: 'Kesmek',
+    baslik: 'Halıda program cinse göre değişir',
     metin: (
       <>
-        Duvarda kapı ya da pencere açıklığı açmak, döşemede merdiven veya asansör boşluğu
-        oluşturmak <Link to="/hizmetler/beton-kesme/">beton kesme</Link> işidir; kesim hattı
-        düz çıktığı için kenarda ek sıva veya tamir işi kalmaz. Ölçü elmas diskin kapasitesini
-        aştığında <Link to="/hizmetler/hidrolik-beton-kesme/">hidrolik beton kesme</Link>{' '}
-        devreye girer. Yol ve zemin çalışmalarında ise{' '}
-        <Link to="/hizmetler/asfalt-derz-kesim/">asfalt derz kesim</Link> ayrı bir uygulama.
+        <Link to="/hizmetler/hali-yikama/">Makine halısı</Link> standart fırça sertliğiyle
+        yıkanırken <Link to="/hizmetler/el-dokuma-hali-yikama/">el dokuma ve yün halı</Link>{' '}
+        düşük ısı ile yumuşak fırça istiyor — boyası sabit olmadığı için yıkamadan önce renk
+        akma testi yapılıyor.{' '}
+        <Link to="/hizmetler/ipek-nepal-hali-yikama/">İpek ve Nepal halılarda</Link> ıslanma
+        süresi sınırlı tutuluyor,{' '}
+        <Link to="/hizmetler/shaggy-hali-yikama/">shaggy ve uzun tüylülerde</Link> ise fırça
+        ayarı tüy uzunluğuna göre kuruluyor. Aynı makinede yıkanıyorlar, aynı ayarla değil.
       </>
     ),
   },
   {
-    baslik: 'Kırmak ve yıkmak',
+    baslik: 'Yerinde işlerde belirleyici olan emiş',
     metin: (
       <>
-        Kaldırılacak beton serbest bir alandaysa ve kenarın düzgün kalması gerekmiyorsa{' '}
-        <Link to="/hizmetler/beton-kirma/">beton kırma</Link> hem daha hızlı hem daha
-        ekonomik olur. Bütün bir yapı söz konusuysa iş{' '}
-        <Link to="/hizmetler/kontrollu-bina-yikimi/">kontrollü bina yıkımı</Link> kapsamına
-        girer ve çevre yapılar da planlamanın parçası hâline gelir.
+        <Link to="/hizmetler/koltuk-yikama/">Koltuk</Link> ve{' '}
+        <Link to="/hizmetler/yatak-baza-temizligi/">yatak</Link> yüksek basınçlı vakumlu
+        üniteyle temizleniyor. Burada belirleyici olan ıslatma değil geri emiş: kumaşın içinde
+        kalan deterjan, temizlenen eşyayı daha hızlı kirletiyor. Yatakta ayrıca ıslatma sınırı
+        var — iç dolguya su geçerse dolgu tam kurumuyor ve içeride nem kalıyor.
       </>
     ),
   },
   {
-    baslik: 'Bağlamak ve güçlendirmek',
+    baslik: 'Mekanizmalı ve hacimli olanlar',
     metin: (
       <>
-        Mevcut betona yeni bir eleman bağlanacaksa üç yol var:{' '}
-        <Link to="/hizmetler/filiz-ekimi/">filiz ekimi</Link> donatı devamlılığı kurar,{' '}
-        <Link to="/hizmetler/ankraj/">ankraj</Link> yükü mevcut betonarmeye aktaran bağlantı
-        noktası oluşturur, <Link to="/hizmetler/kimyasal-dubel/">kimyasal dübel</Link> ise
-        mekanik dübelin tutmadığı durumlarda enjeksiyon reçinesiyle çalışır.
+        <Link to="/hizmetler/stor-perde-yikama/">Stor ve zebra perdeler</Link> mekanizmalı
+        olduğu için ultrasonik makinede, katlanmadan yıkanıyor; katlanarak yıkanan kumaşta
+        kalıcı kırık oluşuyor. Sökme ve tekrar takma bize ait.{' '}
+        <Link to="/hizmetler/yorgan-battaniye-yikama/">Yorgan ve battaniyeler</Link> ise ev
+        tipi makinede dönemedikleri için endüstriyel makinede yıkanıyor — dönemeyen yorgan
+        yıkanmıyor, yalnızca ıslanıyor.
+      </>
+    ),
+  },
+  {
+    baslik: 'Emin değilseniz',
+    metin: (
+      <>
+        Hangisinin gerektiğinden emin değilseniz aramanız yeterli: halının cinsini ve ölçüsünü
+        söylediğinizde ya da WhatsApp&apos;tan fotoğraf gönderdiğinizde uygun programı ve
+        süreyi baştan iletiyoruz. Teslim ortalama 3-4 iş günü sürüyor.
       </>
     ),
   },
@@ -76,16 +88,16 @@ export default function Services() {
   return (
     <div className="page-enter">
       <Seo
-        // routeMeta.js'teki '/hizmetler/' rotasıyla AYNI kalmalı — şehirle
+        // routeMeta.js'teki '/hizmetler/' rotasıyla AYNI kalmalı — hizmetle
         // başlama gerekçesi orada yazıyor.
-        title={`Denizli Beton Delme, Kesme ve Karot Hizmetleri | ${siteConfig.companyName}`}
-        description="Denizli'de karot, beton delme, beton kesme, beton kırma, filiz ekimi, ankraj ve kimyasal dübel hizmetleri. Ücretsiz keşif ve net fiyat teklifi."
+        title={`Koltuk, Perde ve Yorgan Yıkama Denizli | ${siteConfig.companyShortName}`}
+        description="Denizli'de halı, el dokuma halı, shaggy, koltuk, yatak, stor perde ve yorgan yıkama. Adresinizden ücretsiz alıyor, ambalajlı teslim ediyoruz."
         path="/hizmetler/"
       />
 
       <PageHeader
         title="Hizmetlerimiz"
-        description="Profesyonel karot ve kesme ekipmanlarımızla sunduğumuz kapsamlı beton delme, kesme ve kırma hizmetleri."
+        description="Halı, koltuk, yatak, perde ve yorgan. Hangisinin tesise geldiğini, hangisinin adresinizde yapıldığını aşağıda anlattık."
         breadcrumb={[{ label: 'Hizmetler' }]}
       />
 
@@ -95,7 +107,7 @@ export default function Services() {
               hiyerarşisinde seviye atlaması oluyordu (H1 → H3). */}
           <div className="text-center mb-12">
             <h2 className="section-title text-dark">
-              Denizli&apos;de Verdiğimiz <span className="text-gradient-accent">Karot</span> Hizmetleri
+              Denizli&apos;de Verdiğimiz <span className="text-gradient-accent">Yıkama</span> Hizmetleri
             </h2>
             <p className="section-subtitle">
               Her hizmetin sayfasında yöntemi, sahada nasıl uygulandığını ve sık
@@ -137,8 +149,8 @@ export default function Services() {
           </div>
 
           <p className="text-gray-600 text-center mt-10 leading-relaxed">
-            Emin değilseniz aramanız yeterli — yerinde bakıp hangi yöntemin uygun olduğunu
-            söylüyoruz, keşif ücretsiz.{' '}
+            Hangisinin gerektiğinden emin değilseniz aramanız yeterli — halının cinsini ve
+            ölçüsünü söylediğinizde uygun programı ve süreyi baştan iletiyoruz.{' '}
             <a href={`tel:${siteConfig.phoneRaw}`} className="text-accent font-semibold whitespace-nowrap">
               {siteConfig.phone}
             </a>

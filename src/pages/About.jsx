@@ -11,14 +11,14 @@ export default function About() {
   return (
     <div className="page-enter">
       <Seo
-        title={`Hakkımızda | ${siteConfig.companyName} — Denizli Karot`}
-        description={`${siteConfig.companyName}, Denizli ve çevre ilçelerde beton delme, kesme ve kırma hizmetleri veren karot firmasıdır. Önce ücretsiz keşif, sonra net fiyat.`}
+        title={`Hakkımızda | ${siteConfig.companyShortName} — Halı Yıkama Denizli`}
+        description={`${siteConfig.companyShortName}, Denizli'de halı, koltuk, perde ve yorgan yıkama hizmeti veriyor. Eskihisar'daki tesisimizde 16 fırçalı makinelerle çalışıyoruz.`}
         path="/hakkimizda/"
       />
 
       <PageHeader
         title="Hakkımızda"
-        description={`${siteConfig.stats.yearsExperience}+ yıllık saha tecrübesiyle Denizli'nin karot firması.`}
+        description={`${siteConfig.stats.yearsExperience}+ yıllık tecrübeyle Denizli'de halı, koltuk ve perde yıkama.`}
         breadcrumb={[{ label: 'Hakkımızda' }]}
       />
 

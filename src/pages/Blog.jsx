@@ -24,14 +24,14 @@ export default function Blog() {
   return (
     <div className="page-enter">
       <Seo
-        title={`Blog | Karot, Beton Delme ve Kesme Rehberleri — ${siteConfig.companyName}`}
-        description="Karot, beton delme, kesme ve filiz ekimi hakkında sahadan yazılmış rehberler. Fiyatı ne belirler, hangi yöntem ne zaman kullanılır, firma seçerken nelere bakılır."
+        title={`Halı Yıkama Rehberleri | Blog — ${siteConfig.companyShortName}`}
+        description="Halı, koltuk ve perde yıkama hakkında sahadan yazılmış rehberler. Fiyatı ne belirler, leke nasıl çıkar, halı yıkamacı seçerken nelere bakılır."
         path="/blog/"
       />
 
       <PageHeader
         title="Blog"
-        description="Karot ve beton kesme işlerini merak eden herkes için sahadan yazılmış rehberler. Satış broşürü değil; işi anlatan yazılar."
+        description="Halı ve tekstil temizliğini merak eden herkes için sahadan yazılmış rehberler. Satış broşürü değil; işi anlatan yazılar."
         breadcrumb={[{ label: 'Blog' }]}
       />
 

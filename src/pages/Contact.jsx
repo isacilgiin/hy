@@ -76,14 +76,14 @@ export default function Contact() {
   return (
     <div className="page-enter">
       <Seo
-        title={`İletişim | ${siteConfig.companyName} — Denizli Karot`}
-        description={`Denizli karot hizmetleri için bize ulaşın. Telefon ${siteConfig.phone}, WhatsApp ve e-posta. Adres: ${siteConfig.address.full}. Ücretsiz keşif.`}
+        title={`İletişim | ${siteConfig.companyShortName} — Halı Yıkama Denizli`}
+        description={`Halı, koltuk ve perde yıkama için bize ulaşın. Telefon ${siteConfig.phone} ve WhatsApp. Adres: ${siteConfig.address.full}. Alım ve teslim ücretsiz.`}
         path="/iletisim/"
       />
 
       <PageHeader
         title="İletişim"
-        description="Projeleriniz için ücretsiz keşif ve fiyat teklifi alın. Hemen bize ulaşın!"
+        description="Halınızın cinsini ve ölçüsünü söyleyin, fiyatı hemen iletelim. Alım ve teslim ücretsiz."
         breadcrumb={[{ label: 'İletişim' }]}
       />
 

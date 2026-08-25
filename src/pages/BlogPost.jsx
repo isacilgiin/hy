@@ -11,6 +11,39 @@ import blog from '../data/blog'
 import blogContent from '../data/blogContent'
 import { tarihYaz } from './Blog'
 
+/**
+ * Paragraf içi iç bağlantıları çözer.
+ *
+ * blogContent.js'te bağlantılar `[çıpa metni](/hizmetler/slug/)` biçiminde
+ * yazılıyor. Neden markdown: çıplak yol yazılırsa paragraf düz metin olarak
+ * basıldığı için ekranda ham URL görünüyor ("… /hizmetler/hali-yikama/
+ * sayfasında yazdık") — hem çirkin hem tıklanmıyor hem de bağlantı değeri
+ * açısından çıpa metni olmayan bir link zayıf.
+ *
+ * Yalnızca SİTE İÇİ yolları (/ ile başlayan) kabul ediyor; dış bağlantı
+ * gerekirse ayrıca ele alınmalı. React Router `<Link>` kullanılıyor ki
+ * SPA gezinmesi korunsun, tam sayfa yeniden yüklenmesin.
+ */
+const BAGLANTI = /\[([^\]]+)\]\((\/[^)\s]+)\)/g
+
+function Metin({ children }) {
+  if (typeof children !== 'string' || !children.includes('](/')) return children
+  const parcalar = []
+  let son = 0
+  for (const m of children.matchAll(BAGLANTI)) {
+    if (m.index > son) parcalar.push(children.slice(son, m.index))
+    parcalar.push(
+      <Link key={`${m.index}-${m[2]}`} to={m[2]} className="text-accent font-medium underline underline-offset-2 hover:text-accent-dark">
+        {m[1]}
+      </Link>
+    )
+    son = m.index + m[0].length
+  }
+  if (son < children.length) parcalar.push(children.slice(son))
+  return parcalar
+}
+
+
 export default function BlogPost() {
   const { slug } = useParams()
   const yazi = blog.find((y) => y.slug === slug)
@@ -132,7 +165,7 @@ export default function BlogPost() {
               key={p.slice(0, 40)}
               className={`text-gray-600 leading-relaxed mb-5 ${i === 0 ? 'text-lg' : ''}`}
             >
-              {p}
+              <Metin>{p}</Metin>
             </p>
           ))}
 
@@ -143,7 +176,7 @@ export default function BlogPost() {
 
               {bolum.paragraflar?.map((p) => (
                 <p key={p.slice(0, 40)} className="text-gray-600 leading-relaxed mb-5">
-                  {p}
+                  <Metin>{p}</Metin>
                 </p>
               ))}
 
@@ -181,7 +214,9 @@ export default function BlogPost() {
                         strokeWidth={2}
                       />
                     </summary>
-                    <p className="text-gray-600 leading-relaxed mt-4">{item.a}</p>
+                    <p className="text-gray-600 leading-relaxed mt-4">
+                      <Metin>{item.a}</Metin>
+                    </p>
                   </details>
                 ))}
               </div>

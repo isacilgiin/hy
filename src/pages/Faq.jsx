@@ -39,8 +39,8 @@ export default function Faq() {
   return (
     <div className="page-enter">
       <Seo
-        title={`Sıkça Sorulan Sorular | Karot, Beton Delme ve Kesme — ${siteConfig.companyName}`}
-        description={`Karot, beton delme, kesme ve kırma hakkında en çok sorulan ${faq.length} soru ve cevabı. Fiyat, süre, toz ve titreşim, taşıyıcı elemana müdahale, moloz kaldırma.`}
+        title={`Halı Yıkama SSS | ${siteConfig.companyShortName}`}
+        description={`Halı, koltuk ve perde yıkama hakkında en çok sorulan ${faq.length} soru ve cevabı. Teslim süresi, leke, servis, ödeme ve halı cinsine göre program.`}
         path="/sikca-sorulan-sorular/"
         jsonLd={jsonLd}
       />

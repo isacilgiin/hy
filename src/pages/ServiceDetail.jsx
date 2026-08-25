@@ -10,7 +10,8 @@ import serviceContent from '../data/serviceContent'
 // HAFİF dizin (blog.js) — yazıların tam metnini taşıyan blogContent.js DEĞİL.
 // Buradan okuyunca hizmet sayfası 11 bin kelimelik blog gövdesini indirmiyor.
 import blog from '../data/blog'
-import serviceAreas from '../data/serviceAreas'
+// HAFİF İNDEKS — gerekçe bolgelerIndex.js başında.
+import bolgeler, { ilceler } from '../data/bolgelerIndex'
 import siteConfig from '../data/siteConfig'
 import { whatsappUrl } from '../utils/links'
 
@@ -43,10 +44,10 @@ export default function ServiceDetail() {
         name: siteConfig.companyName,
         telephone: siteConfig.phoneRaw,
       },
-      areaServed: serviceAreas.map((a) => ({
-        '@type': 'City',
-        name: `${a.name}, ${siteConfig.address.city}`,
-      })),
+      // Tek idari alan — 61 öğelik liste DEĞİL. Gerekçe vite.config.js'te:
+      // liste her sayfada tekrarlanıp HTML'i şişiriyordu ve hiçbir sayfaya
+      // değer katmıyordu. İlçe kırılımı bölge sayfalarının kendi şemasında.
+      areaServed: { '@type': 'AdministrativeArea', name: siteConfig.address.city },
     }
 
     if (!service.sss?.length) return hizmet
@@ -76,8 +77,8 @@ export default function ServiceDetail() {
   // Ters eşleme: yazı "hangi hizmetlerle ilgiliyim" diyor, biz burada tersini
   // soruyoruz.
   //
-  // Sayı SINIRLANMIYOR. Önce ilk 3'ü alıyordu ama o zaman /hizmetler/karot/
-  // sayfasında tam da en alakalı yazı ("Karot Nedir?") listenin dışında
+  // Sayı SINIRLANMIYOR. Önce ilk 3'ü alıyordu ama o zaman ilgili hizmet
+  // sayfasında tam da en alakalı yazı listenin dışında
   // kalıyordu — alfabetik sırada sonuncuydu. En kalabalık hizmette bile
   // 5 yazı çıkıyor; hepsini göstermek hem daha doğru hem her yazının
   // ilan ettiği her hizmetten link almasını garantiliyor.
@@ -87,7 +88,7 @@ export default function ServiceDetail() {
     <div className="page-enter">
       <Seo
         title={service.seoTitle ?? `Denizli ${service.title} — ${siteConfig.companyName}`}
-        description={`Denizli ve çevre ilçelerde ${service.title.toLowerCase()} hizmeti. ${service.shortDescription} Ücretsiz keşif için ${siteConfig.phone}.`}
+        description={`Denizli ve tüm ilçelerinde ${service.title.toLowerCase()} hizmeti. ${service.shortDescription} Ücretsiz alım ve teslim. ${siteConfig.phone}.`}
         path={`/hizmetler/${service.slug}/`}
         /* Sosyal önizleme görseli WebP değil JPG: WhatsApp WebP og:image ile
            kararsız. src/data/routeMeta.js ile aynı yol kullanılmalı. */
@@ -319,11 +320,11 @@ export default function ServiceDetail() {
               {service.title} Hizmeti Verdiğimiz Bölgeler
             </h2>
             <p className="text-gray-600 text-sm mb-6">
-              {siteConfig.address.city} il genelinde {serviceAreas.length} ilçede{' '}
+              {siteConfig.address.city} il genelinde {ilceler.length} ilçede{' '}
               {service.title.toLowerCase()} hizmeti veriyoruz. Bulunduğunuz ilçeye tıklayın.
             </p>
             <div className="flex flex-wrap gap-2">
-              {serviceAreas.map((a) => (
+              {bolgeler.map((a) => (
                 <Link
                   key={a.slug}
                   to={`/hizmet-bolgeleri/${a.slug}/`}
