@@ -3,18 +3,20 @@ import HeroSection from '../components/HeroSection'
 import ServiceCard from '../components/ServiceCard'
 import StatsSection from '../components/StatsSection'
 import BeforeAfter from '../components/BeforeAfter'
+import ProcessSteps from '../components/ProcessSteps'
 import CTASection from '../components/CTASection'
 import Icon from '../components/Icon'
 import SmartImage from '../components/SmartImage'
 import services from '../data/services'
 import projects from '../data/projects'
+import { haliSureci } from '../data/surec'
 import Seo from '../components/Seo'
 import siteConfig from '../data/siteConfig'
 
 const reasons = [
   { title: 'Fabrikasyon Yıkama', desc: '16 fırçalı tam otomatik makine, kapalı kurutma odaları' },
-  { title: 'Uzman Kadro', desc: `${siteConfig.stats.teamMembers}+ kişilik deneyimli saha ekibi` },
-  { title: 'Hızlı Teslimat', desc: 'Projenizi zamanında ve eksiksiz teslim ediyoruz' },
+  { title: 'Cinse Göre Program', desc: 'Yün, ipek, shaggy ve makine halısı aynı ayarla yıkanmaz' },
+  { title: `${siteConfig.service.teslimSuresi} Teslim`, desc: 'Kuruma tamamlanmadan paketlemiyoruz' },
   { title: 'Net Fiyat', desc: 'Alımda konuşulan rakam teslimde de aynı — sürpriz çıkmaz' },
 ]
 
@@ -76,9 +78,9 @@ export default function Home() {
                 Hizmeti
               </h2>
               <p className="text-gray-600 text-lg leading-relaxed mb-8">
-                {siteConfig.stats.yearsExperience} yılı aşkın saha deneyimimiz, profesyonel makine
-                parkımız ve ekibimizle Denizli ve tüm ilçelerinde halı, koltuk ve perde yıkama
-                hizmetleri veriyoruz.
+                {siteConfig.stats.yearsExperience} yılı aşkın tecrübemiz ve Eskihisar'daki tesisimizle
+                Denizli'nin tüm ilçelerinde halı, koltuk, yatak, perde ve yorgan yıkıyoruz.
+                Halınızı adresinizden alıyor, ambalajlı teslim ediyoruz.
               </p>
 
               <div className="space-y-4">
@@ -102,15 +104,15 @@ export default function Home() {
                 <SmartImage
                   src="/images/hero/hero-2.webp"
                   alt="Tesiste 16 fırçalı makinede halı yıkama"
-                  icon="hydraulic"
-                  label="Saha Çalışması"
+                  icon="carpetRoll"
+                  label="Tesisimiz"
                   className="absolute inset-0 w-full h-full"
                   imgClassName="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-dark/85 via-dark/20 to-transparent" />
                 <div className="absolute bottom-8 left-8 right-8">
-                  <div className="text-white text-2xl font-bold mb-1">Sahada Uzman Ekip</div>
-                  <div className="text-white/60">Denizli ve çevre ilçelerde hizmet</div>
+                  <div className="text-white text-2xl font-bold mb-1">Eskihisar&apos;daki Tesisimiz</div>
+                  <div className="text-white/60">16 fırçalı makine, kapalı kurutma odaları</div>
                 </div>
               </div>
 
@@ -174,6 +176,17 @@ export default function Home() {
         </div>
       </section>
       )}
+
+      {/* ===== Süreç =====
+          Öncesi/sonrasından HEMEN SONRA geliyor, bilinçli: önce farkı
+          gösteriyoruz, hemen ardından o farkın nasıl oluştuğunu anlatıyoruz.
+          Sıra ters olsaydı okuyucu neyi anlattığımızı bilmeden adımları okurdu. */}
+      <ProcessSteps
+        adimlar={haliSureci}
+        baslik="Halınıza Ne Oluyor?"
+        altBaslik="Halı adresinizden alındıktan sonra tesiste yedi adımdan geçiyor. Aradaki farkın büyük kısmı yıkamadan değil, yıkamadan önceki ve sonraki adımlardan geliyor."
+        koyu
+      />
 
       <CTASection />
     </div>

@@ -240,10 +240,13 @@ export default function ServiceAreaDetail() {
                 </span>
               </div>
 
-              {/* İlçeye özel: yapı stoğu ve saha planlaması */}
+              {/* Bölgeye özel: halı stoğu ve alma-teslim planlaması.
+                  Başlık devralınan iskelette "Saha Koşulları ve Planlama" idi —
+                  şantiye dili. Halı yıkamada karşılığı, o bölgeden gelen halının
+                  ne olduğu ve aracın oraya nasıl çıktığı. */}
               <h3 className="text-2xl font-bold text-dark mb-4">
                 {area.name}
-                {bulunmaEkiTam(area.name)} Saha Koşulları ve Planlama
+                {bulunmaEkiTam(area.name)} Alma-Teslim Nasıl Planlanıyor?
               </h3>
               <p className="text-gray-600 leading-relaxed mb-12">{area.yerelBaglam}</p>
 

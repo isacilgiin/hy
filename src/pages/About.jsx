@@ -48,7 +48,7 @@ export default function About() {
                   src="/images/hakkimizda.webp"
                   srcSet="/images/hakkimizda-600.webp 600w, /images/hakkimizda.webp 1200w"
                   sizes="(min-width: 1024px) 560px, 92vw"
-                  alt={`${siteConfig.companyName} saha ekibi ve ekipmanları`}
+                  alt={`${siteConfig.companyName} tesisi ve makine parkı`}
                   icon="users"
                   label={siteConfig.companyName}
                   className="absolute inset-0 w-full h-full"
@@ -115,7 +115,7 @@ export default function About() {
           <div className="text-center mb-14">
             <h2 className="section-title text-dark">Çalışma Prensiplerimiz</h2>
             <p className="section-subtitle">
-              Her işte uyduğumuz kurallar. Bunlar pazarlama cümlesi değil, sahada
+              Her işte uyduğumuz kurallar. Bunlar pazarlama cümlesi değil, tesiste ve
               gerçekten uyguladığımız sıra.
             </p>
           </div>

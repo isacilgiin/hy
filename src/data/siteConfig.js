@@ -17,7 +17,11 @@ const siteConfig = {
   // ===== Firma Bilgileri =====
   companyName: 'Denizli Tomay Halı Yıkama',
   companyShortName: 'Tomay Halı Yıkama',
-  companySlogan: 'Halınız Fabrikada Yıkanır, Kapınıza Teslim Edilir',
+  // KISA TUTUN. Bu metin logo kilidinde marka adının ALTINA basılıyor
+  // (Logo.jsx yedek görünümü). Uzun bir cümle yazıldığında header'daki menüyü
+  // ve footer düzenini itiyor — bir kez yaşandı, cümle şuydu:
+  // "Halınız Fabrikada Yıkanır, Kapınıza Teslim Edilir". O cümle hero'nun işi.
+  companySlogan: 'Fabrikasyon Halı Yıkama',
   companyDescription:
     'Denizli\'de halı, koltuk, perde ve yorgan yıkama. Halınızı adresinizden alıyor, 16 fırçalı tam otomatik makinelerde bitkisel ve antibakteriyel şampuanla yıkıyor, kapalı kurutma odalarında kurutup ambalajlı teslim ediyoruz. Alım ve teslim ücretsiz.',
 

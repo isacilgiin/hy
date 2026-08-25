@@ -120,8 +120,8 @@ export default function Faq() {
             </div>
             <h2 className="text-2xl font-bold text-white mb-3">Aradığınız Cevap Yok mu?</h2>
             <p className="text-white/60 max-w-xl mx-auto mb-8">
-              Projenizin durumu özelse telefonla anlatın ya da WhatsApp&apos;tan fotoğraf gönderin —
-              uygulanabilir mi, nasıl yapılır, ne kadar tutar, hemen söyleyelim.
+              Halınızın durumu özelse telefonla anlatın ya da WhatsApp&apos;tan fotoğraf gönderin —
+              hangi program uygulanır, ne kadar sürer, ne kadar tutar, hemen söyleyelim.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <a href={`tel:${siteConfig.phoneRaw}`} className="btn-primary text-lg px-8 py-3.5">
