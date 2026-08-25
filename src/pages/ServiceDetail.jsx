@@ -82,7 +82,7 @@ export default function ServiceDetail() {
   // kalıyordu — alfabetik sırada sonuncuydu. En kalabalık hizmette bile
   // 5 yazı çıkıyor; hepsini göstermek hem daha doğru hem her yazının
   // ilan ettiği her hizmetten link almasını garantiliyor.
-  const ilgiliYazilar = blog.filter((y) => y.ilgiliHizmetler.includes(service.slug))
+  const ilgiliYazilar = blog.filter((y) => y.ilgiliHizmetler?.includes(service.slug))
 
   return (
     <div className="page-enter">

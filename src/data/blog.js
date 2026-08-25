@@ -13,6 +13,11 @@
  * │ bıraktığı iki sorgu için eklendi — siteConfig.js > seo.hedefSorgular.     │
  * └──────────────────────────────────────────────────────────────────────────┘
  *
+ * `ilgiliHizmetler`: yazının hangi hizmet sayfalarında "İlgili Rehberler"
+ * olarak görüneceği. ServiceDetail.jsx bu alanı okuyor — ALANI ATLAMAYIN,
+ * atlanınca o sayfa çöküyordu (`undefined.includes`). Şema doğrulaması
+ * dosyanın sonunda.
+ *
  * Sıralama slug'a göre alfabetik; yeni yazıyı doğru yere ekleyin.
  * İNDEKS ile İÇERİK ayrışmasın: blogContent.js'te karşılığı olmayan bir slug
  * eklenirse sayfa 200 döner ama hidrasyonda /blog/'a yönlenir (BlogPost.jsx).
@@ -27,6 +32,7 @@ const blog = [
     tarih: "2026-08-25",
     kategori: 'Rehber',
     image: "/images/hizmetler/hali-yikama.webp",
+    ilgiliHizmetler: ["hali-yikama"],
   },
   {
     slug: "denizli-hali-yikama-fiyatlari-2026",
@@ -36,6 +42,7 @@ const blog = [
     tarih: "2026-08-25",
     kategori: 'Rehber',
     image: "/images/hizmetler/hali-yikama.webp",
+    ilgiliHizmetler: ["hali-yikama", "koltuk-yikama", "stor-perde-yikama"],
   },
   {
     slug: "elde-yikama-vs-makine",
@@ -45,6 +52,7 @@ const blog = [
     tarih: "2026-08-25",
     kategori: 'Rehber',
     image: "/images/hizmetler/el-dokuma-hali-yikama.webp",
+    ilgiliHizmetler: ["hali-yikama", "el-dokuma-hali-yikama", "ipek-nepal-hali-yikama"],
   },
   {
     slug: "evde-hali-bakimi-icin-ipuclari",
@@ -54,6 +62,7 @@ const blog = [
     tarih: "2026-08-25",
     kategori: 'Rehber',
     image: "/images/hizmetler/shaggy-hali-yikama.webp",
+    ilgiliHizmetler: ["hali-yikama", "shaggy-hali-yikama"],
   },
   {
     slug: "evde-profesyonel-hali-temizligi",
@@ -63,6 +72,7 @@ const blog = [
     tarih: "2026-08-25",
     kategori: 'Rehber',
     image: "/images/hizmetler/hali-yikama.webp",
+    ilgiliHizmetler: ["hali-yikama", "yorgan-battaniye-yikama"],
   },
   {
     slug: "hali-yikama-sureci-kac-gun",
@@ -72,6 +82,7 @@ const blog = [
     tarih: "2026-08-25",
     kategori: 'Rehber',
     image: "/images/hizmetler/hali-yikama.webp",
+    ilgiliHizmetler: ["hali-yikama", "el-dokuma-hali-yikama", "shaggy-hali-yikama"],
   },
   {
     slug: "hali-yikamaci-secerken-nelere-bakmali",
@@ -81,6 +92,7 @@ const blog = [
     tarih: "2026-08-25",
     kategori: 'Rehber',
     image: "/images/hizmetler/hali-yikama.webp",
+    ilgiliHizmetler: ["hali-yikama", "ipek-nepal-hali-yikama"],
   },
   {
     slug: "koltuk-yikama-sikligi",
@@ -90,6 +102,7 @@ const blog = [
     tarih: "2026-08-25",
     kategori: 'Rehber',
     image: "/images/hizmetler/koltuk-yikama.webp",
+    ilgiliHizmetler: ["koltuk-yikama"],
   },
   {
     slug: "pamukkale-koltuk-yikama-rehberi",
@@ -99,6 +112,7 @@ const blog = [
     tarih: "2026-08-25",
     kategori: 'Rehber',
     image: "/images/hizmetler/koltuk-yikama.webp",
+    ilgiliHizmetler: ["koltuk-yikama", "yatak-baza-temizligi"],
   },
   {
     slug: "stor-perde-yikama-rehberi",
@@ -108,6 +122,7 @@ const blog = [
     tarih: "2026-08-25",
     kategori: 'Rehber',
     image: "/images/hizmetler/stor-perde-yikama.webp",
+    ilgiliHizmetler: ["stor-perde-yikama"],
   },
   {
     slug: "yatak-hijyeni-ve-alerji",
@@ -117,7 +132,24 @@ const blog = [
     tarih: "2026-08-25",
     kategori: 'Rehber',
     image: "/images/hizmetler/yatak-baza-temizligi.webp",
+    ilgiliHizmetler: ["yatak-baza-temizligi", "yorgan-battaniye-yikama"],
   },
 ]
+
+/**
+ * ŞEMA DOĞRULAMASI — sessiz bozulmayı gürültülü hataya çeviriyor.
+ *
+ * `ilgiliHizmetler` alanı unutulduğunda ServiceDetail.jsx
+ * `undefined.includes(...)` diye çöküyordu ve hata SAYFA AÇILINCA görünüyordu,
+ * build sırasında değil. Burada import anında yakalanıyor.
+ */
+for (const y of blog) {
+  if (!Array.isArray(y.ilgiliHizmetler)) {
+    throw new Error(
+      `blog.js — "${y.slug}" kaydında ilgiliHizmetler dizisi yok. ` +
+        `ServiceDetail.jsx bu alanı okuyor; eksik olduğunda hizmet sayfası çöker.`
+    )
+  }
+}
 
 export default blog

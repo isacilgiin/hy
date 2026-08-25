@@ -8,7 +8,9 @@
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "varyant": "node arac/gorsel-varyant.mjs"
+    "varyant": "node arac/gorsel-varyant.mjs",
+    "duman": "node arac/duman-testi.mjs",
+    "prebuild": "npm run duman"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
