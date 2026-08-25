@@ -3,6 +3,7 @@ import PageHeader from '../components/PageHeader'
 import Icon from '../components/Icon'
 import Seo from '../components/Seo'
 import siteConfig from '../data/siteConfig'
+import metaMetinleri from '../data/metaMetinleri'
 import services from '../data/services'
 
 /**
@@ -17,8 +18,10 @@ export default function NotFound() {
   return (
     <div className="page-enter">
       <Seo
-        title={`Sayfa Bulunamadı | ${siteConfig.companyName}`}
-        description="Aradığınız sayfa bulunamadı. Hizmetlerimize göz atabilir veya bize doğrudan ulaşabilirsiniz."
+        /* Build'in yazdigi 404.html ile AYNI olmali; gerekcesi
+           metaMetinleri.js > bulunamadi ("kaynak degil, ayna"). */
+        title={metaMetinleri.bulunamadi.baslik}
+        description={metaMetinleri.bulunamadi.aciklama}
         path="/404/"
         /* Build 404.html'den canonical'ı siliyor; React de koymamalı. */
         kanonikYok

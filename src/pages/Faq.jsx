@@ -5,6 +5,7 @@ import PageHeader from '../components/PageHeader'
 import Icon from '../components/Icon'
 import Seo from '../components/Seo'
 import siteConfig from '../data/siteConfig'
+import metaMetinleri from '../data/metaMetinleri'
 import { faq, faqCategories } from '../data/faq'
 import { whatsappUrl } from '../utils/links'
 
@@ -39,8 +40,8 @@ export default function Faq() {
   return (
     <div className="page-enter">
       <Seo
-        title={`Halı Yıkama SSS | ${siteConfig.companyShortName}`}
-        description={`Halı, koltuk ve perde yıkama hakkında en çok sorulan ${faq.length} soru ve cevabı. Teslim süresi, leke, servis, ödeme ve halı cinsine göre program.`}
+        title={metaMetinleri.sss.baslik}
+        description={metaMetinleri.sss.aciklama(faq.length)}
         path="/sikca-sorulan-sorular/"
         jsonLd={jsonLd}
       />

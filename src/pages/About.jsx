@@ -5,19 +5,20 @@ import Seo from '../components/Seo'
 import Icon from '../components/Icon'
 import SmartImage from '../components/SmartImage'
 import siteConfig from '../data/siteConfig'
+import metaMetinleri from '../data/metaMetinleri'
 import { timeline, yaklasim, hikaye, foundedYear } from '../data/about'
 
 export default function About() {
   return (
     <div className="page-enter">
       <Seo
-        title={`Hakkımızda | ${siteConfig.companyShortName} — Halı Yıkama Denizli`}
-        description={`${siteConfig.companyShortName}, Denizli'de halı, koltuk, perde ve yorgan yıkama hizmeti veriyor. Eskihisar'daki tesisimizde 16 fırçalı makinelerle çalışıyoruz.`}
+        title={metaMetinleri.hakkimizda.baslik}
+        description={metaMetinleri.hakkimizda.aciklama}
         path="/hakkimizda/"
       />
 
       <PageHeader
-        title="Hakkımızda"
+        title={metaMetinleri.hakkimizda.h1}
         description={`${siteConfig.stats.yearsExperience}+ yıllık tecrübeyle Denizli'de halı, koltuk ve perde yıkama.`}
         breadcrumb={[{ label: 'Hakkımızda' }]}
       />

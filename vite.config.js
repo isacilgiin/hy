@@ -1156,7 +1156,7 @@ ErrorDocument 404 /404.html
       fs.writeFileSync(yol, manifestDoldur(fs.readFileSync(yol, 'utf8')))
     },
 
-    writeBundle(secenekler, paket) {
+    writeBundle(secenekler) {
       const cikti = secenekler.dir ?? 'dist'
       const anaHtml = fs.readFileSync(path.join(cikti, 'index.html'), 'utf8')
       const appRotalari = appRotalariniOku()

@@ -5,6 +5,7 @@ import PageHeader from '../components/PageHeader'
 import Seo from '../components/Seo'
 import services from '../data/services'
 import siteConfig from '../data/siteConfig'
+import metaMetinleri from '../data/metaMetinleri'
 
 /**
  * "Hangi hizmete ihtiyacınız var?" rehberi.
@@ -88,15 +89,13 @@ export default function Services() {
   return (
     <div className="page-enter">
       <Seo
-        // routeMeta.js'teki '/hizmetler/' rotasıyla AYNI kalmalı — hizmetle
-        // başlama gerekçesi orada yazıyor.
-        title={`Koltuk, Perde ve Yorgan Yıkama Denizli | ${siteConfig.companyShortName}`}
-        description="Denizli'de halı, el dokuma halı, shaggy, koltuk, yatak, stor perde ve yorgan yıkama. Adresinizden ücretsiz alıyor, ambalajlı teslim ediyoruz."
+        title={metaMetinleri.hizmetler.baslik}
+        description={metaMetinleri.hizmetler.aciklama}
         path="/hizmetler/"
       />
 
       <PageHeader
-        title="Hizmetlerimiz"
+        title={metaMetinleri.hizmetler.h1}
         description="Halı, koltuk, yatak, perde ve yorgan. Hangisinin tesise geldiğini, hangisinin adresinizde yapıldığını aşağıda anlattık."
         breadcrumb={[{ label: 'Hizmetler' }]}
       />

@@ -2,6 +2,7 @@ import PageHeader from '../components/PageHeader'
 import Icon from '../components/Icon'
 import Seo from '../components/Seo'
 import siteConfig from '../data/siteConfig'
+import metaMetinleri from '../data/metaMetinleri'
 import { mapsUrl } from '../utils/links'
 
 /**
@@ -12,7 +13,7 @@ export default function Legal({ sayfa }) {
   return (
     <div className="page-enter">
       <Seo
-        title={`${sayfa.baslik} | ${siteConfig.companyName}`}
+        title={metaMetinleri.yasal.baslik(sayfa.baslik)}
         description={sayfa.ozet}
         path={`/${sayfa.slug}/`}
       />

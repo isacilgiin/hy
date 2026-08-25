@@ -4,6 +4,7 @@ import PageHeader from '../components/PageHeader'
 import Icon from '../components/Icon'
 import Seo from '../components/Seo'
 import siteConfig from '../data/siteConfig'
+import metaMetinleri from '../data/metaMetinleri'
 // HAFİF İNDEKS — bu sayfa yalnızca isim/slug/sayı kullanıyor, uzun metin
 // kullanmıyor. serviceAreas.js'i import etmek 63 kB gzip'lik bir karar olurdu;
 // gerekçe bolgelerIndex.js başında yazılı.
@@ -40,13 +41,13 @@ export default function ServiceAreas() {
   return (
     <div className="page-enter">
       <Seo
-        title={`Hizmet Bölgeleri | Denizli ve Tüm İlçeler — ${siteConfig.companyName}`}
-        description={`Denizli il genelinde ${ilceler.length} ilçe ve ${mahalleler.length} mahallede halı, koltuk ve perde yıkama. Adresinizden ücretsiz alım ve teslim.`}
+        title={metaMetinleri.hizmetBolgeleri.baslik}
+        description={metaMetinleri.hizmetBolgeleri.aciklama(ilceler.length)}
         path="/hizmet-bolgeleri/"
       />
 
       <PageHeader
-        title="Hizmet Bölgeleri"
+        title={metaMetinleri.hizmetBolgeleri.h1}
         description={`Denizli il genelinde ${ilceler.length} ilçe ve ${mahalleler.length} mahalleye gidiyoruz.`}
         breadcrumb={[{ label: 'Hizmet Bölgeleri' }]}
       />

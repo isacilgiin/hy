@@ -13,6 +13,7 @@ import blog from '../data/blog'
 // HAFİF İNDEKS — gerekçe bolgelerIndex.js başında.
 import bolgeler, { ilceler } from '../data/bolgelerIndex'
 import siteConfig from '../data/siteConfig'
+import metaMetinleri from '../data/metaMetinleri'
 import { whatsappUrl } from '../utils/links'
 
 export default function ServiceDetail() {
@@ -87,8 +88,8 @@ export default function ServiceDetail() {
   return (
     <div className="page-enter">
       <Seo
-        title={service.seoTitle ?? `Denizli ${service.title} — ${siteConfig.companyName}`}
-        description={`Denizli ve tüm ilçelerinde ${service.title.toLowerCase()} hizmeti. ${service.shortDescription} Ücretsiz alım ve teslim. ${siteConfig.phone}.`}
+        title={metaMetinleri.hizmetDetay.baslik(service.seoTitle, service.title)}
+        description={metaMetinleri.hizmetDetay.aciklama(service.title, service.shortDescription)}
         path={`/hizmetler/${service.slug}/`}
         /* Sosyal önizleme görseli WebP değil JPG: WhatsApp WebP og:image ile
            kararsız. src/data/routeMeta.js ile aynı yol kullanılmalı. */

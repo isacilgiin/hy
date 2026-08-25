@@ -5,6 +5,7 @@ import PageHeader from '../components/PageHeader'
 import Icon from '../components/Icon'
 import Seo from '../components/Seo'
 import siteConfig from '../data/siteConfig'
+import metaMetinleri from '../data/metaMetinleri'
 import services from '../data/services'
 import bolgelerIndex, { zoneContent, ilceler, mahalleler, mahalleleriBul } from '../data/bolgelerIndex'
 
@@ -159,21 +160,12 @@ export default function ServiceAreaDetail() {
   // sentetik bir "Denizli (Merkez)" kaydı için özel durum vardı; o kayıt
   // açılmadığı için (gerekçe bolgelerIndex.js başında) özel durum da kalktı.
   const mahalleMi = area.tur === 'mahalle'
-  const seoAd = area.name.replace(/\s*\(.*?\)/, '')
-  // Açıklamada ilçe adının önüne il adı gelir (Güney/Kale/Merkez gibi adlar
-  // birden fazla ilde var). Gerekçesi routeMeta.js'te, `acikAd` yanında.
-  const acikAd = seoAd.startsWith(siteConfig.address.city) ? seoAd : `${siteConfig.address.city} ${seoAd}`
 
   return (
     <div className="page-enter">
       <Seo
-        // routeMeta.js'teki bölge rotasıyla AYNI kalmalı — gerekçesi orada yazıyor.
-        title={`${seoAd} Halı Yıkama — Ücretsiz Servis | Tomay`}
-        description={
-          mahalleMi
-            ? `${area.name} Mahallesi (${area.ilce}) halı yıkama: adresinizden ücretsiz alıyor, ${siteConfig.service.teslimSuresi} içinde ambalajlı teslim ediyoruz. Koltuk ve perde de yıkıyoruz.`
-            : `${acikAd} halı yıkama: adresinizden ücretsiz alıyor, ${siteConfig.service.teslimSuresi} içinde ambalajlı teslim ediyoruz. Koltuk ve perde de yıkıyoruz. ${siteConfig.phone}.`
-        }
+        title={metaMetinleri.bolgeDetay.baslik(area.name)}
+        description={metaMetinleri.bolgeDetay.aciklama(area)}
         path={`/hizmet-bolgeleri/${area.slug}/`}
         jsonLd={jsonLd}
       />

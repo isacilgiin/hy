@@ -5,6 +5,7 @@ import PageHeader from '../components/PageHeader'
 import Seo from '../components/Seo'
 import Icon from '../components/Icon'
 import siteConfig from '../data/siteConfig'
+import metaMetinleri from '../data/metaMetinleri'
 import projects from '../data/projects'
 import { haliSureci } from '../data/surec'
 
@@ -26,8 +27,8 @@ export default function Projects() {
   return (
     <div className="page-enter">
       <Seo
-        title={`Öncesi & Sonrası | Halı Yıkama Denizli — ${siteConfig.companyShortName}`}
-        description="Yıkamadan önce ve sonra: halı, koltuk ve perde işlerinin sahada nasıl göründüğü. Hangi lekede ne yapıldığını görselleriyle anlattık."
+        title={metaMetinleri.projeler.baslik}
+        description={metaMetinleri.projeler.aciklama}
         path="/projeler/"
       />
 

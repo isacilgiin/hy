@@ -4,7 +4,7 @@ import PageHeader from '../components/PageHeader'
 import Icon from '../components/Icon'
 import Seo from '../components/Seo'
 import SmartImage from '../components/SmartImage'
-import siteConfig from '../data/siteConfig'
+import metaMetinleri from '../data/metaMetinleri'
 import blog from '../data/blog'
 
 /** "2026-08-12" -> "12 Ağustos 2026" */
@@ -24,8 +24,8 @@ export default function Blog() {
   return (
     <div className="page-enter">
       <Seo
-        title={`Halı Yıkama Rehberleri | Blog — ${siteConfig.companyShortName}`}
-        description="Halı, koltuk ve perde yıkama hakkında işin içinden yazılmış rehberler. Fiyatı ne belirler, leke nasıl çıkar, halı yıkamacı seçerken nelere bakılır."
+        title={metaMetinleri.blog.baslik}
+        description={metaMetinleri.blog.aciklama}
         path="/blog/"
       />
 

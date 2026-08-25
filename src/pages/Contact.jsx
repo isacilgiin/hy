@@ -4,6 +4,7 @@ import Seo from '../components/Seo'
 import Icon from '../components/Icon'
 import MapEmbed from '../components/MapEmbed'
 import siteConfig from '../data/siteConfig'
+import metaMetinleri from '../data/metaMetinleri'
 import services from '../data/services'
 import { mapsUrl, whatsappUrl } from '../utils/links'
 import { trackConversion } from '../utils/analytics'
@@ -76,8 +77,8 @@ export default function Contact() {
   return (
     <div className="page-enter">
       <Seo
-        title={`İletişim | ${siteConfig.companyShortName} — Halı Yıkama Denizli`}
-        description={`Halı, koltuk ve perde yıkama için bize ulaşın. Telefon ${siteConfig.phone} ve WhatsApp. Adres: ${siteConfig.address.full}. Alım ve teslim ücretsiz.`}
+        title={metaMetinleri.iletisim.baslik}
+        description={metaMetinleri.iletisim.aciklama}
         path="/iletisim/"
       />
 
