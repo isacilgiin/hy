@@ -29,6 +29,11 @@
  *   - PSNR 36 dB'nin altına düşerse dosyaya DOKUNMA (gözle fark edilir)
  * Bir dosya bu eşiklerden geçemiyorsa "atlandı" der ve sebebini yazar.
  *
+ * NOT: PSNR alfa kanallı görsellerde HAM RGBA üzerinden ölçülür; bu gerçek
+ * gösterimden daha katıdır (tam saydam piksellerin görünmeyen renk gürültüsünü
+ * de sayar). logo-beyaz için ham RGBA 36,5 dB, gerçek zemine bindirilmiş hâli
+ * 41,8 dB. Yani eşiği geçen bir alfa dosyası gözle fazlasıyla temizdir.
+ *
  * Kullanım:  npm run sikistir              (varsayılan: oncesi-sonrasi/)
  *            npm run sikistir -- blog      (başka bir alt klasör)
  *            npm run sikistir -- . --dene  (hepsi, ama YAZMADAN sadece raporla)
@@ -41,6 +46,24 @@ import { fileURLToPath } from 'node:url'
 const sharp = createRequire(import.meta.url)('sharp')
 
 const KALITE = 80
+/**
+ * ALFA KANALLI görseller (logo gibi) için AYRI kalite.
+ *
+ * 2026-08-26'da öğrenildi: bu araç önce alfa dosyalarını tamamen atlıyordu,
+ * çünkü q80 ile kazanç yalnızca 3,4 KB görünüyordu. Yanlış ölçümdü — kazanç
+ * `quality`'de DEĞİL `alphaQuality`'de. logo-beyaz.webp'in 17,20 KB'ının
+ * 7,92 KB'ı ALPH parçasıydı ve alfa KAYIPSIZ saklanıyordu:
+ *
+ *   şimdi                    17,20 KB
+ *   q80 / alphaQuality:100   13,83 KB   -%20   (ilk, yanıltıcı ölçüm)
+ *   q82 / alphaQuality:70     9,80 KB   -%43   36,5 dB  <-- seçilen
+ *
+ * Logo ince yazı kenarları taşıyor (alfanın %22,6'sı ara ton). Sonuç koyu
+ * lacivert footer zemininde (#0A1832) 3x büyütülerek gözle onaylandı:
+ * harf kenarlarında hale/saçaklanma yok.
+ */
+const ALFA_KALITE = 82
+const ALFA_KANAL_KALITESI = 70
 const EFOR = 6
 const EN_AZ_KAZANC = 0.08 // %8
 const EN_DUSUK_PSNR = 36 // dB
@@ -105,18 +128,13 @@ for (const yol of dosyalar) {
   const asil = fs.readFileSync(yol)
   const meta = await sharp(asil).metadata()
 
-  // Alfa kanallı görselleri (logo gibi) bu araç ELLEMEZ: şeffaflığı kayıplı
-  // yeniden kodlamak kenarlarda hâle bırakır ve kazanç birkaç KB'dir.
-  if (meta.hasAlpha) {
-    console.log('  ' + path.relative(gorselKok, yol).padEnd(40) +
-      (asil.length / 1024).toFixed(0).padStart(6) + 'KB' + ' '.repeat(24) + 'atlandı (alfa kanallı)')
-    atlanan++
-    oncekiToplam += asil.length
-    sonrakiToplam += asil.length
-    continue
-  }
+  // Alfa kanallı görsel farklı ayar ister (bkz. ALFA_KALITE yorumu): kazanç
+  // renk kalitesinden değil alfa kanalının kayıplı saklanmasından geliyor.
+  const ayar = meta.hasAlpha
+    ? { quality: ALFA_KALITE, alphaQuality: ALFA_KANAL_KALITESI, effort: EFOR }
+    : { quality: KALITE, effort: EFOR }
 
-  const yeni = await sharp(asil).webp({ quality: KALITE, effort: EFOR }).toBuffer()
+  const yeni = await sharp(asil).webp(ayar).toBuffer()
   const kazanc = 1 - yeni.length / asil.length
   const p = await psnr(asil, yeni)
 
