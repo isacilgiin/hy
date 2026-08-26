@@ -8,6 +8,7 @@ import { oneCikanFaq as faq } from './src/data/faq.js'
 import rotaMetalari from './src/data/routeMeta.js'
 import heroSlides from './src/data/heroSlides.js'
 import blog from './src/data/blog.js'
+import projects from './src/data/projects.js'
 // llms-full.txt için: sayfaların TAM metni bu iki dosyada. Bunlar tarayıcı
 // paketine değil, yalnızca Node tarafındaki build'e giriyor — routeMeta.js
 // zaten ikisini de import ediyor, yeni bir maliyet doğmuyor.
@@ -743,6 +744,51 @@ ${yazilar}
     }
   }
 
+  /**
+   * RESİM SİTEMAP'İ — sitemaps.org image uzantısı.
+   *
+   * Neden bu sitede NORMALDEN DAHA ÇOK işe yarıyor: site bir SPA. Statik
+   * HTML'de yalnızca TEK bir <img> var (hero ön boyaması); geri kalan her
+   * görseli React basıyor. Googlebot JS'i render edip görselleri sonunda
+   * bulur ama bu ikinci bir geçiştir ve garantisi yoktur. Google'ın kendi
+   * dokümanı faydayı birebir şöyle tarif ediyor: "images your site reaches
+   * with JavaScript code".
+   *
+   * YALNIZCA <image:loc> yazılıyor. <image:caption>, <image:title>,
+   * <image:geo_location> ve <image:license> Google tarafından 2022 Mayıs'ta
+   * KULLANIMDAN KALDIRILDI (Spring cleaning sitemap extensions duyurusu) —
+   * geri eklemeyin, yok sayılıyorlar.
+   *
+   * Bir sayfaya, o sayfada GERÇEKTEN görünmeyen görseli yazmayın: yanlış
+   * sinyal olur. Aşağıdaki eşleme bileşenlerin gerçek render'ını izler
+   * (ör. Home.jsx:183 `projects.slice(0, 3)` — ana sayfada üç karşılaştırma).
+   */
+  const sayfaGorselleri = (yol) => {
+    if (yol === '/')
+      return [
+        ...heroSlides.map((s) => s.image),
+        ...services.map((s) => s.image),
+        ...projects.slice(0, 3).flatMap((pr) => [pr.oncesi, pr.sonrasi]),
+      ]
+    if (yol === '/hizmetler/') return services.map((s) => s.image)
+    if (yol === '/projeler/') return projects.flatMap((pr) => [pr.oncesi, pr.sonrasi])
+    if (yol === '/blog/') return blog.map((y) => y.image)
+    if (yol === '/hakkimizda/') return ['/images/hakkimizda.webp']
+    const hizmet = services.find((s) => `/hizmetler/${s.slug}/` === yol)
+    if (hizmet) return [hizmet.image]
+    const yazi = blog.find((y) => `/blog/${y.slug}/` === yol)
+    if (yazi) return [yazi.image]
+    return []
+  }
+
+  /**
+   * Diskte olmayan görseli sitemap'e YAZMA. 404'e işaret eden bir resim
+   * sitemap'i hiç sitemap olmamasından kötüdür; Google'a bozuk sinyal gider.
+   * Eksik görsellerin listesi zaten `npm run varyant` çıktısında var.
+   */
+  const gorselDiskteVar = (g) =>
+    typeof g === 'string' && g.startsWith('/') && fs.existsSync(path.resolve('public' + g))
+
   const buildSitemap = () => {
     // Her grup, içeriğini üreten dosyadan tarih alır.
     const tarihSabit = gitTarihi('src/data/routeMeta.js')
@@ -775,15 +821,20 @@ ${yazilar}
       ]
 
     return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 ${urls
-  .map(
-    (u) => `  <url>
+  .map((u) => {
+    const gorseller = [...new Set(sayfaGorselleri(u.path))]
+      .filter(gorselDiskteVar)
+      .map((g) => `\n    <image:image>\n      <image:loc>${url}${g}</image:loc>\n    </image:image>`)
+      .join('')
+    return `  <url>
     <loc>${url}${u.path}</loc>${u.lastmod ? `\n    <lastmod>${u.lastmod}</lastmod>` : ''}
     <changefreq>${u.changefreq}</changefreq>
-    <priority>${u.priority}</priority>
+    <priority>${u.priority}</priority>${gorseller}
   </url>`
-  )
+  })
   .join('\n')}
 </urlset>
 `
