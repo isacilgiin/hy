@@ -29,6 +29,26 @@ export default function BeforeAfter({
   baslik,
   aciklama,
   baslangic = 50,
+
+  /**
+   * srcset ADAY SECIMI icin kutunun genisligi. Tarayici gorseli indirmeden
+   * ONCE, daha CSS uygulanmadan bu degere bakarak karar verir — yani yanlis
+   * yazilirsa sessizce bant genisligi yakar, ekranda hicbir sey bozulmaz.
+   *
+   * VARSAYILAN /projeler/ duzenine gore: orada izgara md'den itibaren 2 sutun,
+   * lg'de kutu ~600px olcurdu. Ana sayfada izgara lg'de 3 SUTUN (kutu ~400px),
+   * o yuzden Home.jsx daha dar bir deger geciyor.
+   *
+   * Ortadaki 45vw basamagi 2026-08-26'da OLCULEREK eklendi: eksikken 768-1023px
+   * arasi `100vw`ye dusuyordu, oysa izgara orada zaten 2 sutun (kutu 356px).
+   * 820px/DPR2 tablette 6 gorselin hepsi 1200px inip 1295 KB tutuyordu;
+   * basamak eklenince 800px inip 463 KB'a dustu (/projeler/ 1599 -> 577 KB).
+   *
+   * Degistirirken OLC, hesaplama: kutunun gercek CSS genisligi x DPR, hangi
+   * srcset adayina denk geliyor? (arac: scratchpad/olcum/ba2.mjs)
+   */
+  sizes = '(min-width: 1024px) 600px, (min-width: 768px) 45vw, 100vw',
+
   className = '',
 }) {
   const [oran, setOran] = useState(baslangic)
@@ -82,7 +102,7 @@ export default function BeforeAfter({
         <SmartImage
           src={sonrasi}
           srcSet={sonrasi ? `${sonrasi.replace('.webp', '-800.webp')} 800w, ${sonrasi} 1200w` : undefined}
-          sizes="(min-width: 1024px) 600px, 100vw"
+          sizes={sizes}
           alt={sonrasiAlt}
           icon="carpetRoll"
           label="Sonrası"
@@ -102,7 +122,7 @@ export default function BeforeAfter({
           <SmartImage
             src={oncesi}
             srcSet={oncesi ? `${oncesi.replace('.webp', '-800.webp')} 800w, ${oncesi} 1200w` : undefined}
-            sizes="(min-width: 1024px) 600px, 100vw"
+            sizes={sizes}
             alt={oncesiAlt}
             icon="carpetRoll"
             label="Öncesi"

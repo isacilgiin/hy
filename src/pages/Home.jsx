@@ -188,6 +188,11 @@ export default function Home() {
                 oncesiAlt={`${p.title} — yıkama öncesi`}
                 sonrasiAlt={`${p.title} — yıkama sonrası`}
                 baslik={p.title}
+                /* Burada izgara lg'de 3 SUTUN: kutu 1280px ekranda 377px,
+                   1440'ta 398px olculdu. Bilesenin varsayilani 600px (2 sutunluk
+                   /projeler/ duzeni) — burada birakilirsa 1440/DPR2'de gereksiz
+                   yere 1200px inip 1295 KB tutuyor, 400px ile 463 KB. */
+                sizes="(min-width: 1024px) 400px, (min-width: 768px) 45vw, 100vw"
               />
             ))}
           </div>
