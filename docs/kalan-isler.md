@@ -196,6 +196,75 @@ Kırık değil, sadece hepsi aynı görseli paylaşıyor.
 
 ---
 
+---
+
+## 3b. `gemini-surumu` dalından kurtarılanlar (dal 26 Ağustos'ta SİLİNDİ)
+
+Uzakta `gemini-surumu` diye bir dal duruyordu: 25 Ağustos 15:12'de ayrılmış,
+main o zamandan beri 30 commit atmış. **Merge edilemezdi** — içeriği siliyordu:
+`blogContent.js` -808 satır, `serviceAreas.js` -655, `serviceContent.js` -499,
+`services.js` -272, `faq.js` -138 (toplam -3944). Renkleri de eski 20karot
+paletindeydi (`#0B132B`, mavi `#2563EB`) ve fontu `Kanit` — rebrand öncesi.
+
+Dal silindi. İçindeki üç işe yarar fikir aşağıda; **hiçbiri uygulanmadı**.
+
+### (a) Hero metnini ön boyamaya gömmek — ASIL OLAN BU
+
+Commit `96fca68`. Bu sabahki ölçümün işaret ettiği ~1950 ms'lik boşluğun
+(FCP 872 ms → LCP 2824 ms) doğrudan hedefi: `vite.config.js > heroOnizleme`
+bloğuna `<h1>` ve açıklama paragrafı da gömülüyor, böylece LCP öğesi olan metin
+React'i beklemeden FCP anında boyanıyor.
+
+Yaptığı, özetle:
+- `.hero-on` → `display:flex; align-items:center`
+- katmanlara `z-index` (img 1, ::after 2, içerik 3)
+- `.hero-on-inner` (max-width 1280, padding), `.hero-on-h1`, `.hero-on-p` sınıfları
+- `<h1>` içine `slide.title` + `titleAccent`, `<p>` içine
+  `slide.description.replace(/<[^>]*>/g, '')`
+
+UYARLARKEN ÜÇ ŞEY:
+1. Renk/font GÜNCEL tasarıma göre olmalı (Outfit, `#0A1832`, altın `#E2AC4A`,
+   lacivert `#10388C`) — o daldaki eski palete göre değil.
+2. Ön boyama ile React'in bastığı hero **birebir** aynı olmak zorunda, yoksa
+   React devralınca göz kırpma olur. `npm run seo` bunu zaten denetliyor
+   ("HERO ÖN BOYAMA = REACT HERO"); denetimi de yeni alanları kapsayacak
+   şekilde genişletmek gerekir.
+3. O commit ön boyama `<img>`'inden **`srcset`'i düşürmüş** (sadece `sizes`
+   bırakmış). Bu bir GERİLEME — öyle alınmamalı, srcset kalmalı.
+
+### (b) Slayt 0'da giriş animasyonunu kaldırmak — (a) ile BİRLİKTE anlamlı
+
+Aynı daldaki `HeroSection.jsx` değişikliği `animate-fade-in-up`'ı yalnızca ilk
+slayttan kaldırıyor, diğer slaytlarda bırakıyor:
+
+```jsx
+className={`... ${slideIndex === 0 ? '' : 'animate-fade-in-up delay-200'}`}
+```
+
+Mantıklı: metin ön boyamada zaten görünüyorsa, React devralınca yeniden
+fade-in yapması hem gereksiz hem göz kırpma üretir. Tek başına etkisi küçük
+(ölçtüğüm −80 ms, o da tek koşu), ama (a) ile birlikte gerekli.
+
+DİKKAT: o commit `HeroSection.jsx`'teki `{' '}` açıklamasını da silmiş —
+H1 parçaları arasında boşluk olmazsa `textContent` kelimeleri birleştiriyor
+ve Google H1'i bitişik okuyor. O yorum KALMALI, silinmemeli.
+
+### (c) sharp ile yeniden sıkıştırma
+
+Dalda `scratch/compress_images.cjs` vardı: `public/images` altını gezip
+`.webp` için `{ quality: 80, effort: 6 }`, `.jpg` için `{ quality: 82,
+mozjpeg: true }` ile yeniden kodluyor, 1600px üstünü küçültüyor ve yalnızca
+**küçüldüyse** yazıyor.
+
+Bugün hâlâ geçerli bir ihtiyaç: yeni öncesi/sonrası görselleri ağır —
+`salon-halisi-sonrasi.webp` 354 KB, `salon-halisi-oncesi.webp` 317 KB,
+`yun-hali-sonrasi.webp` 253 KB (hepsi 1200x900). Ayrıca `logo-beyaz.webp`
+17,6 KB (bkz. 1c).
+
+Yapılırsa `arac/` altına düzgün bir betik olarak, `npm run` girdisiyle ve
+ölçülmüş öncesi/sonrası tablosuyla yapılmalı — `scratch/` altında tek
+kullanımlık kalmamalı.
+
 ## 4. Yayın sonrası, unutma
 
 - Search Console'a yeni sitemap gönder
