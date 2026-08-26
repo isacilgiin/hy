@@ -127,7 +127,21 @@ const siteConfig = {
   // Boş bırakılan hesaplar sitede hiç gösterilmez — uydurma link oluşmaz.
   social: {
     instagram: 'https://www.instagram.com/tomay.hali.yikama',
-    facebook: '', // TODO
+
+    /**
+     * DİKKAT — bu bir kişisel profil adresi (isim + rakam biçimi), işletme
+     * Sayfası değil. Yanlışlıkla konulmadı: işletme Facebook'ta bu profilden
+     * yürüyor, 2026-08-26'da işletme sahibince doğrulandı. "Düzeltmeye"
+     * kalkmayın; ayrı bir işletme Sayfası açılırsa o zaman burası değişir.
+     *
+     * Bu değer İKİ yere birden gidiyor:
+     *   1) src/utils/links.js > sosyal bağlantılar — sitedeki Facebook düğmesi
+     *   2) vite.config.js > sameAs — LocalBusiness şeması
+     * sameAs "bu işletmenin başka yerdeki AYNISI" demektir; kişisel profil
+     * tam karşılığı olmadığı için Google bunu yok sayabilir. Zararı yok,
+     * ziyaretçi için faydası var — bilinerek böyle bırakıldı.
+     */
+    facebook: 'https://www.facebook.com/mevlut.furkan.395',
     youtube: '', // TODO
     whatsapp: 'https://wa.me/905373726704',
   },
