@@ -24,7 +24,11 @@
 
 ---
 
-## 0. ÖNCE BU — canlıda eski sürüm var
+## 0. ~~canlıda eski sürüm var~~ — ÇÖZÜLDÜ (26 Ağustos)
+
+> Canlıdan doğrulandı: sitemap'te 70 `image:image`, şemada koordinat
+> `37.8194033`, `AW-18007504148` yok, `salon-halisi-oncesi.webp` 270 KB
+> (sıkıştırılmış hâli). Aşağıdaki eski metin tarih olarak duruyor.
 
 `0e4349d` (meta/h1 tek kaynak) ve ondan önceki birkaç commit **canlıya yüklenmedi**.
 Canlıdaki site son deploy'dan kalma. Yeniden `npm run build` alıp yüklemek gerekiyor.
@@ -161,7 +165,7 @@ olabilir, **araştırılmadı**.
 `hero-2-800.webp` (40 KB) da 220 ms'de iniyor — `HeroSection`'daki `yuklenecek`
 kümesi başlangıçta `{0,1}` olduğu için. İlk ekranda görünmüyor.
 
-### 1d. Bakılmadı
+### 1d. ~~Bakılmadı~~ — HEPSİ CEVAPLANDI (bkz. §5)
 
 - `assets/index-*.css` 9,6 KB render blokluyor — kritik CSS satır içi alınabilir mi
 - `vendor-*.js` 70 KB transfer / 228 KB ham, 33 KB kullanılmıyor, 182 ms CPU
@@ -175,7 +179,12 @@ kaldığı yerden devam ettirilebilir:
 
 ---
 
-## 2. Eksik görseller — 17 dosya (senin kotan)
+## 2. ~~Eksik görseller~~ — TAMAMLANDI (26 Ağustos, 30/30)
+
+> Blog 11/11, öncesi-sonrası 12/12 çift. `npm run varyant` artık eksik
+> bulmuyor. **Kalan tek görsel işi:** 8 hizmet OG görseli hiç üretilmedi,
+> hepsi `og-image.jpg`'ye düşüyor — kırık değil, paylaşımda hepsi aynı
+> görünüyor. Aşağıdaki eski metin tarih olarak duruyor.
 
 **5 blog görseli** + **12 öncesi/sonrası görseli** referans veriliyor ama dosya yok.
 Konsolda 404 olarak görünüyorlar (`/projeler/` ve `/blog/` sayfalarında).
@@ -298,6 +307,126 @@ kullanımlık kalmamalı.
 - GA4'te anahtar olayları işaretle (`telefon_tikla`, `whatsapp_tikla` vb. —
   GA4 zaten veri alıyor, dün `telefon_tikla` 1 kez geldi)
 - SSL otomatik yenileme kontrolü — **26 Eylül 2026**'da doluyor
+
+---
+
+## 5. ÖLÇÜLMÜŞ UYGULAMA PLANI (26 Ağustos, 9 ajanlı iş akışı)
+
+Dokuz ajan, 571 araç çağrısı, 1,86 saat. Dört mercek ölçtü, dört bağımsız
+şüpheci çürütmeye çalıştı (3 iddia sağ çıktı, 1 düştü), biri sentezledi.
+Ham çıktı geçici dosyadaydı; aşağısı kalıcı özeti.
+
+### ① Hero METNİNİ ön boyamaya göm — kalan 9 puanın tek kaynağı
+
+```
+LCP  2780 ms (2756-2788)  ->  844 ms (840-848)   -1936 ms, 5+5 koşu, ayrık
+CLS  0                    ->  0                   iki kolda da sıfır
+```
+
+Mekanizma enstrümante edildi: DCL 1709 -> React devraldı 1790 -> `<p>` DOM'a
+girdi 1790 -> LCP 2796. **LCP öğesi ilk HTML'de hiç yok**; PageSpeed'in
+`elementRenderDelay = 1141 ms`'i tam olarak bu.
+
+Dosya: `vite.config.js:194-205` (`heroOnizleme`) — bugün yalnız `<img>` basıyor.
+Bloğa rozet + `<h1>` + açıklama paragrafı + CTA girecek.
+
+**ÜÇ TUZAK — biri atlanırsa kazancın tamamı gider:**
+
+1. **ELLE HTML YAZMA.** Elle yazılan sürümde rozet/CTA eksik kalınca kutu
+   9 px kaydı, CLS 0 -> 0,0098. SSR makinesi zaten kurulu:
+   `arac/duman-testi.mjs:23-51` (Vite middleware + `ssrLoadModule` +
+   `renderToString`, `MemoryRouter` içinde). `HeroSection.jsx:306` `<Link>`
+   kullanıyor -> Router bağlamı ŞART.
+2. **Animasyon sınıfları ön boyama kopyasından ÇIKACAK.** Blink, üzerinde
+   etkin CSS animasyonu olan öğenin boya-zamanlama kaydını animasyon bitene
+   kadar BASTIRIYOR. Ölçüldü: 2732 ms (std 81, n=7) vs 1812 ms (std 33, n=7)
+   = **-920 ms**. Sınıflar kopyalanırsa metin HTML'de olsa bile kayıt üretmez.
+3. **React tarafında slayt 0'ın animasyonu DÖRT yerde bastırılacak:**
+   `HeroSection.jsx:281, 287, 296, 301`. İkisinde değil — yarım yapmak kazanç
+   değil öğe kaydırması üretiyor (LCP `SPAN`'a ya da başlık logosuna kayıyor).
+
+Ayrıca: ön boyama `<img>`'inin `srcset`'i KALACAK; `vite.config.js:1230`
+`noscriptGovdesi` H1'i gereksizleşiyor (ham HTML'de iki `<h1>` olur);
+`arac/seo-denetimi.mjs:158` denetimi yeni alanları kapsayacak şekilde
+genişletilmeli (dikkat: `rgba()` eşlemesi yanlış alarm verebilir).
+
+### ② CSS'i satır içi al — ①'DEN SONRA
+
+`vite.config.js:1210` `writeBundle`. Kritik CSS **ÇIKARMA** — dosyanın tamamı
+9.541 bayt brotli. ①'den sonra **-480 ms** (844 -> 364). ①'den önce yalnız -64 ms.
+
+**Bedeli:** CLS 0,000 -> **0,0186** (metin 364 ms'de yedek fontla boyanıyor,
+Outfit 1187 ms'de gelince akıyor). Eşik altında ama bugün 0'dayız.
+**KAPI: uygula, 5 koşuda CLS ölç, 0,05'i aşarsa geri al.**
+
+### ③④⑤ Bayt işleri — LCP'ye etkisi 0, ölçüldü
+
+- **③ hero `1200w` basamağı:** 390x3'te -268 ms, -96 KB. ①'den sonra LCP
+  kazancının buharlaşması bekleniyor (birleşik kol ölçülmedi). ÖNCE tek kaynak:
+  `heroSlides.js`'e `heroSrcset()` named export, sonra `vite.config.js:163` ve
+  `HeroSection.jsx:211` oradan beslensin — üç kopyadan biri geride kalırsa
+  tarayıcı hero'yu İKİ KEZ indiriyor (ölçüldü) ve bu ne Lighthouse'da ne
+  LCP'de görünüyor.
+- **④ `ServiceCard.jsx:38-41` srcSet'e `700w` + `1100w`:** LCP 0 ms, ama
+  DPR3'te **-113,8 KB**. `sizes` DEĞİŞMESİN, suçlu o değil. ①'den sonra
+  ③'ten daha iyi etki/risk oranı: tek satır, senkron tehlikesi yok.
+- **⑤ `logo-beyaz.webp` + `logo.webp`:** q82 / **alphaQuality:70** / effort:6
+  -> 17,20 -> **9,80 KB (-%43)**, 41,8 dB. Kazanç `quality`'den değil
+  **`alphaQuality`**'den geliyor; `npm run sikistir` alfa dosyalarını bilerek
+  atlıyor, bu yüzden elle yapılacak. Gözle bir kez onaylandı (26 Ağustos).
+
+### ⑥ OPSİYONEL — `gtag.js`'i `load` + idle'a ertele
+
+v81 build'inde **-404 ms** (2892 [n=21] -> 2488 [n=7], ayrık).
+
+**Görünürdeki çelişki çözüldü:** §1a'daki 20karot A/B'si "128 KB fark = 0 ms"
+diyor, bu bulgu "-404 ms" diyor — ikisi de doğru. AW'nin LCP katkısı **0**
+(konteyner ~2870 ms'de, LCP'den SONRA iniyor); GA4'ün tek başına maliyeti
+**+424 ms** (`gtag.js` 170 ms'de, React paketiyle AYNI ANDA). 20karot farkı
+AW'ydi, bu bulgunun farkı GA4.
+
+**Neden opsiyonel:** Lantern kredi vermiyor, hafif ceza yazıyor (simLCP
+6346 -> 6503, PERF 76 -> 75) — PageSpeed puanı OYNAMAZ. BP zaten 100,
+TBT zaten 57 ms. Ve ①'den sonra kazancın çoğu yeniyor: bayt duyarlılığı
+10,1 -> **0,34 ms/KB**.
+
+**ZORUNLU ŞART:** `window.dataLayer` + `function gtag()` + `gtag('js')` +
+`gtag('config')` satırları SENKRON KALACAK. Stub da ertelenirse
+`src/utils/analytics.js:83` çağrıyı **sessizce düşürüyor** — 4 koşunun 3'ünde
+ilk `page_view` kayboldu, `dataLayer` kuyruğunda izi bile yok. Yarış koşulu,
+elle QA'de yakalanmaz.
+
+### YAPILMAYACAKLAR — ölçülüp elendi
+
+| ne | neden |
+|---|---|
+| `.hero-on img` -> `height:calc(100% - 1px)` | ①'in kazancını GERİ ALIR. Kök neden bilgisi değerli (§1d'yi yanıtlıyor) ama eylem değil |
+| `.hero-foto` -> `calc(100svh - 1px)` | LCP'ye katkı 0 **ve** hero altında görünür kıl çizgi |
+| `latin-ext` preload'unu kaldırmak | **ÇÜRÜTÜLDÜ.** -508 ms metrik yeniden atfıydı; benzeri benzere kontrol -30 ms, aralıklar örtüşüyor. Bedeli gerçek: `ğ` 47 rotada ~530 ms yedek fontla |
+| gtag'ı ilk etkileşimde yüklemek | Etkileşimsiz ziyaretlerde HİÇ `page_view` gitmiyor (ilk yükleme 0, menü 0, SPA 0) |
+| gtag'ı `load`+3000 ms'ye atmak | PUAN ŞİŞİRME: etiket Lighthouse penceresi kapandıktan sonra iniyor. Gerçek tarayıcıda TBT değişmiyor, son uzun görev 2609 ms daha kötü |
+| `manualChunks`'ı bölmek | Ayrılacak parça yok: veri-router API'si sıfır kez geçiyor, zaten ağaç budamayla düşmüş. "33 KB kullanılmıyor" çalışmayan dallar, ayrı modül değil |
+| preconnect'e `crossorigin` | Lighthouse'un tavsiyesi YANLIŞ: gtag `<script src>` no-CORS, crossorigin'li preconnect ayrı soket açar ve script kullanamaz |
+| `<link rel="manifest">` kaldırmak | Manifest HİÇ istenmiyor (canlıda 15 sn'de 27 istek, manifest 0). 221 ms'lik zincir Lighthouse'un kendi artefaktı |
+| `yuklenecek` kümesini `{0}` yapmak / kartları IntersectionObserver'a taşımak | 0 ms (5 koşu, 2 cihaz, 4 kol). Karşılığında slayt geçişinde ~1238 ms fotoğrafsız kare |
+
+### ÖLÇÜM GÜRÜLTÜSÜYDÜ — karara dayanak yapmayın
+
+| iddia | gerçek |
+|---|---|
+| "animasyon -80 ms" (tek koşu) | **-920 ms** (n=7+7, ayrık). -80 gürültüydü, gerçek değer 11 kat büyük — ve ①'den sonra 0 |
+| 1 px düzeltmesi, kısıtsız ağda | -20 ms, yayılımın içinde |
+| yalnız Ads config'ini ertele | +12 ms = kazanç yok |
+| `ertele-load`'un TBT kazancı | -9 ms = yok |
+
+### Beklenen sonuç
+
+**Performance 91 -> 97-100** (kalan 9 puanın tamamı LCP). Sert taban: LCP
+tanım gereği FCP'den önce olamaz, FCP bugün 1,4 sn.
+
+> **Bu bir TAHMİN.** Rakam olarak vermeden önce yamalı build üzerinde tek bir
+> yerel Lighthouse koşusu yapın — harness kurulu ve canlıyı birebir yeniden
+> üretebiliyor (yerel PERF 76 / LCP 6314 ms ↔ canlı 75 / 6,0 sn).
 
 ---
 
