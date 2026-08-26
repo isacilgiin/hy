@@ -31,14 +31,40 @@ export default function ServiceCard({ service, index = 0, one = false }) {
       <div className={`relative overflow-hidden bg-dark ${one ? 'aspect-[4/3] sm:aspect-auto' : 'aspect-[16/10]'}`}>
         <SmartImage
           src={service.image}
-          /* 900w ŞART: mobilde (412px, DPR 1,75) kart 92vw yer kaplıyor, yani
-             379 × 1,75 = 663 fiziksel piksel gerekiyor. 600w yetmediği için
-             tarayıcı doğrudan 1200w'a atlıyor ve kart başına ~31 KB fazladan
-             iniyordu. Ara boy eklenince mobil 900w'ı seçiyor. */
+          /* BASAMAKLAR ÖLÇÜLEREK SEÇİLDİ — aralık bırakmayın.
+
+             Kart 92vw yer kaplıyor; gereken fiziksel piksel = 92vw × DPR.
+             Bir basamak yoksa tarayıcı ARADAKİNE değil, doğrudan bir ÜSTTEKİNE
+             atlıyor ve fark tek bir kartta on KB'lerle ölçülüyor:
+
+               412px DPR 1,75 -> 379 × 1,75 =  663 px  ->  700w
+               390px DPR 3    -> 359 × 3    = 1077 px  -> 1100w
+               360px DPR 3    -> 331 × 3    =  994 px  -> 1100w
+
+             700w ve 1100w eklenmeden önce bu iki durum sırasıyla 900w ve
+             ANA DOSYAYA (1200w) atlıyordu; ölçüldü, DPR 3 telefonda ana
+             sayfada -113,8 KB, DPR 1,75'te -40,2 KB.
+
+             `sizes` DEĞİŞMEDİ ve değişmemeli: 92vw yalnızca %4-5 fazla
+             bildiriyor, o sıçramaları açıklayan şey basamak aralığıydı.
+
+             arac/gorsel-varyant.mjs bu genişlikleri BURADAN okuyup üretiyor;
+             yeni bir basamak eklerseniz `npm run varyant` çalıştırmanız yeter.
+
+             TEK ŞABLON LİTERALİ ŞART — bölmeyin, döngüye çevirmeyin.
+             arac/gorsel-varyant.mjs:105 `srcsetMetinleri()` İLK backtick ile
+             İKİNCİ backtick arasını okuyor. Beş ayrı `...` + `...` yazarsanız
+             araç yalnızca ilkini görür: hem yeni basamakları üretmez (sessizce
+             "üretilen: 0" der) hem de ana dosyanın 600w vaat ettiğini sanır.
+             `-${g}.webp` gibi bir şablon da okunacak rakam bırakmaz.
+             (İkisine de bir kez düşüldü — 2026-08-26.) */
           srcSet={`${service.image.replace('.webp', '-600.webp')} 600w, ${service.image.replace(
             '.webp',
-            '-900.webp'
-          )} 900w, ${service.image} 1200w`}
+            '-700.webp'
+          )} 700w, ${service.image.replace('.webp', '-900.webp')} 900w, ${service.image.replace(
+            '.webp',
+            '-1100.webp'
+          )} 1100w, ${service.image} 1200w`}
           sizes={one ? '(min-width: 1024px) 560px, 92vw' : '(min-width: 1024px) 300px, (min-width: 640px) 45vw, 92vw'}
           alt={service.title}
           icon={service.icon}
