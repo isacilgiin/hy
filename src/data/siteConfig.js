@@ -73,17 +73,45 @@ const siteConfig = {
   },
 
   // ===== Konum =====
-  // TODO: Google İşletme Profili bilgileri. Doğrulanmadan DOLDURMAYIN —
-  // yanlış koordinat, müşteriyi başka bir adrese yollar.
-  // placeId/embedSrc boş kaldığında MapEmbed adres aramasına düşer ve çalışır.
+  /**
+   * KONUM.
+   *
+   * lat/lng 2026-08-26'da işletme sahibince harita üzerinden işaretlendi ve
+   * DOĞRULANDI: ters geokodlama (OpenStreetMap Nominatim) bu koordinat için
+   * "Eskihisar Mahallesi, Merkezefendi, Denizli, 20020" döndürüyor — yukarıdaki
+   * `address` ile posta koduna kadar birebir. Koordinatı elle değiştirirseniz
+   * aynı doğrulamayı TEKRAR yapın; yanlış koordinat müşteriyi başka bir
+   * adrese yollar.
+   *
+   * Beslediği yerler: vite.config.js:283 (LocalBusiness > geo > GeoCoordinates),
+   * :318-320 (geo.position + ICBM meta), utils/links.js > mapEmbedUrl() ve
+   * mapsUrl(). Koordinat dolu olduğu için harita artık adres araması değil,
+   * tam iğne gösteriyor.
+   *
+   * ---------------------------------------------------------------------
+   * shortLink BİLEREK BOŞ — buraya harita iğnesi bağlantısı KOYMAYIN.
+   *
+   * Bu alan vite.config.js:313'te `sameAs`e giriyor. sameAs'in anlamı
+   * "bu varlığın BAŞKA BİR YERDEKİ AYNISI" demektir; doğrulanmış bir Google
+   * İşletme Profili oraya yazılır. Haritaya bırakılmış bir iğne bir varlık
+   * değil, sadece bir koordinattır (paylaşılan gömme adresinin etiketi de
+   * işletme adı değil, `37°49'10.7"N 29°06'55.0"E` idi) — oraya yazmak
+   * Google'a yanlış sinyal olur.
+   *
+   * İşletmenin Google İşletme Profili KAPALI (2026-08-26). Yeniden
+   * açıldığında: shortLink + placeId doldurulur, o zaman sameAs gerçek bir
+   * bağ kurar. embedSrc'ye de gerek kalmaz; profil açılınca placeId ile
+   * gömme zaten işletme adını gösterir.
+   * ---------------------------------------------------------------------
+   */
   geo: {
-    lat: null,
-    lng: null,
+    lat: 37.8194033,
+    lng: 29.1146557,
     region: 'TR-20', // Denizli plaka kodu
     plusCode: '',
-    placeId: '',
-    shortLink: '',
-    embedSrc: '',
+    placeId: '', // TODO: İşletme Profili açılınca
+    shortLink: '', // TODO: İşletme Profili açılınca (yukarıdaki uyarıyı okuyun)
+    embedSrc: '', // gerekmiyor: lat/lng dolu, mapEmbedUrl() iğneyi kendisi kuruyor
   },
 
   // ===== Domain & URL =====
