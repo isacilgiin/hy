@@ -58,7 +58,14 @@ export function kisalt(metin, sinir = ACIKLAMA_SINIRI) {
 }
 
 const saglayici = {
-  '@type': 'LocalBusiness',
+  // Neden LocalBusiness degil: Google'in kurali 'uygulanabilir EN OZGUL tipi
+  // kullan'. schema.org'da hali/tekstil yikamanin birebir alt tipi YOK; en
+  // yakini bu. Resmi tanim dar ('A dry-cleaning business') ama schema.org'un
+  // kendi ornegi bir camasirhane (Larry's Laundromat), yani tip pratikte
+  // yikama islerini kapsiyor. LocalBusiness'in alt tipi oldugu icin ust
+  // tipten gelen hicbir alan kaybolmuyor.
+  // Geri almak isterseniz: iki dosyada da ayni anda degistirin (asagiya bkz).
+  '@type': 'DryCleaningOrLaundry',
   '@id': `${url}/#localbusiness`,
   name: companyName,
   telephone: phoneRaw,
@@ -267,7 +274,11 @@ const bolgeRotalari = serviceAreas.map((a) => {
     // Başlık ve açıklama kalıbının gerekçesi: metaMetinleri.js > bolgeDetay
     title: metaMetinleri.bolgeDetay.baslik(a.name),
     description: metaMetinleri.bolgeDetay.aciklama(a),
-    jsonLd: [hizmetSemasi, faqSemasi(a.sss)],
+    // SSS'siz bir bölge eklenirse boş mainEntity ile GEÇERSİZ bir FAQPage
+    // yayına çıkardı. Bugün 61/61 bölgede soru var, yani bu koruma bir hata
+    // düzeltmesi değil; ileride sorusuz bölge eklenmesine karşı. Hizmet
+    // detayında (satır 217) aynı koruma zaten vardı, burada eksikti.
+    jsonLd: a.sss?.length ? [hizmetSemasi, faqSemasi(a.sss)] : hizmetSemasi,
     h1: `${a.name} Halı Yıkama`,
     // Mahallede kırıntı ÜÇ basamaklı: hub > ilçe > mahalle. Google arama
     // sonucunda ham URL yerine bu yolu gösteriyor ve mahallenin hangi ilçeye
@@ -306,7 +317,13 @@ const blogRotalari = [
       description: y.ozet, // blog.js'te alan adi 'ozet' — 'description' diye bir alan YOK
       image: `${url}${y.image}`,
       datePublished: y.tarih,
-      dateModified: y.tarih,
+      // Bir yazının METNİ güncellenirse blog.js'e opsiyonel `guncelleme`
+      // alanı eklenir ('YYYY-MM-DD') ve Google "güncellendi" sinyalini alır.
+      // Alan yoksa yayın tarihine düşer — bugünkü davranış aynen korunur.
+      // DİKKAT: yalnızca içerik gerçekten değiştiyse doldurun. Google lastmod/
+      // dateModified'ı yalnızca tutarlı biçimde doğruysa dikkate alıyor;
+      // her build'de oynayan bir tarihi görmezden geliyor.
+      dateModified: y.guncelleme ?? y.tarih,
       author: { '@type': 'Organization', name: companyName, url: `${url}/` },
       publisher: { '@type': 'Organization', name: companyName, url: `${url}/` },
       mainEntityOfPage: { '@type': 'WebPage', '@id': `${url}/blog/${y.slug}/` },

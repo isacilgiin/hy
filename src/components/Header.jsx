@@ -13,6 +13,10 @@ const navLinks = [
   { to: '/iletisim/', label: 'İletişim' },
   { to: '/hizmet-bolgeleri/', label: 'Hizmet Bölgeleri' },
   { to: '/blog/', label: 'Blog' },
+  // Kisa etiket bilincli: Footer'da tam adi ('Sikca Sorulan Sorular') geciyor,
+  // burada uzun hali 1024px'te menuyu tasiriyordu. Olculdu: 7 baglantiyla
+  // nav 643px + 381px bos; 'SSS' ~40px, tam ad ~200px.
+  { to: '/sikca-sorulan-sorular/', label: 'SSS' },
 ]
 
 export default function Header() {

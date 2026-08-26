@@ -207,7 +207,14 @@ function seoFromConfig() {
   // --- JSON-LD (Schema.org LocalBusiness) ---
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'LocalBusiness',
+    // Neden LocalBusiness degil: Google'in kurali 'uygulanabilir EN OZGUL tipi
+    // kullan'. schema.org'da hali/tekstil yikamanin birebir alt tipi YOK; en
+    // yakini bu. Resmi tanim dar ('A dry-cleaning business') ama schema.org'un
+    // kendi ornegi bir camasirhane (Larry's Laundromat), yani tip pratikte
+    // yikama islerini kapsiyor. LocalBusiness'in alt tipi oldugu icin ust
+    // tipten gelen hicbir alan kaybolmuyor.
+    // Geri almak isterseniz: iki dosyada da ayni anda degistirin (asagiya bkz).
+    '@type': 'DryCleaningOrLaundry',
     '@id': `${url}/#localbusiness`,
     name: companyName,
     /**
@@ -816,7 +823,10 @@ ${yazilar}
           path: `/blog/${y.slug}/`,
           priority: '0.7',
           changefreq: 'yearly',
-          lastmod: y.tarih,
+          // routeMeta.js > dateModified ile AYNI kaynaktan: yazı güncellenirse
+          // blog.js'teki `guncelleme` alanı hem şemayı hem sitemap'i besler.
+          // İkisi sapmasın; Google çelişkili tarih gördüğünde ikisini de eler.
+          lastmod: y.guncelleme ?? y.tarih,
         })),
       ]
 
