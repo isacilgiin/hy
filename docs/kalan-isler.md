@@ -1,4 +1,24 @@
-# Kalan İşler — 25 Ağustos 2026 akşamı
+# Kalan İşler
+
+> ## 26 Ağustos — DURUM: canlıda **Performance 91**, Best Practices **100**
+>
+> | | 25 Ağu | 26 Ağu |
+> |---|---|---|
+> | Performance | 75 | **91** |
+> | Best Practices | 73 | **100** |
+> | LCP (Lantern tahmini) | 6,0 sn | **3,4 sn** |
+> | TBT | 190 ms | **57 ms** |
+> | Accessibility / SEO | 100 / 100 | 100 / 100 |
+>
+> Sebebi Ads etiketinin kaldırılması (bkz. 1a). Dikkat: `observedLargest-
+> ContentfulPaint` 1168 → 1207 ms, yani **gerçek LCP değişmedi** — Lantern'in
+> *tahmini* düştü, çünkü simüle edecek 150 KB daha az şey var. Ölçtüğüm
+> "Ads LCP'yi etkilemiyor" sonucuyla birebir tutarlı.
+>
+> **Kalan 9 puanın tamamı LCP** (3,4 sn, puan 0,65). O da FCP 1,4 sn ile
+> arasındaki React açılma süresi — çözümü 3b(a)'daki hero ön boyama işi.
+
+---
 
 Çalışma ağacı temiz, her şey commit'li. Son commit `0e4349d`.
 
@@ -250,6 +270,13 @@ H1 parçaları arasında boşluk olmazsa `textContent` kelimeleri birleştiriyor
 ve Google H1'i bitişik okuyor. O yorum KALMALI, silinmemeli.
 
 ### (c) sharp ile yeniden sıkıştırma
+
+> **YAPILDI (26 Ağustos).** `arac/gorsel-sikistir.mjs` + `npm run sikistir`
+> yazıldı; q80 tavanı ölçülerek belirlendi, iki koruma eşiği var (en az %8
+> kazanç, en az 36 dB PSNR). Öncesi/sonrası klasöründe 11 dosya yazıldı,
+> 13'ü eşiklere takıldı. Ana sayfanın kaydırma yükü 1296 → 1121 KB.
+> **Skoru etkilemez** — o görseller lazy ve 91'lik raporun ağ dökümünde yok.
+> `logo-beyaz.webp` bilinerek atlandı: alfa kanallı, kazancı 3,4 KB (ölçüldü).
 
 Dalda `scratch/compress_images.cjs` vardı: `public/images` altını gezip
 `.webp` için `{ quality: 80, effort: 6 }`, `.jpg` için `{ quality: 82,
