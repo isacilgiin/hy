@@ -24,10 +24,31 @@
  * └──────────────────────────────────────────────────────────────────────────┘
  */
 
+/**
+ * `genislik` — srcSet descriptor'ı UYDURULMAZ, diskteki gerçek ölçüdür.
+ *
+ * 2026-08-26'ya kadar srcSet hepsine `1600w` diyordu; oysa hero-1/2/3 diskte
+ * 1376 px. Yani tarayıcıya olmayan bir çözünürlük vaat ediliyordu ve 1376 px
+ * üstü ekranlarda görsel %16 büyütülüyordu (`npm run varyant` bunu zaten
+ * "SRCSET'İN VAAT ETTİĞİNDEN KÜÇÜK" başlığıyla bağırıyordu).
+ *
+ * Aday seçimini değiştirmiyor, bayt kazancı yok — bu bir DOĞRULUK düzeltmesi.
+ * Görseli yeniden üretirseniz burayı da güncelleyin; ölçmek için:
+ *   node arac/gorsel-varyant.mjs --denetle
+ *
+ * DİKKAT — srcSet hâlâ İKİ yerde kopya: vite.config.js:163 (ön yükleme +
+ * ön boyama) ve HeroSection.jsx:211 (React). İkisi de artık bu alandan
+ * besleniyor ama string'in kendisi ayrı. Tek fonksiyona indirmek hero ön
+ * boyama işiyle birlikte yapılacak (bkz. docs/kalan-isler.md §5 ①/③);
+ * şimdi yapılmadı çünkü arac/gorsel-varyant.mjs:105 `srcsetMetinleri()`
+ * `srcSet={fonksiyon(x)}` biçimini okuyamıyor — dosyadaki BİR SONRAKİ
+ * backtick çiftini yakalayıp alakasız genişlikler üretir.
+ */
 const heroSlides = [
   {
     id: 'hali-yikama',
     image: '/images/hero/hero-1.webp',
+    genislik: 1376, // DİSKTEKİ gerçek genişlik — srcSet descriptor'ı buradan
     imageAlt: 'Fabrikada 16 fırçalı tam otomatik makinede halı yıkama',
     icon: 'carpetRoll',
     badge: 'Denizli & Tüm İlçeler',
@@ -42,6 +63,7 @@ const heroSlides = [
   {
     id: 'koltuk-yikama',
     image: '/images/hero/hero-2.webp',
+    genislik: 1376, // DİSKTEKİ gerçek genişlik — srcSet descriptor'ı buradan
     imageAlt: 'Evde yüksek basınçlı vakumlu makineyle koltuk yıkama',
     icon: 'sofa',
     badge: 'Yerinde Hizmet',
@@ -56,6 +78,7 @@ const heroSlides = [
   {
     id: 'stor-perde-yikama',
     image: '/images/hero/hero-3.webp',
+    genislik: 1376, // DİSKTEKİ gerçek genişlik — srcSet descriptor'ı buradan
     imageAlt: 'Ultrasonik makinede stor perde yıkama',
     icon: 'curtain',
     badge: 'Sökme & Takma Dâhil',
@@ -70,6 +93,7 @@ const heroSlides = [
   {
     id: 'el-dokuma-hali-yikama',
     image: '/images/hero/hero-4.webp',
+    genislik: 1600, // DİSKTEKİ gerçek genişlik — srcSet descriptor'ı buradan
     imageAlt: 'El dokuma yün halının düşük ısıda yıkanması',
     icon: 'wool',
     badge: 'Ayrı Program',
@@ -84,6 +108,7 @@ const heroSlides = [
   {
     id: 'yorgan-battaniye-yikama',
     image: '/images/hero/hero-5.webp',
+    genislik: 1600, // DİSKTEKİ gerçek genişlik — srcSet descriptor'ı buradan
     imageAlt: 'Endüstriyel makinede yorgan ve battaniye yıkama',
     icon: 'blanket',
     badge: 'Endüstriyel Makine',

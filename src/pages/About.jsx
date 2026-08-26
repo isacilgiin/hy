@@ -47,7 +47,12 @@ export default function About() {
               <div className="relative rounded-3xl overflow-hidden shadow-2xl aspect-[4/3]">
                 <SmartImage
                   src="/images/hakkimizda.webp"
-                  srcSet="/images/hakkimizda-600.webp 600w, /images/hakkimizda.webp 1200w"
+                  /* 1024w UYDURMA DEĞİL: hakkimizda.webp diskte 1024x1024.
+                     Önceden 1200w deniyordu, yani olmayan bir çözünürlük vaat
+                     ediliyordu ve 1024px üstünde görsel %17 büyütülüyordu.
+                     Görseli yeniden üretirseniz burayı da güncelleyin; ölçmek
+                     için: node arac/gorsel-varyant.mjs --denetle */
+                  srcSet="/images/hakkimizda-600.webp 600w, /images/hakkimizda.webp 1024w"
                   sizes="(min-width: 1024px) 560px, 92vw"
                   alt={`${siteConfig.companyName} tesisi ve makine parkı`}
                   icon="users"

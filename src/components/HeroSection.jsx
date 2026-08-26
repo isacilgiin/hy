@@ -208,7 +208,7 @@ export default function HeroSection() {
                 <SmartImage
                   src={slide.image}
                   /* Mobilde 1600px hero indirmeye gerek yok. */
-                  srcSet={`${slide.image.replace('.webp', '-800.webp')} 800w, ${slide.image} 1600w`}
+                  srcSet={`${slide.image.replace('.webp', '-800.webp')} 800w, ${slide.image} ${slide.genislik}w`}
                   sizes="100vw"
                   alt={slide.imageAlt}
                   icon={null}

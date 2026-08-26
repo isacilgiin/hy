@@ -161,7 +161,7 @@ function seoFromConfig() {
    */
   const ilkSlayt = heroSlides[0]
   const heroSrcset = ilkSlayt
-    ? `${ilkSlayt.image.replace('.webp', '-800.webp')} 800w, ${ilkSlayt.image} 1600w`
+    ? `${ilkSlayt.image.replace('.webp', '-800.webp')} 800w, ${ilkSlayt.image} ${ilkSlayt.genislik}w`
     : ''
   const heroPreload = ilkSlayt
     ? `<link rel="preload" as="image" href="${ilkSlayt.image}" imagesrcset="${heroSrcset}" imagesizes="100vw" fetchpriority="high" />`
