@@ -154,8 +154,34 @@ const siteConfig = {
        https://denizlihaliyikama.net.tr). Devralınan canlı sitede GA4 yoktu,
        yalnızca Ads etiketi vardı. */
     ga4: 'G-FF3630L3MG',
-    // Canlı sitenin gtag'inden okundu.
-    googleAds: 'AW-18007504148',
+
+    // Google Ads — 2026-08-26'da BİLİNÇLİ OLARAK BOŞALTILDI. Geri koymadan önce
+    // aşağıyı okuyun.
+    //
+    // Kimlik kaybolmasın diye burada duruyor: 'AW-18007504148' (devralınan canlı
+    // sitenin gtag'inden okunmuştu). Reklam verilmeye başlanınca tırnak arasına
+    // geri yazmak yeterli.
+    //
+    // NEDEN KALDIRILDI: işletme reklam vermiyor ve aşağıdaki `conversions` alanlarının
+    // üçü de boş — yani etiket tek bir dönüşüm bile göndermiyordu (utils/analytics.js
+    // > donusumBildir hem `googleAds` hem etiket ister). Karşılığında ödenen bedel
+    // ölçüldü (yerel build, 7 koşu almaşık, Lighthouse mobil ayarları, MEDYAN):
+    //
+    //   TBT                 170 ms (164-260)  ->   68 ms (58-96)   -%60
+    //   toplam bayt         1025 KB           ->  831 KB           -194 KB
+    //   gtag                310 KB / 2 istek  ->  163 KB / 1 istek
+    //   üçüncü taraf çerez  .doubleclick.net test_cookie  ->  YOK
+    //   LCP                 4540 ms           -> 4528 ms  (aralıklar örtüşüyor: fark yok)
+    //
+    // Sitedeki TEK üçüncü taraf çerezi buydu. Best Practices 73'ün sebebi olan
+    // third-party-cookies denetimi (26 ağırlığın 5'i) bu yüzden düşüyordu; ayrıca
+    // ad.doubleclick.net / googleads.g.doubleclick.net / google.com.tr istekleri de
+    // bu etiketle birlikte gitti. LCP'ye etkisi YOK: gtag `async`, JS zincirini
+    // bekletmiyor — 20karot (tek etiket) ile birebir kıyasta iki site de aynı LCP.
+    //
+    // GERİ KOYARKEN: conversions.telefon/whatsapp/form da doldurulmalı. Yoksa etiket
+    // yine 150 KB inip hiçbir dönüşüm ölçmez — bugüne kadar olan tam olarak buydu.
+    googleAds: '',
 
     // Google Tag Manager — BİLİNÇLİ OLARAK BOŞ. Geri koymayın.
     // GTM snippet'i window.gtag'i TANIMLAMAZ; yalnızca dataLayer açar. gtag

@@ -22,7 +22,7 @@ Metrikler: FCP 1,4s · **LCP 6,0s (puan 0,13)** · TBT 190ms · CLS 0 · SI 1,4s
 
 Tek metrik skoru öldürüyor: LCP. Ağırlığı 25, puanı 0,13 → tek başına ~22 puan.
 
-### 1a. Asıl suçlu: iki Google etiketi (KARAR SENİN)
+### 1a. Google etiketleri — ÇÖZÜLDÜ (26 Ağustos)
 
 | | |
 |---|---|
@@ -34,10 +34,59 @@ Tek metrik skoru öldürüyor: LCP. Ağırlığı 25, puanı 0,13 → tek başı
 
 ```
 şu anki hâli            LCP 2900 ms
-animasyonlar kapalı     LCP 2820 ms   (-80 ms → animasyon suçlu DEĞİL)
+animasyonlar kapalı     LCP 2820 ms   (-80 ms)
 googletagmanager engel  LCP 2496 ms   (-404 ms)
 ikisi birden            LCP 2496 ms
 ```
+
+> **26 Ağustos düzeltmesi — yukarıdaki -404 ms GÜVENİLMEZ.** Hepsi TEK koşuydu.
+> Ertesi gün 20karot ile birebir kıyas yapıldı (5 koşu, almaşık, aynı düzenek):
+>
+> ```
+> 20karot   LCP 2824 ms (2792-2828)   FCP 876 ms   gtag 182 KB   toplam 638 KB
+> tomay     LCP 2824 ms (2812-2864)   FCP 872 ms   gtag 310 KB   toplam 713 KB
+> ```
+>
+> 20karot'ta `googleAds` boş, yani **tek etiket** iniyor — 128 KB daha az. LCP
+> **birebir aynı**. İki sitede de LCP öğesi aynı: `P.animate-fade-in-up delay-200`.
+> Sonuç: **Google etiketi LCP'nin darboğazı değil** — `async` olduğu için JS
+> zincirini bekletmiyor. Etiket Best Practices'i düşürüyor (o gerçek), performansı değil.
+>
+> Asıl boşluk FCP 872 ms ile LCP 2824 ms arasındaki **~1950 ms**: React'in açılma
+> süresi (index.js + vendor.js indir → ayrıştır → çalıştır → render). Ön boyama
+> HTML'i 872 ms'de basılıyor ama içinde **metin yok**, sadece görsel var; LCP öğesi
+> olan paragrafı React basıyor. İki sitede de aynı mimari, aynı sonuç.
+
+> **Ayrıca:** `siteConfig.analytics.conversions` üçü de boş (`telefon`, `whatsapp`,
+> `form`). `src/utils/analytics.js:40` hem `googleAds` hem `etiket` ister —
+> yani Ads etiketi şu an 150 KB iniyor ve **tek bir dönüşüm bile göndermiyor**.
+
+#### KARAR: Ads etiketi kaldırıldı
+
+İşletme reklam vermiyor (26 Ağustos'ta teyit edildi) ve dönüşüm etiketleri zaten
+boştu — yani etiket 150 KB inip hiçbir şey ölçmüyordu. `siteConfig.js` içinde
+`googleAds: ''` yapıldı; kimlik oradaki yorumda saklı, reklama başlanınca geri
+yazılır (dönüşüm etiketleriyle BİRLİKTE, yoksa yine hiçbir şey ölçmez).
+
+Ölçüm (yerel build, 7 koşu almaşık, Lighthouse mobil ayarları, MEDYAN):
+
+| | Ads VAR | Ads YOK |
+|---|---|---|
+| LCP | 4540 ms (4520-4564) | 4528 ms (4480-4564) — aralıklar örtüşüyor, **fark yok** |
+| **TBT** | 170 ms (164-260) | **68 ms (58-96)** — aralıklar örtüşmüyor, **gerçek** |
+| toplam bayt | 1025 KB | 831 KB |
+| gtag | 310 KB / 2 istek | 163 KB / 1 istek |
+| üçüncü taraf çerez | `.doubleclick.net test_cookie` | **yok** |
+
+v82 build'i üzerinde doğrulandı: geriye yalnızca `_ga` ve `_ga_FF3630L3MG` kaldı
+(ikisi de birinci taraf); üçüncü taraf sunucu olarak yalnızca googletagmanager ve
+google-analytics. doubleclick.net, googleads.g.doubleclick.net ve google.com.tr
+istekleri tamamen gitti.
+
+Beklenen etki: **Best Practices 73 → en az 92** (third-party-cookies denetimi 26
+ağırlığın 5'i; konsol hataları da doubleclick kaynaklıydı, 100 de olabilir).
+**Performance 75 → ~78** — yalnızca TBT'den, LCP değişmiyor.
+Canlıda doğrulanacak: yüklendikten sonra PageSpeed tekrar çekilmeli.
 
 Best Practices 73'ün de **tamamı** bu etiketten: 32 üçüncü taraf çerezi (ağırlık 5)
 + inspector-issues (1) + errors-in-console (1) = 26 ağırlığın 7'si.
@@ -128,6 +177,10 @@ Kırık değil, sadece hepsi aynı görseli paylaşıyor.
 ---
 
 ## 3. Teklif ettiklerim, seçmedin
+
+> Bunların hiçbiri **çürütülmedi**. Üçü hiç ölçülmedi bile — sadece senin
+> kararını bekliyorlar. Yalnızca dördüncüsü (hero animasyonu) ölçüldü ve "düşük
+> öncelik"e indi; o ölçüm de tek koşuydu, şu an yeniden ölçülüyor.
 
 - **blog `guncelleme` alanı** — şu an `dateModified` yayın tarihine bağlı. Bir yazının
   metnini güncellersen Google "güncellendi" sinyalini almaz. `src/data/blog.js`'e
