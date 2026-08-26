@@ -169,8 +169,9 @@ for (const [dosya, kaynak] of kodIcerik) {
     if (literaller.length) {
       dizinler = literaller.map((y) => path.posix.join('public', path.posix.dirname(y)))
     } else {
-      // 2) Şablon: `${yazi.image...}` -> ALAN adı + dosyanın veri importları.
-      const alan = metin.match(/\$\{\s*\w+\.(\w+)/)?.[1]
+      // 2) Şablon: `${yazi.image...}` veya `${sonrasi.replace...}` -> ALAN adı.
+      const m = metin.match(/\$\{\s*(\w+)(?:\.(\w+))?/)
+      const alan = m ? (m[2] && m[2] !== 'replace' ? m[2] : m[1]) : null
       let moduller = veriImportlari(dosya, kaynak)
       // 3) Bileşen veriyi prop'tan alıyorsa (ServiceCard) bir sıçrama: onu
       //    kullanan dosyaların veri importlarına bak.

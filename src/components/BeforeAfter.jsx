@@ -81,9 +81,13 @@ export default function BeforeAfter({
         {/* SONRASI — altta, tam genişlik */}
         <SmartImage
           src={sonrasi}
+          srcSet={sonrasi ? `${sonrasi.replace('.webp', '-800.webp')} 800w, ${sonrasi} 1200w` : undefined}
+          sizes="(min-width: 1024px) 600px, 100vw"
           alt={sonrasiAlt}
           icon="carpetRoll"
           label="Sonrası"
+          width="1200"
+          height="900"
           className="absolute inset-0 h-full w-full"
           draggable={false}
         />
@@ -97,9 +101,13 @@ export default function BeforeAfter({
         >
           <SmartImage
             src={oncesi}
+            srcSet={oncesi ? `${oncesi.replace('.webp', '-800.webp')} 800w, ${oncesi} 1200w` : undefined}
+            sizes="(min-width: 1024px) 600px, 100vw"
             alt={oncesiAlt}
             icon="carpetRoll"
             label="Öncesi"
+            width="1200"
+            height="900"
             className="absolute inset-0 h-full w-full"
             draggable={false}
           />
