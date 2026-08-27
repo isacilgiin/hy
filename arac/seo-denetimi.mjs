@@ -443,5 +443,39 @@ if (anahtarSapma.length) {
   NO(`${anahtarSapma.length} meta anahtarı tam olarak bir sayfa bileşenine bağlı değil`)
   for (const x of anahtarSapma) console.log('      ' + x)
 } else OK(`${Object.keys(meta).length} meta anahtarının hepsi tam olarak bir sayfaya bağlı`)
+/* ===== ÇALIŞMA SAATİ TUTARLILIĞI =====
+ *
+ * Saatler siteConfig.workingHours'ta tek kaynakta duruyor AMA içerik
+ * dosyalarında (faq.js, blogContent.js, serviceContent.js, about.js) düz
+ * cümlelerin içine ELLE de yazılmış durumda — "tesis Pazartesi-Cumartesi
+ * 08:00-19:00 arasında açık" gibi. Bu metinleri şablona çevirmek okunabilirliği
+ * bozardı, o yüzden elle bırakıldı ve kontrol buraya kondu.
+ *
+ * NEDEN GEREKLİ: bu ayrışma gerçekten oldu. Saatler 07:00-18:00'den
+ * 08:00-19:00'a çekildiğinde siteConfig güncellendi ama altı ayrı cümlede eski
+ * saat kaldı; JSON-LD bir şey, sayfa metni başka bir şey söylüyordu. Google
+ * İşletme Profili ile site arasındaki saat uyuşmazlığı eşleşmeyi zayıflatıyor,
+ * müşteri de yanlış saatte kapıda kalıyor.
+ *
+ * Kontrol NEGATİF çalışıyor: yapılandırmadaki saati aramıyor (cümlede farklı
+ * yazılabilir), yapılandırmada OLMAYAN saat kalıplarını arıyor.
+ */
+const saatKaynak = (await import('../src/data/siteConfig.js')).default.workingHours
+const gecerliSaatler = new Set([saatKaynak.schemaOpens, saatKaynak.schemaCloses])
+const icerikDosyalari = srcDosyalari.filter((f) => f.includes(path.join('src', 'data')))
+const saatSapma = []
+for (const f of icerikDosyalari) {
+  if (f.endsWith('siteConfig.js')) continue // kaynağın kendisi + geçmişi anlatan yorumlar
+  for (const eslesme of srcMetin.get(f).matchAll(/\b([0-2]\d:[0-5]\d)\s*[–-]\s*([0-2]\d:[0-5]\d)\b/g)) {
+    if (!gecerliSaatler.has(eslesme[1]) || !gecerliSaatler.has(eslesme[2]))
+      saatSapma.push(`${path.relative('.', f)}: "${eslesme[0]}"`)
+  }
+}
+console.log('\n=== ÇALIŞMA SAATİ TUTARLILIĞI ===')
+if (saatSapma.length) {
+  NO(`${saatSapma.length} yerde saat siteConfig ile ayrışmış (beklenen ${saatKaynak.hours})`)
+  for (const x of saatSapma.slice(0, 6)) console.log('      ' + x)
+} else OK(`içerik metinlerindeki saatler siteConfig ile aynı (${saatKaynak.hours})`)
+
 console.log('\n' + (hata ? `${hata} SORUN` : 'HEPSİ TEMİZ ✓'))
 process.exit(hata ? 1 : 0)

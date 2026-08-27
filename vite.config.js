@@ -227,20 +227,34 @@ function seoFromConfig() {
      * Profildeki ad siteden FARKLIYSA en güçlü alan eşleşmez; alternateName
      * "bu işletme şu adla da biliniyor" demenin doğru yeridir.
      *
-     * ŞU AN BOŞ ve boşken JSON-LD'ye hiç yazılmıyor. Google İşletme Profili'ndeki
-     * ad öğrenildiğinde siteConfig.js'e `googleBusinessName` olarak eklenip
-     * buraya bağlanmalı.
+     * 2026-08-27'de DOLDURULDU: siteConfig.googleBusinessName =
+     * '20 DENİZLİ TOMAY HALI YIKAMA'. Kaynak vergi levhası + İşletme Profili,
+     * işletme sahibince doğrulandı. (Eski not "kaynağı geo.embedSrc" diyordu;
+     * embedSrc hiç dolmadı, ad doğrudan sahibinden geldi.)
+     *
+     * İKİ ALANA BİRDEN yazılıyor ve ikisi AYNI ŞEY DEĞİL:
+     *   legalName     — schema.org: "kuruluşun tescilli resmî adı". Belgede
+     *                   yazan ad budur.
+     *   alternateName — "bu işletme şu adla da biliniyor". Google'ın profil
+     *                   ile siteyi eşleştirdiği alan budur.
+     * Değer aynı olduğu için ikisi de tek kaynaktan besleniyor.
      *
      * BURAYA UYDURMA VARYANT EKLEMEYİN ("denizli halı yıkama", "halı yıkamacı"
-     * gibi). alternateName gerçek addır, anahtar kelime kutusu değil.
+     * gibi). Bu alanlar gerçek addır, anahtar kelime kutusu değil.
      */
-    ...(siteConfig.googleBusinessName ? { alternateName: siteConfig.googleBusinessName } : {}),
+    ...(siteConfig.googleBusinessName
+      ? { legalName: siteConfig.googleBusinessName, alternateName: siteConfig.googleBusinessName }
+      : {}),
     description: companyDescription,
     url,
     telephone: phoneRaw,
     email,
     image: ogImage,
     priceRange: '₺₺',
+    // Google Isletme Profili'ndeki "Acilis tarihi" ile ayni yil. Profil ile
+    // sitenin ayni varlik sayilmasina katkida bulunan alanlardan biri.
+    // Yil siteConfig.foundedYear'dan; oradaki uyariyi okumadan degistirmeyin.
+    foundingDate: String(siteConfig.foundedYear),
     address: {
       '@type': 'PostalAddress',
       streetAddress: address.street,
@@ -258,9 +272,31 @@ function seoFromConfig() {
         }
       : {
           '@type': 'OpeningHoursSpecification',
-          dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-          opens: workingHours.hours.split(' - ')[0],
-          closes: workingHours.hours.split(' - ')[1],
+          // Gunler de saatler de siteConfig'ten; burada ELLE liste tutulmuyor.
+          dayOfWeek: workingHours.schemaDays,
+          /**
+           * schemaOpens/schemaCloses okunuyor, `hours` DEGIL. Bu bir HATA
+           * DUZELTMESI, tercih degil.
+           *
+           * Eskiden `workingHours.hours.split(' - ')` yaziyordu: ASCII tire
+           * ariyordu, ama degerin icindeki karakter EN TIRESI (U+2013, ' – ').
+           * Bolme hicbir zaman tutmadi ve semaya su gidiyordu:
+           *
+           *     "opens": "07:00 – 18:00"      <- saat degil, cumle
+           *     "closes": undefined            <- JSON.stringify bunu ATIYOR
+           *
+           * Yani yayindaki openingHoursSpecification aylardir gecersizdi:
+           * kapanis saati hic yoktu, acilis saati de saat formatinda degildi.
+           * Gorunurde bir sey bozulmadigi icin fark edilmedi — sayfa metni
+           * saatleri kendi cumlesinden yaziyor, sema sessizce coplendi.
+           *
+           * schemaOpens/schemaCloses zaten bunun icin ayri alanlar olarak
+           * duruyordu; `hours` INSAN ICIN yazilmis bir metindir ve
+           * ayristirilmamalidir. Bicimi degistiginde (tire, kisa cizgi,
+           * 'arasi' yazilmasi) bolme yine sessizce bozulur.
+           */
+          opens: workingHours.schemaOpens,
+          closes: workingHours.schemaCloses,
         },
     /**
      * areaServed TEK BİR İDARİ ALAN — 61 öğelik liste DEĞİL.

@@ -30,7 +30,7 @@ export const faq = [
     kategori: 'genel',
     oneCikan: true,
     q: 'Halıyı evden alıyor musunuz, servis ücretli mi?',
-    a: 'Halıyı adresinizden biz alıyoruz ve yıkandıktan sonra yine adresinize teslim ediyoruz. Alım ve teslim için ayrıca ücret almıyoruz. Alma-teslim aracı her gün çıkıyor; tesisimiz ise Pazartesi–Cumartesi 07:00–18:00 arasında açık. Randevuyu telefonda evde birinin bulunduğu saate göre kuruyoruz ve alım ile teslimin aynı saate düşmesi gerekmiyor.',
+    a: 'Halıyı adresinizden biz alıyoruz ve yıkandıktan sonra yine adresinize teslim ediyoruz. Alım ve teslim için ayrıca ücret almıyoruz. Alma-teslim aracı her gün çıkıyor; tesisimiz ise Pazartesi–Cumartesi 08:00–19:00 arasında açık. Randevuyu telefonda evde birinin bulunduğu saate göre kuruyoruz ve alım ile teslimin aynı saate düşmesi gerekmiyor.',
   },
   {
     kategori: 'genel',

@@ -22,6 +22,29 @@ const siteConfig = {
   // ve footer düzenini itiyor — bir kez yaşandı, cümle şuydu:
   // "Halınız Fabrikada Yıkanır, Kapınıza Teslim Edilir". O cümle hero'nun işi.
   companySlogan: 'Fabrikasyon Halı Yıkama',
+
+  /**
+   * RESMÎ TESCİLLİ UNVAN — vergi levhasında ve Google İşletme Profili'nde
+   * yazan ad (işletme sahibince doğrulandı, 2026-08-27).
+   *
+   * companyName'den FARKLI olması normal ve bilinçli: sitede görünen ad
+   * 'Denizli Tomay Halı Yıkama', resmî kayıttaki ad ise başında il plaka
+   * koduyla '20 DENİZLİ TOMAY HALI YIKAMA'. Sitedeki görünen adı buna
+   * çevirmeyin — başlıklar, logo ve footer companyName'i kullanmaya devam
+   * etmeli.
+   *
+   * NE İŞE YARIYOR: vite.config.js'te JSON-LD'ye `legalName` (schema.org:
+   * "kuruluşun tescilli resmî adı") ve `alternateName` ("bu işletme şu adla
+   * da biliniyor") olarak yazılıyor. Ekranda hiçbir şey değişmiyor; tek
+   * etkisi Google'ın İşletme Profili ile siteyi AYNI VARLIK sayması. Yerel
+   * aramada güven sinyallerinin çoğu (puan, yorum, fotoğraf, konum)
+   * profilde duruyor, sitede değil — eşleşme kurulamazsa o sinyaller siteye
+   * bağlanmıyor.
+   *
+   * BURAYA UYDURMA VARYANT YAZMAYIN ('denizli halı yıkamacı' gibi).
+   * Belgede ne yazıyorsa o.
+   */
+  googleBusinessName: '20 DENİZLİ TOMAY HALI YIKAMA',
   companyDescription:
     'Denizli\'de halı, koltuk, perde ve yorgan yıkama. Halınızı adresinizden alıyor, 16 fırçalı tam otomatik makinelerde bitkisel ve antibakteriyel şampuanla yıkıyor, kapalı kurutma odalarında kurutup ambalajlı teslim ediyoruz. Alım ve teslim ücretsiz.',
 
@@ -165,18 +188,30 @@ const siteConfig = {
   yayinSurumu: null,
 
   // ===== Çalışma Saatleri =====
-  // Tesis Pazartesi–Cumartesi 07:00–18:00 (canlı sitenin JSON-LD'si).
+  // Tesis Pazartesi–Cumartesi 08:00–19:00. Google İşletme Profili ile BİREBİR
+  // AYNI olmak zorunda (profil: Pazar kapalı, Pzt-Cmt 08:00-19:00) — Google
+  // profil ile siteyi eşleştirirken ad/adres/telefon yanında saate de bakıyor.
+  //
+  // ÖNCEDEN 07:00–18:00 YAZIYORDU. O değer devralınan canlı sitenin
+  // JSON-LD'sinden gelmişti, işletmeye sorulmamıştı; 2026-08-27'de işletme
+  // sahibi profildeki 08:00–19:00'un doğru olduğunu bildirdi.
+  //
   // Alma-teslim servisi HER GÜN çalışıyor (işletme sahibi, 2026-08-25) —
   // ikisi ayrı alan çünkü ayrı şeyler: tesise gelen müşteri Pazar kapalı bulur,
   // ama halısının alınmasını Pazar günü de isteyebilir.
+  //
+  // SAATİ DEĞİŞTİRİRSENİZ: arac/seo-denetimi.mjs bu değerleri içerik
+  // dosyalarında (faq.js, blogContent.js, serviceContent.js, about.js) arıyor
+  // ve eskisi kalmışsa build'i uyarıyor. Orada 6 yerde ELLE yazılıydı ve
+  // bir kez sessizce ayrıştı; kontrol o yüzden eklendi.
   workingHours: {
     days: 'Pazartesi – Cumartesi',
-    hours: '07:00 – 18:00',
+    hours: '08:00 – 19:00',
     alwaysOpen: false,
     // Schema.org openingHoursSpecification için gün kodları
     schemaDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-    schemaOpens: '07:00',
-    schemaCloses: '18:00',
+    schemaOpens: '08:00',
+    schemaCloses: '19:00',
     pickup: 'Alım ve teslim servisi her gün',
   },
 
@@ -290,6 +325,28 @@ const siteConfig = {
   // KENDİ Google puanını aggregateRating olarak işaretlemesini "self-serving
   // review" sayar ve yok sayar. Puan sitede metin/rozet olarak gösterilebilir,
   // JSON-LD'ye yazılmaz.
+  /**
+   * PUAN — KALICI OLARAK BOŞ. Google İşletme Profili açılsa bile DOLDURMAYIN.
+   *
+   * Google'in yapisal veri kurallari "self-serving review"i acikca yasakliyor:
+   * bir isletmenin KENDI sitesinde KENDI puanini aggregateRating ile
+   * isaretlemesi. Yaptirimi iki asamali — once yildizlar zaten gosterilmez,
+   * sonrasinda yapisal veri manuel islemi gelebilir.
+   *
+   * Yildizlar buna zaten ihtiyac duymuyor: yerel aramada ve bilgi panelinde
+   * puan dogrudan Isletme Profili'nden geliyor, bizim isaretlememizle degil.
+   * Yani doldurmanin KAZANCI YOK, RISKI VAR.
+   *
+   * SERBEST OLAN: yorumlari sitede METIN olarak gostermek ve profile
+   * baglanmak. Yasak olan yalnizca aggregateRating ile isaretlemek.
+   *
+   * showInSchema zaten false; value/count dolsa bile sema uretilmez. Ikisi
+   * birden bilincli: biri unutulursa digeri tutuyor.
+   *
+   * Bu alan bir zamanlar duman-testi'nin "yayina almadan once doldurulmali"
+   * listesindeydi — devralinan sablondan gelen bir varsayimdi ve YANLISTI.
+   * 2026-08-27'de listeden cikarildi.
+   */
   rating: {
     value: null,
     count: null,
@@ -299,10 +356,33 @@ const siteConfig = {
   },
 
   // ===== Kuruluş & İstatistikler =====
-  // Canlı sitedeki sayaç hedeflerinden (data-target) alındı:
-  // 15000 yıkanan halı, 5000 mutlu müşteri, 10 yıl tecrübe, %100 hijyen.
-  // "10+ yıl" ifadesi 2026'da yayında ⇒ kuruluş 2016.
-  foundedYear: 2016,
+  /**
+   * KURULUŞ YILI — işletme sahibince DOĞRULANDI (2026-08-27): 2020.
+   * Kaynak: Google İşletme Profili "Açılış tarihi: 27 Nisan 2020" + vergi levhası.
+   *
+   * ÖNCEDEN 2016 YAZIYORDU VE YANLIŞTI. Nasıl yanlış oldu: değer devralınan
+   * canlı sitenin sayaç hedefinden ÇIKARILMIŞTI ("10 yıl tecrübe" 2026'da
+   * yayında ⇒ kuruluş 2016). Yani ölçülmüş değil, TAHMİN edilmiş bir sayıydı;
+   * işletmeye hiç sorulmamıştı. Sonuç: ana sayfa hero'sunda "10+ Yıl Tecrübe",
+   * footer'da "10+ yıllık saha tecrübesi", Hakkımızda'da "Est. 2016" yazıyordu.
+   * Dördü de gerçek dışıydı ve İşletme Profili ile site arasında 4 yıllık fark
+   * yaratıyordu — Google ikisini eşleştirirken buna bakıyor.
+   *
+   * Buradan türeyen 8 yer var (Footer, Hero istatistiği, StatsSection,
+   * About, Home gövdesi, about.js > hikaye). Hepsi `stats.yearsExperience`
+   * üzerinden hesaplandığı için tek değeri düzeltmek yetiyor.
+   *
+   * ---------------------------------------------------------------------
+   * AŞAĞIDAKİ ÜÇ SAYI HÂLÂ DOĞRULANMADI — aynı güvenilmez kaynaktan geldiler.
+   *
+   * washedCarpets / happyClients / hygieneGuarantee de devralınan sitenin
+   * sayaç hedeflerinden (data-target) alındı; foundedYear'ın yanlış çıkması
+   * o kaynağın güvenilir olmadığını gösterdi. İşletmeye sorulup ya
+   * doğrulanmalı ya da sayaç bölümü kapatılmalı. Sayıları "makul göründüğü"
+   * için bırakmayın — foundedYear de makul görünüyordu.
+   * ---------------------------------------------------------------------
+   */
+  foundedYear: 2020,
 
   stats: {
     // yearsExperience aşağıda foundedYear'dan hesaplanıyor.
@@ -368,11 +448,15 @@ if (import.meta.env?.DEV) {
   if (!siteConfig.email) eksik.push('email')
   if (siteConfig.geo.lat === null || siteConfig.geo.lng === null) eksik.push('geo.lat / geo.lng (harita koordinatı)')
   if (!siteConfig.geo.placeId) eksik.push('geo.placeId (Google İşletme Profili)')
-  if (!siteConfig.geo.embedSrc) eksik.push('geo.embedSrc (harita gömme adresi)')
+  // geo.embedSrc BILEREK listede degil: lat/lng dolu oldugu icin
+  // links.js > mapEmbedUrl() gomme adresini koordinattan kendisi kuruyor.
+  // Ihtiyac ancak profil acilip placeId geldiginde dogar, o zaman da
+  // embedSrc'ye degil placeId'ye gecilir. Kontrol devralinan sablondandi.
   if (!siteConfig.social.facebook) eksik.push('social.facebook')
   if (!siteConfig.analytics.ga4) eksik.push('analytics.ga4')
   if (!siteConfig.analytics.googleSiteVerification) eksik.push('analytics.googleSiteVerification')
-  if (siteConfig.rating.value === null) eksik.push('rating.value / rating.count (Google puanı)')
+  // rating BILEREK listede degil — gerekcesi yukaridaki rating blogunda.
+  // Google self-serving aggregateRating'i yasakliyor; bu alan bos KALMALI.
 
   if (eksik.length) {
     console.warn(
