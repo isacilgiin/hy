@@ -63,13 +63,52 @@ const siteConfig = {
   email: 'bilgi@denizlihaliyikama.net.tr',
 
   // ===== Adres =====
+  /**
+   * ADRES — kaynağı VERGİ LEVHASI (işletme sahibinden, 2026-08-27).
+   *
+   * Levhadaki kayıt birebir şöyle: "ESKİHİSAR MAH. PAMUKKALE. SK. ARI KREMİT
+   * FABRİKASI NO: 17 İÇ KAPI NO: 2 MERKEZEFENDİ / DENİZLİ". Aşağıya yazarken
+   * SADECE yazım düzeltildi ("KREMİT" -> "Kiremit"), hiçbir alan atılmadı;
+   * bina numarası ve iç kapı numarası levhadaki gibi duruyor.
+   *
+   * NEDEN BİREBİR: Google İşletme Profili'nde adres doğrulaması istendiğinde
+   * sunulacak belge bu levha. Sitedeki adres ile belgedeki adres birbirini
+   * tutmazsa doğrulama takılır. Aynı sebeple bu satırlar "daha kısa dursun"
+   * diye sadeleştirilmemeli — landmark (Arı Kiremit Fabrikası) ve iç kapı
+   * numarası belgede var, burada da olmalı.
+   *
+   * ÖNCEKİ DEĞER (2026-08-25 - 2026-08-27): "Eskihisar Mah. Pamukkale Sk.
+   * No:21/A". Sözlü olarak alınmıştı, resmî belgeyle örtüşmüyordu.
+   *
+   * postalCode DEĞİŞMEDİ: aynı mahalle, aynı sokak — 20020 geçerliliğini
+   * koruyor (aşağıdaki geo bloğundaki Nominatim doğrulaması hâlâ tutuyor).
+   *
+   * Buradan beslenen 13 yer var: Footer, İletişim, Yasal, MapEmbed,
+   * metaMetinleri, links.js (harita/yol tarifi bağlantıları), vite.config.js
+   * (JSON-LD PostalAddress, llms.txt, RSS, 404). Hepsi bu tek kaynağı okuyor;
+   * adres başka hiçbir dosyada elle yazılı DEĞİL, öyle de kalmalı.
+   */
   address: {
-    street: 'Eskihisar Mah. Pamukkale Sk. No:21/A',
+    street: 'Eskihisar Mah. Pamukkale Sk. Arı Kiremit Fabrikası No:17 İç Kapı No:2',
     district: 'Merkezefendi',
     city: 'Denizli',
     country: 'Türkiye',
     postalCode: '20020',
-    full: 'Eskihisar Mah. Pamukkale Sk. No:21/A, 20020 Merkezefendi / Denizli',
+    full: 'Eskihisar Mah. Pamukkale Sk. Arı Kiremit Fabrikası No:17 İç Kapı No:2, 20020 Merkezefendi / Denizli',
+    /**
+     * SADECE meta açıklaması için kısa biçim. Sayfada, JSON-LD'de, llms.txt'te
+     * ve Footer'da `full` kullanılır — burası onun yerine geçmez.
+     *
+     * NEDEN VAR: meta açıklaması 155 karakterde kesiliyor (Seo.jsx, routeMeta.js
+     * ve arac/seo-denetimi.mjs:248 aynı sınırı uyguluyor). `full` levhadaki
+     * bina + iç kapı numarasını taşıdığı için İletişim açıklamasını taşırıyor
+     * ve metin "...No:17 İç Kapı…" diye ortadan kesiliyordu; hem adres yarım
+     * kalıyor hem "Alım ve teslim ücretsiz" cümlesi düşüyordu. Mahalle + ilçe
+     * yerel arama için zaten yeterli sinyal.
+     *
+     * `full` değişirse burayı da elden geçirin; kısaltma otomatik DEĞİL.
+     */
+    short: 'Eskihisar Mah., Merkezefendi / Denizli',
   },
 
   // ===== Konum =====

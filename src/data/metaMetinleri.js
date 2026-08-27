@@ -133,9 +133,11 @@ const metaMetinleri = {
   /* ===== /iletisim/ ===== */
   iletisim: {
     baslik: `İletişim | ${companyShortName} — Halı Yıkama Denizli`,
-    // 155 karakteri aşıyor ve iki tarafta da kisalt() ile kesiliyor; aynı
-    // metinden kesildiği için sonuç birebir aynı çıkıyor.
-    aciklama: `Halı, koltuk ve perde yıkama için bize ulaşın. Telefon ${phone} ve WhatsApp. Adres: ${address.full}. Alım ve teslim ücretsiz.`,
+    // 154 karakter — 155'lik kesme sınırının ALTINDA, bilerek. Burada
+    // `address.short` kullanılıyor; `full` (levhadaki bina + iç kapı no)
+    // metni taşırıp "...No:17 İç Kapı…" diye ortadan kesiyor ve son cümleyi
+    // düşürüyordu. Bu satırı uzatmadan önce npm run seo çalıştırın.
+    aciklama: `Halı, koltuk ve perde yıkama için bize ulaşın. Telefon ${phone} ve WhatsApp. Adres: ${address.short}. Alım ve teslim ücretsiz.`,
   },
 
   /* ===== /sikca-sorulan-sorular/ ===== */
