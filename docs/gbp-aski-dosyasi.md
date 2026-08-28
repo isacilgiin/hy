@@ -134,57 +134,52 @@ ayrıca ele alınır.
 > beyanın yazılı ikrarını vermiş olursun. Yalnızca **bugünkü durumu** yaz — bilgi aynı,
 > risk sıfır.
 
-Aşağıdaki metin forma olduğu gibi yapıştırılabilir.
+**Serbest metin alanı en fazla 1000 karakter alıyor.** Aşağıdaki iki sürüm de ölçüldü.
 
----
+### A — tabela asıldıktan sonra (979 karakter) ← kullanılacak olan
 
 ```
-İşletme adı: 20 DENİZLİ TOMAY HALI YIKAMA
-Adres: Eskihisar Mah. Pamukkale Sk. No:17 İç Kapı No:2,
-       Arı Kiremit Fabrikası, 20020 Merkezefendi / Denizli
-Konum: 37°49'10.5"N 29°06'55.2"E — Plus Code R498+R4P
+İşletmem bu adreste fiilen faaliyet göstermektedir; bilgiler ekli resmî belgelerle doğrulanabilir. Vergi levhasındaki unvan profildeki adla aynıdır: 20 DENİZLİ TOMAY HALI YIKAMA; faaliyet kodu 961004 Halı ve Kilim Yıkama Hizmetleri.
 
-Bu adreste tescilli ve fiilen faaliyette olan işletme benim işletmemdir. Mevlüt
-Furkan Tomay adına düzenlenmiş vergi levhası; ticaret unvanı 20 DENİZLİ TOMAY
-HALI YIKAMA, ana faaliyet kodu 961004 "Halı ve Kilim Yıkama Hizmetleri" ile
-ektedir.
+Adresimiz Eskihisar Mah. Pamukkale Sk. No:17 İç Kapı No:2, 20020 Merkezefendi/Denizli'dir. Bölünmüş bina tek dış kapı numarası taşır; birimler iç kapı numarasıyla ayrılır. Ölçülen konum: Plus Code R498+R4P. Birimin kendi ticari elektrik aboneliği ve sayacı vardır; abone adı "Mevlüt Furkan Tomay - 20 Denizli Tomay Halı", 25,20 kW kurulu güç, yıllık 51.583 kWh. İşletme tabelamız ekteki fotoğraflardadır.
 
-İşletmemiz, eski Arı Kiremit Fabrikası binasının bölünmesiyle oluşturulmuş
-bağımsız birimlerden birinde faaliyet göstermektedir. Bina tek bir dış kapı
-numarası (No:17) taşımakta, içindeki birimler iç kapı numaralarıyla
-ayrılmaktadır. Bizim birimimiz İç Kapı No:2'dir ve yukarıda belirtilen
-koordinatta yer almaktadır. Birimimizin kendi girişi, kendi kalıcı tabelası ve
-kendi ticari elektrik aboneliği bulunmaktadır.
+Aynı adreste bize ait olmayan ikinci bir halı yıkama kaydı vardır; ilgimiz yoktur. Kaydımız yalnızca İç Kapı No:2'deki birimi kapsar; iki kayıt ad ve telefon bakımından farklıdır.
 
-Aynı adreste bize ait olmayan, farklı telefon numarasına sahip ikinci bir halı
-yıkama kaydı bulunmaktadır; bu işletmeyle hiçbir ilgimiz yoktur.
-
-Ekteki belgeler:
-
-1. Vergi levhası — işletme adı ve adresi profildekiyle aynıdır.
-
-2. Ticari elektrik faturası — abonelik işletmemiz adına kayıtlıdır. Kurulu güç
-   25,20 kW, yıllık tüketim 51.583 kWh'dir. Birimimizin kendi sayacı vardır.
-
-3. Kira sözleşmesi — yalnızca İç Kapı No:2 numaralı birim için düzenlenmiştir.
-
-4. İş yeri fotoğrafları — fabrika girişindeki tabela, birimimizin kapısındaki
-   tabela, iç kapı numarası ve halı yıkama üretim alanı.
-
-denizlihaliyikama.net.tr adresindeki web sitemizde yer alan işletme adı, adres,
-telefon, çalışma saatleri ve kuruluş yılı, İşletme Profilimizdeki bilgilerle
-birebir aynıdır.
-
-Profilimizin yeniden değerlendirilmesini talep ederiz.
+Giriş üzerinde yapılan işlem: adres alanına iç kapı numarası eklenmiştir. denizlihaliyikama.net.tr sitesindeki ad, adres, telefon ve saatler profille aynıdır.
 ```
 
----
+### B — tabela henüz asılmadıysa (971 karakter)
 
-Metin komşu işletmeden **tek tarafsız cümleyle** bahsediyor — ne suçlama, ne "bu yüzden askıya
-alındık" tezi. Kanıtlanamayan bir iddiayı dosyanın merkezine koymak zayıflatır; inceleyici
-haritaya baktığında zaten görecek, hazırlıksız yakalanmamak yeterli.
+Tabelayı iddia eden cümle çıkarılmış hâli. **Olmayan bir tabelayı "vardır" diye yazmak,
+"aldatıcı içerik" gerekçesiyle askıya alınmış bir dosyada yapılabilecek en kötü şeydir.**
 
----
+```
+İşletmem bu adreste fiilen faaliyet göstermektedir; profil bilgileri ekli resmî belgelerle doğrulanabilir. Vergi levhasındaki unvan profildeki adla aynıdır: 20 DENİZLİ TOMAY HALI YIKAMA; faaliyet kodu 961004 Halı ve Kilim Yıkama Hizmetleri.
+
+Adresimiz Eskihisar Mah. Pamukkale Sk. No:17 İç Kapı No:2, 20020 Merkezefendi/Denizli'dir. Bölünmüş bina tek dış kapı numarası taşır; birimler iç kapı numarasıyla ayrılır. Ölçülen konum: Plus Code R498+R4P. Birimin kendi ticari elektrik aboneliği ve sayacı vardır; abone adı "Mevlüt Furkan Tomay - 20 Denizli Tomay Halı", 25,20 kW kurulu güç, yıllık 51.583 kWh.
+
+Aynı sokak adresinde bize ait olmayan ikinci bir halı yıkama kaydı vardır; ilgimiz yoktur. Kaydımız yalnızca İç Kapı No:2'deki birimi kapsar; iki kayıt ad ve telefon bakımından farklıdır.
+
+Giriş üzerinde yapılan işlem: adres alanına vergi levhasındaki iç kapı numarası eklenmiştir. denizlihaliyikama.net.tr sitesindeki ad, adres, telefon ve saatler profille aynıdır.
+```
+
+### Metinde bilerek olmayanlar
+
+| Çıkarılan | Neden |
+|---|---|
+| "Kalıcı tabelamız vardır" (A sürümünde fotoğrafa atıf var, iddia yok) | Tabela asılmadan yazılamaz |
+| "Başka değişiklik yapılmamıştır" | Google’ın elindeki düzenleme geçmişine karşı doğrulanmamış mutlak olumsuzlama |
+| Sitenin eski adres değeri ve "düzelttik" | Yanlış beyanın yazılı ikrarı olur |
+| Komşu işletmenin adı | Suçlama değil, ayırt edilebilirlik beyanı veriliyor |
+
+### Metinde bilerek olanlar
+
+- **Unvan = profil adı** eşitliği açıkça yazılı → "aldatıcı içerik"in ad ayağını kapatıyor
+- **Faaliyet kodu 961004** → kategori ayağını kapatıyor
+- **İç Kapı No:2 + Plus Code R498+R4P** → komşudan ayıran tek unsur
+- **Abone adı faturadaki hâliyle tırnak içinde** → "unvanla aynı" demek yerine birebir alıntı;
+  ekteki belgeyle çelişmesin diye
+- **İkinci kayıt cümlesi** → denetçi haritaya bakınca hazırlıksız yakalanılmıyor
 
 ## 5. Form: nereden ve hangi alan
 
