@@ -167,10 +167,39 @@ const siteConfig = {
    * ---------------------------------------------------------------------
    */
   geo: {
-    lat: 37.8194033,
-    lng: 29.1146557,
+    /*
+     * ÖLÇÜLDÜ, geocoder'dan alınmadı (2026-08-28).
+     *
+     * Önceki değer 37.8194033 / 29.1146557 idi ve bir adres araması
+     * sonucuydu — yani sokağın ortasına düşen tahmini bir nokta. İşletme
+     * sahibi haritada kendi kapısına sağ tıklayıp okuduğunda çıkan gerçek
+     * koordinat aşağıdaki. İkisi arasında 63 metre var.
+     *
+     * 63 metre normalde önemsiz. Burada değil: adres, bölünmüş bir eski
+     * fabrikanın (Arı Kiremit) iç kapılarından biri ve AYNI dış kapı
+     * numarasında (No:17) ikinci bir halı yıkama kaydı daha var. Google
+     * İşletme Profili askıda ve gerekçe "Aldatıcı içerik". Ek inceleme
+     * dosyasında bu koordinat birimi ayırt eden delil olarak veriliyor;
+     * sitenin başka bir nokta yayınlaması dosyayı kendi içinde çelişkiye
+     * düşürürdü.
+     *
+     * Doğrulama: bu değer, dosyanın altındaki shortLink notunda geçen eski
+     * harita iğnesiyle (37°49'10.7"N 29°06'55.0"E) 8 metre içinde örtüşüyor.
+     * İki bağımsız okuma aynı kapıyı gösteriyor.
+     *
+     * Değiştirmeden önce: kapının önünde ölçülmüş yeni bir okuma olmalı.
+     * Geocoder çıktısıyla, uydu görüntüsünden tahminle veya bina merkeziyle
+     * DEĞİŞTİRMEYİN.
+     */
+    lat: 37.8195833, // 37°49'10.5"N
+    lng: 29.1153333, // 29°06'55.2"E
     region: 'TR-20', // Denizli plaka kodu
-    plusCode: '',
+    /**
+     * Yukarıdaki koordinatın Open Location Code karşılığı. Şu an hiçbir yerde
+     * tüketilmiyor; ölçümü kayda geçirmek için duruyor. Kısa biçimi
+     * "R498+R4P Denizli" — Google Haritalar bu haliyle de arıyor.
+     */
+    plusCode: '8G9FR498+R4P',
     placeId: '', // TODO: İşletme Profili açılınca
     shortLink: '', // TODO: İşletme Profili açılınca (yukarıdaki uyarıyı okuyun)
     embedSrc: '', // gerekmiyor: lat/lng dolu, mapEmbedUrl() iğneyi kendisi kuruyor

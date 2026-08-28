@@ -140,7 +140,7 @@ Bu tablo `siteConfig.js`'in kendi geliştirme uyarısıyla aynı listedir — `n
 
 | Alan | Durum | Not |
 |---|---|---|
-| Firma adı, telefon, e-posta, adres | ✅ | Denizli Tomay Halı Yıkama / 0537 372 67 04 / bilgi@denizlihaliyikama.net.tr / Eskihisar Mah. Pamukkale Sk. No:21/A, 20020 Merkezefendi |
+| Firma adı, telefon, e-posta, adres | ✅ | Denizli Tomay Halı Yıkama / 0537 372 67 04 / bilgi@denizlihaliyikama.net.tr / Eskihisar Mah. Pamukkale Sk. Arı Kiremit Fabrikası No:17 İç Kapı No:2, 20020 Merkezefendi |
 | `workingHours` | ✅ | Tesis Pazartesi–Cumartesi 07:00–18:00 (Pazar kapalı). Alma-teslim servisi **her gün** — ayrı alan, çünkü ayrı şey. |
 | `foundedYear` + `stats` | ✅ | Kuruluş **2016**; 15.000 yıkanan halı, 5.000 mutlu müşteri, %100 hijyen. Hepsi canlı sitenin sayaç hedeflerinden alındı. **"Yıl tecrübe" `foundedYear`'dan otomatik hesaplanıyor** — sadece yılı değiştirin. |
 | `social.instagram` | ✅ | `instagram.com/tomay.hali.yikama` |
