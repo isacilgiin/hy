@@ -478,3 +478,81 @@ olduğu için ikisi de bu dosyanın konusu.
 | Kuruluş | "2020 yılından beri" | `foundingDate: 2020` | ✓ |
 | Konum | — | `geo` ölçülen kapı koordinatı | ✓ |
 | Profil bağlantısı | CID 18159180142286958999 | `sameAs` ilk sırada | ✓ |
+
+---
+
+## 12. Günlük — 07.09.2026 (oturum sonu)
+
+Profil bugün yeniden açıldı. Gün içinde yapılanlar ve yarına kalanlar.
+
+### İşletme sahibinin yaptıkları
+
+- **Üç güncelleme gönderisinin üçü de girildi.** (`docs/gbp-profil-icerigi.md` §2)
+  Plan teker teker girilmesiydi; üçü birden girildi. Geri alınacak bir şey yok,
+  gönderi düşük riskli. **Sonuç: en az iki hafta yeni gönderi girilmeyecek.**
+- Haritalar paylaşım bağlantısı verildi → profilin CID kimliği çözüldü.
+
+### Depoya giren (5 commit)
+
+| Commit | Ne |
+|---|---|
+| `6c778eb` | Tescilli unvan siteye görünür metin olarak: Şartlar sayfasına künye + `llms.txt` |
+| `d676ca5` | `geo.shortLink` = CID adresi → JSON-LD `sameAs` artık profile bağlanıyor |
+| `ac52849` | `docs/gbp-profil-icerigi.md` — 13 ajanlı iş akışının çıktısı |
+| `c041419` | Künye cümlesi kısaltıldı, `embedSrc` geri alındı |
+
+Build v105. `lint`, `npm run seo` temiz.
+
+### YARIN İLK İŞ — cevaplanmamış iki soru
+
+**1. Logo.** İşletme sahibi profile logo girmedi, sebebi kendi ifadesiyle:
+sitedeki logoda *"Tomay Halı Yıkama"* yazıyor, profildeki ad ise
+*"20 DENİZLİ TOMAY HALI YIKAMA"* — **"20 Denizli" kısmı logoda yok.**
+
+ARAŞTIRILACAK, HENÜZ CEVAP VERİLMEDİ: Google İşletme Profili logosunun profil
+adıyla birebir eşleşmesi gerekiyor mu? İlk izlenim gerekmediği yönünde — logo
+bir marka işareti, ad beyanı değil; ayrıca "Tomay Halı Yıkama" farklı bir ad
+değil, aynı adın kısa biçimi (sitede `companyName` / `googleBusinessName`
+ayrımı zaten böyle kurulu ve JSON-LD `legalName`/`alternateName` ile ilan
+ediliyor). AMA doğrulanmadı — Google'ın kendi yardım sayfasından teyit
+edilmeden işletme sahibine "koy gitsin" denmeyecek. Askı gerekçesi
+"Aldatıcı içerik" olduğu için bu soru gereğinden fazla temkin hak ediyor.
+
+Mevcut dosyalar: `public/images/logo/` altında icon-512.png, icon-192.png,
+apple-touch-icon.png, logo.webp, logo-beyaz.webp, og-image.jpg. Boyut denetimi
+yapılmadı (oturum bitti). Google en az 250x250 istiyor ve **.webp kabul
+etmiyor** — icon-512.png biçim olarak uygun görünüyor, ölçülmedi.
+
+**2. Kapak fotoğrafı.** İşletme sahibi *"kapak fotoğrafını biz yaparız herhalde"* dedi.
+
+**CEVAP: HAYIR — üretilmeyecek.** Kapak fotoğrafı işletmenin gerçek
+fotoğrafı olmak zorunda. Bu profil "Aldatıcı içerik"ten askıya alındı;
+üretilmiş bir kapak görseli, tam da suçlanılan davranışın kendi elimizle
+sağlanmış kanıtı olur. Sitedeki 30 görselin yapay zekâ ile üretilmiş olması
+zaten ayrı bir risk (aşağıya bak) — profile o riski taşımayacağız.
+
+Kapak, `docs/gbp-profil-icerigi.md` §5'teki 21 karelik listenin içinden
+seçilecek. Aday: sokak levhası + bina No:17 + kendi tabelan aynı karede.
+**Ön koşul tabela.** Tabela asılmadan cephe/kapı karesi çekilmeyecek —
+eski pankartta hâlâ "Denizli Halı Yıkama" yazıyor ve profildeki adla
+uyuşmuyor.
+
+### Açık kalan diğer işler
+
+| İş | Durum | Kimde |
+|---|---|---|
+| Tabela (2 adet, kalıcı, `20 DENİZLİ TOMAY HALI YIKAMA`) | asılmadı | işletme sahibi |
+| Fotoğraf çekimi (21 kare) | tabelayı bekliyor | işletme sahibi |
+| Hizmetler (8 kalem, metinler hazır) | ~2 hafta sonra | işletme sahibi |
+| Soru-Cevap (5 soru hazır) | ayda 1-2 tane | işletme sahibi |
+| `/projeler/` üretilmiş öncesi/sonrası (12 görsel) | karar bekliyor | işletme sahibi |
+| Üç sayaç: 15.000 halı / 5.000 müşteri / %100 hijyen | **rakam sorulacak** | işletme sahibi |
+| Search Console doğrulaması (`analytics.googleSiteVerification`) | boş | ikisi |
+| birmilyonnokta.com hâlâ `No:21/a` yayınlıyor | düzeltme talebi gönderilmedi | işletme sahibi |
+| Profildeki iğne kapıdan 89 m uzak | **aylarca dokunulmayacak** | — |
+| `20` önekinin profilden kaldırılması | **rafta, aylarca açılmayacak** | — |
+
+### Değişmeyen kural
+
+Ad, adres, kategori, telefon ve konum aylarca oynatılmayacak. Profil
+"Aldatıcı içerik"ten yeni çıktı; incelenen şey düzenleme geçmişiydi.
