@@ -1,7 +1,12 @@
 # Google İşletme Profili askı dosyası
 
-> Durum: **askıda** — gerekçe "Aldatıcı içerik". İtiraz 27.08.2026'da reddedildi.
-> Bu dosya 28.08.2026'da hazırlandı. Sıradaki adım: kalıcı tabela → fotoğraf → ek inceleme.
+> Durum: **AÇILDI** — profil 07.09.2026 itibarıyla yayında ve yönetiliyor.
+> Adres profilde "Arı Kiremit Fabrikası, Eskihisar, Pamukkale Sk. No:17 İç Kapı No:2,
+> 20020 Denizli Merkezefendi" biçiminde duruyor: iç kapı numarası girmiş.
+>
+> 1-10. bölümler askı sürecinin kaydıdır; **geçmiş** olarak okunmalı, iş listesi olarak
+> değil. Bundan sonrası **11. bölümde**. Tekrar askıya alınırsa 4. bölümdeki itiraz
+> metni ve 5. bölümdeki form haritası hâlâ geçerli — bu yüzden silinmedi.
 
 **Bu dosya yayına girmiyor** (`docs/` build çıktısına kopyalanmıyor), ama repoda duruyor.
 Depo herkese açıksa içeriğinde işletme sahibinin adı ve iş yeri bilgileri geçtiğini bil.
@@ -335,3 +340,90 @@ temiz bir hesapla yap, tanımadığın ajansla değil.
 | `arac/seo-denetimi.mjs` | Çalışma saati sapma denetimi (`npm run seo`) |
 
 Profil açıldığında doldurulacak: `geo.placeId`, `geo.shortLink`, yorum bağlantısı.
+
+---
+
+## 11. Açıldıktan sonra (07.09.2026)
+
+Profil geri geldi. Buradan sonrası "kaybetmemek" oyunu; kazanmak değil.
+
+### Kural: yeni açılmış profile seri düzenleme yapılmaz
+
+Askının gerekçesi "Aldatıcı içerik"ti ve incelenen şey profilin **düzenleme geçmişi**.
+Yeni açılan bir kayıt bir süre daha sıkı bakılıyor. Bu yüzden Google'ın kendi
+"Profilinizi tamamlayın" listesindeki maddeler **tek tek, aralarında haftalar
+olacak şekilde** yapılır.
+
+**Hiç dokunulmayacaklar (aylarca):** işletme adı, adres, kategori, telefon.
+Dördü de askının konusuydu. "20" ön ekini kaldırma fikri **rafta** — profil adı
+vergi levhasıyla birebir aynı kalmalı; o soru aylar sonra, o da başka hiçbir sorun
+yokken açılır.
+
+**Sırayla yapılabilecekler** (her biri arasında ~2 hafta):
+
+1. Fotoğraf — dış cephe, tabela, iç mekan, çalışan makineler. En güvenlisi bu,
+   önce bu yapılır.
+2. Hizmetler bölümü — sitedeki hizmet adlarıyla aynı yazılır.
+3. Ürünler.
+4. Güncelleme / duyuru paylaşımı.
+
+### Yorumlar — en riskli başlık
+
+Profilde iki adet 5 yıldızlı yorum var, ikisi de 2 gün önce girilmiş.
+Biri **İsa Çılgın** adına. Bu depo da aynı adla işleniyor ve profil sayfası
+"Bu İşletme Profili'ni yönetiyorsunuz" diyor.
+
+Google'ın politikasında **çıkar çatışması** açık: işletmeyi yöneten kişi kendi
+işletmesine yorum bırakamaz. Yeni açılmış, daha önce aldatıcı içerikten askıya
+alınmış bir profilde aynı gün girilmiş iki genel içerikli 5 yıldız, tespit
+sistemlerinin doğrudan aradığı desen.
+
+Yapılacak: yöneticiye ait yorum **o hesaptan silinir**. Gerçek müşteriye ait
+olmayan varsa o da. Yerine profildeki **"Yorum isteme → Yorum formunuzu eski
+müşterilerinizle paylaşın"** kullanılır; bağlantı gerçek müşterilere gönderilir,
+metin dikte edilmez, karşılığında indirim teklif edilmez.
+
+### Sitede kapatılan boşluk (bu commit)
+
+Google, sitenin her arama sonucunun altına **"Eksik: 20 · Şu terimi ara: 20"**
+basıyordu: profildeki ad `20 DENİZLİ TOMAY HALI YIKAMA`, sitede ise bu dizge
+görünür metin olarak hiçbir yerde geçmiyordu. JSON-LD'deki `legalName` ve
+`alternateName` doluydu ama Google metinde de karşılığını arıyor.
+
+- `src/data/legal.js` → Şartlar ve Koşullar sayfasına **"İşletme künyesi"**
+  bölümü: tescilli unvan, adres, telefon, e-posta, faaliyet kodu 961004.
+  Tek yerde duruyor; başka sayfalara çoğaltılmayacak (anahtar kelime doldurması
+  gibi görünür).
+- `vite.config.js` → `llms.txt` "Firma Bilgileri" altına **Tescilli Unvan**
+  satırı. Statik dosya; AI arama motorlarının okuduğu yer.
+
+### Sırada, tek tıkla açılan iş
+
+**`geo.shortLink`** — `src/data/siteConfig.js` içinde hâlâ boş. Profildeki
+**Paylaş** düğmesine basıp çıkan bağlantı buraya yazılınca `vite.config.js:356`
+onu otomatik olarak JSON-LD `sameAs` dizisine ekliyor. Kod hazır, sadece değer
+eksik.
+
+Bu listedeki en değerli madde bu: `sameAs` "bu site ile şu Haritalar kaydı aynı
+işletmedir" demenin makine tarafından okunan biçimi. Şu an `sameAs` yalnızca
+Instagram ve Facebook'u taşıyor; profil bağlantısı yok.
+
+### Diğer açık işler
+
+| İş | Nerede | Not |
+|---|---|---|
+| `geo.placeId` | `siteConfig.js` | shortLink ile birlikte |
+| Search Console doğrulaması | `analytics.googleSiteVerification` boş | Profildeki "web sitesi" alanının karşılığı |
+| birmilyonnokta.com kaydı | dış site | Hâlâ eski adresi yayınlıyor: "Pamukkale Sok No21/a". Düzeltme talebi gönderilmeli — dışarıdaki tek NAP çelişkisi |
+
+### Doğrulandı (07.09.2026, canlı site ve v103 build)
+
+| Alan | Profil | Site | Durum |
+|---|---|---|---|
+| Ad | 20 DENİZLİ TOMAY HALI YIKAMA | `legalName` + `alternateName` | ✓ |
+| Adres | No:17 İç Kapı No:2, 20020 | `streetAddress` birebir | ✓ |
+| Telefon | 0537 372 67 04 | `telephone` +905373726704 | ✓ |
+| Saatler | Kapanış 19:00 | `openingHoursSpecification` Pzt–Cmt 08:00–19:00 | ✓ |
+| Kuruluş | "2020 yılından beri" | `foundingDate: 2020` | ✓ |
+| Konum | — | `geo` ölçülen kapı koordinatı | ✓ |
+| Profil bağlantısı | Paylaş → link | `sameAs` içinde **yok** | ✗ |

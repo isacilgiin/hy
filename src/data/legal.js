@@ -85,6 +85,40 @@ export const sartlar = {
   ozet:
     'Bu sayfada, web sitesinin kullanımına ve verdiğimiz hizmetlere ilişkin genel şartları özetliyoruz.',
   bolumler: [
+    /**
+     * KÜNYE — Google İşletme Profili ile siteyi AYNI VARLIK saydırmak için var.
+     *
+     * Profildeki tescilli unvan '20 DENİZLİ TOMAY HALI YIKAMA', sitede görünen
+     * ad ise 'Denizli Tomay Halı Yıkama'. İkisinin farklı olması bilinçli
+     * (siteConfig.googleBusinessName açıklamasına bakın) — ama resmî unvan
+     * sayfalarda GÖRÜNÜR METİN olarak hiç geçmiyordu. Google, sitenin her
+     * sayfası için arama sonucunun altına "Eksik: 20" basıyordu: profildeki
+     * adı sitede bulamıyor demek. JSON-LD'deki legalName/alternateName bu
+     * boşluğu tek başına kapatmıyor, Google metinde de karşılığını arıyor.
+     *
+     * BAŞKA SAYFALARA ÇOĞALTMAYIN. Aynı unvanın sayfa sayfa tekrarı anahtar
+     * kelime doldurması gibi görünür; künye tek yerde durur. Başlıklar, logo
+     * ve footer companyName kullanmaya devam etmeli.
+     *
+     * Değerler siteConfig'ten okunuyor — buraya elle adres/telefon yazmayın.
+     * Faaliyet kodu vergi levhasından alındı (2026-08-27).
+     */
+    {
+      baslik: 'İşletme künyesi',
+      paragraflar: [
+        `Bu site ${siteConfig.companyName} tarafından işletilmektedir. Tanıtımda kullandığımız ad ${siteConfig.companyName}, vergi levhasındaki ve Google İşletme Profili'ndeki tescilli unvan ise şudur:`,
+      ],
+      liste: [
+        `Tescilli unvan — ${siteConfig.googleBusinessName}`,
+        `Adres — ${siteConfig.address.full}`,
+        `Telefon — ${siteConfig.phone}`,
+        `E-posta — ${siteConfig.email}`,
+        'Faaliyet konusu — 961004 Halı ve Kilim Yıkama Hizmetleri',
+      ],
+      sonParagraflar: [
+        'Adresimizde tek dış kapı numarası altında birden fazla işletme bulunur; birimler iç kapı numarasıyla ayrılır. Bize ait birim İç Kapı No:2\'dir. Arı Kiremit Fabrikası girişinden içeri girip iç kapı numarasını takip edebilirsiniz.',
+      ],
+    },
     {
       baslik: 'Sitenin kullanımı',
       paragraflar: [

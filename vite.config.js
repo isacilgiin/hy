@@ -595,7 +595,11 @@ ${gtagKimlikleri.map((id) => `    gtag('config','${id}',{send_page_view:false});
 
 ## Firma Bilgileri
 
-- Firma Adı: ${companyName}
+- Firma Adı: ${companyName}${
+  siteConfig.googleBusinessName && siteConfig.googleBusinessName !== companyName
+    ? `\n- Tescilli Unvan: ${siteConfig.googleBusinessName} (vergi levhası ve Google İşletme Profili'ndeki resmî ad)`
+    : ''
+}
 - Sektör: ${siteConfig.sector.tanim}
 - Konum: ${address.city}, Türkiye
 - Adres: ${address.full}
