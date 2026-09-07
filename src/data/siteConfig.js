@@ -232,9 +232,26 @@ const siteConfig = {
     placeId: '',
     // Profilin kalıcı kimliği (CID). sameAs'e bu giriyor.
     shortLink: 'https://maps.google.com/?cid=18159180142286958999',
-    // İşletme adıyla etiketli gömme harita; mapEmbedUrl() önce buna bakıyor.
-    embedSrc:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3151.7572753076097!2d29.111898076463607!3d37.8191539719743!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14c715ff08da592f%3A0xfc025e20c1577197!2s20%20DEN%C4%B0ZL%C4%B0%20TOMAY%20HALI%20YIKAMA!5e0!3m2!1str!2str!4v1788793260375!5m2!1str!2str',
+    /*
+     * BOŞ BIRAKILDI — bir kez dolduruldu, aynı gün geri alındı.
+     *
+     * İşletme adıyla etiketli gömme adresi elimizde var (profilin Paylaş
+     * çıktısı). Ama o gömmenin işaretçisi Google'ın profildeki iğnesi ve
+     * yukarıda yazıldığı gibi ölçülen kapıdan 89 metre uzakta. Doldurmak,
+     * İletişim sayfasında adı doğru ama yeri yanlış bir işaretçi göstermek
+     * demekti — üstelik JSON-LD hâlâ doğru koordinatı yayınlarken.
+     *
+     * Bölünmüş bir fabrikada 89 metre yanlış birim demek; sitenin çözmesi
+     * gereken sorunun ta kendisi. Boş kalınca mapEmbedUrl() lat/lng ile
+     * kapının tam üstüne iğne koyuyor.
+     *
+     * Site ile profil arasındaki bağ zaten shortLink üzerinden sameAs ile
+     * kurulu; gömme haritanın ayrıca ad taşımasına gerek yok.
+     *
+     * NE ZAMAN DOLDURULUR: profildeki iğne kapıya çekildikten sonra. O
+     * düzenleme şimdi yapılmıyor (askı gerekçesi konum/adresti).
+     */
+    embedSrc: '',
   },
 
   // ===== Domain & URL =====

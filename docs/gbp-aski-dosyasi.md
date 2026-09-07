@@ -420,6 +420,25 @@ yerine işletme adını gösteriyor.
 ftid/CID onun yerine geçmez. Eksik-alan denetimi bunu raporlamaya devam edecek;
 bilinçli.
 
+### Geri alınan iki şey (aynı gün)
+
+**`geo.embedSrc` boşaltıldı.** Profilin Paylaş çıktısındaki gömme harita işletme
+adını gösteriyor ama işaretçisi Google'ın iğnesi — kapıdan 89 metre uzak. İletişim
+sayfasında adı doğru, yeri yanlış bir işaretçi göstermek olurdu; üstelik JSON-LD
+aynı anda doğru koordinatı yayınlarken. Bölünmüş bir fabrikada 89 metre yanlış birim
+demek. Boş kalınca harita kapının tam üstüne iğne koyuyor. Site-profil bağı zaten
+`sameAs` ile kurulu; gömmenin ayrıca ad taşımasına gerek yok. Profildeki iğne kapıya
+çekildikten sonra doldurulur.
+
+**Künyedeki bir cümle kısaltıldı.** Şartlar sayfasındaki künyeye önce şu yazılmıştı:
+"Adresimizde tek dış kapı numarası altında birden fazla işletme bulunur; birimler iç
+kapı numarasıyla ayrılır. Bize ait birim İç Kapı No:2'dir." Doğruydu ama §8'in kendi
+kuralını çiğniyordu: *aynı adresteki ikinci kayıttan herkese açık alanda söz edilmez.*
+Site artık `sameAs` ile profile bağlı, yani aynı sınıf yüzey. Cümle yol tarifine
+indirildi: "Arı Kiremit Fabrikası girişinden içeri girip İç Kapı No:2'yi takip
+edebilirsiniz." Künyenin asıl işi — tescilli unvanı görünür metinde yayınlamak —
+değişmedi.
+
 ### Profildeki iğne 89 metre şaşıyor
 
 Google tarafındaki profil konumu **37.819154 / 29.114473**. Ölçülen kapı

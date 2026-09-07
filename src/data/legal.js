@@ -102,6 +102,15 @@ export const sartlar = {
      *
      * Değerler siteConfig'ten okunuyor — buraya elle adres/telefon yazmayın.
      * Faaliyet kodu vergi levhasından alındı (2026-08-27).
+     *
+     * SON CÜMLE BİLEREK YOL TARİFİ; ORAYA AÇIKLAMA EKLEMEYİN. İlk yazımda
+     * "tek dış kapı numarası altında birden fazla işletme bulunur" diye
+     * başlayan bir cümle vardı ve çıkarıldı. Doğruydu ama askının konusunu
+     * (aynı adreste ikinci bir halı yıkama kaydı olması) işletmenin kendi
+     * eliyle, kalıcı ve herkese açık bir sayfaya taşıyordu. O bilgi
+     * docs/gbp-aski-dosyasi.md ve ek inceleme formuna ait; site ile profil
+     * artık sameAs ile bağlı olduğu için ikisi aynı sınıf yüzey sayılır.
+     * Müşteriye lazım olan kısım — hangi kapıdan girileceği — kaldı.
      */
     {
       baslik: 'İşletme künyesi',
@@ -116,7 +125,7 @@ export const sartlar = {
         'Faaliyet konusu — 961004 Halı ve Kilim Yıkama Hizmetleri',
       ],
       sonParagraflar: [
-        'Adresimizde tek dış kapı numarası altında birden fazla işletme bulunur; birimler iç kapı numarasıyla ayrılır. Bize ait birim İç Kapı No:2\'dir. Arı Kiremit Fabrikası girişinden içeri girip iç kapı numarasını takip edebilirsiniz.',
+        'Arı Kiremit Fabrikası girişinden içeri girip İç Kapı No:2\'yi takip edebilirsiniz.',
       ],
     },
     {
