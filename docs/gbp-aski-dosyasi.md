@@ -431,6 +431,16 @@ Sitedeki değer ölçülen kapı olarak KALIYOR (iki bağımsız okumayla doğru
 Profildeki iğneyi kapıya çekmek doğru olur **ama şimdi değil**: konum düzenlemesi
 askının tam konusuydu. Aylar sonra, başka hiçbir sorun yokken.
 
+### Profil içeriği hazır
+
+Hizmet kalemleri, güncelleme gönderileri, Soru-Cevap, fotoğraf listesi ve takvim:
+**`docs/gbp-profil-icerigi.md`**. Karakter sınırları tek tek ölçüldü.
+
+O dosyanın 0. bölümü sitedeki iki riski anlatıyor (üretilmiş öncesi/sonrası
+görselleri, doğrulanmamış üç sayaç) — profil ile site artık sameAs ile bağlı
+olduğu için ikisi de bu dosyanın konusu.
+
+
 ### Diğer açık işler
 
 | İş | Nerede | Not |
