@@ -397,22 +397,44 @@ görünür metin olarak hiçbir yerde geçmiyordu. JSON-LD'deki `legalName` ve
 - `vite.config.js` → `llms.txt` "Firma Bilgileri" altına **Tescilli Unvan**
   satırı. Statik dosya; AI arama motorlarının okuduğu yer.
 
-### Sırada, tek tıkla açılan iş
+### Profil bağlantısı — TAMAM (07.09.2026)
 
-**`geo.shortLink`** — `src/data/siteConfig.js` içinde hâlâ boş. Profildeki
-**Paylaş** düğmesine basıp çıkan bağlantı buraya yazılınca `vite.config.js:356`
-onu otomatik olarak JSON-LD `sameAs` dizisine ekliyor. Kod hazır, sadece değer
-eksik.
+İşletme sahibi Haritalar üzerinden paylaştı; kimlikler çözüldü:
 
-Bu listedeki en değerli madde bu: `sameAs` "bu site ile şu Haritalar kaydı aynı
-işletmedir" demenin makine tarafından okunan biçimi. Şu an `sameAs` yalnızca
-Instagram ve Facebook'u taşıyor; profil bağlantısı yok.
+| | |
+|---|---|
+| ftid | `0x14c715ff08da592f:0xfc025e20c1577197` |
+| CID | `18159180142286958999` |
+| kgmid | `/g/11zfj7mqgk` |
+| kısa adres | https://maps.app.goo.gl/iNLW4A1ANQQQwqhs7 |
+
+`siteConfig.geo.shortLink` = `https://maps.google.com/?cid=18159180142286958999`
+— kısa adres DEĞİL, CID adresi. Kısa adresler yeniden üretilebiliyor, CID profil
+silinmedikçe değişmiyor. Artık JSON-LD `sameAs` dizisinin ilk sırasında: site ile
+profil arasındaki bağ makine tarafından okunabilir hâlde.
+
+`geo.embedSrc` de dolduruldu. İletişim sayfasındaki gömme harita artık koordinat
+yerine işletme adını gösteriyor.
+
+`geo.placeId` boş kalıyor — Places API biçimi olan `ChIJ...` elimizde yok ve
+ftid/CID onun yerine geçmez. Eksik-alan denetimi bunu raporlamaya devam edecek;
+bilinçli.
+
+### Profildeki iğne 89 metre şaşıyor
+
+Google tarafındaki profil konumu **37.819154 / 29.114473**. Ölçülen kapı
+**37.8195833 / 29.1153333**. Arada 89 metre var. Aynı iğne, eskiden sitede duran
+geocoder tahminine yalnızca 32 metre uzak — yani Google da kapıyı değil sokak
+adresini işaretlemiş.
+
+Sitedeki değer ölçülen kapı olarak KALIYOR (iki bağımsız okumayla doğrulandı).
+Profildeki iğneyi kapıya çekmek doğru olur **ama şimdi değil**: konum düzenlemesi
+askının tam konusuydu. Aylar sonra, başka hiçbir sorun yokken.
 
 ### Diğer açık işler
 
 | İş | Nerede | Not |
 |---|---|---|
-| `geo.placeId` | `siteConfig.js` | shortLink ile birlikte |
 | Search Console doğrulaması | `analytics.googleSiteVerification` boş | Profildeki "web sitesi" alanının karşılığı |
 | birmilyonnokta.com kaydı | dış site | Hâlâ eski adresi yayınlıyor: "Pamukkale Sok No21/a". Düzeltme talebi gönderilmeli — dışarıdaki tek NAP çelişkisi |
 
@@ -426,4 +448,4 @@ Instagram ve Facebook'u taşıyor; profil bağlantısı yok.
 | Saatler | Kapanış 19:00 | `openingHoursSpecification` Pzt–Cmt 08:00–19:00 | ✓ |
 | Kuruluş | "2020 yılından beri" | `foundingDate: 2020` | ✓ |
 | Konum | — | `geo` ölçülen kapı koordinatı | ✓ |
-| Profil bağlantısı | Paylaş → link | `sameAs` içinde **yok** | ✗ |
+| Profil bağlantısı | CID 18159180142286958999 | `sameAs` ilk sırada | ✓ |

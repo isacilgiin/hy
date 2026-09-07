@@ -151,19 +151,47 @@ const siteConfig = {
    * tam iğne gösteriyor.
    *
    * ---------------------------------------------------------------------
-   * shortLink BİLEREK BOŞ — buraya harita iğnesi bağlantısı KOYMAYIN.
+   * shortLink DOLDU (07.09.2026) — profil yeniden açıldı.
    *
-   * Bu alan vite.config.js:313'te `sameAs`e giriyor. sameAs'in anlamı
-   * "bu varlığın BAŞKA BİR YERDEKİ AYNISI" demektir; doğrulanmış bir Google
-   * İşletme Profili oraya yazılır. Haritaya bırakılmış bir iğne bir varlık
-   * değil, sadece bir koordinattır (paylaşılan gömme adresinin etiketi de
-   * işletme adı değil, `37°49'10.7"N 29°06'55.0"E` idi) — oraya yazmak
-   * Google'a yanlış sinyal olur.
+   * Bu alan vite.config.js'te `sameAs`e giriyor. sameAs'in anlamı "bu varlığın
+   * BAŞKA BİR YERDEKİ AYNISI" demektir; doğrulanmış bir Google İşletme Profili
+   * oraya yazılır. Askı döneminde burası BİLEREK boştu: elde yalnızca haritaya
+   * bırakılmış bir iğne vardı ve o bir varlık değil, sadece bir koordinattır
+   * (o zamanki gömme adresinin etiketi bile işletme adı değil,
+   * `37°49'10.7"N 29°06'55.0"E` idi).
    *
-   * İşletmenin Google İşletme Profili KAPALI (2026-08-26). Yeniden
-   * açıldığında: shortLink + placeId doldurulur, o zaman sameAs gerçek bir
-   * bağ kurar. embedSrc'ye de gerek kalmaz; profil açılınca placeId ile
-   * gömme zaten işletme adını gösterir.
+   * Artık profil yayında ve kimliği elimizde. İşletme sahibinin Haritalar'dan
+   * paylaştığı bağlantı şuraya çözülüyor:
+   *   .../maps/place/20+DENİZLİ+TOMAY+HALI+YIKAMA/@37.819154,29.1118981,17z/
+   *   data=...!1s0x14c715ff08da592f:0xfc025e20c1577197...!16s/g/11zfj7mqgk
+   *
+   * Buradan üç kimlik çıkıyor:
+   *   ftid  0x14c715ff08da592f:0xfc025e20c1577197
+   *   CID   18159180142286958999  (ikinci hex'in ondalık karşılığı)
+   *   kgmid /g/11zfj7mqgk         (Bilgi Grafiği kimliği)
+   *
+   * shortLink'e maps.app.goo.gl kısa adresi DEĞİL, CID adresi yazıldı:
+   * kısa adresler yeniden üretilebiliyor, CID profil silinmedikçe değişmiyor.
+   * Kısa adres kayıt için: https://maps.app.goo.gl/iNLW4A1ANQQQwqhs7
+   *
+   * placeId HÂLÂ BOŞ ve öyle kalabilir. Places API'nin "ChIJ..." biçimindeki
+   * kimliği elimizde yok; onu üretmek için API anahtarı gerekiyor. Yukarıdaki
+   * ftid/CID aynı kaydı gösteriyor ama ChIJ DEĞİL — placeId alanına onları
+   * yazmayın, yanlış biçim olur. Alt taraftaki eksik-alan denetimi bu yüzden
+   * placeId'yi raporlamaya devam edecek; bilinçli.
+   *
+   * embedSrc DOLDU: profil açılmadan önce gömme harita koordinat gösteriyordu,
+   * iğnenin etiketi bir sayı dizisiydi. Artık işletme adıyla etiketli gömme
+   * adresi var, mapEmbedUrl() önce buna bakıyor.
+   *
+   * BİLİNEN SAPMA — Google'ın profildeki iğnesi (37.819154 / 29.114473)
+   * yukarıda ölçülen kapıdan 89 metre uzakta. Aynı iğne, eskiden sitede duran
+   * geocoder tahminine (37.8194033 / 29.1146557) sadece 32 metre uzak. Yani
+   * Google da kapıyı değil, sokak adresini işaretlemiş. Sitedeki lat/lng
+   * ölçülen kapı olarak KALIYOR — iki bağımsız okumayla doğrulandı.
+   * Profildeki iğneyi kapıya çekmek doğru olur AMA şimdi değil: profil
+   * "Aldatıcı içerik"ten yeni çıktı ve konum düzenlemesi askının tam
+   * konusuydu. Aylar sonra, başka hiçbir sorun yokken yapılır.
    * ---------------------------------------------------------------------
    */
   geo: {
@@ -200,9 +228,13 @@ const siteConfig = {
      * "R498+R4P Denizli" — Google Haritalar bu haliyle de arıyor.
      */
     plusCode: '8G9FR498+R4P',
-    placeId: '', // TODO: İşletme Profili açılınca
-    shortLink: '', // TODO: İşletme Profili açılınca (yukarıdaki uyarıyı okuyun)
-    embedSrc: '', // gerekmiyor: lat/lng dolu, mapEmbedUrl() iğneyi kendisi kuruyor
+    // ChIJ biçiminde Place ID elimizde yok — yukarıdaki nota bakın. BOŞ KALSIN.
+    placeId: '',
+    // Profilin kalıcı kimliği (CID). sameAs'e bu giriyor.
+    shortLink: 'https://maps.google.com/?cid=18159180142286958999',
+    // İşletme adıyla etiketli gömme harita; mapEmbedUrl() önce buna bakıyor.
+    embedSrc:
+      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3151.7572753076097!2d29.111898076463607!3d37.8191539719743!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14c715ff08da592f%3A0xfc025e20c1577197!2s20%20DEN%C4%B0ZL%C4%B0%20TOMAY%20HALI%20YIKAMA!5e0!3m2!1str!2str!4v1788793260375!5m2!1str!2str',
   },
 
   // ===== Domain & URL =====
